@@ -1,38 +1,38 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ƒeƒB[ƒJƒbƒvƒQ[ƒ€‚ğŠÇ—‚·‚éManagerƒNƒ‰ƒX
+/// ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—ã‚²ãƒ¼ãƒ ã‚’ç®¡ç†ã™ã‚‹Managerã‚¯ãƒ©ã‚¹
 /// </summary>
 public class TeapotGameManager : MonoBehaviour
 {
     #region serialize
-    [Tooltip("ƒeƒB[ƒJƒbƒv‚ğ‘I‘ğ‚·‚éƒ{ƒ^ƒ“‚ÌPanel")]
+    [Tooltip("ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—ã‚’é¸æŠã™ã‚‹ãƒœã‚¿ãƒ³ã®Panel")]
     [SerializeField]
     GameObject _selectButtonPanel = default;
 
-    [Tooltip("ƒŠƒUƒ‹ƒg‰æ–Ê‚ÌPanel")]
+    [Tooltip("ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã®Panel")]
     [SerializeField]
     GameObject _resultPanel = default;
 
-    [Tooltip("‘I‘ğ‚·‚éButton")]
+    [Tooltip("é¸æŠã™ã‚‹Button")]
     [SerializeField]
     Button[] _selectButtons = default;
 
-    [Tooltip("‚à‚¤ˆê“xƒvƒŒƒC‚·‚é—p‚ÌButton")]
+    [Tooltip("ã‚‚ã†ä¸€åº¦ãƒ—ãƒ¬ã‚¤ã™ã‚‹ç”¨ã®Button")]
     [SerializeField]
     Button _replayButton = default;
 
-    [Tooltip("Œ‹‰Ê‚ğ•\¦‚·‚éText")]
+    [Tooltip("çµæœã‚’è¡¨ç¤ºã™ã‚‹Text")]
     [SerializeField]
     Text _resultText = default;
     #endregion
 
     #region private
-    /// <summary> ³‰ğ‚ÌˆÊ’u‚Ì”Ô† </summary>
+    /// <summary> æ­£è§£ã®ä½ç½®ã®ç•ªå· </summary>
     int _correct = 0;
     #endregion
     #region property
@@ -56,7 +56,7 @@ public class TeapotGameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒeƒB[ƒ|ƒbƒg‚ğ‘I‘ğ‚·‚é‰æ–Ê‚ğ•\¦‚·‚é
+    /// ãƒ†ã‚£ãƒ¼ãƒãƒƒãƒˆã‚’é¸æŠã™ã‚‹ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void OnSelectTeacup(int correctNum)
     {
@@ -66,7 +66,7 @@ public class TeapotGameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€‚ğŠJn‚·‚é
+    /// ã‚²ãƒ¼ãƒ ã‚’é–‹å§‹ã™ã‚‹
     /// </summary>
     void OnGameStart()
     {
@@ -74,14 +74,14 @@ public class TeapotGameManager : MonoBehaviour
         GameStart?.Invoke();
     }
     /// <summary>
-    /// ƒQ[ƒ€‚ğI—¹‚·‚é
+    /// ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹
     /// </summary>
     void OnGameEnd()
     {
         GameEnd?.Invoke();
     }
     /// <summary>
-    /// ƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»
+    /// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–
     /// </summary>
     void InitializeObject()
     {
@@ -90,14 +90,19 @@ public class TeapotGameManager : MonoBehaviour
         Initialize?.Invoke();
     }
     /// <summary>
-    /// Button‚ğ‘I‘ğ
+    /// Buttonã‚’é¸æŠ
     /// </summary>
-    /// <param name="buttonNum"> ‘I‘ğ‚µ‚½Button‚Ì”Ô† </param>
+    /// <param name="buttonNum"> é¸æŠã—ãŸButtonã®ç•ªå· </param>
     public void Select(int buttonNum)
     {
         StartCoroutine(OnResult(buttonNum));
     }
 
+    /// <summary>
+    /// ãƒªã‚¶ãƒ«ãƒˆã‚’è¡¨ç¤ºã™ã‚‹
+    /// </summary>
+    /// <param name="buttonNum"> é¸æŠã—ãŸButtonã®ç•ªå· </param>
+    /// <returns></returns>
     IEnumerator OnResult(int buttonNum)
     {
         var waitTime = new WaitForSeconds(1f);
@@ -108,17 +113,17 @@ public class TeapotGameManager : MonoBehaviour
 
         yield return waitTime;
 
-        if (result) //³‰ğ‚ÌˆÊ’u‚Æ‘I‘ğ‚µ‚½ƒ{ƒ^ƒ“‚Ì”Ô†‚ª“¯‚¶ê‡
+        if (result) //æ­£è§£ã®ä½ç½®ã¨é¸æŠã—ãŸãƒœã‚¿ãƒ³ã®ç•ªå·ãŒåŒã˜å ´åˆ
         {
-            _resultText.text = "‚ ‚½‚èI";
+            _resultText.text = "ã‚ãŸã‚Šï¼";
         }
         else
         {
-            _resultText.text = "‚Í‚¸‚ê";
+            _resultText.text = "ã¯ãšã‚Œ";
         }
 
         yield return waitTime;
 
-        _resultPanel.SetActive(true);@//ƒŠƒUƒ‹ƒg‰æ–Ê•\¦
+        _resultPanel.SetActive(true);ã€€//ãƒªã‚¶ãƒ«ãƒˆç”»é¢è¡¨ç¤º
     }
 }

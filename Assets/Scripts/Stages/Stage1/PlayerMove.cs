@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// ƒXƒe[ƒW1‚ÌƒvƒŒƒCƒ„[‚ÌˆÚ“®‹@”\‚ğŠÇ—‚·‚é
+/// ã‚¹ãƒ†ãƒ¼ã‚¸1ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•æ©Ÿèƒ½ã‚’ç®¡ç†ã™ã‚‹
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMove : MonoBehaviour, IMovable

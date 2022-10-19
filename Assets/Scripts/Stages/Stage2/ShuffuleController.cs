@@ -1,39 +1,39 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
 /// <summary>
-/// ƒXƒe[ƒW2‚ÌƒeƒB[ƒJƒbƒv‚ğƒVƒƒƒbƒtƒ‹‚·‚éController
+/// ã‚¹ãƒ†ãƒ¼ã‚¸2ã®ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—ã‚’ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹Controller
 /// </summary>
 public class ShuffuleController : MonoBehaviour
 {
-    [Tooltip("ƒVƒƒƒbƒtƒ‹‚·‚é‰ñ”")]
+    [Tooltip("ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹å›æ•°")]
     [SerializeField]
     int _shuffuleCount = 10;
 
-    [Tooltip("ƒVƒƒƒbƒtƒ‹‚Ì‰ŠúƒXƒs[ƒh")]
+    [Tooltip("ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã®åˆæœŸã‚¹ãƒ”ãƒ¼ãƒ‰")]
     [SerializeField]
     float _initualShuffuleSpeed = 2.0f;
 
-    [Tooltip("ƒVƒƒƒbƒtƒ‹ŠÔ‚ğ•Ï‰»‚³‚¹‚é’l")]
+    [Tooltip("ã‚·ãƒ£ãƒƒãƒ•ãƒ«æ™‚é–“ã‚’å¤‰åŒ–ã•ã›ã‚‹å€¤")]
     [SerializeField]
     float _changeshuffuleTimeValue = 2f;
 
     #region serialize
-    [Tooltip("ƒeƒB[ƒJƒbƒv")]
+    [Tooltip("ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—")]
     [SerializeField]
     List<Transform> _teacups = new List<Transform>();
 
-    [Tooltip("ƒeƒB[ƒJƒbƒv‚ğ‚Ü‚Æ‚ß‚½eƒIƒuƒWƒFƒNƒg‚ÌTransform")]
+    [Tooltip("ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—ã‚’ã¾ã¨ã‚ãŸè¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®Transform")]
     [SerializeField]
     Transform _teacupsTrans = default;
 
-    [Tooltip("ƒeƒB[ƒJƒbƒv‚É‰B‚ê‚éƒLƒƒƒ‰ƒNƒ^[")]
+    [Tooltip("ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—ã«éš ã‚Œã‚‹ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼")]
     [SerializeField]
     Transform _hidingCharacter = default;
 
-    [Tooltip("‰B‚ê‚éˆÊ’u")]
+    [Tooltip("éš ã‚Œã‚‹ä½ç½®")]
     [SerializeField]
     Transform[] _hidingPositions = default;
     #endregion
@@ -50,19 +50,22 @@ public class ShuffuleController : MonoBehaviour
 
         _currentShuffuleSpeed = _initualShuffuleSpeed;
     }
-
+    /// <summary>
+    /// ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹
+    /// </summary>
+    /// <param name="speed"> å…¥ã‚Œæ›¿ãˆã‚‹é€Ÿåº¦ </param>
     void Shuffule(float speed)
     {
-        bool isSet = false;
+        bool isSet = false; //ã‚»ãƒƒãƒˆå®Œäº†ã®ãƒ•ãƒ©ã‚°
         int rand1 = 0;
         int rand2 = 0;
 
         while (!isSet)
         {
-            rand1 = Random.Range(0, _teacups.Count); //ƒVƒƒƒbƒtƒ‹‚·‚é1‚Â–Ú‚Ìƒ^[ƒQƒbƒg
-            rand2 = Random.Range(0, _teacups.Count); //ƒVƒƒƒbƒtƒ‹‚·‚é2‚Â–Ú‚Ìƒ^[ƒQƒbƒg
+            rand1 = Random.Range(0, _teacups.Count); //ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹1ã¤ç›®ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
+            rand2 = Random.Range(0, _teacups.Count); //ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹2ã¤ç›®ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
 
-            if (rand1 != rand2)@//Še’l‚ªˆá‚¤‚à‚Ì‚É‚È‚Á‚½‚çƒ‹[ƒv‚©‚ç”²‚¯‚é
+            if (rand1 != rand2)ã€€//å„å€¤ãŒé•ã†ã‚‚ã®ã«ãªã£ãŸã‚‰ãƒ«ãƒ¼ãƒ—ã‹ã‚‰æŠœã‘ã‚‹
             {
                 isSet = true;
             }
@@ -72,22 +75,24 @@ public class ShuffuleController : MonoBehaviour
 
         _teacups[rand1].DOMove(pos2, speed);
         _teacups[rand2].DOMove(pos1, speed);
-        (_teacups[rand1], _teacups[rand2]) = (_teacups[rand2], _teacups[rand1]); //Tuple‚ğ—˜—p‚µ‚Ä“ü‚ê‘Ö‚¦‚é
+
+        (_teacups[rand1], _teacups[rand2]) = (_teacups[rand2], _teacups[rand1]); //Tupleã‚’åˆ©ç”¨ã—ã¦å…¥ã‚Œæ›¿ãˆã‚‹
     }
 
     /// <summary>
-    /// ƒVƒƒƒbƒtƒ‹ŠJn
+    /// ã‚·ãƒ£ãƒƒãƒ•ãƒ«é–‹å§‹
     /// </summary>
     /// <returns></returns>
     IEnumerator StartShuffule()
     {
-        int pos = Random.Range(0, _hidingPositions.Length); //‰ŠúˆÊ’u‚ğƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ‚ß‚é
+        int pos = Random.Range(0, _hidingPositions.Length); //åˆæœŸä½ç½®ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã§æ±ºã‚ã‚‹
         _hidingCharacter.position = _hidingPositions[pos].position;
 
         var corect = _teacups[pos];
 
         yield return new WaitForSeconds(1.0f);
         
+        //ã‚«ãƒƒãƒ—ã‚’é™ã‚ã—ã¦ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’éš ã™
         _teacupsTrans.DOMoveY(0.5f, 1.0f)
                      .OnComplete(() =>
                      {
@@ -96,7 +101,7 @@ public class ShuffuleController : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-        //w’è‚µ‚½‰ñ”•ªƒVƒƒƒbƒtƒ‹
+        //æŒ‡å®šã—ãŸå›æ•°åˆ†ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹
         for (int i = 0; i < _shuffuleCount; i++)
         {
             Shuffule(_currentShuffuleSpeed);
@@ -106,25 +111,28 @@ public class ShuffuleController : MonoBehaviour
 
             if (i < _shuffuleCount / 2)
             {
-                _currentShuffuleSpeed /= _changeshuffuleTimeValue; //™X‚É‘¬‚­‚·‚é
+                _currentShuffuleSpeed /= _changeshuffuleTimeValue; //å¾ã€…ã«é€Ÿãã™ã‚‹
             }
             else
             {
-                _currentShuffuleSpeed *= _changeshuffuleTimeValue; //™X‚É’x‚­‚·‚é
+                _currentShuffuleSpeed *= _changeshuffuleTimeValue; //å¾ã€…ã«é…ãã™ã‚‹
             }
         }
 
-        //³‰ğ‚ÌƒJƒbƒv‚ğ’²‚×‚é
+        //æ­£è§£ã®ã‚«ãƒƒãƒ—ã‚’èª¿ã¹ã‚‹
         for (int i = 0; i < _teacups.Count; i++)
         {
             if (_teacups[i] == corect)
             {
-                TeapotGameManager.Instance.OnSelectTeacup(i); 
+                TeapotGameManager.Instance.OnSelectTeacup(i);
                 break;
             }
         }
-        Debug.Log("ƒVƒƒƒbƒtƒ‹Š®—¹");
+        Debug.Log("ã‚·ãƒ£ãƒƒãƒ•ãƒ«å®Œäº†");
     }
+    /// <summary>
+    /// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…ç½®ã‚’åˆæœŸåŒ–
+    /// </summary>
     void InitializeObject()
     {
         _teacupsTrans.DOMoveY(1.5f, 0f);
@@ -134,11 +142,16 @@ public class ShuffuleController : MonoBehaviour
             t.DOLocalMoveY(0f, 0f);
         }
     }
+    /// <summary>
+    /// ãƒ†ã‚£ãƒ¼ã‚«ãƒƒãƒ—ã®ä¸­èº«ã‚’è¦‹ã›ã‚‹
+    /// </summary>
+    /// <param name="selectNum"> è¦‹ã›ã‚‹ã‚«ãƒƒãƒ—ã®ç•ªå· </param>
+    /// <param name="result"> çµæœ </param>
     void OpenTeacup(int selectNum, bool result)
     {
         _hidingCharacter.parent = null;
         
-        //‚Í‚¸‚ê‚½ê‡‚Í‚ ‚½‚è‚ÌˆÊ’u‚ğŒ©‚¹‚é
+        //ã¯ãšã‚ŒãŸå ´åˆã¯ã‚ãŸã‚Šã®ä½ç½®ã‚’è¦‹ã›ã‚‹
         if (!result)
         {
             _teacups[selectNum].DOMoveY(2f, 1f)
