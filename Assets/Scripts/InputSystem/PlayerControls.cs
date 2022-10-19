@@ -105,6 +105,34 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Stage1"",
+            ""id"": ""e29ea919-df65-43e6-85bf-c6becfde67bf"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""836a399c-91c5-403c-979d-7b17e07d62e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""10b977ff-17b6-436b-82a8-6a66a55368b6"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -112,6 +140,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        // Stage1
+        m_Stage1 = asset.FindActionMap("Stage1", throwIfNotFound: true);
+        m_Stage1_Newaction = m_Stage1.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -200,8 +231,45 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Stage1
+    private readonly InputActionMap m_Stage1;
+    private IStage1Actions m_Stage1ActionsCallbackInterface;
+    private readonly InputAction m_Stage1_Newaction;
+    public struct Stage1Actions
+    {
+        private @PlayerControls m_Wrapper;
+        public Stage1Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_Stage1_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_Stage1; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Stage1Actions set) { return set.Get(); }
+        public void SetCallbacks(IStage1Actions instance)
+        {
+            if (m_Wrapper.m_Stage1ActionsCallbackInterface != null)
+            {
+                @Newaction.started -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnNewaction;
+                @Newaction.performed -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnNewaction;
+                @Newaction.canceled -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnNewaction;
+            }
+            m_Wrapper.m_Stage1ActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Newaction.started += instance.OnNewaction;
+                @Newaction.performed += instance.OnNewaction;
+                @Newaction.canceled += instance.OnNewaction;
+            }
+        }
+    }
+    public Stage1Actions @Stage1 => new Stage1Actions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IStage1Actions
+    {
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }

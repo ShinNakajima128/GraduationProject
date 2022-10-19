@@ -8,14 +8,6 @@ using DG.Tweening;
 /// </summary>
 public class ShuffuleController : MonoBehaviour
 {
-    [Tooltip("ティーカップ")]
-    [SerializeField]
-    Transform[] _teacups = default;
-
-    [Tooltip("ティーカップに隠れるキャラクター")]
-    [SerializeField]
-    Transform _hidingCharacter = default;
-
     [Tooltip("シャッフルする回数")]
     [SerializeField]
     int _shuffuleCount = 10;
@@ -24,18 +16,147 @@ public class ShuffuleController : MonoBehaviour
     [SerializeField]
     float _initualShuffuleSpeed = 2.0f;
 
+    [Tooltip("シャッフル時間を変化させる値")]
+    [SerializeField]
+    float _changeshuffuleTimeValue = 2f;
+
+    #region serialize
+    [Tooltip("ティーカップ")]
+    [SerializeField]
+    List<Transform> _teacups = new List<Transform>();
+
+    [Tooltip("ティーカップをまとめた親オブジェクトのTransform")]
+    [SerializeField]
+    Transform _teacupsTrans = default;
+
+    [Tooltip("ティーカップに隠れるキャラクター")]
+    [SerializeField]
+    Transform _hidingCharacter = default;
+
+    [Tooltip("隠れる位置")]
+    [SerializeField]
+    Transform[] _hidingPositions = default;
+    #endregion
+
+    #region private
+    float _currentShuffuleSpeed;
+    #endregion
+
     private void Start()
     {
-        StartCoroutine(InGame());
+        TeapotGameManager.Instance.GameStart += () => StartCoroutine(StartShuffule());
+        TeapotGameManager.Instance.OpenTeacupPhase += OpenTeacup;
+        TeapotGameManager.Instance.Initialize += InitializeObject;
+
+        _currentShuffuleSpeed = _initualShuffuleSpeed;
     }
 
-    void Shuffule()
+    void Shuffule(float speed)
     {
+        bool isSet = false;
+        int rand1 = 0;
+        int rand2 = 0;
 
+        while (!isSet)
+        {
+            rand1 = Random.Range(0, _teacups.Count); //シャッフルする1つ目のターゲット
+            rand2 = Random.Range(0, _teacups.Count); //シャッフルする2つ目のターゲット
+
+            if (rand1 != rand2)　//各値が違うものになったらループから抜ける
+            {
+                isSet = true;
+            }
+        }
+        var pos1 = _teacups[rand1].position;
+        var pos2 = _teacups[rand2].position;
+
+        _teacups[rand1].DOMove(pos2, speed);
+        _teacups[rand2].DOMove(pos1, speed);
+        (_teacups[rand1], _teacups[rand2]) = (_teacups[rand2], _teacups[rand1]); //Tupleを利用して入れ替える
     }
 
-    IEnumerator InGame()
+    /// <summary>
+    /// シャッフル開始
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator StartShuffule()
     {
-        yield return null;
+        int pos = Random.Range(0, _hidingPositions.Length); //初期位置をランダムで決める
+        _hidingCharacter.position = _hidingPositions[pos].position;
+
+        var corect = _teacups[pos];
+
+        yield return new WaitForSeconds(1.0f);
+        
+        _teacupsTrans.DOMoveY(0.5f, 1.0f)
+                     .OnComplete(() =>
+                     {
+                         _hidingCharacter.SetParent(_teacups[pos]);
+                     });
+
+        yield return new WaitForSeconds(2.0f);
+
+        //指定した回数分シャッフル
+        for (int i = 0; i < _shuffuleCount; i++)
+        {
+            Shuffule(_currentShuffuleSpeed);
+
+            yield return new WaitForSeconds(_currentShuffuleSpeed);
+            
+
+            if (i < _shuffuleCount / 2)
+            {
+                _currentShuffuleSpeed /= _changeshuffuleTimeValue; //徐々に速くする
+            }
+            else
+            {
+                _currentShuffuleSpeed *= _changeshuffuleTimeValue; //徐々に遅くする
+            }
+        }
+
+        //正解のカップを調べる
+        for (int i = 0; i < _teacups.Count; i++)
+        {
+            if (_teacups[i] == corect)
+            {
+                TeapotGameManager.Instance.OnSelectTeacup(i); 
+                break;
+            }
+        }
+        Debug.Log("シャッフル完了");
+    }
+    void InitializeObject()
+    {
+        _teacupsTrans.DOMoveY(1.5f, 0f);
+
+        foreach (var t in _teacups)
+        {
+            t.DOLocalMoveY(0f, 0f);
+        }
+    }
+    void OpenTeacup(int selectNum, bool result)
+    {
+        _hidingCharacter.parent = null;
+        
+        //はずれた場合はあたりの位置を見せる
+        if (!result)
+        {
+            _teacups[selectNum].DOMoveY(2f, 1f)
+                               .OnComplete(() => 
+                               {
+                                   for (int i = 0; i < _teacups.Count; i++)
+                                   {
+                                       if (i == selectNum)
+                                       {
+                                           continue;
+                                       }
+                                       _teacups[i].DOMoveY(2f, 0.5f);
+                                   }
+                               });
+        }
+        else
+        {
+            _teacups[selectNum].DOMoveY(2f, 1f);
+        }
     }
 }

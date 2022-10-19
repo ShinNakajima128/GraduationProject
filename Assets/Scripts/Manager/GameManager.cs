@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public enum Stages
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Stage1,
+    Stage2,
+    Stage3,
+    Stage4,
+    Stage5,
+    Stage6
+}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+public class GameManager : SingletonMonoBehaviour<GameManager>
+{
+    [SerializeField]
+    Stages _currentStage = default;
 }
