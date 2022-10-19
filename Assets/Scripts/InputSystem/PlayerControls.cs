@@ -111,26 +111,81 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
             ""id"": ""e29ea919-df65-43e6-85bf-c6becfde67bf"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
                     ""id"": ""836a399c-91c5-403c-979d-7b17e07d62e1"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""10b977ff-17b6-436b-82a8-6a66a55368b6"",
-                    ""path"": """",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""7010f2cc-9234-4a2f-9626-b29d80b70430"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""2ba105d4-432f-4a92-8b6c-c011ae20194a"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""637759ec-01fb-4808-94bf-673706e2116e"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""964a67e7-8a56-40ef-ab79-63d064415cf1"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""134002c3-bdb2-4742-9797-1c4bd34220fd"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -142,7 +197,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         // Stage1
         m_Stage1 = asset.FindActionMap("Stage1", throwIfNotFound: true);
-        m_Stage1_Newaction = m_Stage1.FindAction("New action", throwIfNotFound: true);
+        m_Stage1_Move = m_Stage1.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -235,12 +290,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     // Stage1
     private readonly InputActionMap m_Stage1;
     private IStage1Actions m_Stage1ActionsCallbackInterface;
-    private readonly InputAction m_Stage1_Newaction;
+    private readonly InputAction m_Stage1_Move;
     public struct Stage1Actions
     {
         private @PlayerControls m_Wrapper;
         public Stage1Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Stage1_Newaction;
+        public InputAction @Move => m_Wrapper.m_Stage1_Move;
         public InputActionMap Get() { return m_Wrapper.m_Stage1; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -250,16 +305,16 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_Stage1ActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnNewaction;
+                @Move.started -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_Stage1ActionsCallbackInterface.OnMove;
             }
             m_Wrapper.m_Stage1ActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
             }
         }
     }
@@ -270,6 +325,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     }
     public interface IStage1Actions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
     }
 }
