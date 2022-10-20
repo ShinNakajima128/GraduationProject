@@ -1,19 +1,21 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+///éšœå®³ç‰©ã®æ©Ÿèƒ½ã‚’æŒã¤ã‚¯ãƒ©ã‚¹
 public class Obstacle : MonoBehaviour
 {
     #region serialize
+    [Tooltip("éšœå®³ç‰©ã®ç¨®é¡")]
     [SerializeField]
     ObstacleType _obstacleType = default;
 
-    [Tooltip("ˆÚ“®‘¬“x")]
+    [Tooltip("ç§»å‹•é€Ÿåº¦")]
     [SerializeField]
     float _moveSpeed = 5.0f;
 
-    [Tooltip("”ñƒAƒNƒeƒBƒu‚É‚È‚é‚Ü‚Å‚ÌŠÔ")]
+    [Tooltip("éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã‚‹ã¾ã§ã®æ™‚é–“")]
     [SerializeField]
     float _vanishTime = 20.0f;
     #endregion
@@ -53,7 +55,7 @@ public class Obstacle : MonoBehaviour
     }
 
     /// <summary>
-    /// ”ñƒAƒNƒeƒBƒu‚·‚éƒ^ƒCƒ}[‚ğŠJn
+    /// éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã™ã‚‹ã‚¿ã‚¤ãƒãƒ¼ã‚’é–‹å§‹
     /// </summary>
     /// <returns></returns>
     IEnumerator OnVanishTimer()
