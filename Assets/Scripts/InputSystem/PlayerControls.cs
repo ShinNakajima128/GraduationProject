@@ -188,6 +188,89 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Stage3"",
+            ""id"": ""14910024-ca5c-4732-84f4-38130f8ef1ba"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""463fd3e6-4898-4749-8574-6e4068a43731"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""68880c16-50f1-45f8-8d61-084dd5038f02"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e8b42287-fb11-4d49-939a-de60b0309a5c"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""5d6552c4-e5fd-40fe-a07e-bd7f380d8c23"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""71ab5a4d-33bc-48af-b642-b098fee57812"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""0e49a530-b026-4f18-857e-ab4f11b6cdc4"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4cb2a25d-1cbe-445a-a8d4-b843d7d66f16"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -198,6 +281,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Stage1
         m_Stage1 = asset.FindActionMap("Stage1", throwIfNotFound: true);
         m_Stage1_Move = m_Stage1.FindAction("Move", throwIfNotFound: true);
+        // Stage3
+        m_Stage3 = asset.FindActionMap("Stage3", throwIfNotFound: true);
+        m_Stage3_Move = m_Stage3.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -319,11 +405,48 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         }
     }
     public Stage1Actions @Stage1 => new Stage1Actions(this);
+
+    // Stage3
+    private readonly InputActionMap m_Stage3;
+    private IStage3Actions m_Stage3ActionsCallbackInterface;
+    private readonly InputAction m_Stage3_Move;
+    public struct Stage3Actions
+    {
+        private @PlayerControls m_Wrapper;
+        public Stage3Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Stage3_Move;
+        public InputActionMap Get() { return m_Wrapper.m_Stage3; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Stage3Actions set) { return set.Get(); }
+        public void SetCallbacks(IStage3Actions instance)
+        {
+            if (m_Wrapper.m_Stage3ActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
+            }
+            m_Wrapper.m_Stage3ActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+            }
+        }
+    }
+    public Stage3Actions @Stage3 => new Stage3Actions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
     }
     public interface IStage1Actions
+    {
+        void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IStage3Actions
     {
         void OnMove(InputAction.CallbackContext context);
     }
