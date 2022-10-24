@@ -201,6 +201,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ModeChenge"",
+                    ""type"": ""Button"",
+                    ""id"": ""510f2df8-bc49-4da1-aefd-d4f84627bcbf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -269,6 +278,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffdcffb4-ed91-40eb-a681-68b1c89ec968"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ModeChenge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f7350b6-f131-42d8-b69c-c618e4954e6f"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ModeChenge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -284,6 +315,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Stage3
         m_Stage3 = asset.FindActionMap("Stage3", throwIfNotFound: true);
         m_Stage3_Move = m_Stage3.FindAction("Move", throwIfNotFound: true);
+        m_Stage3_ModeChenge = m_Stage3.FindAction("ModeChenge", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -410,11 +442,13 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Stage3;
     private IStage3Actions m_Stage3ActionsCallbackInterface;
     private readonly InputAction m_Stage3_Move;
+    private readonly InputAction m_Stage3_ModeChenge;
     public struct Stage3Actions
     {
         private @PlayerControls m_Wrapper;
         public Stage3Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Stage3_Move;
+        public InputAction @ModeChenge => m_Wrapper.m_Stage3_ModeChenge;
         public InputActionMap Get() { return m_Wrapper.m_Stage3; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -427,6 +461,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
+                @ModeChenge.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnModeChenge;
+                @ModeChenge.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnModeChenge;
+                @ModeChenge.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnModeChenge;
             }
             m_Wrapper.m_Stage3ActionsCallbackInterface = instance;
             if (instance != null)
@@ -434,6 +471,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @ModeChenge.started += instance.OnModeChenge;
+                @ModeChenge.performed += instance.OnModeChenge;
+                @ModeChenge.canceled += instance.OnModeChenge;
             }
         }
     }
@@ -449,5 +489,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IStage3Actions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnModeChenge(InputAction.CallbackContext context);
     }
 }

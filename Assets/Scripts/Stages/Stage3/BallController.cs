@@ -18,6 +18,17 @@ public class BallController : MonoBehaviour
         Move();
     }
 
+    /// <summary>
+    /// ìäÇ∞ÇÈ
+    /// </summary>
+    public void Throw(Vector3 dir)
+    {
+
+    }
+
+    /// <summary>
+    /// êiÇﬁ
+    /// </summary>
     private void Move()
     {
         _rb.velocity = transform.forward * _moveSpeed;
@@ -25,8 +36,8 @@ public class BallController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("SideBlock"))
-        {
-        }
+        var normal = transform.forward;
+        normal.x *= -1;
+        transform.forward = normal;
     }
 }
