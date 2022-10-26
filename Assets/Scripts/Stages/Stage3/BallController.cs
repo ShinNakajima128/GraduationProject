@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public class BallController : MonoBehaviour
+public class BallController : MonoBehaviour, IThrowable
 {
+    #region Field
     [Header("É{Å[ÉãÇÃì]Ç™ÇÈë¨Ç≥")]
     [SerializeField]
     private float _moveSpeed;
 
     private Rigidbody _rb;
+    #endregion
 
+    #region Unity Fucntion
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -18,16 +21,27 @@ public class BallController : MonoBehaviour
         Move();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        var forward = transform.forward;
+        forward.x *= -1;
+        transform.forward = forward;
+    }
+    #endregion
+
+    #region Public Fucntion
     /// <summary>
     /// ìäÇ∞ÇÈ
     /// </summary>
-    public void Throw(Vector3 pos,Quaternion dir)
+    void IThrowable.Throw(Vector3 pos, Quaternion dir)
     {
         this.transform.position = pos;
         this.transform.rotation = dir;
         this.gameObject.SetActive(true);
     }
+    #endregion
 
+    #region Private Function
     /// <summary>
     /// êiÇﬁ
     /// </summary>
@@ -35,11 +49,5 @@ public class BallController : MonoBehaviour
     {
         _rb.velocity = transform.forward * _moveSpeed;
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        var forward = transform.forward;
-        forward.x *= -1;
-        transform.forward = forward;
-    }
+    #endregion
 }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -181,7 +180,7 @@ public class Stage3PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         // ìäÇ∞èIÇ¶ÇƒÇ¢ÇΩÇÁâΩÇ‡ÇµÇ»Ç¢
-        if (IsThrowed) 
+        if (IsThrowed)
         {
             CallBackUnRegist();
             return;
@@ -220,8 +219,13 @@ public class Stage3PlayerController : MonoBehaviour
             var ballPosition = _throwPoint.position;
             var ballDirection = this.transform.rotation;
 
-            _ball.Throw(ballPosition, ballDirection);
-            IsThrowed = true;
+            var ball = _ball as IThrowable;
+
+            if (ball != null)
+            {
+                ball.Throw(ballPosition, ballDirection);
+                IsThrowed = true;
+            }
         }
     }
     #endregion
