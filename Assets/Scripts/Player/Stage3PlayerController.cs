@@ -1,21 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 public class Stage3PlayerController : MonoBehaviour
 {
-    #region Define
-    /// <summary>
-    /// PlayerÇÃëÄçÏëŒè€
-    /// </summary>
-    private enum ControlTarget
-    {
-        None,
-        Position,
-        Direction
-    }
-    #endregion
-
     #region Field
     [Header("â°à⁄ìÆÇÃë¨Ç≥")]
     [SerializeField]
@@ -25,12 +14,22 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private float _width;
 
+    [Header("êUÇËå¸ÇØÇÈç≈ëÂílÅ@Å¶êÑèß(0 Å` 0.4)")]
+    [SerializeField]
+    private float _eulerMaxValue;
+
+    [SerializeField]
+    private Transform _throwPoint;
+
     [SerializeField]
     private BallController _ball;
 
     private PlayerInput _pInput;
 
     private ControlTarget _target = ControlTarget.None;
+
+    // ìäÇ∞èIÇÌÇ¡ÇΩÇ©
+    public bool IsThrowed { get; private set; } = false;
     #endregion
 
     #region Unity Function
@@ -61,7 +60,7 @@ public class Stage3PlayerController : MonoBehaviour
     /// </summary>
     private void ChengeActionMap(string name)
     {
-        _pInput.defaultActionMap = name;
+        _pInput.SwitchCurrentActionMap(name);
     }
 
     /// <summary>
@@ -90,29 +89,139 @@ public class Stage3PlayerController : MonoBehaviour
     private void CallBackRegist()
     {
         _pInput.actions["Move"].performed += OnMove;
-        _pInput.actions["ModeChenge"].performed += OnModeChenge;
+        _pInput.actions["Chenge"].started += OnChenge;
+        _pInput.actions["Throw"].started += OnThrow;
+    }
+
+    /// <summary>
+    /// ÉÅÉ\ÉbÉhÇÃìoò^âèú
+    /// </summary>
+    private void CallBackUnRegist()
+    {
+        _pInput.actions["Move"].performed -= OnMove;
+        _pInput.actions["Chenge"].started -= OnChenge;
+        _pInput.actions["Throw"].started -= OnThrow;
+    }
+
+    /// <summary>
+    /// å¸Ç´ÇïœÇ¶ÇÈ
+    /// </summary>
+    private void ChengeDirection(Vector2 value)
+    {
+        var euler = Quaternion.identity;
+
+        if (value.x == -1)
+        {
+            euler = Quaternion.Euler(0f, -1f, 0f);
+        }
+        else if (value.x == 1)
+        {
+            euler = Quaternion.Euler(0f, 1f, 0f);
+        }
+
+        this.transform.rotation = this.transform.rotation * euler;
+
+        FixRotation(this.transform.rotation);
+    }
+
+    /// <summary>
+    /// ê≥ãKâª
+    /// </summary>
+    private void FixRotation(Quaternion rotation)
+    {
+        if (rotation.y > _eulerMaxValue)
+        {
+            rotation.y = _eulerMaxValue;
+        }
+        else if (rotation.y < -_eulerMaxValue)
+        {
+            rotation.y = -_eulerMaxValue;
+        }
+
+        this.transform.rotation = rotation;
+    }
+
+    /// <summary>
+    /// PlayerÇÃâ°à⁄ìÆ
+    /// </summary>
+    private void Move(Vector2 value)
+    {
+        var myPos = this.transform.position;
+
+        if (value != Vector2.zero)
+        {
+            // â°à⁄ìÆ
+            myPos.x = myPos.x + value.x * _moveSpeed;
+            // ç¿ïWÇÃèCê≥
+            myPos = FixPosition(myPos);
+
+            this.transform.position = myPos;
+        }
+    }
+
+    /// <summary>
+    /// é©êgÇÃç¿ïWÇÃèCê≥
+    /// </summary>
+    private Vector3 FixPosition(Vector3 myPos)
+    {
+        if (myPos.x > _width)
+        {
+            myPos.x = _width;
+        }
+        else if (myPos.x < -_width)
+        {
+            myPos.x = -_width;
+        }
+
+        return myPos;
     }
     #endregion
 
     #region InputSystem CallBacks
-    private void OnMove(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        var h = context.ReadValue<Vector2>();
-        var t = this.transform.position;
-
-        if (h != Vector2.zero)
+        // ìäÇ∞èIÇ¶ÇƒÇ¢ÇΩÇÁâΩÇ‡ÇµÇ»Ç¢
+        if (IsThrowed) 
         {
-            t.x = t.x + h.x * _moveSpeed;
-            this.transform.position = t;
+            CallBackUnRegist();
+            return;
         }
+
+        var h = context.ReadValue<Vector2>();
+
+        switch (_target)
+        {
+            case ControlTarget.None:
+                break;
+            case ControlTarget.Position:
+                Move(h);
+                break;
+            case ControlTarget.Direction:
+                ChengeDirection(h);
+                break;
+            default:
+                break;
+        }
+
     }
 
-    private void OnModeChenge(InputAction.CallbackContext context)
+    public void OnChenge(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            Debug.Log("Mode Chenge !!");
             ChengeControlMode();
+        }
+    }
+
+    private void OnThrow(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            var ballPosition = _throwPoint.position;
+            var ballDirection = this.transform.rotation;
+
+            _ball.Throw(ballPosition, ballDirection);
+            IsThrowed = true;
         }
     }
     #endregion

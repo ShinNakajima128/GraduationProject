@@ -21,9 +21,11 @@ public class BallController : MonoBehaviour
     /// <summary>
     /// “Š‚°‚é
     /// </summary>
-    public void Throw(Vector3 dir)
+    public void Throw(Vector3 pos,Quaternion dir)
     {
-
+        this.transform.position = pos;
+        this.transform.rotation = dir;
+        this.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -36,8 +38,8 @@ public class BallController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        var normal = transform.forward;
-        normal.x *= -1;
-        transform.forward = normal;
+        var forward = transform.forward;
+        forward.x *= -1;
+        transform.forward = forward;
     }
 }
