@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,17 +10,12 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Vector3 _stopPoint;
 
-    private void Start()
+    public void MoveRequest(Action action = null)
     {
-        MoveRequest();
+        StartCoroutine(MoveAsync(action));
     }
 
-    public void MoveRequest()
-    {
-        StartCoroutine(MoveAsync());
-    }
-
-    private IEnumerator MoveAsync()
+    private IEnumerator MoveAsync(Action action = null)
     {
         while (this.transform.position.z > _stopPoint.z)
         {
@@ -28,7 +24,8 @@ public class CameraController : MonoBehaviour
             this.transform.position = pos;
             yield return null;
         }
-
+        // ˆÚ“®‚ªI‚í‚Á‚½
+        action();
         yield return null;
     }
 }

@@ -17,18 +17,20 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private float _eulerMaxValue;
 
+    [Header("投げる場所")]
     [SerializeField]
     private Transform _throwPoint;
 
+    [Header("ボール")]
     [SerializeField]
     private BallController _ball;
 
     private PlayerInput _pInput;
 
-    private ControlTarget _target = ControlTarget.None;
-
     // 投げ終わったか
     public bool IsThrowed { get; private set; } = false;
+    // 投げられるか
+    public bool CanControl { get; private set; } = false;
     #endregion
 
     #region Unity Function
@@ -45,7 +47,6 @@ public class Stage3PlayerController : MonoBehaviour
     private void Initialize()
     {
         _pInput = GetComponent<PlayerInput>();
-        _target = ControlTarget.Position;
 
         if (_pInput)
         {
@@ -63,32 +64,13 @@ public class Stage3PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// 操作の変更
-    /// </summary>
-    private void ChengeControlMode()
-    {
-        switch (_target)
-        {
-            case ControlTarget.None:
-                break;
-            case ControlTarget.Position:
-                _target = ControlTarget.Direction;
-                break;
-            case ControlTarget.Direction:
-                _target = ControlTarget.Position;
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
     /// メソッドの登録
     /// </summary>
     private void CallBackRegist()
     {
         _pInput.actions["Move"].performed += OnMove;
-        _pInput.actions["Chenge"].started += OnChenge;
+        _pInput.actions["ToLeft"].started += OnToLeft;
+        _pInput.actions["ToRight"].started += OnToRight;
         _pInput.actions["Throw"].started += OnThrow;
     }
 
@@ -98,29 +80,9 @@ public class Stage3PlayerController : MonoBehaviour
     private void CallBackUnRegist()
     {
         _pInput.actions["Move"].performed -= OnMove;
-        _pInput.actions["Chenge"].started -= OnChenge;
+        _pInput.actions["ToLeft"].started -= OnToLeft;
+        _pInput.actions["ToRight"].started -= OnToRight;
         _pInput.actions["Throw"].started -= OnThrow;
-    }
-
-    /// <summary>
-    /// 向きを変える
-    /// </summary>
-    private void ChengeDirection(Vector2 value)
-    {
-        var euler = Quaternion.identity;
-
-        if (value.x == -1)
-        {
-            euler = Quaternion.Euler(0f, -1f, 0f);
-        }
-        else if (value.x == 1)
-        {
-            euler = Quaternion.Euler(0f, 1f, 0f);
-        }
-
-        this.transform.rotation = this.transform.rotation * euler;
-
-        FixRotation(this.transform.rotation);
     }
 
     /// <summary>
@@ -141,24 +103,6 @@ public class Stage3PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Playerの横移動
-    /// </summary>
-    private void Move(Vector2 value)
-    {
-        var myPos = this.transform.position;
-
-        if (value != Vector2.zero)
-        {
-            // 横移動
-            myPos.x = myPos.x + value.x * _moveSpeed;
-            // 座標の修正
-            myPos = FixPosition(myPos);
-
-            this.transform.position = myPos;
-        }
-    }
-
-    /// <summary>
     /// 自身の座標の修正
     /// </summary>
     private Vector3 FixPosition(Vector3 myPos)
@@ -176,9 +120,18 @@ public class Stage3PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region Public Function
+    public void Send()
+    {
+        CanControl = true;
+    }
+    #endregion
+
     #region InputSystem CallBacks
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (!CanControl) return;
+
         // 投げ終えていたら何もしない
         if (IsThrowed)
         {
@@ -186,34 +139,50 @@ public class Stage3PlayerController : MonoBehaviour
             return;
         }
 
-        var h = context.ReadValue<Vector2>();
+        var velue = context.ReadValue<Vector2>();
+        var myPos = this.transform.position;
 
-        switch (_target)
+        if (velue != Vector2.zero)
         {
-            case ControlTarget.None:
-                break;
-            case ControlTarget.Position:
-                Move(h);
-                break;
-            case ControlTarget.Direction:
-                ChengeDirection(h);
-                break;
-            default:
-                break;
-        }
+            // 横移動
+            myPos.x = myPos.x + velue.x * _moveSpeed;
+            // 座標の修正
+            myPos = FixPosition(myPos);
 
+            this.transform.position = myPos;
+        }
     }
 
-    public void OnChenge(InputAction.CallbackContext context)
+    private void OnToLeft(InputAction.CallbackContext context)
     {
+        if (!CanControl) return;
+
         if (context.started)
         {
-            ChengeControlMode();
+            var euler = Quaternion.Euler(0f, -1f, 0f);
+            this.transform.rotation = this.transform.rotation * euler;
+
+            FixRotation(this.transform.rotation);
+        }
+    }
+
+    private void OnToRight(InputAction.CallbackContext context)
+    {
+        if (!CanControl) return;
+
+        if (context.started)
+        {
+            var euler = Quaternion.Euler(0f, 1f, 0f);
+            this.transform.rotation = this.transform.rotation * euler;
+
+            FixRotation(this.transform.rotation);
         }
     }
 
     private void OnThrow(InputAction.CallbackContext context)
     {
+        if (!CanControl) return;
+
         if (context.started)
         {
             var ballPosition = _throwPoint.position;
@@ -221,11 +190,8 @@ public class Stage3PlayerController : MonoBehaviour
 
             var ball = _ball as IThrowable;
 
-            if (ball != null)
-            {
-                ball.Throw(ballPosition, ballDirection);
-                IsThrowed = true;
-            }
+            ball.Throw(ballPosition, ballDirection);
+            IsThrowed = true;
         }
     }
     #endregion

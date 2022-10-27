@@ -203,18 +203,27 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Chenge"",
+                    ""name"": ""Throw"",
                     ""type"": ""Button"",
-                    ""id"": ""510f2df8-bc49-4da1-aefd-d4f84627bcbf"",
+                    ""id"": ""bdc5057c-fb7f-4fd9-bbae-b727f5a45f8e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Throw"",
+                    ""name"": ""ToLeft"",
                     ""type"": ""Button"",
-                    ""id"": ""bdc5057c-fb7f-4fd9-bbae-b727f5a45f8e"",
+                    ""id"": ""8d95b1ab-cb21-4291-af2c-21b68933d666"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""e26ba21a-13ae-468d-8df0-43b93297f8b0"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -290,34 +299,67 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ffdcffb4-ed91-40eb-a681-68b1c89ec968"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Chenge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6f7350b6-f131-42d8-b69c-c618e4954e6f"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Chenge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ed230e35-5a4d-47c1-9217-67382d74262c"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5610213-abab-4dbf-8cc9-cb44dba6c205"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2805029a-c1dd-4977-920c-6300c14ba335"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""028181bc-a09b-490d-87fa-3f4b8dfb70fa"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39193a92-1e6b-4fd7-86f5-ced82f39c67e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9638ebd-501c-460e-9a34-a3926733e938"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -335,8 +377,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Stage3
         m_Stage3 = asset.FindActionMap("Stage3", throwIfNotFound: true);
         m_Stage3_Move = m_Stage3.FindAction("Move", throwIfNotFound: true);
-        m_Stage3_Chenge = m_Stage3.FindAction("Chenge", throwIfNotFound: true);
         m_Stage3_Throw = m_Stage3.FindAction("Throw", throwIfNotFound: true);
+        m_Stage3_ToLeft = m_Stage3.FindAction("ToLeft", throwIfNotFound: true);
+        m_Stage3_ToRight = m_Stage3.FindAction("ToRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -463,15 +506,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Stage3;
     private IStage3Actions m_Stage3ActionsCallbackInterface;
     private readonly InputAction m_Stage3_Move;
-    private readonly InputAction m_Stage3_Chenge;
     private readonly InputAction m_Stage3_Throw;
+    private readonly InputAction m_Stage3_ToLeft;
+    private readonly InputAction m_Stage3_ToRight;
     public struct Stage3Actions
     {
         private @PlayerControls m_Wrapper;
         public Stage3Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Stage3_Move;
-        public InputAction @Chenge => m_Wrapper.m_Stage3_Chenge;
         public InputAction @Throw => m_Wrapper.m_Stage3_Throw;
+        public InputAction @ToLeft => m_Wrapper.m_Stage3_ToLeft;
+        public InputAction @ToRight => m_Wrapper.m_Stage3_ToRight;
         public InputActionMap Get() { return m_Wrapper.m_Stage3; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -484,12 +529,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnMove;
-                @Chenge.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnChenge;
-                @Chenge.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnChenge;
-                @Chenge.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnChenge;
                 @Throw.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnThrow;
                 @Throw.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnThrow;
                 @Throw.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnThrow;
+                @ToLeft.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToLeft;
+                @ToLeft.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToLeft;
+                @ToLeft.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToLeft;
+                @ToRight.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToRight;
+                @ToRight.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToRight;
+                @ToRight.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToRight;
             }
             m_Wrapper.m_Stage3ActionsCallbackInterface = instance;
             if (instance != null)
@@ -497,12 +545,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Chenge.started += instance.OnChenge;
-                @Chenge.performed += instance.OnChenge;
-                @Chenge.canceled += instance.OnChenge;
                 @Throw.started += instance.OnThrow;
                 @Throw.performed += instance.OnThrow;
                 @Throw.canceled += instance.OnThrow;
+                @ToLeft.started += instance.OnToLeft;
+                @ToLeft.performed += instance.OnToLeft;
+                @ToLeft.canceled += instance.OnToLeft;
+                @ToRight.started += instance.OnToRight;
+                @ToRight.performed += instance.OnToRight;
+                @ToRight.canceled += instance.OnToRight;
             }
         }
     }
@@ -518,7 +569,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IStage3Actions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnChenge(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
+        void OnToLeft(InputAction.CallbackContext context);
+        void OnToRight(InputAction.CallbackContext context);
     }
 }

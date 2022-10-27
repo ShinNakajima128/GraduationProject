@@ -181,18 +181,27 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Chenge",
+                    "name": "Throw",
                     "type": "Button",
-                    "id": "510f2df8-bc49-4da1-aefd-d4f84627bcbf",
+                    "id": "bdc5057c-fb7f-4fd9-bbae-b727f5a45f8e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Throw",
+                    "name": "ToLeft",
                     "type": "Button",
-                    "id": "bdc5057c-fb7f-4fd9-bbae-b727f5a45f8e",
+                    "id": "8d95b1ab-cb21-4291-af2c-21b68933d666",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToRight",
+                    "type": "Button",
+                    "id": "e26ba21a-13ae-468d-8df0-43b93297f8b0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -268,34 +277,67 @@
                 },
                 {
                     "name": "",
-                    "id": "ffdcffb4-ed91-40eb-a681-68b1c89ec968",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Chenge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6f7350b6-f131-42d8-b69c-c618e4954e6f",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Chenge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "ed230e35-5a4d-47c1-9217-67382d74262c",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5610213-abab-4dbf-8cc9-cb44dba6c205",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2805029a-c1dd-4977-920c-6300c14ba335",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "028181bc-a09b-490d-87fa-3f4b8dfb70fa",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "39193a92-1e6b-4fd7-86f5-ced82f39c67e",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9638ebd-501c-460e-9a34-a3926733e938",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
