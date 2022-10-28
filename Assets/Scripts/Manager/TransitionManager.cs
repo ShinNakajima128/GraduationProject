@@ -40,7 +40,7 @@ public class TransitionManager : MonoBehaviour
 
     private void Start()
     {
-        FadeIn(_fadeType);
+        FadeOut(_fadeType);
     }
     /// <summary>
     /// シーン遷移する
@@ -65,7 +65,8 @@ public class TransitionManager : MonoBehaviour
         {
             case FadeType.Normal:
                 Instance._fadeImage.enabled = true;
-                Instance._fadeImage.DOFade(0, Instance._fadeTime)
+                Instance._fadeImage.DOFade(1f, 0f);
+                Instance._fadeImage.DOFade(0f, Instance._fadeTime)
                           .OnComplete(() =>
                           {
                               action?.Invoke();
@@ -86,7 +87,8 @@ public class TransitionManager : MonoBehaviour
         {
             case FadeType.Normal:
                 Instance._fadeImage.enabled = true;
-                Instance._fadeImage.DOFade(1, Instance._fadeTime)
+                Instance._fadeImage.DOFade(0f, 0f);
+                Instance._fadeImage.DOFade(1f, Instance._fadeTime)
                           .OnComplete(() =>
                           {
                               action?.Invoke();
