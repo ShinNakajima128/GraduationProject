@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// イントロSceneの管理を行うマネージャークラス
+/// </summary>
 public class IntroManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    MessagePlayer _player = default;
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator Start()
     {
-        
+        yield return StartCoroutine(_player.PlayAllMessageCoroutine());
+        //yield return StartCoroutine(_player.PlayMessageCorountine(MessageType.Intro));
+
+        TransitionManager.SceneTransition(SceneType.Stage1_Fall);
     }
 }
