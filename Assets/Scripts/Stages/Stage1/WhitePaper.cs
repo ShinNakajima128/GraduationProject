@@ -85,6 +85,7 @@ public class WhitePaper : MonoBehaviour, IObjectable
             {
                 _effectTarget = other.GetComponent<IEffectable>();
             }
+            FallGameManager.Instance.OnGetItem(_effectTarget);
             EffectManager.PlayEffect(EffectType.Get, _effectTarget.EffectPos);
         }
     }
