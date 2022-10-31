@@ -95,24 +95,20 @@ public class MessagePlayer : MonoBehaviour
 
         var t = data.Texts;
 
-        yield return null;
-
         //メッセージを流す
         for (int i = 0; i < t.Length; i++)
         {
             _actorText.text = t[i].Actor;
             _messageText.text = "";
 
+            //メッセージを一文字ずつ表示
             foreach (var m in t[i].Message)
             {
                 _messageText.text += m;
                 yield return new WaitForSeconds(_flowTime);
             }
 
-            Debug.Log("check");
-
             _submitIcon.enabled = true; //入力を促すアイコンをアクティブにする
-            yield return null;
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
         }
     }

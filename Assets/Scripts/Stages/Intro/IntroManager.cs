@@ -10,10 +10,17 @@ public class IntroManager : MonoBehaviour
     [SerializeField]
     MessagePlayer _player = default;
 
-    IEnumerator Start()
+    private void Start()
+    {
+        TransitionManager.FadeOut(FadeType.Normal, () => 
+        {
+            StartCoroutine(StartIntro());
+        });
+        
+    }
+    IEnumerator StartIntro()
     {
         yield return StartCoroutine(_player.PlayAllMessageCoroutine());
-        //yield return StartCoroutine(_player.PlayMessageCorountine(MessageType.Intro));
 
         TransitionManager.SceneTransition(SceneType.Stage1_Fall);
     }
