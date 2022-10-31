@@ -24,6 +24,7 @@ public class Obstacle : MonoBehaviour
     Rigidbody _rb;
     bool _init = false;
     Vector3 _rotateValue = default;
+    IDamagable _target;
     #endregion
 
     private void OnEnable()
@@ -67,7 +68,16 @@ public class Obstacle : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            gameObject.SetActive(false);
+            if (_target == null)
+            {
+                _target = other.GetComponent<IDamagable>();
+            }
+            
+            if (!_target.IsInvincibled)
+            {
+                _target.Damage(1);
+                gameObject.SetActive(false);
+            }
         }
     }
 }

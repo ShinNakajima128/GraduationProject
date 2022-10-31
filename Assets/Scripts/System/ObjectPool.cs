@@ -41,7 +41,7 @@ public abstract class ObjectPool<T> : MonoBehaviour
             }
             else
             {
-                Debug.LogError("コンポーネントが見つかりませんでした");
+                //Debug.LogError("コンポーネントが見つかりませんでした");
             }
             
             obj.SetActive(false);
