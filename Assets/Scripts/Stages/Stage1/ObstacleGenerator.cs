@@ -36,6 +36,8 @@ public class ObstacleGenerator : MonoBehaviour
     /// </summary>
     IEnumerator OnGenerate()
     {
+        yield return null;
+
         while (true)
         {
             int rand = Random.Range(0, _obstacleList.Count);
