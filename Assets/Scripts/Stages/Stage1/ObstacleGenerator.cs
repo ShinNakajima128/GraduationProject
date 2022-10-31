@@ -52,8 +52,15 @@ public class ObstacleGenerator : MonoBehaviour
             yield return new WaitForSeconds(_generateInterval);
         }
     }
+    /// <summary>
+    /// アクティブのオブジェクトを全て非アクティブ化し、生成を終了する
+    /// </summary>
     void StopGenerate()
     {
+        foreach (var o in _obstacleList)
+        {
+            o.Return();
+        }
         _isInGamed = false;
     }
 }

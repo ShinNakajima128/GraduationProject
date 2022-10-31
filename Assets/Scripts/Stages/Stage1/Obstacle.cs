@@ -76,6 +76,7 @@ public class Obstacle : MonoBehaviour
             if (!_target.IsInvincibled)
             {
                 _target.Damage(1);
+                AudioManager.PlaySE(SEType.Player_Damage);
                 gameObject.SetActive(false);
             }
         }

@@ -49,8 +49,12 @@ public class WhitePaperGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// アクティブのオブジェクトを全て非アクティブ化し、生成を終了する
+    /// </summary>
     void StopGenerate()
     {
+        _wpc.Return();
         _isInGamed = false;
     }
 }
