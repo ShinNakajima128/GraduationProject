@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -55,12 +56,18 @@ public class BackgroundController : MonoBehaviour
     {
         _groundModel.gameObject.SetActive(true);
         _groundModel.DOMoveY(_finishTrans.position.y - 2.5f, _groundModelSpeed);
-        SetScrollSpeed(new Vector2(0f, 0f), _groundModelSpeed);
+        SetScrollSpeed(new Vector2(0f, -0.25f), _groundModelSpeed, () => 
+        {
+            SetScrollSpeed(new Vector2(0f, 0f), 0f);
+        });
     }
 
-    void SetScrollSpeed(Vector2 vector, float time)
+    void SetScrollSpeed(Vector2 vector, float time, Action action = null)
     {
-        _mat.DOVector(vector, _propertyId, time);
-        //_background.material = _mat;
+        _mat.DOVector(vector, _propertyId, time)
+            .OnComplete(() => 
+            {
+                action?.Invoke();
+            });
     }
 }
