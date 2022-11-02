@@ -42,5 +42,6 @@ public struct MessageText
 public enum MessageType
 {
     Intro,
-    Tutorial
+    Tutorial,
+    Stage1_End
 }
