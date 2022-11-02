@@ -9,9 +9,13 @@ public enum EffectType
     /// </summary>
     None,
     /// <summary>
-    /// 被弾
+    /// 獲得
     /// </summary>
-    Get
+    Get,
+    /// <summary>
+    /// 妨害
+    /// </summary>
+    Obstacle
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>
