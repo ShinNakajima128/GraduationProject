@@ -12,13 +12,16 @@ public class FallGameManager : MonoBehaviour
 {
     #region selialize
     [SerializeField]
-    Transform _PlayerTrans = default;
+    Transform _playerTrans = default;
 
     [SerializeField]
     Transform _startTrans = default;
 
     [SerializeField]
     Text _informationText = default;
+
+    [SerializeField]
+    MessagePlayer _player = default;
     #endregion
 
     #region private
@@ -39,7 +42,7 @@ public class FallGameManager : MonoBehaviour
     }
     private void Start()
     {
-        _originPos = _PlayerTrans.position;
+        _originPos = _playerTrans.position;
         OnGameStart();
     }
 
@@ -47,7 +50,7 @@ public class FallGameManager : MonoBehaviour
     public void OnGameStart()
     {
         Init();
-        _PlayerTrans.DOMove(_startTrans.position, 2.0f)
+        _playerTrans.DOMove(_startTrans.position, 2.0f)
                     .OnComplete(() =>
                     {
                         StartCoroutine(GameStartCoroutine(() => GameStart?.Invoke()));
@@ -69,7 +72,7 @@ public class FallGameManager : MonoBehaviour
 
     void Init()
     {
-        _PlayerTrans.position = _originPos;
+        _playerTrans.position = _originPos;
         _informationText.text = "";
     }
 
@@ -88,5 +91,13 @@ public class FallGameManager : MonoBehaviour
         yield return new WaitForSeconds(4.0f);
 
         _informationText.text = "ステージクリア!";
+
+        yield return new WaitForSeconds(4.0f);
+
+        _informationText.text = "";
+
+        yield return StartCoroutine(_player.PlayAllMessageCoroutine());
+
+        TransitionManager.SceneTransition(SceneType.Lobby);
     }
 }
