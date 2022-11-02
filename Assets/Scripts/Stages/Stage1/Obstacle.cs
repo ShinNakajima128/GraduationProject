@@ -11,6 +11,10 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     ObstacleType _obstacleType = default;
 
+    [Tooltip("回転の種類")]
+    [SerializeField]
+    RotateType _rotateType = default;
+
     [Tooltip("移動速度")]
     [SerializeField]
     float _moveSpeed = 5.0f;
@@ -23,6 +27,7 @@ public class Obstacle : MonoBehaviour
     #region private
     Rigidbody _rb;
     bool _init = false;
+    bool _isHit = false;
     Vector3 _rotateValue = default;
     IDamagable _target;
     #endregion
@@ -34,6 +39,7 @@ public class Obstacle : MonoBehaviour
         int randY = Random.Range(-1, 2);
         int randZ = Random.Range(-1, 2);
         _rotateValue = new Vector3(randX, randY, randZ);
+        _isHit = false;
     }
     private void OnDisable()
     {
@@ -51,8 +57,13 @@ public class Obstacle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Rotate(_rotateValue);
         _rb.AddForce(Vector3.up * _moveSpeed, ForceMode.Force);
+
+        if (_rotateType == RotateType.None)
+        {
+            return;
+        }
+        transform.Rotate(_rotateValue);
     }
 
     /// <summary>
@@ -64,8 +75,14 @@ public class Obstacle : MonoBehaviour
         yield return new WaitForSeconds(_vanishTime);
         gameObject.SetActive(false);
     }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (_isHit)
+        {
+            return;
+        }
+
         if (other.gameObject.tag == "Player")
         {
             if (_target == null)
@@ -75,10 +92,28 @@ public class Obstacle : MonoBehaviour
             
             if (!_target.IsInvincibled)
             {
-                _target.Damage(1);
-                AudioManager.PlaySE(SEType.Player_Damage);
-                gameObject.SetActive(false);
+                if (_obstacleType == ObstacleType.Table)
+                {
+                    Debug.Log("ヒット");
+                    StartCoroutine(VanishCoroutine());
+                }
+                else
+                {
+                    _target.Damage(1);
+                    AudioManager.PlaySE(SEType.Player_Damage);
+                    gameObject.SetActive(false);
+                }
             }
         }
+    }
+    IEnumerator VanishCoroutine()
+    {
+        yield return new WaitForSeconds(2.0f);
+        gameObject.SetActive(false);
+    }
+    enum RotateType
+    {
+        None,
+        Random
     }
 }
