@@ -17,7 +17,7 @@ public class Scatter : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             if (_target == null)
             {

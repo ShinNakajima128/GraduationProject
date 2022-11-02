@@ -13,6 +13,9 @@ public class TableController : MonoBehaviour, IEffectable
 
     [SerializeField]
     int _seCount = 5;
+
+    [SerializeField]
+    GameObject _chaseObject = default;
     #endregion
     #region private
     bool _isEffected;
@@ -26,16 +29,24 @@ public class TableController : MonoBehaviour, IEffectable
     private void OnEnable()
     {
         _isEffected = false;
+        transform.localPosition = Vector3.zero;
     }
     private void Start()
     {
         _wait = new WaitForSeconds(_seInterval);
     }
-
+    private void FixedUpdate()
+    {
+        transform.localPosition = _chaseObject.transform.localPosition;
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        Debug.Log(other.gameObject.name);
+
+        if (other.gameObject.CompareTag("Player"))
         {
+            Debug.Log("Hit");
+
             if (!_isEffected)
             {
                 EffectManager.PlayEffect(EffectType.Obstacle, EffectPos.position);

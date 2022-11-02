@@ -22,12 +22,14 @@ public class Obstacle : MonoBehaviour
     [Tooltip("非アクティブになるまでの時間")]
     [SerializeField]
     float _vanishTime = 20.0f;
+
+    [SerializeField]
+    GameObject _obstacleObject = default;
     #endregion
 
     #region private
     Rigidbody _rb;
     bool _init = false;
-    bool _isHit = false;
     Vector3 _rotateValue = default;
     IDamagable _target;
     #endregion
@@ -39,7 +41,6 @@ public class Obstacle : MonoBehaviour
         int randY = Random.Range(-1, 2);
         int randZ = Random.Range(-1, 2);
         _rotateValue = new Vector3(randX, randY, randZ);
-        _isHit = false;
     }
     private void OnDisable()
     {
@@ -73,17 +74,13 @@ public class Obstacle : MonoBehaviour
     IEnumerator OnVanishTimer()
     {
         yield return new WaitForSeconds(_vanishTime);
-        gameObject.SetActive(false);
+        _obstacleObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_isHit)
-        {
-            return;
-        }
-
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
             if (_target == null)
             {
@@ -92,25 +89,14 @@ public class Obstacle : MonoBehaviour
             
             if (!_target.IsInvincibled)
             {
-                if (_obstacleType == ObstacleType.Table)
-                {
-                    Debug.Log("ヒット");
-                    StartCoroutine(VanishCoroutine());
-                }
-                else
-                {
-                    _target.Damage(1);
-                    AudioManager.PlaySE(SEType.Player_Damage);
-                    gameObject.SetActive(false);
-                }
+                _target.Damage(1);
+                AudioManager.PlaySE(SEType.Player_Damage);
+                _obstacleObject.SetActive(false);
+                //gameObject.SetActive(false);
             }
         }
     }
-    IEnumerator VanishCoroutine()
-    {
-        yield return new WaitForSeconds(2.0f);
-        gameObject.SetActive(false);
-    }
+
     enum RotateType
     {
         None,
