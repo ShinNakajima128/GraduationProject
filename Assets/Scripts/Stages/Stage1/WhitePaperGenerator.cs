@@ -2,38 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ステージ1の障害物を生成するクラス
-/// </summary>
-public class ObstacleGenerator : MonoBehaviour
+public class WhitePaperGenerator : MonoBehaviour
 {
     #region serialize
-    [Tooltip("ゲーム開始時の障害物生成時間の間隔")]
+    [Tooltip("ゲーム開始時の白紙生成時間の間隔")]
     [SerializeField]
     float _generateInterval = 3.0f;
 
-    [Tooltip("障害物を生成する位置")]
+    [Tooltip("白紙を生成する位置")]
     [SerializeField]
     Transform[] _generateTrans = default;
 
-    [Tooltip("生成する障害物のList")]
+    [Tooltip("生成する白紙のController")]
     [SerializeField]
-    List<ObstacleController> _obstacleList = new List<ObstacleController>();
+    WhitePaperController _wpc = default;
     #endregion
+
     #region private
     bool _isInGamed;
     #endregion
 
     void Start()
     {
-        FallGameManager.Instance.GameStart +=() => StartCoroutine(OnGenerate());
+        FallGameManager.Instance.GameStart += () => StartCoroutine(OnGenerate());
         FallGameManager.Instance.GameEnd += StopGenerate;
     }
-
-    void Generate(int index)
+    void Generate()
     {
         int randPos = Random.Range(0, _generateTrans.Length);
-        _obstacleList[index].Use(_generateTrans[randPos].position);
+        _wpc.Use(_generateTrans[randPos].position);
     }
 
     /// <summary>
@@ -46,28 +43,18 @@ public class ObstacleGenerator : MonoBehaviour
 
         while (_isInGamed)
         {
-            int rand = Random.Range(0, _obstacleList.Count);
-            Generate(rand);
+            Generate();
 
             yield return new WaitForSeconds(_generateInterval);
         }
     }
+
     /// <summary>
     /// アクティブのオブジェクトを全て非アクティブ化し、生成を終了する
     /// </summary>
     void StopGenerate()
     {
-        foreach (var o in _obstacleList)
-        {
-            o.Return();
-        }
+        _wpc.Return();
         _isInGamed = false;
     }
-}
-public enum ObstacleType
-{
-    Chair,
-    Clock,
-    Table,
-    Mirror
 }

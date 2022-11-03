@@ -8,39 +8,9 @@ using UnityEngine.Audio;
 public enum BGMType
 {
     /// <summary> タイトル画面 </summary>
-    Title,
-    /// <summary> 拠点:メイン </summary>
-    Base_Main,
-    /// <summary> 拠点:武器選択 </summary>
-    Base_WeaponSelect,
-    /// <summary> ベイクルバレー:メイン </summary>
-    BakeleValley_Main,
-    /// <summary> ベイクルバレー:ボス </summary>
-    BakeleValley_Boss,
-    /// <summary> レインディ雲海:メイン </summary>
-    RaindyClouds_Main,
-    /// <summary> レインディ雲海:ボス </summary>
-    RaindyClouds_Boss,
-    /// <summary> デザートリゾート:メイン </summary>
-    DessertResort_Main,
-    /// <summary> デザートリゾート:ボス </summary>
-    DessertResort_Boss,
-    /// <summary> グレース雪原:メイン </summary>
-    GlaseSnowField_Main,
-    /// <summary> グレース雪原:ボス </summary>
-    GlaseSnowField_Boss,
-    /// <summary> ガナッシュ火山:メイン </summary>
-    GanacheVolcano_Main,
-    /// <summary> ガナッシュ火山:ボス </summary>
-    GanacheVolcano_Boss,
-    /// <summary> ミニゲーム:ブロック壊し </summary>
-    MiniGame_BreakingBlocks,
-    /// <summary> ステージクリア </summary>
-    ClearJingle,
+    Title, 
     /// <summary> ゲームオーバー </summary>
-    Gameover,
-    /// <summary> クリアシーン </summary>
-    Clear
+    Gameover
 }
 public enum SEType
 {
@@ -54,106 +24,34 @@ public enum SEType
     UI_CursolMove,
     /// <summary> UI:画面遷移音 </summary>
     UI_Transition,
+    /// <summary> UI:ボタン選択 </summary>
+    UI_ButtonSelect,
     /// <summary> プレイヤー:足音 </summary>
     Player_FootStep,
-    /// <summary> プレイヤー:ジャンプ </summary>
-    Player_Jump,
     /// <summary> プレイヤー:ダメージ </summary>
     Player_Damage,
     /// <summary> プレイヤー:回復音 </summary>
     Player_Heal,
     /// <summary> プレイヤー:金平糖を獲得 </summary>
     Player_GetItem,
-    /// <summary> 武器:武器変更 </summary>
-    Weapon_Change,
-    /// <summary> 武器:突き </summary>
-    Weapon_Thrust,
-    /// <summary> 武器:お菓子破棄 </summary>
-    Weapon_Discard,
-    /// <summary> 武器:振り回し </summary>
-    Weapon_Wield,
-    /// <summary> 武器:叩きつけ </summary>
-    Weapon_Strike,
-    /// <summary> 武器:射撃 </summary>
-    Weapon_Shoot,
-    /// <summary> 武器:爆発 </summary>
-    Weapon_Explosion,
-    /// <summary> 武器:コンボ攻撃 </summary>
-    Weapon_Combo,
-    /// <summary> 武器:コンボのフィニッシュ </summary>
-    Weapon_Finish,
     /// <summary> 敵全般:被弾 </summary>
     Enemy_Damage,
     /// <summary> 敵全般:消滅 </summary>
     Enemy_Vanish,
-    /// <summary> デコリー:移動 </summary>
-    Decolly_Move,
-    /// <summary> デコリー:攻撃 </summary>
-    Decolly_Attack,
-    /// <summary> ビターゴーレム:足音 </summary>
-    BetterGolem_FootStep,
-    /// <summary> ビターゴーレム:登場 </summary>
-    BetterGolem_Flap,
-    /// <summary> ビターゴーレム:吠える </summary>
-    BetterGolem_Roar,
-    /// <summary> ビターゴーレム:攻撃 </summary>
-    BetterGolem_Attack,
-    /// <summary> ビターゴーレム:ダメージ </summary>
-    BetterGolem_Damage,
-    /// <summary> ビターゴーレム:ダウン </summary>
-    BetterGolem_Down,
-    /// <summary> ビターゴーレム:爆散 </summary>
-    BetterGolem_Dead,
-    /// <summary> フィールドオブジェクト:ジャンプマット </summary>
-    FieldObject_JumpMat,
-    /// <summary> フィールドオブジェクト:壊れる音 </summary>
-    FieldObject_Break,
-    /// <summary> アイテム:チョコエッグを壊す </summary>
-    Item_GetChocoEgg,
-    /// <summary> 武器:アイテム装着 </summary>
-    Weapon_Attach,
-    /// <summary> UI:ボタン選択 </summary>
-    UI_ButtonSelect,
-    /// <summary> ビターゴーレム:登場 </summary>
-    BetterGolem_Entry,
-    /// <summary> ウィンク </summary>
-    UI_Wink,
-    /// <summary> プレイヤー:またね </summary>
-    Player_Seeyou,
-    /// <summary> クリア画面のジングル </summary>
-    ClearJingle,
-    /// <summary> クリームに当たった時の音 </summary>
-    Cream,
-    /// <summary> 無敵中に攻撃が当たった時の音 </summary>
-    Invincible,
-    /// <summary> 敵の体力が0になった時の音 </summary>
-    Enemy_Down
+    /// <summary> アイテム:獲得 </summary>
+    Item_Get,
+    /// <summary> アイテム:カウントアップ </summary>
+    Item_Countup,
+    /// <summary> アイテム:紙が飛び散る </summary>
+    Object_Scatter
+
 }
 public enum VOICEType
 {
-    /// <summary> 通常攻撃 </summary>
-    Attack_Normal,
-    /// <summary> 叩きつけ攻撃 </summary>
-    Attack_Strike,
-    /// <summary> コンボ1段目 </summary>
-    Attack_Combo_First,
-    /// <summary> コンボ2段目 </summary>
-    Attack_Combo_Second,
-    /// <summary> コンボフィニッシュ </summary>
-    Attack_Finish,
-    /// <summary> 回避 </summary>
-    Avoid,
-    /// <summary> ステージ外へ落下 </summary>
-    FallOffStage,
-    /// <summary> 復帰 </summary>
-    CameBack,
-    /// <summary> ジャンプ </summary>
-    Jump,
     /// <summary> ダメージ </summary>
-    Damage,
-    /// <summary> ゲームオーバー </summary>
-    Gameover
+    Damage
 }
+
 /// <summary>
 /// オーディオ機能を管理するコンポーネント
 /// </summary>

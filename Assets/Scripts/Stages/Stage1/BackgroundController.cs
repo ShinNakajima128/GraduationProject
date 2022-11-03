@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -9,37 +10,64 @@ using DG.Tweening;
 public class BackgroundController : MonoBehaviour
 {
     #region serialize
-    [Tooltip("落下速度")]
+    [Tooltip("地面のモデルのアニメーション時間")]
     [SerializeField]
-    float _fallSpeed = 5.0f;
+    float _groundModelSpeed = 3.0f;
 
-    
-    [Tooltip("落下表現用の背景モデル")]
+    [Tooltip("地面のモデル")]
     [SerializeField]
-    Transform _backgroundModel = default;
+    Transform _groundModel = default;
     
-    [Tooltip("位置リセット用のObject")]
+    [Tooltip("ゲーム終了時の着地地点のObject")]
     [SerializeField]
-    Transform _resetPositionPoint = default;
+    Transform _finishTrans = default;
+
+    [SerializeField]
+    Renderer _background = default;
 
     #endregion
 
     #region private
     Vector3 _originPos;
+    Material _mat;
+    int _propertyId = 0;
     #endregion
 
     private void Awake()
     {
-        _originPos = _backgroundModel.position;
+        _originPos = _groundModel.position;
     }
     private void Start()
     {
-        _backgroundModel.DOMoveY(_resetPositionPoint.position.y, _fallSpeed)
-                        .SetEase(Ease.Linear)
-                        .OnComplete(() =>
-                        {
-                            _backgroundModel.position = _originPos;
-                        })
-                        .SetLoops(-1);
+        _mat = _background.material;
+        _propertyId = Shader.PropertyToID("Vector2_f819a373818e42bd843147b85c47a54d");
+        FallGameManager.Instance.GameStart += Init;
+        FallGameManager.Instance.GameEnd += FinishAnimation;
+    }
+
+    void Init()
+    {
+        _groundModel.position = _originPos;
+        _groundModel.gameObject.SetActive(false);
+        SetScrollSpeed(new Vector2(0f, -0.2f), 0f);
+    }
+
+    void FinishAnimation()
+    {
+        _groundModel.gameObject.SetActive(true);
+        _groundModel.DOMoveY(_finishTrans.position.y - 2.5f, _groundModelSpeed);
+        SetScrollSpeed(new Vector2(0f, -0.25f), _groundModelSpeed, () => 
+        {
+            SetScrollSpeed(new Vector2(0f, 0f), 0f);
+        });
+    }
+
+    void SetScrollSpeed(Vector2 vector, float time, Action action = null)
+    {
+        _mat.DOVector(vector, _propertyId, time)
+            .OnComplete(() => 
+            {
+                action?.Invoke();
+            });
     }
 }
