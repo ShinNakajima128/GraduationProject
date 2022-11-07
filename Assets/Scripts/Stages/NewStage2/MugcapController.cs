@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class MugcapController : MonoBehaviour
@@ -12,8 +13,8 @@ public class MugcapController : MonoBehaviour
     /// <summary>
     /// ‰º‚ª‚é
     /// </summary>
-    public void Down()
+    public IEnumerator DownAsync()
     {
-        transform.DOLocalMove(_movePosition.localPosition, _duration);
+        yield return transform.DOLocalMove(_movePosition.localPosition, _duration).AsyncWaitForCompletion();
     }
 }

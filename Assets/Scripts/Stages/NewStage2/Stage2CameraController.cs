@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Stage2CameraController : MonoBehaviour
@@ -8,8 +9,8 @@ public class Stage2CameraController : MonoBehaviour
     /// <summary>
     /// ƒJƒƒ‰‚ÌŒã‘Ş
     /// </summary>
-    public void Out()
+    public void Out(Action action)
     {
-
+        
     }
 }
