@@ -59,15 +59,18 @@ public class PlayerMove : MonoBehaviour, IMovable
     void OffMove()
     {
         _isMovable = false;
-        gameObject.transform.DOMoveY(_finishTrans.position.y, 3f)
+        gameObject.transform.DOMoveY(_finishTrans.position.y - 3, 1.5f)
                             .OnComplete(() => 
                             {
+                                gameObject.transform.DOMove(new Vector3(0f, 10f,0f), 0f);
+                                gameObject.transform.DOMoveY(_finishTrans.position.y + 5f, 2.0f);
                                 StartCoroutine(FinishAnimation());
                             });
     }
 
     IEnumerator FinishAnimation()
     {
+        yield return new WaitForSeconds(2.0f);
         _anim.Play("Landing");
         yield return new WaitForSeconds(1.0f);
         _anim.Play("Clear");
