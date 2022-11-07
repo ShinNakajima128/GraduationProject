@@ -88,7 +88,11 @@ public class FallGameManager : MonoBehaviour
 
     IEnumerator GameEndCoroutine()
     {
-        yield return new WaitForSeconds(4.0f);
+        TransitionManager.FadeIn(FadeType.Normal, () => 
+        {
+            TransitionManager.FadeOut(FadeType.Normal);
+        });
+        yield return new WaitForSeconds(5.0f);
 
         _informationText.text = "ステージクリア!";
 
@@ -96,7 +100,7 @@ public class FallGameManager : MonoBehaviour
 
         _informationText.text = "";
 
-        yield return StartCoroutine(_player.PlayAllMessageCoroutine());
+       // yield return StartCoroutine(_player.PlayAllMessageCoroutine());
 
         TransitionManager.SceneTransition(SceneType.Lobby);
     }

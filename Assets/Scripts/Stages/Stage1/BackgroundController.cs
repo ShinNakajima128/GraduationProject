@@ -54,14 +54,17 @@ public class BackgroundController : MonoBehaviour
 
     void FinishAnimation()
     {
-        _groundModel.gameObject.SetActive(true);
-        _groundModel.DOMoveY(_finishTrans.position.y - 2.5f, _groundModelSpeed);
-        SetScrollSpeed(new Vector2(0f, -0.25f), _groundModelSpeed, () => 
-        {
-            SetScrollSpeed(new Vector2(0f, 0f), 0f);
-        });
+        StartCoroutine(FinishCoroutine());
     }
 
+    IEnumerator FinishCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        SetScrollSpeed(new Vector2(0f, 0f), 0f);
+        _groundModel.gameObject.SetActive(true);
+        _groundModel.DOMoveY(_finishTrans.position.y + 2.5f, 0);
+    }
     void SetScrollSpeed(Vector2 vector, float time, Action action = null)
     {
         _mat.DOVector(vector, _propertyId, time)
