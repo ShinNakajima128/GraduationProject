@@ -5,6 +5,8 @@ public class Stage2GameManager : MonoBehaviour
     private enum State
     {
         None,
+        ZoomIn,
+        DownMugCap,
         ZoomOut,
         shuffle,
         Select
@@ -25,7 +27,7 @@ public class Stage2GameManager : MonoBehaviour
 
     private void Start()
     {
-        ChengeState(State.ZoomOut);
+        ChengeState(State.ZoomIn);
     }
 
     /// <summary>
@@ -33,15 +35,20 @@ public class Stage2GameManager : MonoBehaviour
     /// </summary>
     private void ChengeState(State next)
     {
+        Debug.Log(next.ToString());
+
         switch (next)
         {
             case State.None:
                 break;
+            case State.ZoomIn:
+                _cameraController.ZoomInRequest(() => ChengeState(State.DownMugCap));
+                break;
+            case State.DownMugCap:
+                _mugcapManager.Setup(() => ChengeState(State.ZoomOut));
+                break;
             case State.ZoomOut:
-                // カメラのズームアウト
-                _cameraController.MoveRequest();
-                // ネズミが入ってるカップを下げる
-                _mugcapManager.Setup(() => ChengeState(State.shuffle));
+                _cameraController.ZoomOutRequest(() => ChengeState(State.shuffle));
                 break;
             case State.shuffle:
                 break;

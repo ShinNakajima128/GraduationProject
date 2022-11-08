@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -13,10 +14,22 @@ public class Stage2CameraController : MonoBehaviour
     private float _duration;
 
     [SerializeField]
-    private Transform _target;
+    private Transform _zoomOutTrans;
 
-    public void MoveRequest()
+    [SerializeField]
+    private Transform _zoomInTrans;
+
+    public void ZoomOutRequest(Action action)
     {
-        transform.DOLocalMove(_target.localPosition, _duration);
+        _camera.transform.DOLocalMove(_zoomOutTrans.localPosition, _duration).
+            SetEase(Ease.Linear).
+            OnComplete(() => action());
+    }
+
+    internal void ZoomInRequest(Action action)
+    {
+        _camera.transform.DOLocalMove(_zoomInTrans.localPosition, _duration).
+            SetEase(Ease.Linear).
+            OnComplete(() => action());
     }
 }

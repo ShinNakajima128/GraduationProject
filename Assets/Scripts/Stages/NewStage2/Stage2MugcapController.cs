@@ -19,6 +19,7 @@ public class Stage2MugcapController : MonoBehaviour
     public void MoveUpRequest(Action action = null)
     {
         transform.DOLocalMove(_targetUpPos.localPosition, _duration).
+            SetEase(Ease.Linear).
             OnComplete(() => action());
     }
 
@@ -28,6 +29,7 @@ public class Stage2MugcapController : MonoBehaviour
     public void MoveDownRequest(Action action = null)
     {
         transform.DOLocalMove(_targetDownPos.localPosition, _duration).
+            SetEase(Ease.Linear).
             OnComplete(() => action());
     }
 }
