@@ -2,47 +2,55 @@ using UnityEngine;
 
 public class Stage2GameManager : MonoBehaviour
 {
-    public enum GameState
+    private enum State
     {
         None,
-        CameraDown,
-        Shuffle,
-        Select,
+        ZoomOut,
+        shuffle,
+        Select
     }
 
     [SerializeField]
-    private MugcapManager _mugcapManager;
+    private Stage2MugcapManager _mugcapManager;
 
     [SerializeField]
-    private Stage2CameraController _cameraCtrl;
+    private Stage2CameraController _cameraController;
 
-    private GameState _state;
+    private State _state;
+
+    private void Awake()
+    {
+        ChengeState(State.None);
+    }
 
     private void Start()
     {
-        ChengeState(GameState.CameraDown);
+        ChengeState(State.ZoomOut);
     }
 
-    private void ChengeState(GameState next)
+    /// <summary>
+    /// ステートの変更
+    /// </summary>
+    private void ChengeState(State next)
     {
         switch (next)
         {
-            case GameState.None:
+            case State.None:
                 break;
-            case GameState.CameraDown:
-                _mugcapManager.DownRequest(() =>
-                {
-                    ChengeState(GameState.Shuffle);
-                });
+            case State.ZoomOut:
+                // カメラのズームアウト
+                _cameraController.MoveRequest();
+                // ネズミが入ってるカップを下げる
+                _mugcapManager.Setup(() => ChengeState(State.shuffle));
                 break;
-            case GameState.Shuffle:
-                _mugcapManager.Shuffle();
+            case State.shuffle:
                 break;
-            case GameState.Select:
+            case State.Select:
                 break;
             default:
                 break;
         }
+
         _state = next;
     }
 }
