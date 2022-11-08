@@ -33,24 +33,22 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
         }
         else
         {
-            var look = Camera.main.transform;
-            _dir = look.forward * _dir.z + look.right * _dir.x;
-            //_dir = Camera.main.transform.TransformDirection(_dir);    // メインカメラを基準に入力方向のベクトルを変換する
-            _dir.y = 0;  // y 軸方向はゼロにして水平方向のベクトルにする
-            Debug.Log(_dir);
             Quaternion targetRotation = Quaternion.LookRotation(_dir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * _turnSpeed);
+            Vector3 velocity = _dir.normalized * _moveSpeed;
+            velocity.y = _rb.velocity.y;
+            _rb.velocity = velocity;
         }
 
-        Vector3 velocity = _dir.normalized * _moveSpeed;
-        velocity.y = _rb.velocity.y;
-        _rb.velocity = velocity;
+        
         CharacterAnimation();
     }
 
     public void SetDirection(Vector3 dir)
     {
         _dir = Vector3.forward * dir.y + Vector3.right * dir.x;
+        _dir = Camera.main.transform.TransformDirection(_dir);    // メインカメラを基準に入力方向のベクトルを変換する
+        _dir.y = 0;  // y 軸方向はゼロにして水平方向のベクトルにする
     }
     void CharacterAnimation()
     {
