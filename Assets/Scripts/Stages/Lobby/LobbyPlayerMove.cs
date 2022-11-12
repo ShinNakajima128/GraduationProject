@@ -17,6 +17,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     Rigidbody _rb;
     Animator _anim;
     Vector3 _dir;
+    bool _isMoving;
     #endregion
 
     private void Awake()
@@ -25,23 +26,30 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
         TryGetComponent(out _anim);
     }
 
+    private void Start()
+    {
+        LobbyManager.Instance.PlayerMove += PlayerMovable;
+    }
+
     private void FixedUpdate()
     {
-        if (_dir == Vector3.zero)
+        if (_isMoving)
         {
-            _rb.velocity = new Vector3(0f, _rb.velocity.y, 0f);
-        }
-        else
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(_dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * _turnSpeed);
-            Vector3 velocity = _dir.normalized * _moveSpeed;
-            velocity.y = _rb.velocity.y;
-            _rb.velocity = velocity;
-        }
+            if (_dir == Vector3.zero)
+            {
+                _rb.velocity = new Vector3(0f, _rb.velocity.y, 0f);
+            }
+            else
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(_dir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * _turnSpeed);
+                Vector3 velocity = _dir.normalized * _moveSpeed;
+                velocity.y = _rb.velocity.y;
+                _rb.velocity = velocity;
+            }
 
-        
-        CharacterAnimation();
+            CharacterAnimation();
+        }
     }
 
     public void SetDirection(Vector3 dir)
@@ -58,5 +66,10 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
             velo.y = 0;
             _anim.SetFloat("Move", velo.magnitude);
         }
+    }
+
+    void PlayerMovable(bool isMove)
+    {
+        _isMoving = isMove;
     }
 }
