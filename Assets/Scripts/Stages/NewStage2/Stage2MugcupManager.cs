@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System;
 using UnityEngine;
 
@@ -15,6 +14,7 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void Initialise(Action action)
     {
+        _mugcups[0].IsInMouse = true;
         _mugcups[0].CupDownRequest(action);
     }
 

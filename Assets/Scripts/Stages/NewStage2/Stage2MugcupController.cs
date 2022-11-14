@@ -12,8 +12,10 @@ public class Stage2MugcupController : MonoBehaviour
     [SerializeField]
     private Transform _downTrans;
 
+    public bool IsInMouse { get; set; } = false;
+
     public void CupDownRequest(Action action)
     {
-        _mugcup.MoveRequest(_downTrans.localPosition, 2f,action);
+        _mugcup.MoveRequest(_downTrans.localPosition, 2f, action);
     }
 }
