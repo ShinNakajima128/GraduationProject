@@ -15,6 +15,17 @@ public enum Stages
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
+    #region serialize
     [SerializeField]
     Stages _currentStage = default;
+
+    [SerializeField]
+    ClockState _currentClockState = ClockState.Zero;
+    #endregion
+    #region private
+    #endregion
+    #region property
+    public Stages CurrentStage => _currentStage;
+    public ClockState CurrentClockState => _currentClockState;
+    #endregion
 }
