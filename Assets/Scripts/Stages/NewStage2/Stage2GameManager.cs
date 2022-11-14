@@ -1,58 +1,68 @@
+using System;
+using UnityChan;
 using UnityEngine;
 
 public class Stage2GameManager : MonoBehaviour
 {
-    private enum State
+    #region Define
+    private enum GameState
     {
         None,
         ZoomIn,
         DownMugCap,
         ZoomOut,
-        shuffle,
+        Shuffle,
         Select
     }
+    #endregion
 
     [SerializeField]
-    private Stage2MugcapManager _mugcapManager;
+    private Stage2CameraController _camera;
 
     [SerializeField]
-    private Stage2CameraController _cameraController;
+    private Stage2MugcupManager _mugcupManager;
 
-    private State _state;
-
-    private void Awake()
-    {
-        ChengeState(State.None);
-    }
+    private GameState _state;
+    private ShuffleFase _currentShuffleFase;
 
     private void Start()
     {
-        ChengeState(State.ZoomIn);
+        ChengeState(GameState.ZoomIn);
+        ChengeFaze((ShuffleFase.One));
+    }
+
+    private void ChengeFaze(ShuffleFase next)
+    {
+        _currentShuffleFase = next;
     }
 
     /// <summary>
     /// ステートの変更
     /// </summary>
-    private void ChengeState(State next)
+    private void ChengeState(GameState next)
     {
         Debug.Log(next.ToString());
 
         switch (next)
         {
-            case State.None:
+            case GameState.None:
                 break;
-            case State.ZoomIn:
-                _cameraController.ZoomInRequest(() => ChengeState(State.DownMugCap));
+            case GameState.ZoomIn:
+                _camera.ZoomRequest(Stage2CameraController.ZoomType.In, () => ChengeState(GameState.DownMugCap));
                 break;
-            case State.DownMugCap:
-                _mugcapManager.Setup(() => ChengeState(State.ZoomOut));
+            case GameState.DownMugCap:
+                _mugcupManager.Initialise(() => ChengeState(GameState.ZoomOut));
                 break;
-            case State.ZoomOut:
-                _cameraController.ZoomOutRequest(() => ChengeState(State.shuffle));
+            case GameState.ZoomOut:
+                _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Shuffle));
                 break;
-            case State.shuffle:
+            case GameState.Shuffle:
+                _mugcupManager.Shuffle(_currentShuffleFase, () =>
+                {
+                    ChengeState(GameState.Select);
+                });
                 break;
-            case State.Select:
+            case GameState.Select:
                 break;
             default:
                 break;

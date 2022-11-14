@@ -19,17 +19,24 @@ public class Stage2CameraController : MonoBehaviour
     [SerializeField]
     private Transform _zoomInTrans;
 
-    public void ZoomOutRequest(Action action)
+    public enum ZoomType
     {
-        _camera.transform.DOLocalMove(_zoomOutTrans.localPosition, _duration).
-            SetEase(Ease.Linear).
-            OnComplete(() => action());
+        In,
+        Out
     }
 
-    internal void ZoomInRequest(Action action)
+    public void ZoomRequest(ZoomType type, Action action = null)
     {
-        _camera.transform.DOLocalMove(_zoomInTrans.localPosition, _duration).
-            SetEase(Ease.Linear).
-            OnComplete(() => action());
+        switch (type)
+        {
+            case ZoomType.In:
+                _camera.transform.DOLocalMove(_zoomInTrans.localPosition, _duration).SetEase(Ease.Linear).OnComplete(() => action());
+                break;
+            case ZoomType.Out:
+                _camera.transform.DOLocalMove(_zoomOutTrans.localPosition, _duration).SetEase(Ease.Linear).OnComplete(() => action());
+                break;
+            default:
+                break;
+        }
     }
 }
