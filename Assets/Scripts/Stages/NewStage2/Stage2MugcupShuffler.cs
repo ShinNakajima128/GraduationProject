@@ -83,10 +83,11 @@ public class Stage2MugcupShuffler : MonoBehaviour
     #region Type2
     private IEnumerator Type2ShuffleAsync(Stage2MugcupController[] mugcups, float duration, Action action)
     {
+        // 入れ替わりが終わったかのフラグ
         var isSwaped1 = false;
         var isSwaped2 = false;
 
-        // 最初は0番にマウスが入ってる
+        // 最初は0番にマウスが入ってる ※現状？？
         var hasMouseIndex = 0;
 
         for (int i = 0; i < _shuffleCount; i++)
@@ -97,9 +98,13 @@ public class Stage2MugcupShuffler : MonoBehaviour
             // 交換するIndex
             var indexes = Type2GetNumber(mugcups.Length, hasMouseIndex);
 
+            // エフェクトの再生
+            PlayEffects(mugcups, indexes.Item1, indexes.Item2);
+
             // 中身の入れ替え
             ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
 
+            // フラグか切り替わるまで、待つ
             while (isSwaped1 || isSwaped2)
             {
                 yield return null;
@@ -107,6 +112,16 @@ public class Stage2MugcupShuffler : MonoBehaviour
         }
 
         action?.Invoke();
+    }
+
+    /// <summary>
+    /// エフェクトの再生
+    /// </summary>
+    private IEnumerator PlayEffects(Stage2MugcupController[] mugcups, int item1, int item2)
+    {
+        mugcups[item1].PlayEffect();
+        mugcups[item2].PlayEffect();
+        yield return null;
     }
 
     private (int, int) Type2GetNumber(int length, int hasMouseIndex)

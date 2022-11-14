@@ -18,4 +18,9 @@ public class Stage2MugcupController : MonoBehaviour
     {
         _mugcup.MoveRequest(_downTrans.localPosition, 2f, action);
     }
+
+    public void PlayEffect()
+    {
+
+    }
 }
