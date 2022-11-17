@@ -50,6 +50,7 @@ public class FallGameManager : MonoBehaviour
     private void Start()
     {
         _originPos = _playerTrans.position;
+        GameManager.UpdateCurrentStage(Stages.Stage1);
         OnGameStart();
     }
 
@@ -100,7 +101,7 @@ public class FallGameManager : MonoBehaviour
             _inGamePanel.SetActive(false);
             TransitionManager.FadeOut(FadeType.Normal);
         });
-        yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(4.5f);
         _finishCamera.Priority = 12;
         yield return new WaitForSeconds(2.5f);
 
