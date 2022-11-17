@@ -33,6 +33,7 @@ public class PlayerMove : MonoBehaviour, IMovable
 
     private void Start()
     {
+        _cc.enabled = false;
         FallGameManager.Instance.GameStart += OnMove;
         FallGameManager.Instance.GameEnd += OffMove;
     }
@@ -53,11 +54,13 @@ public class PlayerMove : MonoBehaviour, IMovable
 
     void OnMove()
     {
+        _cc.enabled = true;
         _isMovable = true;
     }
 
     void OffMove()
     {
+        _cc.enabled = false;
         _isMovable = false;
         gameObject.transform.DOMoveY(_finishTrans.position.y - 3, 1.5f)
                             .OnComplete(() => 
@@ -72,7 +75,7 @@ public class PlayerMove : MonoBehaviour, IMovable
     {
         yield return new WaitForSeconds(2.0f);
         _anim.Play("Landing");
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
         _anim.Play("Clear");
     }
 }
