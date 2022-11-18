@@ -28,6 +28,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera _clockCamera = default;
 
+    [SerializeField]
+    CinemachineInputProvider _provider = default;
+
     [Header("UI")]
     [SerializeField]
     GameObject _stageDescriptionPanel = default;
@@ -45,6 +48,7 @@ public class LobbyManager : MonoBehaviour
     #region property
     public static LobbyManager Instance { get; private set; }
     public static bool IsFirstArrival { get; private set; } = true;
+    public static Stages BeforeStage { get; set; }
     /// <summary> ドアに近づいた時のAction </summary>
     public Action ApproachDoor { get; set; }
     /// <summary> ドアから離れた時のAction </summary>
@@ -62,30 +66,31 @@ public class LobbyManager : MonoBehaviour
     IEnumerator Start()
     {
         SetPlayerPosition(GameManager.Instance.CurrentStage);
+        _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f);
+
         yield return null;
+
+        _provider.enabled = false;
+        PlayerMove?.Invoke(false);
+
+        yield return new WaitForSeconds(1.5f);
 
         if (IsFirstArrival)
         {
-            PlayerMove?.Invoke(false);
             StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage1_End, () =>
             {
-                _clockCamera.Priority = 15;
-                _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, action: () =>
-                {
-                    _clockCamera.Priority = 10;
-                    StartCoroutine(OnPlayerMovable(3.0f));
-                });
+                ClockDirection();
             }));
             IsFirstArrival = false;
         }
+        else if(!GameManager.CheckStageStatus()) //未クリアの時は時計の演出を行う
+        {
+            ClockDirection();
+        }
         else
         {
-            _clockCamera.Priority = 15;
-            _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, action: () =>
-            {
-                _clockCamera.Priority = 10;
-                StartCoroutine(OnPlayerMovable(3.0f));
-            });
+            StartCoroutine(OnPlayerMovable(1.5f));
+            Debug.Log("クリア済みステージ");
         }
     }
     public static void OnStageDescription(SceneType type)
@@ -142,6 +147,21 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(Interval);
 
         PlayerMove?.Invoke(true);
+        _provider.enabled = true;
+    }
+
+    /// <summary>
+    /// カメラ、時計の演出
+    /// </summary>
+    void ClockDirection()
+    {
+        _clockCamera.Priority = 15;
+        _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), action: () =>
+        {
+            GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
+            _clockCamera.Priority = 10;
+            StartCoroutine(OnPlayerMovable(3.0f));
+        });
     }
 }
 [Serializable]
