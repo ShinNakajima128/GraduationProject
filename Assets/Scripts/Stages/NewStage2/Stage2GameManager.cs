@@ -22,6 +22,9 @@ public class Stage2GameManager : MonoBehaviour
     [SerializeField]
     private Stage2MugcupManager _mugcupManager;
 
+    [SerializeField]
+    private Stage2Selector _selector;
+
     private GameState _state;
     private ShuffleFase _currentShuffleFase;
 
@@ -63,6 +66,7 @@ public class Stage2GameManager : MonoBehaviour
                 });
                 break;
             case GameState.Select:
+                _selector.PlaySelect();
                 break;
             default:
                 break;
