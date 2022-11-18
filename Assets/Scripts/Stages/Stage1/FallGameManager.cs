@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cinemachine;
 
 /// <summary>
 /// 落下ゲームの管理を行うマネージャークラス
@@ -18,10 +19,16 @@ public class FallGameManager : MonoBehaviour
     Transform _startTrans = default;
 
     [SerializeField]
+    GameObject _inGamePanel = default;
+
+    [SerializeField]
     Text _informationText = default;
 
     [SerializeField]
     MessagePlayer _player = default;
+
+    [SerializeField]
+    CinemachineVirtualCamera _finishCamera = default;
     #endregion
 
     #region private
@@ -43,6 +50,7 @@ public class FallGameManager : MonoBehaviour
     private void Start()
     {
         _originPos = _playerTrans.position;
+        GameManager.UpdateCurrentStage(Stages.Stage1);
         OnGameStart();
     }
 
@@ -90,17 +98,18 @@ public class FallGameManager : MonoBehaviour
     {
         TransitionManager.FadeIn(FadeType.Normal, () => 
         {
+            _inGamePanel.SetActive(false);
             TransitionManager.FadeOut(FadeType.Normal);
         });
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(4.5f);
+        _finishCamera.Priority = 12;
+        yield return new WaitForSeconds(2.5f);
 
         _informationText.text = "ステージクリア!";
 
         yield return new WaitForSeconds(4.0f);
 
-        _informationText.text = "";
-
-       // yield return StartCoroutine(_player.PlayAllMessageCoroutine());
+        //_informationText.text = "";
 
         TransitionManager.SceneTransition(SceneType.Lobby);
     }
