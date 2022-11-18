@@ -30,7 +30,7 @@ public class LobbyClockController : MonoBehaviour
 
     private void OnValidate()
     {
-        ChangeClockState(_currentClockState);
+        //ChangeClockState(_currentClockState);
     }
 
     void Start()
@@ -38,10 +38,12 @@ public class LobbyClockController : MonoBehaviour
         //StartCoroutine(SecondHandMove());
     }
 
-    public void ChangeClockState(ClockState state, float animTime = 3f, Action action = null)
+    public void ChangeClockState(ClockState state, float animTime = 3f, float derayTime = 4.0f, Action action = null)
     {
         Vector3 hourRotate = default;
         Vector3 secondRotate = default;
+        
+        Debug.Log(state);
 
         switch (state)
         {
@@ -105,15 +107,11 @@ public class LobbyClockController : MonoBehaviour
         _minuteHand.DOLocalRotate(secondRotate, animTime)
             .OnComplete(() => 
             {
-                _currentClockState = state;
+                GameManager.UpdateCurrentClock(state);
                 action?.Invoke();
             })
-            .SetDelay(4.0f);
-
-        
+            .SetDelay(derayTime);
     }
-
-
 
     IEnumerator SecondHandMove()
     {
