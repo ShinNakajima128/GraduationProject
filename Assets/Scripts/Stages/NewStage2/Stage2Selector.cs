@@ -11,10 +11,10 @@ public class Stage2Selector : MonoBehaviour
     private PlayerInput _input;
 
     [SerializeField]
-    private GameObject[] _selectIcons;
+    private Stage2SelectSender _sender;
 
     [SerializeField]
-    private Stage2SelectSender _sender;
+    private GameObject[] _selectIcons;
 
     private int _currentSelectNum = 0;
 

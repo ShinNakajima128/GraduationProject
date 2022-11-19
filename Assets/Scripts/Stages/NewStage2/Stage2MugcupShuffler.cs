@@ -111,7 +111,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
                     var indexes = Type2GetNumber(hasMouseIndex, mugcups.Length);
 
                     // エフェクトの再生
-                    StartCoroutine(PlayEffects(mugcups, duration / _shuffleCounts[1], indexes.Item1, indexes.Item2, () => isSwaped1 = true));
+                    StartCoroutine(PlayEffects(mugcups, duration / _shuffleCounts[1] * 1.5f, indexes.Item1, indexes.Item2, () => isSwaped1 = true));
 
                     // 中身の入れ替え
                     Type2ReplaceForItemOfArray(mugcups, indexes.Item2, indexes.Item1);

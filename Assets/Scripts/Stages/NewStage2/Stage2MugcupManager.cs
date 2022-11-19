@@ -43,7 +43,7 @@ public class Stage2MugcupManager : MonoBehaviour
     /// <summary>
     /// 配列の中身を初期状態に戻る
     /// </summary>
-    public void ResetForArray()
+    public void ResetForArray(Action action = null)
     {
         // ID順にソート
         _mugcups = _mugcups.OrderBy(item => item.ID).ToArray();
@@ -52,6 +52,40 @@ public class Stage2MugcupManager : MonoBehaviour
         for (int index = 0; index < _mugcups.Length; index++)
         {
             _mugcups[index].transform.position = _defaultPositions[index];
+        }
+
+        action?.Invoke();
+    }
+
+    /// <summary>
+    /// 全てのカップをあげる
+    /// </summary>
+    public void OpenAllMugCup(Action action = null)
+    {
+        for (int i = 0; i < _mugcups.Length; i++)
+        {
+            if (i == 5)
+            {
+                _mugcups[i].CupUpRequest(action);
+                continue;
+            }
+            _mugcups[i].CupUpRequest();
+        }
+    }
+
+    /// <summary>
+    /// 全てのカップをさげる
+    /// </summary>
+    public void CloseAllMugCup(Action action = null)
+    {
+        for (int i = 0; i < _mugcups.Length; i++)
+        {
+            if (i == 5)
+            {
+                _mugcups[i].CupDownRequest(action);
+                continue;
+            }
+            _mugcups[i].CupDownRequest();
         }
     }
 
@@ -75,5 +109,18 @@ public class Stage2MugcupManager : MonoBehaviour
             if (_mugcups[i].IsInMouse) return i;
         }
         return -1;
+    }
+
+    /// <summary>
+    /// カップをあげる
+    /// </summary>
+    public void OpenRequest(int index, Action action = null)
+    {
+        _mugcups[index].CupUpRequest(action);
+    }
+
+    public void CloseRequest(int index, Action action = null)
+    {
+        _mugcups[index].CupDownRequest(action);
     }
 }

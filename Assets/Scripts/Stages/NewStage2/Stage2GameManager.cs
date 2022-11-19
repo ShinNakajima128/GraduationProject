@@ -38,7 +38,7 @@ public class Stage2GameManager : MonoBehaviour
     /// </summary>
     private void ChengeState(GameState next)
     {
-        Debug.Log($"ステートを{ next}に変更");
+        Debug.Log($"ステートを{next}に変更");
 
         switch (next)
         {
@@ -76,31 +76,57 @@ public class Stage2GameManager : MonoBehaviour
     /// <summary>
     /// 判定をし、ステートを切り替える
     /// </summary>
-    internal void Judge(int currentSelectNum)
+    internal void Judge(int selectedNumber)
     {
         if (_state != GameState.Select) return;
 
+        // マウスが入っているIndexを取得
         var num = _mugcupManager.GetInMouseCupNumber();
 
-        if (num == currentSelectNum)
+        // アイコンの削除
+        _selector.Stop();
+
+        // 正解時
+        if (num == selectedNumber)
         {
             Debug.Log("成功");
+            // 選んだカップをあげる
+
             if (_currentShuffleFase != ShuffleFase.Three)
             {
-                // シャッフルステートの切り替え
                 _currentShuffleFase++;
-                ChengeState(GameState.Shuffle);
+                // 選択したカップをあげる
+                _mugcupManager.OpenRequest(selectedNumber,() => 
+                {
+                    // 下げた後、ステートを切り替える
+                    _mugcupManager.CloseRequest(selectedNumber,() => ChengeState(GameState.Shuffle));
+                });
             }
-            else if(_currentShuffleFase == ShuffleFase.Three)
+            else if (_currentShuffleFase == ShuffleFase.Three)
             {
                 ChengeState(GameState.GameEnd);
             }
         }
+        // 不正解
         else
         {
             Debug.Log("失敗");
-            _mugcupManager.ResetForArray();
-            ChengeState(GameState.Shuffle);
+            // 全てあげる
+            _mugcupManager.OpenAllMugCup(() =>
+            {
+                Debug.Log("All Open");
+                // 全てあげた後に閉じる
+                _mugcupManager.CloseAllMugCup(() =>
+                {
+                    Debug.Log("All Close");
+                    // 配列のリセット
+                    _mugcupManager.ResetForArray(() =>
+                    {
+                        // ステートの変更
+                        ChengeState(GameState.Shuffle);
+                    });
+                });
+            });
         }
     }
 }

@@ -450,8 +450,8 @@ GameObject:
   m_Component:
   - component: {fileID: 396310277}
   - component: {fileID: 396310276}
-  - component: {fileID: 396310278}
   - component: {fileID: 396310279}
+  - component: {fileID: 396310278}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -472,6 +472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _input: {fileID: 396310278}
+  _sender: {fileID: 396310279}
   _selectIcons:
   - {fileID: 725194576}
   - {fileID: 1458473472}
@@ -479,7 +480,6 @@ MonoBehaviour:
   - {fileID: 190166170}
   - {fileID: 1319966891}
   - {fileID: 1546033649}
-  _sender: {fileID: 396310279}
 --- !u!4 &396310277
 Transform:
   m_ObjectHideFlags: 0

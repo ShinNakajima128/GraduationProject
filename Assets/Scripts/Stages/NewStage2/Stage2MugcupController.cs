@@ -16,9 +16,14 @@ public class Stage2MugcupController : MonoBehaviour
 
     public bool IsInMouse { get; set; } = false;
 
-    public void CupDownRequest(Action action)
+    public void CupDownRequest(Action action = null)
     {
         _mugcup.MoveRequest(_downTrans.localPosition, 2f, action);
+    }
+
+    public void CupUpRequest(Action action = null)
+    {
+        _mugcup.MoveRequest(_upTrans.localPosition, 2f, action);
     }
 
     public void PlayEffect()
