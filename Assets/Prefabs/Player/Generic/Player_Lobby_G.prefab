@@ -4812,9 +4812,10 @@ GameObject:
   - component: {fileID: 7110005239827552803}
   - component: {fileID: 7110005239827552802}
   - component: {fileID: 7110005239827552801}
-  m_Layer: 0
+  - component: {fileID: 3288098507497221362}
+  m_Layer: 8
   m_Name: Player_Lobby_G
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4826,7 +4827,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7956375967782102903}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: -8.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4950,6 +4951,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: c25b6bd4-4d0e-4a75-9497-9b4674874db2
     m_ActionName: Stage2/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4eebcca8-bd83-4cc3-a670-d83589d54d0f
+    m_ActionName: Stage2/SelectDown[/XInputControllerWindows/dpad/right,/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ade9c65b-07f7-4290-92e5-ad65f473e147
+    m_ActionName: Stage2/Enter[/XInputControllerWindows/buttonEast,/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -4981,6 +4990,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6145c77ff1892de4bacc647824626c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3288098507497221362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7956375967782102903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c6a18e5f6d818b4ea2349c2862c3544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _TestEyeType: 0
+  _eyeRenderer: {fileID: 2296935398802106750}
 --- !u!1 &8065782447603781526
 GameObject:
   m_ObjectHideFlags: 0
