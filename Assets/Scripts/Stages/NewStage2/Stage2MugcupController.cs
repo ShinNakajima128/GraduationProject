@@ -12,6 +12,8 @@ public class Stage2MugcupController : MonoBehaviour
     [SerializeField]
     private Transform _downTrans;
 
+    public int ID { get; set; }
+
     public bool IsInMouse { get; set; } = false;
 
     public void CupDownRequest(Action action)

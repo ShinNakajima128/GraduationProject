@@ -18,6 +18,8 @@ public class Stage2Selector : MonoBehaviour
 
     private int _currentSelectNum = 0;
 
+    public bool _canSelected { get; private set; } = false;
+
     private void Awake()
     {
         Intialize();
@@ -50,6 +52,7 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     public void Begin()
     {
+        _canSelected = true;
         _selectIcons[0].SetActive(true);
     }
 
@@ -58,11 +61,11 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     public void Stop()
     {
+        _canSelected = false;
         foreach (var item in _selectIcons)
         {
             item.SetActive(false);
         }
-
         _currentSelectNum = 0;
     }
 
@@ -71,19 +74,20 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     private void Increment(InputAction.CallbackContext callback)
     {
-        if (callback.started)
-        {
-            // 現在のアイコンを非表示に
-            _selectIcons[_currentSelectNum].SetActive(false);
-            // 現在選択しているアイコンを変更
-            _currentSelectNum++;
-            if (_currentSelectNum > 5)
+        if (_canSelected)
+            if (callback.started)
             {
-                _currentSelectNum = 0;
+                // 現在のアイコンを非表示に
+                _selectIcons[_currentSelectNum].SetActive(false);
+                // 現在選択しているアイコンを変更
+                _currentSelectNum++;
+                if (_currentSelectNum > 5)
+                {
+                    _currentSelectNum = 0;
+                }
+                // 選択アイコンの更新
+                _selectIcons[_currentSelectNum].SetActive(true);
             }
-            // 選択アイコンの更新
-            _selectIcons[_currentSelectNum].SetActive(true);
-        }
     }
 
     /// <summary>
@@ -91,19 +95,20 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     private void Decrement(InputAction.CallbackContext callback)
     {
-        if (callback.started)
-        {
-            // 現在のアイコンを非表示に
-            _selectIcons[_currentSelectNum].SetActive(false);
-            // 現在選択しているアイコンを変更
-            _currentSelectNum--;
-            if (_currentSelectNum < 0)
+        if (_canSelected)
+            if (callback.started)
             {
-                _currentSelectNum = 5;
+                // 現在のアイコンを非表示に
+                _selectIcons[_currentSelectNum].SetActive(false);
+                // 現在選択しているアイコンを変更
+                _currentSelectNum--;
+                if (_currentSelectNum < 0)
+                {
+                    _currentSelectNum = 5;
+                }
+                // 選択アイコンの更新
+                _selectIcons[_currentSelectNum].SetActive(true);
             }
-            // 選択アイコンの更新
-            _selectIcons[_currentSelectNum].SetActive(true);
-        }
     }
 
     /// <summary>
@@ -111,9 +116,10 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     private void Enter(InputAction.CallbackContext callback)
     {
-        if (callback.started)
-        {
-            _sender.SendSelectNumber(_currentSelectNum);
-        }
+        if (_canSelected)
+            if (callback.started)
+            {
+                _sender.SendSelectNumber(_currentSelectNum);
+            }
     }
 }

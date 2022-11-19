@@ -53,7 +53,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
             Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCount, () => isSwaped2 = true);
 
             // 配列の中身を入れ替える
-            ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
+            Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
 
             // フラグか切り替わるまで、待つ
             while (!isSwaped1 || !isSwaped2)
@@ -87,21 +87,30 @@ public class Stage2MugcupShuffler : MonoBehaviour
         // 入れ替わりが終わったかのフラグ
         var isSwaped = false;
 
-        // 最初は0番にマウスが入ってる ※現状？？
+        // マウスが入っているカップのIndex
         var hasMouseIndex = 0;
+        // Indexの取得
+        for (int i = 0; i < mugcups.Length; i++)
+        {
+            if (mugcups[i].IsInMouse)
+            {
+                hasMouseIndex = i;
+                break;
+            }
+        }
 
         for (int i = 0; i < _shuffleCount; i++)
         {
             isSwaped = false;
 
             // 交換するIndex
-            var indexes = Type2GetNumber(mugcups.Length, hasMouseIndex);
+            var indexes = Type2GetNumber(ref hasMouseIndex,mugcups.Length);
 
             // エフェクトの再生
             StartCoroutine(PlayEffects(mugcups, indexes.Item1, indexes.Item2, () => isSwaped = true));
 
             // 中身の入れ替え
-            ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
+            Type2ReplaceForItemOfArray(mugcups, indexes.Item2, indexes.Item1);
 
             // フラグか切り替わるまで、待つ
             while (!isSwaped)
@@ -125,7 +134,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
         action?.Invoke();
     }
 
-    private (int, int) Type2GetNumber(int length, int hasMouseIndex)
+    private (int, int) Type2GetNumber(ref int hasMouseIndex, int length)
     {
         var num1 = hasMouseIndex;
         var num2 = UnityEngine.Random.Range(0, length - 1);
@@ -135,18 +144,37 @@ public class Stage2MugcupShuffler : MonoBehaviour
             num2 = UnityEngine.Random.Range(0, length - 1);
         }
 
+        hasMouseIndex = num2;
+
         return (num1, num2);
     }
     #endregion
 
     /// <summary>
-    /// 配列の中身を入れ替える
+    /// 配列の要素を入れ替える
     /// </summary>
-    private void ReplaceForItemOfArray(Stage2MugcupController[] mugcups, int index1, int index2, Action action = null)
+    private void Type1ReplaceForItemOfArray(Stage2MugcupController[] mugcups, int index1, int index2, Action action = null)
     {
         var item = mugcups[index1];
         mugcups[index1] = mugcups[index2];
         mugcups[index2] = item;
+        action?.Invoke();
+    }
+
+    /// <summary>
+    /// 配列の要素を入れ替える
+    /// </summary>
+    private void Type2ReplaceForItemOfArray(Stage2MugcupController[] mugcups, int index1, int index2, Action action = null)
+    {
+        var item = mugcups[index1];
+        var tmpPos = mugcups[index1].gameObject.transform.position;
+
+        mugcups[index1].gameObject.transform.position = mugcups[index2].gameObject.transform.position;
+        mugcups[index1] = mugcups[index2];
+
+        mugcups[index2].gameObject.transform.position = tmpPos;
+        mugcups[index2] = item;
+
         action?.Invoke();
     }
 

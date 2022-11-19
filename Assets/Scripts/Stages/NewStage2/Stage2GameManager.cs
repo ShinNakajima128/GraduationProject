@@ -93,8 +93,9 @@ public class Stage2GameManager : MonoBehaviour
         }
         else
         {
-            ChengeState(GameState.Shuffle);
             Debug.Log("Ž¸”s");
+            ChengeState(GameState.Shuffle);
+            _mugcupManager.ResetForArray();
         }
     }
 }
