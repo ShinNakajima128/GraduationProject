@@ -15,7 +15,8 @@ public enum EffectType
     /// <summary>
     /// 妨害
     /// </summary>
-    Obstacle
+    Obstacle,
+    Swap
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>
