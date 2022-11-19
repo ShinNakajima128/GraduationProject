@@ -23,6 +23,8 @@ public class Stage2MugcupController : MonoBehaviour
 
     public void PlayEffect()
     {
-        EffectManager.PlayEffect(EffectType.Swap, this.transform.position);
+        var pos = this.transform.position;
+        pos.y += 0.5f;
+        EffectManager.PlayEffect(EffectType.Swap, pos);
     }
 }

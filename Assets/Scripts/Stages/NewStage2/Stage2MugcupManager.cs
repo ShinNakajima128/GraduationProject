@@ -51,7 +51,7 @@ public class Stage2MugcupManager : MonoBehaviour
         // À•W‚Ì‰Šú‰»
         for (int index = 0; index < _mugcups.Length; index++)
         {
-            _mugcups[index].gameObject.transform.localPosition = _defaultPositions[index];
+            _mugcups[index].transform.position = _defaultPositions[index];
         }
     }
 

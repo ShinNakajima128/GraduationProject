@@ -24,6 +24,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
                 StartCoroutine(Type2ShuffleAsync(mugcups, duration, action));
                 break;
             case ShuffleFase.Three:
+                StartCoroutine(Type3ShuffleAsync(mugcups, duration, action));
                 break;
             default:
                 break;
@@ -132,6 +133,74 @@ public class Stage2MugcupShuffler : MonoBehaviour
                     // 交換
                     Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[1], () => isSwaped1 = true);
                     Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[1], () => isSwaped2 = true);
+
+                    // 配列の中身を入れ替える
+                    Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
+
+                    // フラグか切り替わるまで、待つ
+                    while (!isSwaped1 || !isSwaped2)
+                    {
+                        yield return null;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        action?.Invoke();
+    }
+
+    private IEnumerator Type3ShuffleAsync(Stage2MugcupController[] mugcups, float duration, Action action)
+    {
+        // 入れ替わりが終わったかのフラグ
+        var isSwaped1 = false;
+
+        // マウスが入っているカップのIndex
+        var hasMouseIndex = 0;
+
+        // シャッフルの処理
+        for (int i = 0; i < _shuffleCounts[1]; i++)
+        {
+            // 終わっているかのフラグ
+            isSwaped1 = false;
+
+            // 交換するIndexの取得
+            var num = UnityEngine.Random.Range(0, 2);
+
+            switch (num)
+            {
+                // 魔法ワープ
+                case 0:
+                    // マウスが入ってるIndexの取得
+                    hasMouseIndex = GetInMouseIndex(mugcups);
+
+                    // 交換するIndexを取得
+                    var indexes = Type2GetNumber(hasMouseIndex, mugcups.Length);
+
+                    // エフェクトの再生
+                    StartCoroutine(PlayEffects(mugcups, duration / _shuffleCounts[2], indexes.Item1, indexes.Item2, () => isSwaped1 = true));
+
+                    // 中身の入れ替え
+                    Type2ReplaceForItemOfArray(mugcups, indexes.Item2, indexes.Item1);
+
+                    // フラグか切り替わるまで、待つ
+                    while (!isSwaped1)
+                    {
+                        yield return null;
+                    }
+                    break;
+                // 物理ワープ
+                case 1:
+                    // 物理ワープ用の新たなフラグ
+                    var isSwaped2 = false;
+
+                    // 交換するカップのIndexを取得
+                    indexes = Type1GetNumber(mugcups.Length);
+
+                    // 交換
+                    Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[2], () => isSwaped1 = true);
+                    Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[2], () => isSwaped2 = true);
 
                     // 配列の中身を入れ替える
                     Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);

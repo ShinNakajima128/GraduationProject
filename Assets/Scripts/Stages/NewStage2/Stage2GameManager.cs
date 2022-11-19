@@ -64,6 +64,7 @@ public class Stage2GameManager : MonoBehaviour
                 _selector.Begin();
                 break;
             case GameState.GameEnd:
+                Debug.Log("Game Clear");
                 break;
             default:
                 break;
@@ -90,12 +91,16 @@ public class Stage2GameManager : MonoBehaviour
                 _currentShuffleFase++;
                 ChengeState(GameState.Shuffle);
             }
+            else if(_currentShuffleFase == ShuffleFase.Three)
+            {
+                ChengeState(GameState.GameEnd);
+            }
         }
         else
         {
             Debug.Log("Ž¸”s");
-            ChengeState(GameState.Shuffle);
             _mugcupManager.ResetForArray();
+            ChengeState(GameState.Shuffle);
         }
     }
 }

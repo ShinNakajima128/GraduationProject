@@ -52,6 +52,7 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     public void Begin()
     {
+        _currentSelectNum = 0;
         _canSelected = true;
         _selectIcons[0].SetActive(true);
     }
