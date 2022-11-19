@@ -22,6 +22,5 @@ public class Stage2MugcupController : MonoBehaviour
     public void PlayEffect()
     {
         EffectManager.PlayEffect(EffectType.Swap, this.transform.position);
-        Debug.Log("エフェクトの再生");
     }
 }

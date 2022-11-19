@@ -118,9 +118,10 @@ public class Stage2MugcupShuffler : MonoBehaviour
     /// </summary>
     private IEnumerator PlayEffects(Stage2MugcupController[] mugcups, int item1, int item2, Action action = null)
     {
+        Debug.Log("Effectの再生");
         mugcups[item1].PlayEffect();
         mugcups[item2].PlayEffect();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
         action?.Invoke();
     }
 
