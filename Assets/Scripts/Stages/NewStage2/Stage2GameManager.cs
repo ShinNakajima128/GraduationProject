@@ -24,6 +24,9 @@ public class Stage2GameManager : MonoBehaviour
     [SerializeField]
     private Stage2Selector _selector;
 
+    [SerializeField]
+    private GameObject _clearPanel;
+
     private GameState _state;
     private ShuffleFase _currentShuffleFase;
 
@@ -64,7 +67,7 @@ public class Stage2GameManager : MonoBehaviour
                 _selector.Begin();
                 break;
             case GameState.GameEnd:
-                Debug.Log("Game Clear");
+                _clearPanel.SetActive(true);
                 break;
             default:
                 break;
@@ -119,12 +122,7 @@ public class Stage2GameManager : MonoBehaviour
                 _mugcupManager.CloseAllMugCup(() =>
                 {
                     Debug.Log("All Close");
-                    // 配列のリセット
-                    _mugcupManager.ResetForArray(() =>
-                    {
-                        // ステートの変更
-                        ChengeState(GameState.Shuffle);
-                    });
+                    ChengeState(GameState.Shuffle);
                 });
             });
         }
