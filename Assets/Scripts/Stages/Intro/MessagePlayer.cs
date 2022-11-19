@@ -100,6 +100,7 @@ public class MessagePlayer : MonoBehaviour
         {
             _actorText.text = t[i].Actor;
             _messageText.text = "";
+            _submitIcon.enabled = false;
 
             //メッセージを一文字ずつ表示
             foreach (var m in t[i].Message)
@@ -111,5 +112,8 @@ public class MessagePlayer : MonoBehaviour
             _submitIcon.enabled = true; //入力を促すアイコンをアクティブにする
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
         }
+
+        _messagePanel.SetActive(false);
+        action?.Invoke();
     }
 }

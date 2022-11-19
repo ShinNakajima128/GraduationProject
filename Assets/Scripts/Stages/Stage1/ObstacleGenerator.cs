@@ -20,11 +20,16 @@ public class ObstacleGenerator : MonoBehaviour
     [SerializeField]
     List<ObstacleController> _obstacleList = new List<ObstacleController>();
     #endregion
+    #region private
+    bool _isInGamed;
+    #endregion
 
     void Start()
     {
-        StartCoroutine(OnGenerate());
+        FallGameManager.Instance.GameStart +=() => StartCoroutine(OnGenerate());
+        FallGameManager.Instance.GameEnd += StopGenerate;
     }
+
     void Generate(int index)
     {
         int randPos = Random.Range(0, _generateTrans.Length);
@@ -37,14 +42,26 @@ public class ObstacleGenerator : MonoBehaviour
     IEnumerator OnGenerate()
     {
         yield return null;
+        _isInGamed = true;
 
-        while (true)
+        while (_isInGamed)
         {
             int rand = Random.Range(0, _obstacleList.Count);
             Generate(rand);
 
             yield return new WaitForSeconds(_generateInterval);
         }
+    }
+    /// <summary>
+    /// アクティブのオブジェクトを全て非アクティブ化し、生成を終了する
+    /// </summary>
+    void StopGenerate()
+    {
+        foreach (var o in _obstacleList)
+        {
+            o.Return();
+        }
+        _isInGamed = false;
     }
 }
 public enum ObstacleType

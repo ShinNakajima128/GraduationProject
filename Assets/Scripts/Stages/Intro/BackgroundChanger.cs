@@ -38,6 +38,10 @@ public class BackgroundChanger : MonoBehaviour
         switch (_state)
         {
             case BackgroundState.panel1:
+                if (!_backgrounds[0].enabled)
+                {
+                    _backgrounds[0].enabled = true;
+                }
                 _backgrounds[1].sprite = background;
                 _backgrounds[1].DOFade(1f, _changeTime)
                                .OnComplete(() => 
@@ -47,6 +51,10 @@ public class BackgroundChanger : MonoBehaviour
                                });
                 break;
             case BackgroundState.panel2:
+                if (!_backgrounds[1].enabled)
+                {
+                    _backgrounds[1].enabled = true;
+                }
                 _backgrounds[0].sprite = background;
                 _backgrounds[1].DOFade(0f, _changeTime)
                                .OnComplete(() =>

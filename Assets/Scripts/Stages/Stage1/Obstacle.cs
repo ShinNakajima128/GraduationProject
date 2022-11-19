@@ -11,6 +11,10 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     ObstacleType _obstacleType = default;
 
+    [Tooltip("回転の種類")]
+    [SerializeField]
+    RotateType _rotateType = default;
+
     [Tooltip("移動速度")]
     [SerializeField]
     float _moveSpeed = 5.0f;
@@ -18,12 +22,16 @@ public class Obstacle : MonoBehaviour
     [Tooltip("非アクティブになるまでの時間")]
     [SerializeField]
     float _vanishTime = 20.0f;
+
+    [SerializeField]
+    GameObject _obstacleObject = default;
     #endregion
 
     #region private
     Rigidbody _rb;
     bool _init = false;
     Vector3 _rotateValue = default;
+    IDamagable _target;
     #endregion
 
     private void OnEnable()
@@ -50,8 +58,13 @@ public class Obstacle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Rotate(_rotateValue);
         _rb.AddForce(Vector3.up * _moveSpeed, ForceMode.Force);
+
+        if (_rotateType == RotateType.None)
+        {
+            return;
+        }
+        transform.Rotate(_rotateValue);
     }
 
     /// <summary>
@@ -61,13 +74,32 @@ public class Obstacle : MonoBehaviour
     IEnumerator OnVanishTimer()
     {
         yield return new WaitForSeconds(_vanishTime);
-        gameObject.SetActive(false);
+        _obstacleObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
-            gameObject.SetActive(false);
+            if (_target == null)
+            {
+                _target = other.GetComponent<IDamagable>();
+            }
+            
+            if (!_target.IsInvincibled)
+            {
+                _target.Damage(1);
+                AudioManager.PlaySE(SEType.Player_Damage);
+                _obstacleObject.SetActive(false);
+                //gameObject.SetActive(false);
+            }
         }
+    }
+
+    enum RotateType
+    {
+        None,
+        Random
     }
 }

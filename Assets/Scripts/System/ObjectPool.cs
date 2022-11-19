@@ -41,7 +41,7 @@ public abstract class ObjectPool<T> : MonoBehaviour
             }
             else
             {
-                Debug.LogError("コンポーネントが見つかりませんでした");
+                //Debug.LogError("コンポーネントが見つかりませんでした");
             }
             
             obj.SetActive(false);
@@ -63,5 +63,17 @@ public abstract class ObjectPool<T> : MonoBehaviour
             }
         }
         Debug.LogError("使用可能なObjectがありませんでした");
+    }
+
+    /// <summary>
+    /// プーリングしたObjectを全て非アクティブにする
+    /// </summary>
+    /// <returns></returns>
+    public void Return()
+    {
+        foreach (var go in _objectList)
+        {
+            go.SetActive(false);
+        }
     }
 }
