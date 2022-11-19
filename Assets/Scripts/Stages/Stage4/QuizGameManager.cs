@@ -39,6 +39,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
     Ease _cameraEase = default;
 
     [Header("Objects")]
+    [Tooltip("クイズコントローラー")]
+    [SerializeField]
+    QuizController _quizCtrl = default;
+
+    [Tooltip("Objectを管理するマネージャー")]
+    [SerializeField]
+    ObjectManager _objectMng = default;
+
     [Tooltip("最初の演出用のトランプ兵")]
     [SerializeField]
     Transform _directionTrumpSoldier = default;
