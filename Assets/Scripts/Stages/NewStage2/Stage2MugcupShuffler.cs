@@ -7,7 +7,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
 {
     [Header("シャッフルの回数")]
     [SerializeField]
-    private int _shuffleCount;
+    private int[] _shuffleCounts;
 
     /// <summary>
     /// シャッフルのリクエスト
@@ -39,7 +39,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
         var isSwaped1 = false;
         var isSwaped2 = false;
 
-        for (int count = 0; count < _shuffleCount; count++)
+        for (int count = 0; count < _shuffleCounts[0]; count++)
         {
             // フラグのリセット
             isSwaped1 = false;
@@ -49,8 +49,8 @@ public class Stage2MugcupShuffler : MonoBehaviour
             var indexes = Type1GetNumber(mugcups.Length);
 
             // 交換の処理
-            Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCount, () => isSwaped1 = true);
-            Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCount, () => isSwaped2 = true);
+            Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[0], () => isSwaped1 = true);
+            Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[0], () => isSwaped2 = true);
 
             // 配列の中身を入れ替える
             Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
@@ -85,37 +85,65 @@ public class Stage2MugcupShuffler : MonoBehaviour
     private IEnumerator Type2ShuffleAsync(Stage2MugcupController[] mugcups, float duration, Action action)
     {
         // 入れ替わりが終わったかのフラグ
-        var isSwaped = false;
+        var isSwaped1 = false;
 
         // マウスが入っているカップのIndex
         var hasMouseIndex = 0;
-        // Indexの取得
-        for (int i = 0; i < mugcups.Length; i++)
+
+        // シャッフルの処理
+        for (int i = 0; i < _shuffleCounts[1]; i++)
         {
-            if (mugcups[i].IsInMouse)
+            // 終わっているかのフラグ
+            isSwaped1 = false;
+
+            // 交換するIndexの取得
+            var num = UnityEngine.Random.Range(0, 2);
+
+            switch (num)
             {
-                hasMouseIndex = i;
-                break;
-            }
-        }
+                // 魔法ワープ
+                case 0:
+                    // マウスが入ってるIndexの取得
+                    hasMouseIndex = GetInMouseIndex(mugcups);
 
-        for (int i = 0; i < _shuffleCount; i++)
-        {
-            isSwaped = false;
+                    // 交換するIndexを取得
+                    var indexes = Type2GetNumber(hasMouseIndex, mugcups.Length);
 
-            // 交換するIndex
-            var indexes = Type2GetNumber(ref hasMouseIndex,mugcups.Length);
+                    // エフェクトの再生
+                    StartCoroutine(PlayEffects(mugcups, duration / _shuffleCounts[1], indexes.Item1, indexes.Item2, () => isSwaped1 = true));
 
-            // エフェクトの再生
-            StartCoroutine(PlayEffects(mugcups, indexes.Item1, indexes.Item2, () => isSwaped = true));
+                    // 中身の入れ替え
+                    Type2ReplaceForItemOfArray(mugcups, indexes.Item2, indexes.Item1);
 
-            // 中身の入れ替え
-            Type2ReplaceForItemOfArray(mugcups, indexes.Item2, indexes.Item1);
+                    // フラグか切り替わるまで、待つ
+                    while (!isSwaped1)
+                    {
+                        yield return null;
+                    }
+                    break;
+                // 物理ワープ
+                case 1:
+                    // 物理ワープ用の新たなフラグ
+                    var isSwaped2 = false;
 
-            // フラグか切り替わるまで、待つ
-            while (!isSwaped)
-            {
-                yield return null;
+                    // 交換するカップのIndexを取得
+                    indexes = Type1GetNumber(mugcups.Length);
+
+                    // 交換
+                    Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[1], () => isSwaped1 = true);
+                    Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[1], () => isSwaped2 = true);
+
+                    // 配列の中身を入れ替える
+                    Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
+
+                    // フラグか切り替わるまで、待つ
+                    while (!isSwaped1 || !isSwaped2)
+                    {
+                        yield return null;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -123,18 +151,33 @@ public class Stage2MugcupShuffler : MonoBehaviour
     }
 
     /// <summary>
+    /// マウスが入っているIndexを取得
+    /// </summary>
+    private int GetInMouseIndex(Stage2MugcupController[] mugcups)
+    {
+        for (int x = 0; x < mugcups.Length; x++)
+        {
+            if (mugcups[x].IsInMouse)
+            {
+                return x;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
     /// エフェクトの再生
     /// </summary>
-    private IEnumerator PlayEffects(Stage2MugcupController[] mugcups, int item1, int item2, Action action = null)
+    private IEnumerator PlayEffects(Stage2MugcupController[] mugcups, float duration, int item1, int item2, Action action = null)
     {
         Debug.Log("Effectの再生");
         mugcups[item1].PlayEffect();
         mugcups[item2].PlayEffect();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(duration);
         action?.Invoke();
     }
 
-    private (int, int) Type2GetNumber(ref int hasMouseIndex, int length)
+    private (int, int) Type2GetNumber(int hasMouseIndex, int length)
     {
         var num1 = hasMouseIndex;
         var num2 = UnityEngine.Random.Range(0, length - 1);
@@ -143,8 +186,6 @@ public class Stage2MugcupShuffler : MonoBehaviour
         {
             num2 = UnityEngine.Random.Range(0, length - 1);
         }
-
-        hasMouseIndex = num2;
 
         return (num1, num2);
     }

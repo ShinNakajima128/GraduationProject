@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class Stage2MugcupManager : MonoBehaviour
@@ -9,6 +10,11 @@ public class Stage2MugcupManager : MonoBehaviour
     [SerializeField]
     private Stage2MugcupShuffler _shuffler;
 
+    [Header("最初にネズミが入ってる場所(Index)")]
+    [SerializeField]
+    private int _indexOfInMouse;
+
+    [Header("シャッフルの時間")]
     [SerializeField]
     private float _shuffleTime;
 
@@ -18,10 +24,10 @@ public class Stage2MugcupManager : MonoBehaviour
     {
         _defaultPositions = new Vector3[_mugcups.Length];
 
-        for (int i = 0; i < _mugcups.Length; i++)
+        for (int index = 0; index < _mugcups.Length; index++)
         {
-            _mugcups[i].ID = i;
-            _defaultPositions[i] = _mugcups[i].transform.position;
+            _mugcups[index].ID = index;
+            _defaultPositions[index] = _mugcups[index].transform.position;
         }
     }
 
@@ -30,8 +36,8 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void Initialise(Action action)
     {
-        _mugcups[0].IsInMouse = true;
-        _mugcups[0].CupDownRequest(action);
+        _mugcups[_indexOfInMouse].IsInMouse = true;
+        _mugcups[_indexOfInMouse].CupDownRequest(action);
     }
 
     /// <summary>
@@ -39,21 +45,13 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void ResetForArray()
     {
-        Debug.Log("Reset");
-        for (int i = 0; i < _mugcups.Length; i++)
+        // ID順にソート
+        _mugcups = _mugcups.OrderBy(item => item.ID).ToArray();
+
+        // 座標の初期化
+        for (int index = 0; index < _mugcups.Length; index++)
         {
-            for (int x = 0; x < _mugcups.Length; x++)
-            {
-                if (i == _mugcups[x].ID)
-                {
-                    var tmp = _mugcups[i];
-                    _mugcups[i] = _mugcups[x];
-                    _mugcups[x] = tmp;
-                    break;
-                }
-            }
-            // 座標のリセット
-            _mugcups[i].gameObject.transform.position = _defaultPositions[i];
+            _mugcups[index].gameObject.transform.localPosition = _defaultPositions[index];
         }
     }
 
