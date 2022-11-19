@@ -17,4 +17,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     [SerializeField]
     Stages _currentStage = default;
+
+    internal void Judge(int currentSelectNum)
+    {
+        throw new NotImplementedException();
+    }
 }

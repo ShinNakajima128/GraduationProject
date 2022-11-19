@@ -755,6 +755,8 @@ GameObject:
   m_Component:
   - component: {fileID: 396310277}
   - component: {fileID: 396310276}
+  - component: {fileID: 396310278}
+  - component: {fileID: 396310279}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -774,7 +776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d937f1b571e1a140a872554f834ddbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _input: {fileID: 0}
+  _input: {fileID: 396310278}
   _selectIcons:
   - {fileID: 725194576}
   - {fileID: 1458473472}
@@ -782,6 +784,7 @@ MonoBehaviour:
   - {fileID: 190166170}
   - {fileID: 1319966891}
   - {fileID: 1546033649}
+  _sender: {fileID: 396310279}
 --- !u!4 &396310277
 Transform:
   m_ObjectHideFlags: 0
@@ -797,6 +800,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &396310278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396310275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: cbfc9062f7e19c6478621389149f8fb8,
+    type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Stage2
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &396310279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396310275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ba9e6a03d0d14408cdbecba10f1496, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _manager: {fileID: 209915778}
 --- !u!1 &404306533
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,6 +979,7 @@ MonoBehaviour:
   - {fileID: 1371540652}
   - {fileID: 923814428}
   _shuffler: {fileID: 538057525}
+  _shuffleTime: 8
 --- !u!114 &538057525
 MonoBehaviour:
   m_ObjectHideFlags: 0

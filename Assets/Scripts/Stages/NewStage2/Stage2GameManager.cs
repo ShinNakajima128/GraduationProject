@@ -1,5 +1,3 @@
-using System;
-using UnityChan;
 using UnityEngine;
 
 public class Stage2GameManager : MonoBehaviour
@@ -12,7 +10,8 @@ public class Stage2GameManager : MonoBehaviour
         DownMugCap,
         ZoomOut,
         Shuffle,
-        Select
+        Select,
+        GameEnd
     }
     #endregion
 
@@ -31,12 +30,7 @@ public class Stage2GameManager : MonoBehaviour
     private void Start()
     {
         ChengeState(GameState.ZoomIn);
-        ChengeFaze((ShuffleFase.One));
-    }
-
-    private void ChengeFaze(ShuffleFase next)
-    {
-        _currentShuffleFase = next;
+        _currentShuffleFase = ShuffleFase.One;
     }
 
     /// <summary>
@@ -44,7 +38,7 @@ public class Stage2GameManager : MonoBehaviour
     /// </summary>
     private void ChengeState(GameState next)
     {
-        Debug.Log(next.ToString());
+        Debug.Log($"ステートを{ next}に変更");
 
         switch (next)
         {
@@ -60,18 +54,47 @@ public class Stage2GameManager : MonoBehaviour
                 _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Shuffle));
                 break;
             case GameState.Shuffle:
+                _selector.Stop();
                 _mugcupManager.Shuffle(_currentShuffleFase, () =>
                 {
                     ChengeState(GameState.Select);
                 });
                 break;
             case GameState.Select:
-                _selector.PlaySelect();
+                _selector.Begin();
+                break;
+            case GameState.GameEnd:
                 break;
             default:
                 break;
         }
 
         _state = next;
+    }
+
+    /// <summary>
+    /// 判定をし、ステートを切り替える
+    /// </summary>
+    internal void Judge(int currentSelectNum)
+    {
+        if (_state != GameState.Select) return;
+
+        var num = _mugcupManager.GetInMouseCupNumber();
+
+        if (num == currentSelectNum)
+        {
+            Debug.Log("成功");
+            if (_currentShuffleFase != ShuffleFase.Three)
+            {
+                // シャッフルステートの切り替え
+                _currentShuffleFase++;
+                ChengeState(GameState.Shuffle);
+            }
+        }
+        else
+        {
+            ChengeState(GameState.Shuffle);
+            Debug.Log("失敗");
+        }
     }
 }

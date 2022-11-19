@@ -9,6 +9,9 @@ public class Stage2MugcupManager : MonoBehaviour
     [SerializeField]
     private Stage2MugcupShuffler _shuffler;
 
+    [SerializeField]
+    private float _shuffleTime;
+
     /// <summary>
     /// シャッフル前の状態にする
     /// </summary>
@@ -23,6 +26,20 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void Shuffle(ShuffleFase fase, Action action = null)
     {
-        _shuffler.ShuffleRequest(fase, _mugcups, 2f, action);
+        Debug.Log("シャッフル開始のリクエスト");
+        _shuffler.ShuffleRequest(fase, _mugcups, _shuffleTime, action);
+    }
+
+    /// <summary>
+    /// ネズミが入っている番号を返す
+    /// </summary>
+    public int GetInMouseCupNumber()
+    {
+        for (int i = 0; i < _mugcups.Length; i++)
+        {
+            // ネズミが入っている番号を返す
+            if (_mugcups[i].IsInMouse) return i;
+        }
+        return -1;
     }
 }
