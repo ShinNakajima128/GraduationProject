@@ -221,6 +221,107 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
             ]
         },
         {
+            ""name"": ""Stage2"",
+            ""id"": ""5cf81c34-c6bd-4cbd-9cb8-c30ce02615d6"",
+            ""actions"": [
+                {
+                    ""name"": ""SelectUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""c25b6bd4-4d0e-4a75-9497-9b4674874db2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""4eebcca8-bd83-4cc3-a670-d83589d54d0f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Enter"",
+                    ""type"": ""Button"",
+                    ""id"": ""ade9c65b-07f7-4290-92e5-ad65f473e147"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ee783c0a-679c-4b55-800f-71703278bb1f"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""08a910c6-49b0-4cdf-a434-81bfa5ea560f"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""649a6933-57b5-4b1e-9423-50736f641852"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab228518-f8d0-4d2b-96ad-39320cf75e8c"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7550997b-f2b1-40a8-87fb-1b499b154f31"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Enter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea197805-209a-440f-b49e-34e6bd936136"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Enter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""Stage3"",
             ""id"": ""14910024-ca5c-4732-84f4-38130f8ef1ba"",
             ""actions"": [
@@ -395,6 +496,67 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UIInput"",
+            ""id"": ""3947145d-1e27-45f9-85f0-c16f202b6c28"",
+            ""actions"": [
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6627b80-bdf7-4b14-b8ee-c880af5f1a70"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""cf9470d0-3a31-4a67-adae-5121235eb7ee"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a048f618-65d2-4a9a-a807-7803bfa6c256"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""32ab7013-669d-4ad0-9760-151597f16d30"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ff7a7cc-7c8f-43c2-aa3e-9fd50952e2cf"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -406,12 +568,20 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Stage1
         m_Stage1 = asset.FindActionMap("Stage1", throwIfNotFound: true);
         m_Stage1_Move = m_Stage1.FindAction("Move", throwIfNotFound: true);
+        // Stage2
+        m_Stage2 = asset.FindActionMap("Stage2", throwIfNotFound: true);
+        m_Stage2_SelectUp = m_Stage2.FindAction("SelectUp", throwIfNotFound: true);
+        m_Stage2_SelectDown = m_Stage2.FindAction("SelectDown", throwIfNotFound: true);
+        m_Stage2_Enter = m_Stage2.FindAction("Enter", throwIfNotFound: true);
         // Stage3
         m_Stage3 = asset.FindActionMap("Stage3", throwIfNotFound: true);
         m_Stage3_Move = m_Stage3.FindAction("Move", throwIfNotFound: true);
         m_Stage3_Throw = m_Stage3.FindAction("Throw", throwIfNotFound: true);
         m_Stage3_ToLeft = m_Stage3.FindAction("ToLeft", throwIfNotFound: true);
         m_Stage3_ToRight = m_Stage3.FindAction("ToRight", throwIfNotFound: true);
+        // UIInput
+        m_UIInput = asset.FindActionMap("UIInput", throwIfNotFound: true);
+        m_UIInput_Submit = m_UIInput.FindAction("Submit", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -542,6 +712,55 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     }
     public Stage1Actions @Stage1 => new Stage1Actions(this);
 
+    // Stage2
+    private readonly InputActionMap m_Stage2;
+    private IStage2Actions m_Stage2ActionsCallbackInterface;
+    private readonly InputAction m_Stage2_SelectUp;
+    private readonly InputAction m_Stage2_SelectDown;
+    private readonly InputAction m_Stage2_Enter;
+    public struct Stage2Actions
+    {
+        private @PlayerControls m_Wrapper;
+        public Stage2Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SelectUp => m_Wrapper.m_Stage2_SelectUp;
+        public InputAction @SelectDown => m_Wrapper.m_Stage2_SelectDown;
+        public InputAction @Enter => m_Wrapper.m_Stage2_Enter;
+        public InputActionMap Get() { return m_Wrapper.m_Stage2; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Stage2Actions set) { return set.Get(); }
+        public void SetCallbacks(IStage2Actions instance)
+        {
+            if (m_Wrapper.m_Stage2ActionsCallbackInterface != null)
+            {
+                @SelectUp.started -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnSelectUp;
+                @SelectUp.performed -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnSelectUp;
+                @SelectUp.canceled -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnSelectUp;
+                @SelectDown.started -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnSelectDown;
+                @SelectDown.performed -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnSelectDown;
+                @SelectDown.canceled -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnSelectDown;
+                @Enter.started -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnEnter;
+                @Enter.performed -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnEnter;
+                @Enter.canceled -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnEnter;
+            }
+            m_Wrapper.m_Stage2ActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @SelectUp.started += instance.OnSelectUp;
+                @SelectUp.performed += instance.OnSelectUp;
+                @SelectUp.canceled += instance.OnSelectUp;
+                @SelectDown.started += instance.OnSelectDown;
+                @SelectDown.performed += instance.OnSelectDown;
+                @SelectDown.canceled += instance.OnSelectDown;
+                @Enter.started += instance.OnEnter;
+                @Enter.performed += instance.OnEnter;
+                @Enter.canceled += instance.OnEnter;
+            }
+        }
+    }
+    public Stage2Actions @Stage2 => new Stage2Actions(this);
+
     // Stage3
     private readonly InputActionMap m_Stage3;
     private IStage3Actions m_Stage3ActionsCallbackInterface;
@@ -598,6 +817,39 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         }
     }
     public Stage3Actions @Stage3 => new Stage3Actions(this);
+
+    // UIInput
+    private readonly InputActionMap m_UIInput;
+    private IUIInputActions m_UIInputActionsCallbackInterface;
+    private readonly InputAction m_UIInput_Submit;
+    public struct UIInputActions
+    {
+        private @PlayerControls m_Wrapper;
+        public UIInputActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Submit => m_Wrapper.m_UIInput_Submit;
+        public InputActionMap Get() { return m_Wrapper.m_UIInput; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIInputActions set) { return set.Get(); }
+        public void SetCallbacks(IUIInputActions instance)
+        {
+            if (m_Wrapper.m_UIInputActionsCallbackInterface != null)
+            {
+                @Submit.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnSubmit;
+                @Submit.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnSubmit;
+                @Submit.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnSubmit;
+            }
+            m_Wrapper.m_UIInputActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Submit.started += instance.OnSubmit;
+                @Submit.performed += instance.OnSubmit;
+                @Submit.canceled += instance.OnSubmit;
+            }
+        }
+    }
+    public UIInputActions @UIInput => new UIInputActions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -607,11 +859,21 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
     }
+    public interface IStage2Actions
+    {
+        void OnSelectUp(InputAction.CallbackContext context);
+        void OnSelectDown(InputAction.CallbackContext context);
+        void OnEnter(InputAction.CallbackContext context);
+    }
     public interface IStage3Actions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
         void OnToLeft(InputAction.CallbackContext context);
         void OnToRight(InputAction.CallbackContext context);
+    }
+    public interface IUIInputActions
+    {
+        void OnSubmit(InputAction.CallbackContext context);
     }
 }
