@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,9 +15,12 @@ public class Stage2Selector : MonoBehaviour
     [SerializeField]
     private GameObject[] _selectIcons;
 
+    [SerializeField]
+    private Stage2CameraController _cameraCtrl;
+
     private int _currentSelectNum = 0;
 
-    public bool _canSelected { get; private set; } = false;
+    public bool _canSelect { get; private set; } = false;
 
     private void Awake()
     {
@@ -53,7 +55,7 @@ public class Stage2Selector : MonoBehaviour
     public void Begin()
     {
         _currentSelectNum = 0;
-        _canSelected = true;
+        _canSelect = true;
         _selectIcons[0].SetActive(true);
     }
 
@@ -62,7 +64,7 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        _canSelected = false;
+        _canSelect = false;
         foreach (var item in _selectIcons)
         {
             item.SetActive(false);
@@ -75,7 +77,7 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     private void Increment(InputAction.CallbackContext callback)
     {
-        if (_canSelected)
+        if (_canSelect)
             if (callback.started)
             {
                 // 現在のアイコンを非表示に
@@ -96,7 +98,7 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     private void Decrement(InputAction.CallbackContext callback)
     {
-        if (_canSelected)
+        if (_canSelect)
             if (callback.started)
             {
                 // 現在のアイコンを非表示に
@@ -117,9 +119,11 @@ public class Stage2Selector : MonoBehaviour
     /// </summary>
     private void Enter(InputAction.CallbackContext callback)
     {
-        if (_canSelected)
+        if (_canSelect)
             if (callback.started)
             {
+                // 選択したカップに夜
+                _cameraCtrl.SelectZoom(_currentSelectNum, 2f);
                 _sender.SendSelectNumber(_currentSelectNum);
             }
     }

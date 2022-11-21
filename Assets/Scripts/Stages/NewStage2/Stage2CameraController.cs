@@ -7,6 +7,13 @@ using UnityEngine;
 /// </summary>
 public class Stage2CameraController : MonoBehaviour
 {
+    public enum ZoomType
+    {
+        In,
+        Out
+    }
+
+
     [SerializeField]
     private Camera _camera;
 
@@ -19,10 +26,12 @@ public class Stage2CameraController : MonoBehaviour
     [SerializeField]
     private Transform _zoomInTrans;
 
-    public enum ZoomType
+    [SerializeField]
+    private Transform[] _zoonPositions;
+
+    public void SelectZoom(int index, float duration)
     {
-        In,
-        Out
+        _camera.transform.DOMove(_zoonPositions[index].position, duration);
     }
 
     public void ZoomRequest(ZoomType type, Action action = null)
