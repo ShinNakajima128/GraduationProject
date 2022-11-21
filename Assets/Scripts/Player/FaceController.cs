@@ -1,33 +1,72 @@
+using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EyeTypes
+public enum FaceType
 {
-    Default, /// デフォルト.
-    Angry, /// 怒ってる.
-    Blink, /// 瞬き.
-    Close, /// 閉じている.
-    Open, /// 見開いている.
-    Dizzy, /// フラフラ.
-    Happy, /// 嬉しい.
-    Hmm, /// ふーん.
-    NUM, /// 目の種類数. 
+    Default,
+    Blink,
+    Smile,
+    Damage,
+    Angry,
+    Fancy,
+    Cry,
+    Rotation
 }
 
+public enum EyeType
+{
+    Default, /// デフォルト
+    HerfEye, /// 半目
+    Close_Default, /// 閉じ目:通常
+    Close_Smile, /// 閉じ目:笑顔
+    Close_Damage, /// 閉じ目:ダメ―ジ
+    Fancy, /// 空想、注視
+    Angry, /// 怒り
+    Close_Cry, /// 閉じ目:悲しみ
+    NUM, /// 目の種類数
+}
+public enum MouseType
+{
+    Default, /// デフォルト
+    Negative, /// 不満、ネガティブ
+    Surprise, /// 驚き
+    Smile, /// 笑顔
+    Thinking, /// 考える
+    NUM /// 口の種類数
+}
 public class FaceController : MonoBehaviour
 {
     #region serialize
+    [Header("variables")]
     [SerializeField]
-    EyeTypes _TestEyeType = default;
+    FaceType _testFaceType = default;
 
     [SerializeField]
-    Renderer _eyeRenderer = default;
+    float _blinkInterval = 1.5f;
+
+    [SerializeField]
+    float _blinkSwitchTime = 0.03f;
+
+    [SerializeField]
+    float _testInterval = 1.5f;
+
+    [SerializeField]
+    Face[] _faceTypes = default;
+
+    [Header("Renderer")]
+    [SerializeField]
+    Renderer _faceRenderer = default;
     #endregion
+
     #region private
-    Dictionary<EyeTypes, Vector2> _eyeTypeDic = new Dictionary<EyeTypes, Vector2>();
+    Dictionary<EyeType, Vector2> _eyeTypeDic = new Dictionary<EyeType, Vector2>();
+    Dictionary<MouseType, Vector2> _mouseTypeDic = new Dictionary<MouseType, Vector2>();
     Material _eyeMat;
+    Material _mouseMat;
+    bool _isBlinking = false;
     bool _init = false;
     #endregion
     #region property
@@ -37,35 +76,156 @@ public class FaceController : MonoBehaviour
     {
         if (_init)
         {
-            ChangeEyeType(_TestEyeType);
+            ChangeFaceType(_testFaceType);
         }
     }
     private void Awake()
     {
-        int count = 0;
+        int eyeCount = 0;
+        
         for (int i = 0; i < 4; i++)
         {
             for (int n = 0; n < 2; n++)
             {
-                _eyeTypeDic.Add((EyeTypes)count, new Vector2(n * 0.5f, i * - 0.25f));
-                //Debug.Log($"offset{(EyeTypes)count} x:{n * 0.5f}, y { i * -0.25f}");
-                count++;
+                _eyeTypeDic.Add((EyeType)eyeCount, new Vector2(n * 0.5f, i * - 0.25f));
+                eyeCount++;
             }
         }
-        _eyeMat = _eyeRenderer.materials[1];
+        
+        int mouseCount = 0;
+        
+        for (int i = 0; i < 4; i++)
+        {
+            for (int n = 0; n < 2; n++)
+            {
+                if (mouseCount >= (int)MouseType.NUM)
+                {
+                    break;
+                }
+
+                _mouseTypeDic.Add((MouseType)mouseCount, new Vector2(n * 0.5f, i * -0.25f));
+                mouseCount++;
+            }
+        }
+        _eyeMat = _faceRenderer.materials[1];
+        _mouseMat = _faceRenderer.materials[2];
         _init = true;
     }
 
-    public void ChangeEyeType(EyeTypes type)
+    //private IEnumerator Start()
+    //{
+    //    while (true)
+    //    {
+    //        yield return StartCoroutine(TestFaceAnimation());
+    //    }
+    //}
+    /// <summary>
+    /// 表情を変更
+    /// </summary>
+    /// <param name="type"> 表情の種類 </param>
+    public void ChangeFaceType(FaceType type)
     {
-        _eyeMat.SetTextureOffset("_MainTex", GetEyeOffset(type));
-        _eyeRenderer.materials[1] = _eyeMat;
+        //瞬きの時は瞬き用の処理を実行
+        if (type == FaceType.Blink)
+        {
+            _isBlinking = true;
+
+            StartCoroutine(BlinkCoroutine());
+        }
+        else
+        {
+            _isBlinking = false;
+            var face = _faceTypes.FirstOrDefault(f => f.FaceType == type);
+
+            ChangeEyeType(face.EyeType);
+            ChangeMouseType(face.MouseType);
+        }
     }
 
-    Vector2 GetEyeOffset(EyeTypes type)
+    void ChangeEyeType(EyeType type)
+    {
+        _eyeMat.SetTextureOffset("_MainTex", GetEyeOffset(type));
+        _faceRenderer.materials[1] = _eyeMat;
+    }
+
+    void ChangeMouseType(MouseType type)
+    {
+        _mouseMat.SetTextureOffset("_MainTex", GetMouseOffset(type));
+        _faceRenderer.materials[1] = _mouseMat;
+    }
+
+    Vector2 GetEyeOffset(EyeType type)
     {
         var v = _eyeTypeDic.FirstOrDefault(x => x.Key == type).Value;
 
         return v;
     }
+    Vector2 GetMouseOffset(MouseType type)
+    {
+        var v = _mouseTypeDic.FirstOrDefault(x => x.Key == type).Value;
+
+        return v;
+    }
+
+    IEnumerator BlinkCoroutine()
+    {
+        float timer;
+
+        //瞬きの処理のループ
+        while (_isBlinking)
+        {
+            yield return new WaitForSeconds(_blinkSwitchTime);
+
+            ChangeEyeType(EyeType.HerfEye);
+
+            yield return new WaitForSeconds(_blinkSwitchTime);
+
+            ChangeEyeType(EyeType.Close_Default);
+
+            yield return new WaitForSeconds(_blinkSwitchTime);
+
+            ChangeEyeType(EyeType.HerfEye);
+
+            yield return new WaitForSeconds(_blinkSwitchTime);
+
+            ChangeEyeType(EyeType.Default);
+            
+            //ここで指定した瞬きの秒数の間、処理を待機
+            timer = 0;
+            while (_isBlinking && timer < _blinkInterval)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+        }
+    }
+
+    IEnumerator TestFaceAnimation()
+    {
+        yield return new WaitForSeconds(_testInterval);
+
+        ChangeFaceType(FaceType.Smile);
+        yield return new WaitForSeconds(_testInterval);
+        ChangeFaceType(FaceType.Blink);
+        yield return new WaitForSeconds(_testInterval * 2);
+        ChangeFaceType(FaceType.Cry);
+        yield return new WaitForSeconds(_testInterval);
+        ChangeFaceType(FaceType.Damage);
+        yield return new WaitForSeconds(_testInterval);
+        ChangeFaceType(FaceType.Angry);
+        yield return new WaitForSeconds(_testInterval);
+        ChangeFaceType(FaceType.Fancy);
+        yield return new WaitForSeconds(_testInterval);
+        ChangeFaceType(FaceType.Default);
+        yield return new WaitForSeconds(_testInterval);
+    }
 }
+
+[Serializable]
+public struct Face
+{
+    public FaceType FaceType;
+    public EyeType EyeType;
+    public MouseType MouseType;
+}
+
