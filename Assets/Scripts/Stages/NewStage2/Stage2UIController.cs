@@ -6,7 +6,8 @@ public class Stage2UIController : MonoBehaviour
     {
         GameClear,
         Miss,
-        Clear
+        Clear,
+        Play
     }
 
     [SerializeField]
@@ -17,6 +18,9 @@ public class Stage2UIController : MonoBehaviour
 
     [SerializeField]
     private GameObject _clearPanel;
+
+    [SerializeField]
+    private GameObject _playPanel;
 
     [SerializeField]
     private RectTransform _pointerImage;
@@ -54,7 +58,7 @@ public class Stage2UIController : MonoBehaviour
     /// <summary>
     /// UIÇÃï\é¶êÿÇËë÷Ç¶
     /// </summary>
-    public void ChengeActivate(UIType type, bool active)
+    public void ChengeActive(UIType type, bool active)
     {
         switch (type)
         {
@@ -66,6 +70,9 @@ public class Stage2UIController : MonoBehaviour
                 break;
             case UIType.Clear:
                 _clearPanel.SetActive(active);
+                break;
+            case UIType.Play:
+                _playPanel.SetActive(active);
                 break;
             default:
                 break;

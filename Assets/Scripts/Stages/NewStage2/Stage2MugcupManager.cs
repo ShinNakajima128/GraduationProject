@@ -20,6 +20,8 @@ public class Stage2MugcupManager : MonoBehaviour
 
     private Vector3[] _defaultPositions;
 
+    public bool IsOpened { get; set; }
+
     private void Awake()
     {
         _defaultPositions = new Vector3[_mugcups.Length];
@@ -62,6 +64,9 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void OpenAllMugCup(Action action = null)
     {
+        Debug.Log("All Opened");
+        IsOpened = true;
+
         for (int i = 0; i < _mugcups.Length; i++)
         {
             if (i == 5)
@@ -78,11 +83,19 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void CloseAllMugCup(Action action = null)
     {
+        Debug.Log("All Closed");
+
         for (int i = 0; i < _mugcups.Length; i++)
         {
-            if (i == 5)
+            if (i == _mugcups.Length - 1)
             {
-                _mugcups[i].CupDownRequest(action);
+                //  最後のカップが下がりきった時
+                _mugcups[i].CupDownRequest(() => 
+                {
+                    action();
+                    IsOpened = false;
+                });
+
                 continue;
             }
             _mugcups[i].CupDownRequest();
@@ -92,7 +105,7 @@ public class Stage2MugcupManager : MonoBehaviour
     /// <summary>
     /// シャッフル
     /// </summary>
-    public void Shuffle(ShuffleFase fase, Action action = null)
+    public void BeginShuffle(ShuffleFase fase, Action action = null)
     {
         Debug.Log("シャッフル開始のリクエスト");
         _shuffler.ShuffleRequest(fase, _mugcups, _shuffleTime, action);
@@ -116,11 +129,17 @@ public class Stage2MugcupManager : MonoBehaviour
     /// </summary>
     public void OpenRequest(int index, Action action = null)
     {
+        Debug.Log($"{index}のカップをあげる");
         _mugcups[index].CupUpRequest(action);
     }
 
+    /// <summary>
+    /// カップを下げる
+    /// </summary>
     public void CloseRequest(int index, Action action = null)
     {
+        IsOpened = true;
+        Debug.Log($"{index}のカップをさげる");
         _mugcups[index].CupDownRequest(action);
     }
 }

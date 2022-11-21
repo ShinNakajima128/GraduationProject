@@ -29,8 +29,12 @@ public class Stage2CameraController : MonoBehaviour
     [SerializeField]
     private Transform[] _zoonPositions;
 
+    public bool IsZoomed { get; set; } = false;
+
     public void SelectZoom(int index, float duration)
     {
+        Debug.Log($"ƒJƒƒ‰‚ð{index}‚ÉˆÚ“®");
+        IsZoomed = true;
         _camera.transform.DOMove(_zoonPositions[index].position, duration);
     }
 
@@ -39,9 +43,11 @@ public class Stage2CameraController : MonoBehaviour
         switch (type)
         {
             case ZoomType.In:
+                IsZoomed = true;
                 _camera.transform.DOLocalMove(_zoomInTrans.localPosition, _duration).SetEase(Ease.Linear).OnComplete(() => action());
                 break;
             case ZoomType.Out:
+                IsZoomed = false;
                 _camera.transform.DOLocalMove(_zoomOutTrans.localPosition, _duration).SetEase(Ease.Linear).OnComplete(() => action());
                 break;
             default:

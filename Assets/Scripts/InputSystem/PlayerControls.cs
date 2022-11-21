@@ -250,6 +250,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PointerMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""97964740-0d87-4fd8-a9c5-5ead4fb19282"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -318,6 +327,72 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Enter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3412da19-c0e3-4d4d-aada-7d55d4bbb967"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""25bce9ac-d04d-49c5-aa23-1d9dda11e1bc"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""0a93786f-23dd-49e6-821c-f7a0dba37ee9"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ca8d9b2b-6c02-420d-9799-f1c4af7f93e7"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""2efb85fb-5a0d-4ae4-8e6a-73c7cf18c3ae"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""102fe259-a6a1-40d6-8243-144b8c171455"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -573,6 +648,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Stage2_SelectUp = m_Stage2.FindAction("SelectUp", throwIfNotFound: true);
         m_Stage2_SelectDown = m_Stage2.FindAction("SelectDown", throwIfNotFound: true);
         m_Stage2_Enter = m_Stage2.FindAction("Enter", throwIfNotFound: true);
+        m_Stage2_PointerMove = m_Stage2.FindAction("PointerMove", throwIfNotFound: true);
         // Stage3
         m_Stage3 = asset.FindActionMap("Stage3", throwIfNotFound: true);
         m_Stage3_Move = m_Stage3.FindAction("Move", throwIfNotFound: true);
@@ -718,6 +794,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Stage2_SelectUp;
     private readonly InputAction m_Stage2_SelectDown;
     private readonly InputAction m_Stage2_Enter;
+    private readonly InputAction m_Stage2_PointerMove;
     public struct Stage2Actions
     {
         private @PlayerControls m_Wrapper;
@@ -725,6 +802,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @SelectUp => m_Wrapper.m_Stage2_SelectUp;
         public InputAction @SelectDown => m_Wrapper.m_Stage2_SelectDown;
         public InputAction @Enter => m_Wrapper.m_Stage2_Enter;
+        public InputAction @PointerMove => m_Wrapper.m_Stage2_PointerMove;
         public InputActionMap Get() { return m_Wrapper.m_Stage2; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -743,6 +821,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Enter.started -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnEnter;
                 @Enter.performed -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnEnter;
                 @Enter.canceled -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnEnter;
+                @PointerMove.started -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnPointerMove;
+                @PointerMove.performed -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnPointerMove;
+                @PointerMove.canceled -= m_Wrapper.m_Stage2ActionsCallbackInterface.OnPointerMove;
             }
             m_Wrapper.m_Stage2ActionsCallbackInterface = instance;
             if (instance != null)
@@ -756,6 +837,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Enter.started += instance.OnEnter;
                 @Enter.performed += instance.OnEnter;
                 @Enter.canceled += instance.OnEnter;
+                @PointerMove.started += instance.OnPointerMove;
+                @PointerMove.performed += instance.OnPointerMove;
+                @PointerMove.canceled += instance.OnPointerMove;
             }
         }
     }
@@ -864,6 +948,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnSelectUp(InputAction.CallbackContext context);
         void OnSelectDown(InputAction.CallbackContext context);
         void OnEnter(InputAction.CallbackContext context);
+        void OnPointerMove(InputAction.CallbackContext context);
     }
     public interface IStage3Actions
     {

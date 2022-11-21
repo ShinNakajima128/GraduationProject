@@ -40,18 +40,42 @@ public class Stage2GameManager : MonoBehaviour
 
     private void Start()
     {
-        _input.actions["Enter"].started += GoToShuffle;
+        _input.actions["Enter"].started += OnEnter;
         ChengeState(GameState.ZoomIn);
         _currentShuffleFase = ShuffleFase.One;
     }
 
-    private void GoToShuffle(InputAction.CallbackContext context)
+    // 〇ボタンor左クリックが押された時
+    private void OnEnter(InputAction.CallbackContext context)
     {
-        if (_state == GameState.Wait)
-        {
-            // 全部下げた後、シャッフル開始
-            _mugcupManager.CloseAllMugCup(() => ChengeState(GameState.Shuffle));
-        }
+        if (context.started)
+            switch (_state)
+            {
+                case GameState.ZoomIn:
+                    break;
+                case GameState.DownMugCap:
+                    break;
+                case GameState.ZoomOut:
+                    break;
+                case GameState.Shuffle:
+                    break;
+                case GameState.Select:
+                    break;
+                case GameState.Wait:
+                    if (_camera.IsZoomed is true)
+                    {
+                        _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Shuffle));
+                    }
+                    else
+                    {
+                        ChengeState(GameState.Shuffle);
+                    }
+                    break;
+                case GameState.GameEnd:
+                    break;
+                default:
+                    break;
+            }
     }
 
     /// <summary>
@@ -74,15 +98,21 @@ public class Stage2GameManager : MonoBehaviour
                 _mouse.OnAnimation(MouseState.CloseEar, 2f);
                 break;
             case GameState.ZoomOut:
-                _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Shuffle));
+                _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Wait));
+                break;
+            case GameState.Wait:
+                // スタートパネルの表示
+                _uiCtrl.ChengeActive(Stage2UIController.UIType.Play,true);
                 break;
             case GameState.Shuffle:
+                // スタートパネルの非表示
+                _uiCtrl.ChengeActive(Stage2UIController.UIType.Play, false);
                 // UIの非表示
                 _uiCtrl.SetDisable();
                 // 選択機能の停止
                 _selector.Stop();
                 // シャッフルに移行の処理
-                _mugcupManager.Shuffle(_currentShuffleFase, () =>
+                _mugcupManager.BeginShuffle(_currentShuffleFase, () =>
                 {
                     ChengeState(GameState.Select);
                 });
@@ -90,8 +120,7 @@ public class Stage2GameManager : MonoBehaviour
             case GameState.Select:
                 _selector.Begin();
                 break;
-            case GameState.Wait:
-                break;
+            
             case GameState.GameEnd:
                 break;
             default:
@@ -111,7 +140,7 @@ public class Stage2GameManager : MonoBehaviour
         // マウスが入っているIndexを取得
         var num = _mugcupManager.GetInMouseCupNumber();
 
-        // アイコンの削除
+        // 選択アイコンの削除
         _selector.Stop();
 
         // 正解時
@@ -133,6 +162,7 @@ public class Stage2GameManager : MonoBehaviour
     {
         Debug.Log("正解");
 
+        _uiCtrl.ChengeActive(Stage2UIController.UIType.Clear, true);
         // マウスを起き上がる
         _mouse.OnAnimation(MouseState.WakeUp, 0.5f);
 
@@ -140,27 +170,29 @@ public class Stage2GameManager : MonoBehaviour
         {
             // フェーズの切り替え
             _currentShuffleFase++;
-
             // 選択したカップをあげる
             _mugcupManager.OpenRequest(selectedNumber, () =>
             {
-                // マウスをねかせる
+                // アニメーション
                 _mouse.OnAnimation(MouseState.CloseEar, 0.5f);
                 // UIの表示
-                _uiCtrl.ChengeActivate(Stage2UIController.UIType.Clear, true);
+                _uiCtrl.ChengeActive(Stage2UIController.UIType.Clear, true);
                 // 下げた後、ステートを切り替える
                 _mugcupManager.CloseRequest(selectedNumber, () =>
                 {
-                    ChengeState(GameState.Wait);
-                }
-                );
+                    // ズームしていたら、ズームアウトしてからフェーズを変える
+                    if (_camera.IsZoomed is true)
+                    {
+                        _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Wait));
+                    }
+                });
             });
         }
         else if (_currentShuffleFase == ShuffleFase.Three)
         {
             _mugcupManager.OpenRequest(num);
             // UIの表示
-            _uiCtrl.ChengeActivate(Stage2UIController.UIType.GameClear, true);
+            _uiCtrl.ChengeActive(Stage2UIController.UIType.GameClear, true);
             ChengeState(GameState.GameEnd);
         }
     }
@@ -172,6 +204,7 @@ public class Stage2GameManager : MonoBehaviour
     {
         Debug.Log("失敗");
 
+        _uiCtrl.ChengeActive(Stage2UIController.UIType.Miss, true);
         // ネズミが起き上がる
         _mouse.OnAnimation(MouseState.WakeUp, 1f);
         // 全てあげる
@@ -181,15 +214,16 @@ public class Stage2GameManager : MonoBehaviour
             _mouse.OnAnimation(MouseState.CloseEar, 1f);
 
             // UIの表示
-            _uiCtrl.ChengeActivate(Stage2UIController.UIType.Miss, true);
+            _uiCtrl.ChengeActive(Stage2UIController.UIType.Miss, true);
 
-            Debug.Log("All Open");
             // 全てあげた後に閉じる
             _mugcupManager.CloseAllMugCup(() =>
             {
-                Debug.Log("All Close");
-
-                ChengeState(GameState.Wait);
+                // ズームしていたら、ズームアウトしてからフェーズを変える
+                if (_camera.IsZoomed is true)
+                {
+                    _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Wait));
+                }
             });
         });
     }
