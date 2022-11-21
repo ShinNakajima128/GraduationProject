@@ -66,6 +66,22 @@ public class DorMouse : MonoBehaviour
         }
         _anim.PlayInFixedTime(state.ToString());
     }
+
+    /// <summary>
+    /// ”­Œ©‚ÌSE‚ğÄ¶
+    /// </summary>
+    void PlayFindSE()
+    {
+        try
+        {
+            AudioManager.PlaySE(SEType.Finding);
+        }
+        catch
+        {
+            Debug.LogError("AudioManager‚ªHierarchy‚É‚È‚¢‚½‚ßAÄ¶‚Å‚«‚Ü‚¹‚ñ");
+        }
+    }
+
     IEnumerator WakeUpMouseCoroutine()
     {
         yield return new WaitForSeconds(1f);

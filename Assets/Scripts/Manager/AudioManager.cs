@@ -43,7 +43,8 @@ public enum SEType
     /// <summary> アイテム:カウントアップ </summary>
     Item_Countup,
     /// <summary> アイテム:紙が飛び散る </summary>
-    Object_Scatter
+    Object_Scatter,
+    Finding
 
 }
 public enum VOICEType
