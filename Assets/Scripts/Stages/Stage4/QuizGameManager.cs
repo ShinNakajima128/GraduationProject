@@ -57,10 +57,13 @@ public class QuizGameManager : StageGame<QuizGameManager>
     #endregion
     #region private
     #endregion
+    #region public
+    public override event Action GameSetUp;
+    public override event Action GameStart;
+    public override event Action GamePause;
+    public override event Action GameEnd;
+    #endregion
     #region property
-    public override Action GameStart { get; set; }
-    public override Action GamePause { get; set; }
-    public override Action GameEnd { get; set; }
     #endregion
 
     protected override void Start()
@@ -101,9 +104,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
         yield return new WaitForSeconds(1.5f);
 
+        //yield return StartCoroutine(); QuizManagerのお題表示処理
+        
         action?.Invoke();
         _informationText.text = "";
-        StartCoroutine(InGameCoroutine());
     }
 
     protected override IEnumerator GameEndCoroutine(Action action = null)
@@ -113,11 +117,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
     IEnumerator InGameCoroutine()
     {
-        bool isAnswerSelect;
+        bool isAnswerPhase;
 
         for (int i = 0; i < _quizNum; i++)
         {
-            isAnswerSelect = false;
+            isAnswerPhase = false;
+            OnGameSetUp();
 
             if (i > 0)
             {
@@ -128,7 +133,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     {
                         Viewing(() =>
                         {
-                            isAnswerSelect = true;
+                            isAnswerPhase = true;
                         });
                     });
                 });
@@ -138,10 +143,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 //ゲームの配置のセットアップ処理をここに記述
                 Viewing(() =>
                 {
-                    isAnswerSelect = true;
+                    isAnswerPhase = true;
                 });
             }
-            yield return new WaitUntil(() => isAnswerSelect); //プレイヤーの選択を待つ
+            yield return new WaitUntil(() => isAnswerPhase); //選択肢が表示されるのを待機
+
+            yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, (QuizType)i));
         }
     }
     void Viewing(Action action = null)
@@ -154,5 +161,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
                         action?.Invoke();
                         Debug.Log("クイズ表示");
                     });
+    }
+
+    public override void OnGameSetUp()
+    {
+        GameSetUp?.Invoke();
     }
 }
