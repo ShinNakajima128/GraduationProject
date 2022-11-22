@@ -12,6 +12,11 @@ using Cinemachine;
 public class FallGameManager : MonoBehaviour
 {
     #region selialize
+    [Header("Variable")]
+    [SerializeField]
+    int _targetCount = 10;
+
+    [Header("Objects")]
     [SerializeField]
     Transform _playerTrans = default;
 
@@ -35,12 +40,17 @@ public class FallGameManager : MonoBehaviour
     Vector3 _originPos;
     #endregion
 
+    #region events
+    public event Action GameStart;
+    public event Action<IEffectable> GetItem;
+    public event Action GamePause;
+    public event Action GameEnd;
+    public event Action ClearDirection;
+    #endregion
+
     #region property
     public static FallGameManager Instance { get; private set; }
-    public Action GameStart { get; set; }
-    public Action<IEffectable> GetItem { get; set; }
-    public Action GamePause { get; set; }
-    public Action GameEnd { get; set; }
+    public int TargetCount => _targetCount;
     #endregion
 
     private void Awake()
@@ -101,10 +111,12 @@ public class FallGameManager : MonoBehaviour
             _inGamePanel.SetActive(false);
             TransitionManager.FadeOut(FadeType.Normal);
         });
+        _informationText.gameObject.transform.DOLocalMoveY(300, 0f);
         yield return new WaitForSeconds(4.5f);
         _finishCamera.Priority = 12;
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2f);
 
+        ClearDirection?.Invoke();
         _informationText.text = "ステージクリア!";
 
         yield return new WaitForSeconds(4.0f);

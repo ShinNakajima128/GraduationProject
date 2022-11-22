@@ -2188,6 +2188,7 @@ GameObject:
   - component: {fileID: 3749895016044665686}
   - component: {fileID: 3749895016044665684}
   - component: {fileID: 3749895016044665674}
+  - component: {fileID: 2005977277859383329}
   m_Layer: 8
   m_Name: Player_Stage1_G
   m_TagString: Player
@@ -2361,6 +2362,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _finishTrans: {fileID: 0}
+--- !u!114 &2005977277859383329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092404783612470785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c6a18e5f6d818b4ea2349c2862c3544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _testFaceType: 0
+  _blinkInterval: 2.5
+  _blinkSwitchTime: 0.03
+  _testInterval: 1.5
+  _faceTypes:
+  - FaceType: 0
+    EyeType: 0
+    MouseType: 0
+  - FaceType: 2
+    EyeType: 6
+    MouseType: 3
+  - FaceType: 3
+    EyeType: 4
+    MouseType: 1
+  - FaceType: 4
+    EyeType: 6
+    MouseType: 4
+  - FaceType: 5
+    EyeType: 5
+    MouseType: 2
+  - FaceType: 6
+    EyeType: 7
+    MouseType: 4
+  - FaceType: 7
+    EyeType: 3
+    MouseType: 2
+  _faceRenderer: {fileID: 5278719235194972168}
 --- !u!1 &4129510418623155936
 GameObject:
   m_ObjectHideFlags: 0
