@@ -76,7 +76,6 @@ public class LobbyManager : MonoBehaviour
         {
             yield return null;
 
-
             _provider.enabled = false;
             PlayerMove?.Invoke(false);
 
@@ -105,6 +104,11 @@ public class LobbyManager : MonoBehaviour
                     Debug.Log("クリア済みステージ");
                 }
             }
+        }
+        else
+        {
+            _provider.enabled = true;
+            PlayerMove?.Invoke(true);
         }
     }
 
