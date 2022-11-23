@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// バラの木のコンポーネント
+/// </summary>
 public class RoseTree : MonoBehaviour
 {
     #region serialize
@@ -17,7 +20,6 @@ public class RoseTree : MonoBehaviour
     #endregion
     #region private
     Rose[] _roses;
-    
     #endregion
     #region property
     public int RedRoseCount => _roses.Count(r => r.CurrentRoseType == RoseType.Red);

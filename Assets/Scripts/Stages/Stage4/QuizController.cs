@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UniRx;
 
 /// <summary>
@@ -14,6 +15,9 @@ public class QuizController : MonoBehaviour
     #region serialize
     [SerializeField]
     int _answerTime = 10;
+
+    [SerializeField]
+    float _goToNextPhaseInterval = 2.5f;
 
     [Header("UI")]
     [SerializeField]
@@ -40,12 +44,26 @@ public class QuizController : MonoBehaviour
     {
         foreach (var b in _choiceButtonList)
         {
-            b.Button.onClick.AddListener(() =>
+            //ボタンにカーソルが合った時のイベントを登録
+            b.Button.gameObject.TryGetComponent<EventTrigger>(out var trigger);
+
+            var selectEntry = new EventTrigger.Entry();
+            selectEntry.eventID = EventTriggerType.Select;
+
+            selectEntry.callback.AddListener(eventData => 
             {
                 _playerChoiceValue = b.ChoiceAnswerValue;
+            });
+            trigger.triggers.Add(selectEntry);
+
+            //ボタン選択時の処理を登録
+            b.Button.onClick.AddListener(() =>
+            {
                 _isChoiced = true;
             });
         }
+        EventSystem.current.firstSelectedGameObject.GetComponent<Button>().Select();
+        _choicePanel.SetActive(false);
     }
 
     /// <summary>
@@ -54,11 +72,12 @@ public class QuizController : MonoBehaviour
     /// <param name="manager"></param>
     /// <param name="type"></param>
     /// <returns></returns>
-    public IEnumerator OnChoicePhaseCoroutine(ObjectManager manager, QuizType type)
+    public IEnumerator OnChoicePhaseCoroutine(ObjectManager manager, QuizType type, Action<int> callback)
     {
         //選択状態のフラグをリセット
         _isChoiced = false;
         _choicePanel.SetActive(true);
+
         float timer = 0;
 
         switch (type)
@@ -98,16 +117,19 @@ public class QuizController : MonoBehaviour
         if (Judge())
         {
             _questionText.text = "正解！";
+            callback?.Invoke(1);
         }
         else
         {
             _questionText.text = $"不正解… 正解は{_currentAnswerValue}";
+            callback?.Invoke(0);
         }
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(_goToNextPhaseInterval);
 
         _questionText.text = "";
         _AnswerTimeText.text = "";
+        EventSystem.current.firstSelectedGameObject.GetComponent<Button>().Select();
         _choicePanel.SetActive(false);
     }
 
@@ -117,8 +139,9 @@ public class QuizController : MonoBehaviour
     /// <returns> 判定結果 </returns>
     public bool Judge()
     {
-        if (!_isChoiced) return false; //時間内に選択していなかったら不正解
+        //if (!_isChoiced) return false; //時間内に選択していなかったら不正解
 
+        Debug.Log($"正解:{_currentAnswerValue}, プレイヤーの解答:{_playerChoiceValue}");
         return _currentAnswerValue == _playerChoiceValue; //正解と解答を比較した真偽を返す
     }
 

@@ -9,6 +9,7 @@ public class ObjectManager : MonoBehaviour
 {
     #region serialize
     [Header("Objects")]
+    [Tooltip("Sceneã‚É”z’u‚µ‚Ä‚ ‚é–Ø")]
     [SerializeField]
     RoseTree[] _trees = default;
     #endregion
