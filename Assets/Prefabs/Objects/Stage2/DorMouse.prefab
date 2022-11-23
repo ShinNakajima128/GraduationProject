@@ -63,6 +63,37 @@ Transform:
   m_Father: {fileID: 8836631104264043249}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -56.147205, y: 180, z: -90}
+--- !u!1 &773879409781983303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3243180923738611314}
+  m_Layer: 0
+  m_Name: EffectPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3243180923738611314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773879409781983303}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.0532, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8836631104264043249}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &873911249925956927
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,6 +318,7 @@ Transform:
   m_Children:
   - {fileID: 1422797655403605359}
   - {fileID: 1569279701552360685}
+  - {fileID: 3243180923738611314}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -385,13 +417,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e1dd78a8fd3c24e96cd69337f53269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _earAnimTime: 1
-  _wakeTime: 1
   _interval: 1.5
+  _effectTrans: {fileID: 3243180923738611314}
   _mouseMaterials:
   - {fileID: 2100000, guid: 5a4f29f9c32f4da4f88d371c1e61472a, type: 2}
   - {fileID: 2100000, guid: e395aba2edae9d145bf919ed728a00bc, type: 2}
   - {fileID: 2100000, guid: 9559f7d6d44a083449807df539db2aff, type: 2}
+  _debugMode: 0
 --- !u!1 &6015128248957790462
 GameObject:
   m_ObjectHideFlags: 0

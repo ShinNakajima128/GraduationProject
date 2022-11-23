@@ -14,6 +14,9 @@ public class DorMouse : MonoBehaviour
     [SerializeField]
     float _interval = 1.5f;
 
+    [SerializeField]
+    Transform _effectTrans = default;
+
     [Header("Material")]
     [Tooltip("ネズミの表情を変更する用のMaterial")]
     [SerializeField]
@@ -75,6 +78,7 @@ public class DorMouse : MonoBehaviour
         try
         {
             AudioManager.PlaySE(SEType.Finding);
+            EffectManager.PlayEffect(EffectType.DorMouse_Find, _effectTrans.position);
         }
         catch
         {
