@@ -10,4 +10,9 @@ public class LobbyPlayerController : PlayerBase
     #endregion
     #region property
     #endregion
+
+    private void Start()
+    {
+        _fc.ChangeFaceType(FaceType.Blink);
+    }
 }
