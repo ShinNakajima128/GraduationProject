@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public enum FaceType
 {
@@ -45,7 +46,8 @@ public class FaceController : MonoBehaviour
     FaceType _testFaceType = default;
 
     [SerializeField]
-    float _blinkInterval = 1.5f;
+    [Range(3.0f, 5.0f)]
+    int _blinkMaxInterval = 5;
 
     [SerializeField]
     float _blinkSwitchTime = 0.03f;
@@ -170,7 +172,7 @@ public class FaceController : MonoBehaviour
     IEnumerator BlinkCoroutine()
     {
         float timer;
-
+        float rand;
         //瞬きの処理のループ
         while (_isBlinking)
         {
@@ -192,7 +194,8 @@ public class FaceController : MonoBehaviour
             
             //ここで指定した瞬きの秒数の間、処理を待機
             timer = 0;
-            while (_isBlinking && timer < _blinkInterval)
+            rand = UnityEngine.Random.Range(3, _blinkMaxInterval);
+            while (_isBlinking && timer < rand)
             {
                 timer += Time.deltaTime;
                 yield return null;
