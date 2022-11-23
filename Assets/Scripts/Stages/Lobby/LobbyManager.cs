@@ -76,6 +76,7 @@ public class LobbyManager : MonoBehaviour
         {
             yield return null;
 
+
             _provider.enabled = false;
             PlayerMove?.Invoke(false);
 
@@ -83,24 +84,30 @@ public class LobbyManager : MonoBehaviour
 
             if (IsFirstArrival)
             {
+                Debug.Log("Test");
+
                 StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage1_End, () =>
                 {
                     ClockDirection();
                 }));
                 IsFirstArrival = false;
             }
-            else if (!GameManager.CheckStageStatus()) //未クリアの時は時計の演出を行う
+            else 
             {
-                ClockDirection();
-            }
-            else
-            {
-                StartCoroutine(OnPlayerMovable(1.5f));
-                Debug.Log("クリア済みステージ");
+                //未クリアの時は時計の演出を行う
+                if (!GameManager.CheckStageStatus())
+                {
+                    ClockDirection();
+                }
+                else
+                {
+                    StartCoroutine(OnPlayerMovable(1.5f));
+                    Debug.Log("クリア済みステージ");
+                }
             }
         }
-        PlayerMove?.Invoke(true);
     }
+
     public static void OnStageDescription(SceneType type)
     {
         Instance._stageDescriptionPanel.SetActive(true);

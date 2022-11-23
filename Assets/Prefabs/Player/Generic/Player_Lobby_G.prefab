@@ -5002,8 +5002,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c6a18e5f6d818b4ea2349c2862c3544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _TestEyeType: 0
-  _eyeRenderer: {fileID: 2296935398802106750}
+  _testFaceType: 0
+  _blinkInterval: 1.5
+  _blinkSwitchTime: 0.03
+  _testInterval: 1.5
+  _faceTypes:
+  - FaceType: 0
+    EyeType: 0
+    MouseType: 0
+  - FaceType: 2
+    EyeType: 3
+    MouseType: 3
+  - FaceType: 3
+    EyeType: 4
+    MouseType: 1
+  - FaceType: 4
+    EyeType: 6
+    MouseType: 4
+  - FaceType: 5
+    EyeType: 5
+    MouseType: 2
+  - FaceType: 6
+    EyeType: 7
+    MouseType: 4
+  _faceRenderer: {fileID: 2296935398802106750}
 --- !u!1 &8065782447603781526
 GameObject:
   m_ObjectHideFlags: 0

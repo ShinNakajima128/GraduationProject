@@ -261,7 +261,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bacea2a3c6ffd034b950d2bae1d9f263, type: 2}
   - {fileID: 11400000, guid: c15d494fd9f0bdd4eb4606f080b08f49, type: 2}
   _flowTime: 0.05
-  _messagePanel: {fileID: 7212509088412788654}
+  _messagePanelFadeTime: 0.3
+  _messagePanelCanvasGroup: {fileID: 9302814361711268}
   _actorText: {fileID: 7212509086770939666}
   _messageText: {fileID: 7212509087645101657}
   _submitIcon: {fileID: 7212509088761214040}
@@ -535,6 +536,7 @@ GameObject:
   - component: {fileID: 7212509087898063546}
   - component: {fileID: 7212509087898063544}
   - component: {fileID: 7212509087898063545}
+  - component: {fileID: 9302814361711268}
   m_Layer: 5
   m_Name: MessagePanel
   m_TagString: Untagged
@@ -603,6 +605,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &9302814361711268
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7212509087898063547}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &7212509088412788654
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +632,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7212509088412788653
 RectTransform:
   m_ObjectHideFlags: 0
