@@ -40,6 +40,10 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField]
     Stage[] _stageDatas = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -68,30 +72,34 @@ public class LobbyManager : MonoBehaviour
         SetPlayerPosition(GameManager.Instance.CurrentStage);
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f);
 
-        yield return null;
-
-        _provider.enabled = false;
-        PlayerMove?.Invoke(false);
-
-        yield return new WaitForSeconds(1.5f);
-
-        if (IsFirstArrival)
+        if (!_debugMode)
         {
-            StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage1_End, () =>
+            yield return null;
+
+            _provider.enabled = false;
+            PlayerMove?.Invoke(false);
+
+            yield return new WaitForSeconds(1.5f);
+
+            if (IsFirstArrival)
+            {
+                StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage1_End, () =>
+                {
+                    ClockDirection();
+                }));
+                IsFirstArrival = false;
+            }
+            else if (!GameManager.CheckStageStatus()) //未クリアの時は時計の演出を行う
             {
                 ClockDirection();
-            }));
-            IsFirstArrival = false;
+            }
+            else
+            {
+                StartCoroutine(OnPlayerMovable(1.5f));
+                Debug.Log("クリア済みステージ");
+            }
         }
-        else if(!GameManager.CheckStageStatus()) //未クリアの時は時計の演出を行う
-        {
-            ClockDirection();
-        }
-        else
-        {
-            StartCoroutine(OnPlayerMovable(1.5f));
-            Debug.Log("クリア済みステージ");
-        }
+        PlayerMove?.Invoke(true);
     }
     public static void OnStageDescription(SceneType type)
     {
