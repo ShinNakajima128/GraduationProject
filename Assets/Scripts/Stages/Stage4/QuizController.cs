@@ -210,22 +210,6 @@ public enum QuizType
 public class ChoiceButton
 {
     public Button Button;
-    public GamepadButtonType GamepadButtonType;
     public Text ChoiceText;
     public int ChoiceAnswerValue;
-
-    public bool IsButtonInputed 
-    { 
-        get 
-        {
-            return GamepadButtonType switch
-            {
-                GamepadButtonType.A => UIInput.A,
-                GamepadButtonType.B => UIInput.B,
-                GamepadButtonType.X => UIInput.X,
-                GamepadButtonType.Y => UIInput.Y,
-                _ => false,
-            };
-        } 
-    }
 }
