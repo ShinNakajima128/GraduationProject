@@ -1,31 +1,17 @@
+using DG.Tweening;
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    private float _speed;
+    private Transform _stopPoint;
 
     [SerializeField]
-    private Vector3 _stopPoint;
+    private float _duration;
 
     public void MoveRequest(Action action = null)
     {
-        StartCoroutine(MoveAsync(action));
-    }
-
-    private IEnumerator MoveAsync(Action action = null)
-    {
-        while (this.transform.position.z > _stopPoint.z)
-        {
-            var pos = this.transform.position;
-            pos.z -= _speed;
-            this.transform.position = pos;
-            yield return null;
-        }
-        // ˆÚ“®‚ªI‚í‚Á‚½Žž
-        action();
-        yield return null;
+        transform.DOMove(_stopPoint.position, _duration).OnComplete(() => action());
     }
 }

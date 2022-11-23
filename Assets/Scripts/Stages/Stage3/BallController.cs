@@ -7,6 +7,8 @@ public class BallController : MonoBehaviour, IThrowable
     [SerializeField]
     private float _moveSpeed;
 
+    private bool _isMove = false;
+
     private Rigidbody _rb;
     #endregion
 
@@ -31,13 +33,23 @@ public class BallController : MonoBehaviour, IThrowable
 
     #region Public Fucntion
     /// <summary>
+    /// ç¿ïWà⁄ìÆÇÃìØä˙
+    /// </summary>
+    public void SyncMovedTransorm(float addValue)
+    {
+        var pos = transform.position;
+        pos.x += addValue;
+        transform.position = pos;
+    }
+
+    /// <summary>
     /// ìäÇ∞ÇÈ
     /// </summary>
     void IThrowable.Throw(Vector3 pos, Quaternion dir)
     {
         this.transform.position = pos;
         this.transform.rotation = dir;
-        this.gameObject.SetActive(true);
+        _isMove = true;
     }
     #endregion
 
@@ -47,6 +59,7 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     private void Move()
     {
+        if (_isMove)
         _rb.velocity = transform.forward * _moveSpeed;
     }
     #endregion

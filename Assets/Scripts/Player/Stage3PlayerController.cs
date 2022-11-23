@@ -148,6 +148,8 @@ public class Stage3PlayerController : MonoBehaviour
             myPos.x = myPos.x + velue.x * _moveSpeed;
             // 座標の修正
             myPos = FixPosition(myPos);
+            // ボールのx座標移動
+            _ball.SyncMovedTransorm(velue.x * _moveSpeed);
 
             this.transform.position = myPos;
         }

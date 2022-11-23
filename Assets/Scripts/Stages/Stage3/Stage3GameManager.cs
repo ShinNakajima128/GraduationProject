@@ -8,7 +8,8 @@ public class Stage3GameManager : MonoBehaviour
         None,
         Order,
         MoveCamera,
-        Throw
+        Throw,
+        Result
     }
     #endregion
 
@@ -20,6 +21,9 @@ public class Stage3GameManager : MonoBehaviour
 
     [SerializeField]
     private Stage3PlayerController _player;
+
+    [SerializeField]
+    private Stage3ScoreConter _scoreConter;
 
     private GameState _state = GameState.None;
 
@@ -42,6 +46,8 @@ public class Stage3GameManager : MonoBehaviour
                 break;
             case GameState.Throw:
                 _player.Send();
+                break;
+            case GameState.Result:
                 break;
             default:
                 break;
