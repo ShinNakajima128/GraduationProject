@@ -7,6 +7,7 @@ public class Stage2GameManager : MonoBehaviour
     private enum GameState
     {
         None,
+        AllView,
         ZoomIn,
         DownMugCap,
         ZoomOut,
@@ -35,11 +36,15 @@ public class Stage2GameManager : MonoBehaviour
     [SerializeField]
     private PlayerInput _input;
 
+    [SerializeField]
+    private Stages _stages;
+
     private GameState _state;
     private ShuffleFase _currentShuffleFase;
 
     private void Start()
     {
+        GameManager.UpdateCurrentStage(_stages);
         _input.actions["Enter"].started += OnEnter;
         ChengeState(GameState.ZoomIn);
         _currentShuffleFase = ShuffleFase.One;
@@ -51,6 +56,9 @@ public class Stage2GameManager : MonoBehaviour
         if (context.started)
             switch (_state)
             {
+                case GameState.AllView:
+                    _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.ZoomIn));
+                    break;
                 case GameState.ZoomIn:
                     break;
                 case GameState.DownMugCap:
@@ -72,6 +80,8 @@ public class Stage2GameManager : MonoBehaviour
                     }
                     break;
                 case GameState.GameEnd:
+                    // タイトルに戻る
+                    TransitionManager.SceneTransition(SceneType.Lobby);
                     break;
                 default:
                     break;
@@ -101,8 +111,13 @@ public class Stage2GameManager : MonoBehaviour
                 _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Wait));
                 break;
             case GameState.Wait:
-                // スタートパネルの表示
-                _uiCtrl.ChengeActive(Stage2UIController.UIType.Play,true);
+                // シャッフルスタート画面の表示
+                _uiCtrl.ChengeActive(Stage2UIController.UIType.Play, true);
+                // ズームしていたら、ズームアウトしてからフェーズを変える
+                if (_camera.IsZoomed is true)
+                {
+                    _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Wait));
+                }
                 break;
             case GameState.Shuffle:
                 // スタートパネルの非表示
@@ -120,7 +135,6 @@ public class Stage2GameManager : MonoBehaviour
             case GameState.Select:
                 _selector.Begin();
                 break;
-            
             case GameState.GameEnd:
                 break;
             default:
@@ -206,7 +220,7 @@ public class Stage2GameManager : MonoBehaviour
 
         _uiCtrl.ChengeActive(Stage2UIController.UIType.Miss, true);
         // ネズミが起き上がる
-        _mouse.OnAnimation(MouseState.WakeUp, 1f);
+        _mouse.OnAnimation(MouseState.OpenEar, 1f);
         // 全てあげる
         _mugcupManager.OpenAllMugCup(() =>
         {
@@ -216,15 +230,8 @@ public class Stage2GameManager : MonoBehaviour
             // UIの表示
             _uiCtrl.ChengeActive(Stage2UIController.UIType.Miss, true);
 
-            // 全てあげた後に閉じる
-            _mugcupManager.CloseAllMugCup(() =>
-            {
-                // ズームしていたら、ズームアウトしてからフェーズを変える
-                if (_camera.IsZoomed is true)
-                {
-                    _camera.ZoomRequest(Stage2CameraController.ZoomType.Out, () => ChengeState(GameState.Wait));
-                }
-            });
+            // ステートの変更
+            ChengeState(GameState.Wait);
         });
     }
 }

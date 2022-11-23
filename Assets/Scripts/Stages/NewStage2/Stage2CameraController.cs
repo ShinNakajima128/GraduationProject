@@ -21,11 +21,15 @@ public class Stage2CameraController : MonoBehaviour
     private float _duration;
 
     [SerializeField]
+    private Transform _allViewTran;
+
+    [SerializeField]
     private Transform _zoomOutTrans;
 
     [SerializeField]
     private Transform _zoomInTrans;
 
+    // カップに寄る座標     
     [SerializeField]
     private Transform[] _zoonPositions;
 

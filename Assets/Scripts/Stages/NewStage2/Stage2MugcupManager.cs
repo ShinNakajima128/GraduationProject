@@ -108,6 +108,13 @@ public class Stage2MugcupManager : MonoBehaviour
     public void BeginShuffle(ShuffleFase fase, Action action = null)
     {
         Debug.Log("シャッフル開始のリクエスト");
+        // 空いていたら、全て閉じてからシャッフルをする
+        if (IsOpened)
+        {
+            CloseAllMugCup(() => _shuffler.ShuffleRequest(fase, _mugcups, _shuffleTime, action));
+            return;
+        }
+        
         _shuffler.ShuffleRequest(fase, _mugcups, _shuffleTime, action);
     }
 
