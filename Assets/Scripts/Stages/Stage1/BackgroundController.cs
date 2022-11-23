@@ -49,7 +49,7 @@ public class BackgroundController : MonoBehaviour
     {
         _groundModel.position = _originPos;
         _groundModel.gameObject.SetActive(false);
-        SetScrollSpeed(new Vector2(0f, -0.2f), 0f);
+        SetScrollSpeed(new Vector2(0f, -0.04f), 0f);
     }
 
     void FinishAnimation()

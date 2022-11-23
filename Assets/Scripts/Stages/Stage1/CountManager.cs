@@ -26,13 +26,12 @@ public class CountManager : MonoBehaviour
 
     [SerializeField]
     Text _countText = default;
-
-    [SerializeField]
-    int _targetCount = 10;
     #endregion
+
     #region private
     DirectionPaper[] _directionPapers;
     ReactiveProperty<int> _currentCount = new ReactiveProperty<int>();
+    int _targetCount;
     #endregion
     #region property
     #endregion
@@ -51,6 +50,8 @@ public class CountManager : MonoBehaviour
     private void Start()
     {
         FallGameManager.Instance.GetItem += GetAnimation;
+        _targetCount = FallGameManager.Instance.TargetCount;
+
         _countText.text = $"{_currentCount}–‡ / {_targetCount}–‡";
         _currentCount.Subscribe(_ =>
         {

@@ -24,7 +24,7 @@ public class Rose : MonoBehaviour
 
     public void SetRoseType()
     {
-        _sr.enabled = true;
+        
         RoseType rand = (RoseType)Random.Range(0, 3);
 
         switch (rand)
@@ -33,9 +33,11 @@ public class Rose : MonoBehaviour
                 _sr.enabled = false;
                 break;
             case RoseType.Red:
+                _sr.enabled = true;
                 _sr.sprite = _spriteData.RoseSprites[0];
                 break;
             case RoseType.White:
+                _sr.enabled = true;
                 _sr.sprite = _spriteData.RoseSprites[1];
                 break;
             default:
