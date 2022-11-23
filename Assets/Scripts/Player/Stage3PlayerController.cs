@@ -27,6 +27,8 @@ public class Stage3PlayerController : MonoBehaviour
 
     private PlayerInput _pInput;
 
+    public bool Debug = false;
+
     // 投げ終わったか
     public bool IsThrowed { get; private set; } = false;
     // 投げられるか
@@ -52,6 +54,11 @@ public class Stage3PlayerController : MonoBehaviour
         {
             ChengeActionMap("Stage3");
             CallBackRegist();
+        }
+
+        if (Debug)
+        {
+            CanControl = true;
         }
     }
 
@@ -105,18 +112,21 @@ public class Stage3PlayerController : MonoBehaviour
     /// <summary>
     /// 自身の座標の修正
     /// </summary>
-    private Vector3 FixPosition(Vector3 myPos)
+    private (Vector3,bool) FixPosition(Vector3 myPos)
     {
+        var isFix = false;
         if (myPos.x > _width)
         {
             myPos.x = _width;
+            isFix = true;
         }
         else if (myPos.x < -_width)
         {
             myPos.x = -_width;
+            isFix = true;
         }
 
-        return myPos;
+        return (myPos,isFix);
     }
     #endregion
 
@@ -146,10 +156,16 @@ public class Stage3PlayerController : MonoBehaviour
         {
             // 横移動
             myPos.x = myPos.x + velue.x * _moveSpeed;
-            // 座標の修正
-            myPos = FixPosition(myPos);
-            // ボールのx座標移動
-            _ball.SyncMovedTransorm(velue.x * _moveSpeed);
+            // 座標の正規化と結果を取得
+            var fixedPos = FixPosition(myPos);
+            // 正規化した座標を取得
+            myPos = fixedPos.Item1;
+            // 正規化した場合は座標を移動しない
+            if (!fixedPos.Item2)
+            {
+                // ボールのx座標移動
+                _ball.SyncMovedTransorm(velue.x * _moveSpeed);
+            }
 
             this.transform.position = myPos;
         }
