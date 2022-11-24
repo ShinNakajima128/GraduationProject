@@ -117,7 +117,7 @@ public enum SceneType
     Intro,
     Lobby,
     Stage1_Fall,
-    Stage2_TeapotShuffle,
+    Stage2,
     Stage3,
     Stage4,
     Stage5,

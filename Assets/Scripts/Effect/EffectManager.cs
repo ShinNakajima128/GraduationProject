@@ -16,7 +16,8 @@ public enum EffectType
     /// 妨害
     /// </summary>
     Obstacle,
-    Swap
+    Swap,
+    DorMouse_Find
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>

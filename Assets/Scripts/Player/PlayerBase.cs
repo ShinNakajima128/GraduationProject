@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerBase : MonoBehaviour
 {
-    #region private
+    #region member variable
+    protected FaceController _fc;
     PlayerInput _input;
     IMovable _move;
     #endregion
@@ -13,6 +14,7 @@ public class PlayerBase : MonoBehaviour
     private void Awake()
     {
         TryGetComponent(out _input);
+        TryGetComponent(out _fc);
         TryGetComponent(out _move);
     }
 

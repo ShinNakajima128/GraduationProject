@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.Collections;
 using UniRx;
 
 /// <summary>
@@ -16,6 +17,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [Tooltip("問題の数")]
     [SerializeField]
     int _quizNum = 5;
+
+    [Tooltip("クリアに必要な正解の数")]
+    [SerializeField]
+    int _requiredCorrectNum = 0;
 
     [Tooltip("お題の数を数える時間")]
     [SerializeField]
@@ -56,6 +61,8 @@ public class QuizGameManager : StageGame<QuizGameManager>
     Text _informationText = default;
     #endregion
     #region private
+    /// <summary> 正解した回数 </summary>
+    int _corectNum = 0;
     #endregion
     #region public
     public override event Action GameSetUp;
@@ -103,8 +110,6 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _informationText.text = "スタート!";
 
         yield return new WaitForSeconds(1.5f);
-
-        //yield return StartCoroutine(); QuizManagerのお題表示処理
         
         action?.Invoke();
         _informationText.text = "";
@@ -148,8 +153,25 @@ public class QuizGameManager : StageGame<QuizGameManager>
             }
             yield return new WaitUntil(() => isAnswerPhase); //選択肢が表示されるのを待機
 
-            yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, (QuizType)i));
+            yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, (QuizType)i, x => _corectNum += x));
         }
+
+        GameEnd?.Invoke();
+
+        Debug.Log($"正解した数/問題数：{_corectNum}/{_quizNum}");
+
+        if (_corectNum >= _requiredCorrectNum)
+        {
+            _informationText.text = "ステージクリア！";
+        }
+        else
+        {
+            _informationText.text = "ステージ失敗…";
+        }
+        yield return new WaitForSeconds(2.5f);
+
+        TransitionManager.SceneTransition(SceneType.Lobby);
+
     }
     void Viewing(Action action = null)
     {

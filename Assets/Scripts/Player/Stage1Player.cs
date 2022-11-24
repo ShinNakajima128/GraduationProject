@@ -33,16 +33,21 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable
     public Transform EffectPos => _effectPos;
 
     public bool IsInvincibled => _isInvincibled;
-    #endregion
 
+    void Start()
+    {
+        _fc.ChangeFaceType(FaceType.Blink);
+    }
+    #endregion
     public void Damage(int value)
     {
         StartCoroutine(DamageCoroutine());
     }
-
     IEnumerator DamageCoroutine()
     {
         _isInvincibled = true;
+        _fc.ChangeFaceType(FaceType.Damage);
+
         var wait = new WaitForSeconds(_blinksInterVal);
 
         for (int i = 0; i < _blinksNum; i++)
@@ -53,5 +58,17 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable
 
         _isInvincibled = false;
         _playerModel.SetActive(true);
+        _fc.ChangeFaceType(FaceType.Blink);
     }
+
+    #region animation event method
+    public void OnSmileFace()
+    {
+        _fc.ChangeFaceType(FaceType.Smile);
+    }
+    public void OnRotationFace()
+    {
+        _fc.ChangeFaceType(FaceType.Rotation);
+    }
+    #endregion
 }

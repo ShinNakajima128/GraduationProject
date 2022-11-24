@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
 /// メッセージを再生するコンポーネント
@@ -18,12 +19,15 @@ public class MessagePlayer : MonoBehaviour
     [Tooltip("次の文字が表示されるまでの時間")]
     [SerializeField]
     float _flowTime = 0.05f;
-    #endregion
 
-    #region UI Objects
-    [Tooltip("メッセージを表示するPanel")]
+    [Tooltip("メッセージ画面の透過速度")]
     [SerializeField]
-    GameObject _messagePanel = default;
+    float _messagePanelFadeTime = 0.3f;
+    
+    [Header("UI")]
+    [Tooltip("メッセージを表示するPanelのCanvasGroup")]
+    [SerializeField]
+    CanvasGroup _messagePanelCanvasGroup = default;
 
     [Tooltip("メッセージの話し手")]
     [SerializeField]
@@ -53,9 +57,13 @@ public class MessagePlayer : MonoBehaviour
     {
         _actorText.text = "";
         _messageText.text = "";
-        _messagePanel.SetActive(false);
     }
 
+    /// <summary>
+    /// 全てのメッセージを順に再生する
+    /// </summary>
+    /// <param name="action"> 再生完了後のEvent </param>
+    /// <returns></returns>
     public IEnumerator PlayAllMessageCoroutine(Action action = null)
     {
         foreach (var d in _data)
@@ -64,6 +72,12 @@ public class MessagePlayer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 指定したメッセージデータを再生する
+    /// </summary>
+    /// <param name="type"> 指定されたメッセージデータ </param>
+    /// <param name="action"> 再生完了後のEvent </param>
+    /// <returns></returns>
     public IEnumerator PlayMessageCorountine(MessageType type, Action action = null)
     {
         var d = _data.FirstOrDefault(m => m.MessageType == type);
@@ -77,21 +91,15 @@ public class MessagePlayer : MonoBehaviour
     /// <param name="data"> メッセージのデータ </param>
     IEnumerator FlowMessage(TextData data, Action action)
     {
-        _messagePanel.SetActive(false);
-
         _bc.BackgroundChange(data.Background, () =>
         {
             _isChanged = true;
-
-            if (!_messagePanel.activeSelf)
-            {
-                _messagePanel.SetActive(true);
-            }
         });
 
         yield return new WaitUntil(() => _isChanged); //背景が切り替わるまで待機
 
         _isChanged = false;
+        FadeMessageCanvas(1f, _messagePanelFadeTime);
 
         var t = data.Texts;
 
@@ -113,7 +121,20 @@ public class MessagePlayer : MonoBehaviour
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
         }
 
-        _messagePanel.SetActive(false);
+        FadeMessageCanvas(0f, _messagePanelFadeTime);
         action?.Invoke();
+    }
+
+    /// <summary>
+    /// メッセージ画面の透過度を変更する
+    /// </summary>
+    /// <param name="value"> 変更後の値 </param>
+    /// <param name="fadeTime"> 透過にかける時間 </param>
+    void FadeMessageCanvas(float value, float fadeTime = 0f)
+    {
+        DOTween.To(() => _messagePanelCanvasGroup.alpha,
+            x => _messagePanelCanvasGroup.alpha = x,
+            value,
+            fadeTime);
     }
 }

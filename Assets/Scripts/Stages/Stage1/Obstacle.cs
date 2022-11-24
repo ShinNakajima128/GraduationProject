@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(Rigidbody))]
 ///障害物の機能を持つクラス
@@ -30,18 +31,36 @@ public class Obstacle : MonoBehaviour
     #region private
     Rigidbody _rb;
     bool _init = false;
-    Vector3 _rotateValue = default;
+    Quaternion _rotateValue = default;
     IDamagable _target;
     #endregion
 
     private void OnEnable()
     {
         StartCoroutine(OnVanishTimer());
-        int randX = Random.Range(-1, 2);
-        int randY = Random.Range(-1, 2);
-        int randZ = Random.Range(-1, 2);
-        _rotateValue = new Vector3(randX, randY, randZ);
+
+        int randX = 0;
+        int randY = 0;
+        int randZ = 0;
+
+        switch (_rotateType)
+        {
+            case RotateType.None:
+                break;
+            case RotateType.Random:
+                randX = Random.Range(0, 360);
+                randY = Random.Range(0, 360);
+                randZ = Random.Range(0, 360);
+                break;
+            case RotateType.Mirror:
+                randY = Random.Range(135, 245);
+                break;
+            default:
+                break;
+        }
+        transform.DOLocalRotate(new Vector3(randX, randY, randZ), 0f);
     }
+
     private void OnDisable()
     {
         transform.localPosition = Vector3.zero;
@@ -59,12 +78,6 @@ public class Obstacle : MonoBehaviour
     private void FixedUpdate()
     {
         _rb.AddForce(Vector3.up * _moveSpeed, ForceMode.Force);
-
-        if (_rotateType == RotateType.None)
-        {
-            return;
-        }
-        transform.Rotate(_rotateValue);
     }
 
     /// <summary>
@@ -100,6 +113,7 @@ public class Obstacle : MonoBehaviour
     enum RotateType
     {
         None,
-        Random
+        Random,
+        Mirror
     }
 }

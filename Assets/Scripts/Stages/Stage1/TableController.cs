@@ -41,8 +41,6 @@ public class TableController : MonoBehaviour, IEffectable
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("Hit");

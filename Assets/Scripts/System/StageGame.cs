@@ -12,11 +12,14 @@ public abstract class StageGame<T> : MonoBehaviour
     #endregion
     #region private
     #endregion
+    #region public
+    public abstract event Action GameSetUp;
+    public abstract event Action GameStart;
+    public abstract event Action GamePause;
+    public abstract event Action GameEnd;
+    #endregion
     #region property
     public static StageGame<T> Instance { get; private set; }
-    public abstract Action GameStart { get; set; }
-    public abstract Action GamePause { get; set; }
-    public abstract Action GameEnd { get; set; }
     #endregion
 
     protected void Awake()
@@ -29,6 +32,7 @@ public abstract class StageGame<T> : MonoBehaviour
         //現在のステージをGameManagerに更新
         GameManager.UpdateCurrentStage(_managedStage);
     }
+    public abstract void OnGameSetUp();
     public abstract void OnGameStart();
     public abstract void OnGameEnd();
     protected abstract  void Init();

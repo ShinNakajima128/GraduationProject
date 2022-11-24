@@ -14,6 +14,9 @@ public class DorMouse : MonoBehaviour
     [SerializeField]
     float _interval = 1.5f;
 
+    [SerializeField]
+    Transform _effectTrans = default;
+
     [Header("Material")]
     [Tooltip("ネズミの表情を変更する用のMaterial")]
     [SerializeField]
@@ -52,7 +55,7 @@ public class DorMouse : MonoBehaviour
     /// マウスのアニメーションを再生
     /// </summary>
     /// <param name="state"> 再生するアニメーション </param>
-    public void OnAnimation(MouseState state)
+    public void OnAnimation(MouseState state,float duration)
     {
         switch (state)
         {
@@ -64,7 +67,7 @@ public class DorMouse : MonoBehaviour
                 _isAwaking = false;
                 break;
         }
-        _anim.PlayInFixedTime(state.ToString());
+        _anim.CrossFadeInFixedTime(state.ToString(), duration);
     }
 
     /// <summary>
@@ -75,6 +78,7 @@ public class DorMouse : MonoBehaviour
         try
         {
             AudioManager.PlaySE(SEType.Finding);
+            EffectManager.PlayEffect(EffectType.DorMouse_Find, _effectTrans.position);
         }
         catch
         {
@@ -91,7 +95,7 @@ public class DorMouse : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
 
         _mouseRenderer.material = _mouseMaterials[2];
-        
+
         //瞬きの処理のループ
         while (_isAwaking)
         {
@@ -124,11 +128,11 @@ public class DorMouse : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
 
-        OnAnimation(MouseState.WakeUp);
+        // OnAnimation(MouseState.WakeUp);
 
         yield return new WaitForSeconds(8.0f);
 
-        OnAnimation(MouseState.CloseEar);
+        // OnAnimation(MouseState.CloseEar);
     }
 }
 public enum MouseState
