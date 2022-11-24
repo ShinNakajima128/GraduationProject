@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +14,8 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private float _width;
 
-    [Header("振り向ける最大値　※推奨(0 ～ 0.4)")]
+    [Header("振り向ける最大値")]
+    [Range(0f, 0.4f)]
     [SerializeField]
     private float _eulerMaxValue;
 
@@ -27,7 +29,9 @@ public class Stage3PlayerController : MonoBehaviour
 
     private PlayerInput _pInput;
 
-    public bool Debug = false;
+    public bool IsDebug = false;
+
+    public Action OnCircleButtonStarted { get; private set; }
 
     // 投げ終わったか
     public bool IsThrowed { get; private set; } = false;
@@ -56,7 +60,7 @@ public class Stage3PlayerController : MonoBehaviour
             CallBackRegist();
         }
 
-        if (Debug)
+        if (IsDebug)
         {
             CanControl = true;
         }
@@ -112,7 +116,7 @@ public class Stage3PlayerController : MonoBehaviour
     /// <summary>
     /// 自身の座標の修正
     /// </summary>
-    private (Vector3,bool) FixPosition(Vector3 myPos)
+    private (Vector3, bool) FixPosition(Vector3 myPos)
     {
         var isFix = false;
         if (myPos.x > _width)
@@ -126,14 +130,25 @@ public class Stage3PlayerController : MonoBehaviour
             isFix = true;
         }
 
-        return (myPos,isFix);
+        return (myPos, isFix);
     }
     #endregion
 
     #region Public Function
-    public void Send()
+    /// <summary>
+    /// Player操作の開始
+    /// </summary>
+    public void StartControl()
     {
         CanControl = true;
+    }
+
+    /// <summary>
+    /// 〇ボタンが押された時にする処理を追加
+    /// </summary>
+    public void RegistToOnCircleButton(Action action)
+    {
+        OnCircleButtonStarted += action;
     }
     #endregion
 
@@ -197,14 +212,19 @@ public class Stage3PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 〇ボタンが押された時
+    /// </summary>
     private void OnThrow(InputAction.CallbackContext context)
     {
+        OnCircleButtonStarted();
+
         if (!CanControl) return;
 
         if (context.started)
         {
             var ballPosition = _throwPoint.position;
-            var ballDirection = this.transform.rotation;
+            var ballDirection = transform.rotation;
 
             var ball = _ball as IThrowable;
 

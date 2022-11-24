@@ -1,11 +1,20 @@
 ﻿using System;
+using UnityEngine;
 
 [Serializable]
 public class Order
 {
-    public int _red;
-    public int _black;
-    public int _count;
-    public bool _oddNumder;
-    public bool _evenNumber;
+    [SerializeField]
+    public string Name;
+    [Header("倒すトランプ兵の種類")]
+    public CardType CardType;
+    [Header("お題の表示するテキスト")]
+    public string DisplayText;
+    [Header("倒す数\n片方の場合は上限に気を付ける。")]
+    [Range(0,24)]
+    public int Count;
+    [Header("奇数のお題か")]
+    public bool OddNumder;
+    [Header("偶数のお題か")]
+    public bool EvenNumber;
 }
