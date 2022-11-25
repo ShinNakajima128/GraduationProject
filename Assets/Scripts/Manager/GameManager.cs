@@ -26,10 +26,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     #endregion
     #region private
     Dictionary<Stages, bool> _stageStatusDic = new Dictionary<Stages, bool>();
+    bool _isClearStaged = false;
     #endregion
     #region property
     public Stages CurrentStage => _currentStage;
     public ClockState CurrentClockState => _currentClockState;
+    public static bool IsClearStaged => Instance._isClearStaged;
     #endregion
 
     private void Awake()
@@ -39,6 +41,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             Destroy(gameObject);
             return;
         }
+
         DontDestroyOnLoad(gameObject);
 
         for (int i = 0; i < (int)Stages.StageNum; i++)
@@ -69,6 +72,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public static void UpdateCurrentStage(Stages stage)
     {
         Instance._currentStage = stage;
+        Instance._isClearStaged = false;
     }
     /// <summary>
     /// GameManagerが保持しているステージのクリア状況を確認する
@@ -81,6 +85,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         //クリア済みかどうかを返す
         return stage.Value;
+    }
+
+    /// <summary>
+    /// 各ゲームの結果をセーブする
+    /// </summary>
+    /// <param name="result"> ミニゲームの結果 </param>
+    public static void SaveStageResult(bool result)
+    {
+        Instance._isClearStaged = result;
     }
 
     /// <summary>

@@ -69,8 +69,8 @@ public class LobbyManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        SetPlayerPosition(GameManager.Instance.CurrentStage);
-        _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f);
+        SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
+        _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
 
         if (!_debugMode)
         {
@@ -81,10 +81,9 @@ public class LobbyManager : MonoBehaviour
 
             yield return new WaitForSeconds(1.5f);
 
+            //ロビーに初めて来たときはストーリーメッセージを再生
             if (IsFirstArrival)
             {
-                Debug.Log("Test");
-
                 StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage1_End, () =>
                 {
                     ClockDirection();
@@ -93,8 +92,8 @@ public class LobbyManager : MonoBehaviour
             }
             else 
             {
-                //未クリアの時は時計の演出を行う
-                if (!GameManager.CheckStageStatus())
+                //未クリア且つステージをクリアしている場合は時計の演出を行う
+                if (!GameManager.CheckStageStatus() && GameManager.IsClearStaged)
                 {
                     ClockDirection();
                 }
@@ -112,6 +111,10 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ステージの詳細を表示する
+    /// </summary>
+    /// <param name="type"> 遷移先のステージのScene </param>
     public static void OnStageDescription(SceneType type)
     {
         Instance._stageDescriptionPanel.SetActive(true);
@@ -120,6 +123,9 @@ public class LobbyManager : MonoBehaviour
         Instance.ApproachDoor?.Invoke();
     }
 
+    /// <summary>
+    /// ステージの詳細を非表示する
+    /// </summary>
     public static void OffStageDescription()
     {
         Instance._stageDescriptionPanel.SetActive(false);
@@ -128,6 +134,10 @@ public class LobbyManager : MonoBehaviour
         Instance.StepAwayDoor?.Invoke();
     }
 
+    /// <summary>
+    /// プレイヤーの位置をドアの前に移動
+    /// </summary>
+    /// <param name="type"> Stageの種類 </param>
     void SetPlayerPosition(Stages type)
     {
         switch (type)
@@ -161,6 +171,11 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーを操作可能にする
+    /// </summary>
+    /// <param name="Interval"> 可能になるまでの時間 </param>
+    /// <returns></returns>
     IEnumerator OnPlayerMovable(float Interval)
     {
         yield return new WaitForSeconds(Interval);
@@ -174,11 +189,14 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     void ClockDirection()
     {
-        _clockCamera.Priority = 15;
+        _clockCamera.Priority = 15; //演出用カメラをアクティブ化
+        Camera.main.LayerCullingToggle("Ornament", false); //ロビーのライトなどの装飾品を非表示にする
+
         _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), action: () =>
         {
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
             _clockCamera.Priority = 10;
+            Camera.main.LayerCullingToggle("Ornament", true);
             StartCoroutine(OnPlayerMovable(3.0f));
         });
     }
