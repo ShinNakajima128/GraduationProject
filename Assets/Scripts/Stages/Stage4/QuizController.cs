@@ -13,9 +13,12 @@ using UniRx;
 public class QuizController : MonoBehaviour
 {
     #region serialize
+    [Header("Variable")]
+    [Tooltip("選択肢を選ぶ時間")]
     [SerializeField]
     int _answerTime = 10;
 
+    [Tooltip("結果表示後、次のフェイズに進むまでの時間")]
     [SerializeField]
     float _goToNextPhaseInterval = 2.5f;
 
@@ -95,7 +98,20 @@ public class QuizController : MonoBehaviour
                 _currentAnswerValue = manager.CurrentRedRoseCount + manager.CurrentWhiteRoseCount;
                 break;
             case QuizType.TrumpSolder:
-                _questionText.text = "トランプ兵の数は？";
+                var randomTrumpType = (Stage4TrumpType)UnityEngine.Random.Range(0, 2);
+
+                switch (randomTrumpType)
+                {
+                    case Stage4TrumpType.Trump_Red:
+                        _questionText.text = "赤いトランプ兵の数は？";
+                        break;
+                    case Stage4TrumpType.Trump_Black:
+                        _questionText.text = "黒いトランプ兵の数は？";
+                        break;
+                    default:
+                        break;
+                }
+                
                 //_currentAnswerValue 
                 break;
             case QuizType.All:
@@ -145,6 +161,10 @@ public class QuizController : MonoBehaviour
         return _currentAnswerValue == _playerChoiceValue; //正解と解答を比較した真偽を返す
     }
 
+    /// <summary>
+    /// 選択肢となるの各ボタンの設定を行う
+    /// </summary>
+    /// <param name="type"> 問題の種類 </param>
     void ChoiceButtonSetUp(QuizType type)
     {
         int[] answerValues = new int[_choiceButtonList.Count];
@@ -196,7 +216,7 @@ public class QuizController : MonoBehaviour
             {
                 for (int n = 0; n < values.Length; n++)
                 {
-                    //同じ添え字の場合は処理を飛ばす
+                    //同じ添え字の場合は処理をスキップ
                     if (i == n)
                     {
                         continue;

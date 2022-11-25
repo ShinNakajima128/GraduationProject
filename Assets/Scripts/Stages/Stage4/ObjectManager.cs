@@ -43,6 +43,8 @@ public class ObjectManager : MonoBehaviour
             return count;
         }
     }
+    public int CurrentRedTrumpCount { get; set; }
+    public int CurrentBlackTrumpCount { get; set; }
     #endregion
 
     private void Start()
