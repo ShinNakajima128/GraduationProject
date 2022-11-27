@@ -5,5 +5,5 @@ public interface IThrowable
     /// <summary>
     /// 投げる
     /// </summary>
-    void Throw(Vector3 pos, Quaternion dir);
+    void Throw(Vector3 throwPos,Quaternion dir);
 }

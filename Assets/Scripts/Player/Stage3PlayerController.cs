@@ -223,8 +223,10 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.started)
         {
+            // ボールの座標
             var ballPosition = _throwPoint.position;
-            var ballDirection = transform.rotation;
+            // ボールの向き
+            var ballDirection = this.transform.rotation;
 
             var ball = _ball as IThrowable;
 

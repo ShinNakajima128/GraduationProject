@@ -10,6 +10,8 @@ public class BallController : MonoBehaviour, IThrowable
     private bool _isMove = false;
 
     private Rigidbody _rb;
+
+    private Vector3 _direction;
     #endregion
 
     #region Unity Fucntion
@@ -20,14 +22,22 @@ public class BallController : MonoBehaviour, IThrowable
 
     private void Update()
     {
-        Move();
+        _direction = _rb.velocity;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        var forward = transform.forward;
-        forward.x *= -1;
-        transform.forward = forward;
+        if (collision.gameObject.name == "Goal")
+        {
+            Debug.Log("Goal");
+            this.gameObject.SetActive(false);
+        }
+
+        // 法線を取得
+        var normal = collision.contacts[0].normal;
+        // 反射ベクトルを取得
+        Vector3 result = Vector3.Reflect(_direction, normal);
+        _rb.velocity = result;
     }
     #endregion
 
@@ -47,20 +57,13 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     void IThrowable.Throw(Vector3 pos, Quaternion dir)
     {
-        this.transform.position = pos;
-        this.transform.rotation = dir;
+        transform.position = pos;
+        transform.rotation = dir;
         _isMove = true;
+        _rb.velocity = transform.forward * _moveSpeed;
     }
     #endregion
 
     #region Private Function
-    /// <summary>
-    /// 進む
-    /// </summary>
-    private void Move()
-    {
-        if (_isMove)
-        _rb.velocity = transform.forward * _moveSpeed;
-    }
     #endregion
 }
