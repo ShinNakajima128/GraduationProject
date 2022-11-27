@@ -94,28 +94,34 @@ public class QuizController : MonoBehaviour
                 _currentAnswerValue = manager.CurrentWhiteRoseCount;
                 break;
             case QuizType.RedAndWhiteRose:
-                _questionText.text = "赤いバラと白いバラの合計は？";
+                _questionText.text = "赤いバラと白いバラの数は？";
                 _currentAnswerValue = manager.CurrentRedRoseCount + manager.CurrentWhiteRoseCount;
                 break;
             case QuizType.TrumpSolder:
-                var randomTrumpType = (Stage4TrumpType)UnityEngine.Random.Range(0, 2);
-
-                switch (randomTrumpType)
-                {
-                    case Stage4TrumpType.Trump_Red:
-                        _questionText.text = "赤いトランプ兵の数は？";
-                        break;
-                    case Stage4TrumpType.Trump_Black:
-                        _questionText.text = "黒いトランプ兵の数は？";
-                        break;
-                    default:
-                        break;
-                }
+                _questionText.text = "トランプ兵の数は？";
+                _currentAnswerValue = manager.CurrentRedTrumpCount + manager.CurrentBlackTrumpCount;
                 
-                //_currentAnswerValue 
+                ///トランプ兵を赤と黒で数え分けた場合の処理
+                //var randomTrumpType = (Stage4TrumpType)UnityEngine.Random.Range(0, 2);
+
+                //switch (randomTrumpType)
+                //{
+                //    case Stage4TrumpType.Trump_Red:
+                //        _questionText.text = "赤いトランプ兵の数は？";
+                //        _currentAnswerValue = manager.CurrentRedTrumpCount;
+                //        break;
+                //    case Stage4TrumpType.Trump_Black:
+                //        _questionText.text = "黒いトランプ兵の数は？";
+                //        _currentAnswerValue = manager.CurrentBlackTrumpCount;
+                //        break;
+                //    default:
+                //        break;
+                //}
                 break;
             case QuizType.All:
-                _questionText.text = "バラとトランプ兵の合計は？";
+                _questionText.text = "バラとトランプ兵の数は？";
+                _currentAnswerValue = manager.CurrentRedRoseCount + manager.CurrentWhiteRoseCount
+                                    + manager.CurrentRedTrumpCount + manager.CurrentBlackTrumpCount;
                 break;
             default:
                 break;

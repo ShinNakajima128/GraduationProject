@@ -65,10 +65,12 @@ public class Stage4TrumpSolder : MonoBehaviour
     private void OnDisable()
     {
         transform.localPosition = Vector3.zero;
+        _trumpType = Stage4TrumpType.OFF;
     }
 
     private void Update()
     {
+        //演出用のトランプ以外は左へ進む
         if (!_isDirectionTrump)
         {
             transform.localPosition -= new Vector3(_moveSpeed * Time.deltaTime, 0f, 0f);

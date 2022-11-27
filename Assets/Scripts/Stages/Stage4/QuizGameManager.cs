@@ -59,6 +59,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [Header("UI")]
     [SerializeField]
     Text _informationText = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
+
+    [Header("テストするクイズの種類")]
+    [SerializeField]
+    QuizType _debugQuizType = default;
     #endregion
     #region private
     /// <summary> 正解した回数 </summary>
@@ -127,12 +135,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
         for (int i = 0; i < _quizNum; i++)
         {
             isAnswerPhase = false;
-            OnGameSetUp();
 
             if (i > 0)
             {
                 TransitionManager.FadeIn(FadeType.Normal, () =>
                 {
+                    OnGameSetUp();
                     _cameraTrans.DOMoveX(_startCameraPos.position.x, 0f);
                     TransitionManager.FadeOut(FadeType.Normal, () =>
                     {
@@ -145,7 +153,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
             }
             else
             {
-                //ゲームの配置のセットアップ処理をここに記述
+                OnGameSetUp();
                 Viewing(() =>
                 {
                     isAnswerPhase = true;
@@ -153,7 +161,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
             }
             yield return new WaitUntil(() => isAnswerPhase); //選択肢が表示されるのを待機
 
-            yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, (QuizType)i, x => _corectNum += x));
+            if (!_debugMode)
+            {
+                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, (QuizType)i, x => _corectNum += x));
+            }
+            else
+            {
+                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, _debugQuizType, x => _corectNum += x));
+            }
         }
 
         GameEnd?.Invoke();
