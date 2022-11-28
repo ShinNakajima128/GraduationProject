@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,16 +52,29 @@ public class ObjectManager : MonoBehaviour
     public int CurrentBlackTrumpCount => _trumpGenerator.CurrentBlackTrumpCount;
     #endregion
 
+    private void OnDisable()
+    {
+        QuizGameManager.Instance.QuizSetUp -= ObjectSetUp;
+    }
+
     private void Start()
     {
-        QuizGameManager.Instance.GameSetUp += ObjectSetUp;
+        //QuizGameManager.Instance.GameSetUp += ObjectSetUp;
+        QuizGameManager.Instance.QuizSetUp += ObjectSetUp;
     }
-    void ObjectSetUp()
+    void ObjectSetUp(QuizType quizType)
     {
+        Debug.Log($"現在のクイズ：{quizType}");
         foreach (var t in _trees)
         {
             t.Deploy();
         }
+
+        if (quizType != QuizType.TrumpSolder)
+        {
+            return;
+        }
+
         _trumpGenerator.Return();
         _trumpGenerator.Generate();
     }

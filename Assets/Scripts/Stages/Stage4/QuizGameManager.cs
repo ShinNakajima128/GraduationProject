@@ -131,16 +131,25 @@ public class QuizGameManager : StageGame<QuizGameManager>
     IEnumerator InGameCoroutine()
     {
         bool isAnswerPhase;
+        QuizType currentQuizType;
 
         for (int i = 0; i < _quizNum; i++)
         {
             isAnswerPhase = false;
+            currentQuizType = (QuizType)i;
 
             if (i > 0)
             {
                 TransitionManager.FadeIn(FadeType.Normal, () =>
                 {
-                    OnGameSetUp();
+                    if (!_debugMode)
+                    {
+                        OnQuizSetUp(currentQuizType);
+                    }
+                    else
+                    {
+                        OnQuizSetUp(_debugQuizType);
+                    }
                     _cameraTrans.DOMoveX(_startCameraPos.position.x, 0f);
                     TransitionManager.FadeOut(FadeType.Normal, () =>
                     {
@@ -153,7 +162,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
             }
             else
             {
-                OnGameSetUp();
+                if (!_debugMode)
+                {
+                    OnQuizSetUp(currentQuizType);
+                }
+                else
+                {
+                    OnQuizSetUp(_debugQuizType);
+                }
                 Viewing(() =>
                 {
                     isAnswerPhase = true;
@@ -163,7 +179,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
             if (!_debugMode)
             {
-                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, (QuizType)i, x => _corectNum += x));
+                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, currentQuizType, x => _corectNum += x));
             }
             else
             {
@@ -178,10 +194,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
         if (_corectNum >= _requiredCorrectNum)
         {
             _informationText.text = "ステージクリア！";
+            GameManager.SaveStageResult(true);
         }
         else
         {
             _informationText.text = "ステージ失敗…";
+            GameManager.SaveStageResult(false);
         }
         yield return new WaitForSeconds(2.5f);
 
@@ -203,5 +221,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
+    }
+    void OnQuizSetUp(QuizType type)
+    {
+        QuizSetUp?.Invoke(type);
     }
 }

@@ -12,7 +12,8 @@ public enum Stages
     Stage4 = 3,
     Stage5 = 4,
     Stage6 = 5,
-    StageNum = 6
+    Stage_Boss = 6,
+    StageNum = 7
 }
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
