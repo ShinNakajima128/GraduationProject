@@ -14,7 +14,7 @@ public class MessagePlayer : MonoBehaviour
     #region serialize
     [Tooltip("テキストデータ")]
     [SerializeField]
-    TextData[] _data = default;
+    ScenarioData[] _data = default;
 
     [Tooltip("次の文字が表示されるまでの時間")]
     [SerializeField]
@@ -50,7 +50,10 @@ public class MessagePlayer : MonoBehaviour
     bool _isChanged = false;
     bool _isPressed = false;
     #endregion
-
+    public event Action CameraShake;
+    public event Action ConcentratedLine;
+    public event Action Closeup;
+    public event Action Reset;
     #region property
     #endregion
     private void Start()
@@ -89,7 +92,7 @@ public class MessagePlayer : MonoBehaviour
     /// メッセージを再生
     /// </summary>
     /// <param name="data"> メッセージのデータ </param>
-    IEnumerator FlowMessage(TextData data, Action action)
+    IEnumerator FlowMessage(ScenarioData data, Action action)
     {
         _bc.BackgroundChange(data.Background, () =>
         {
@@ -101,26 +104,33 @@ public class MessagePlayer : MonoBehaviour
         _isChanged = false;
         FadeMessageCanvas(1f, _messagePanelFadeTime);
 
-        var t = data.Texts;
+        var d = data.Dialog;
 
         //メッセージを流す
-        for (int i = 0; i < t.Length; i++)
+        for (int i = 0; i < d.Length; i++)
         {
-            _actorText.text = t[i].Actor;
+            _actorText.text = d[i].Actor;
             _messageText.text = "";
             _submitIcon.enabled = false;
+            OnScreenEffect(d[i].EffectType);
 
-            //メッセージを一文字ずつ表示
-            foreach (var m in t[i].Message)
+            foreach (var message in d[i].AllMessage)
             {
-                _messageText.text += m;
-                yield return new WaitForSeconds(_flowTime);
+                //メッセージを一文字ずつ表示
+                foreach (var m in message)
+                {
+                    _messageText.text += m;
+                    yield return new WaitForSeconds(_flowTime);
+                }
+                yield return new WaitForSeconds(0.5f);
             }
+            
 
             _submitIcon.enabled = true; //入力を促すアイコンをアクティブにする
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
         }
 
+        OnScreenEffect(ScreenEffectType.Reset);
         FadeMessageCanvas(0f, _messagePanelFadeTime);
         action?.Invoke();
     }
@@ -136,5 +146,26 @@ public class MessagePlayer : MonoBehaviour
             x => _messagePanelCanvasGroup.alpha = x,
             value,
             fadeTime);
+    }
+
+    void OnScreenEffect(ScreenEffectType type)
+    {
+        switch (type)
+        {
+            case ScreenEffectType.CameraShake:
+                CameraShake?.Invoke();
+                break;
+            case ScreenEffectType.ConcentratedLine:
+                ConcentratedLine?.Invoke();
+                break;
+            case ScreenEffectType.Closeup:
+                Closeup?.Invoke();
+                break;
+            case ScreenEffectType.Reset:
+                Reset?.Invoke();
+                break;
+            default:
+                break;
+        }
     }
 }
