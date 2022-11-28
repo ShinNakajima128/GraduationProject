@@ -85,6 +85,7 @@ public class Stage2GameManager : MonoBehaviour
                     if (IsClear)
                     {
                         // ƒƒr[‚ÉˆÚ“®
+                        GameManager.SaveStageResult(true);
                         TransitionManager.SceneTransition(SceneType.Lobby);
                     }
                     break;
