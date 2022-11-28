@@ -50,7 +50,10 @@ public class MessagePlayer : MonoBehaviour
     bool _isChanged = false;
     bool _isPressed = false;
     #endregion
-
+    public event Action CameraShake;
+    public event Action ConcentratedLine;
+    public event Action Closeup;
+    public event Action Reset;
     #region property
     #endregion
     private void Start()
@@ -109,6 +112,7 @@ public class MessagePlayer : MonoBehaviour
             _actorText.text = d[i].Actor;
             _messageText.text = "";
             _submitIcon.enabled = false;
+            OnScreenEffect(d[i].EffectType);
 
             foreach (var message in d[i].AllMessage)
             {
@@ -126,6 +130,7 @@ public class MessagePlayer : MonoBehaviour
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
         }
 
+        OnScreenEffect(ScreenEffectType.Reset);
         FadeMessageCanvas(0f, _messagePanelFadeTime);
         action?.Invoke();
     }
@@ -141,5 +146,26 @@ public class MessagePlayer : MonoBehaviour
             x => _messagePanelCanvasGroup.alpha = x,
             value,
             fadeTime);
+    }
+
+    void OnScreenEffect(ScreenEffectType type)
+    {
+        switch (type)
+        {
+            case ScreenEffectType.CameraShake:
+                CameraShake?.Invoke();
+                break;
+            case ScreenEffectType.ConcentratedLine:
+                ConcentratedLine?.Invoke();
+                break;
+            case ScreenEffectType.Closeup:
+                Closeup?.Invoke();
+                break;
+            case ScreenEffectType.Reset:
+                Reset?.Invoke();
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -103,6 +103,7 @@ public enum MessageType
 {
     Intro,
     Tutorial,
-    Stage1_End
+    Stage1_End,
+    Stage_Boss_Start
 }
 
