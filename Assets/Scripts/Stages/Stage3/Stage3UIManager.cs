@@ -41,20 +41,20 @@ public class Stage3UIManager : MonoBehaviour
     /// <summary>
     /// ‚¨‘è‚Ì”ñ•\Ž¦
     /// </summary>
-    public void UIDisable(Type type)
+    public void ChengeUIActivete(Type type, bool state)
     {
         Debug.Log($"{type} UI‚Ì”ñ•\Ž¦");
 
         switch (type)
         {
             case Type.OrderUI:
-                _orderUI.SetActive(false);
+                _orderUI.SetActive(state);
                 break;
             case Type.IngameUI:
-                _ingameOrder.SetActive(false);
+                _ingameOrder.SetActive(state);
                 break;
             case Type.BlackOutImage:
-                _blackOut.gameObject.SetActive(false);
+                _blackOut.gameObject.SetActive(state);
                 break;
             default:
                 break;

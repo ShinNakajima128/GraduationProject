@@ -138,7 +138,7 @@ public class Stage3PlayerController : MonoBehaviour
     /// <summary>
     /// Player‘€ì‚ÌŠJn
     /// </summary>
-    public void StartControl()
+    public void BeginControl()
     {
         CanControl = true;
     }

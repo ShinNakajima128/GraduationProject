@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-internal class Stage3ScoreConter : MonoBehaviour
+public class Stage3ScoreConter : MonoBehaviour
 {
     public int HitedCount { get; private set; }
     public int HitedRedCount { get; private set; }

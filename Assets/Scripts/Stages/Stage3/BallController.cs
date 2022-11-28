@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BallController : MonoBehaviour, IThrowable
@@ -7,10 +8,13 @@ public class BallController : MonoBehaviour, IThrowable
     [SerializeField]
     private float _moveSpeed;
 
-    private bool _isMove = false;
+    [SerializeField]
+    private CameraController _camera;
 
+    private bool IsThrow { get; set; } = false;
+
+    private event Action OnGoaled;
     private Rigidbody _rb;
-
     private Vector3 _direction;
     #endregion
 
@@ -23,6 +27,13 @@ public class BallController : MonoBehaviour, IThrowable
     private void Update()
     {
         _direction = _rb.velocity;
+        if (IsThrow)
+            MoveCamera();
+    }
+
+    private void MoveCamera()
+    {
+        _camera.MoveCamera(this.transform.position.z);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -30,6 +41,7 @@ public class BallController : MonoBehaviour, IThrowable
         if (collision.gameObject.name == "Goal")
         {
             Debug.Log("Goal");
+            OnGoaled();
             this.gameObject.SetActive(false);
         }
 
@@ -59,8 +71,13 @@ public class BallController : MonoBehaviour, IThrowable
     {
         transform.position = pos;
         transform.rotation = dir;
-        _isMove = true;
         _rb.velocity = transform.forward * _moveSpeed;
+        IsThrow = true;
+    }
+
+    public void AddCallBack(Action action)
+    {
+        OnGoaled += action;
     }
     #endregion
 

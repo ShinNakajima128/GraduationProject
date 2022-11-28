@@ -26,6 +26,9 @@ public class Stage3GameManager : MonoBehaviour
     private Stage3PlayerController _player;
 
     [SerializeField]
+    private BallController _ball;
+
+    [SerializeField]
     private Stage3ScoreConter _scoreConter;
 
     [Header("暗転にかける時間")]
@@ -39,6 +42,8 @@ public class Stage3GameManager : MonoBehaviour
         ChengeStage(GameState.CreateOrder);
         // 〇ボタンに処理の登録
         _player.RegistToOnCircleButton(() => ChengeStage(GameState.MoveCamera));
+        // ゴール時の挙動の追加
+        _ball.AddCallBack(() => ChengeStage(GameState.Result));
     }
 
     /// <summary>
@@ -55,11 +60,12 @@ public class Stage3GameManager : MonoBehaviour
             case GameState.CreateOrder:
                 // オーダーの作成
                 var order = _order.CreateOrder(() => ChengeStage(GameState.MoveCamera));
+                // お題のUI表示
                 _uiManager.DisplayOrder(order);
                 break;
             case GameState.MoveCamera:
                 // Orderの非表示
-                _uiManager.UIDisable(Stage3UIManager.Type.OrderUI);
+                _uiManager.ChengeUIActivete(Stage3UIManager.Type.OrderUI, false);
                 // カメラの移動
                 _cameraCtrl.MoveRequest(() => ChengeStage(GameState.Throw));
                 // 暗転の処理
@@ -67,10 +73,12 @@ public class Stage3GameManager : MonoBehaviour
                 break;
             case GameState.Throw:
                 // 暗転パネルの非表示
-                _uiManager.UIDisable(Stage3UIManager.Type.BlackOutImage);
-                _player.StartControl();
+                _uiManager.ChengeUIActivete(Stage3UIManager.Type.BlackOutImage, false);
+                // 操作を開始
+                _player.BeginControl();
                 break;
             case GameState.Result:
+                Debug.Log("To Result");
                 break;
             default:
                 break;

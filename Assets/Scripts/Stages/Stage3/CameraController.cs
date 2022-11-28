@@ -13,6 +13,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float _duration;
 
+    [SerializeField]
+    private float _distanceToBallPosition;
+
     private void Start()
     {
         transform.position = _startPoint.position;
@@ -21,5 +24,12 @@ public class CameraController : MonoBehaviour
     public void MoveRequest(Action action = null)
     {
         transform.DOMove(_stopPoint.position, _duration).OnComplete(() => action());
+    }
+
+    public void MoveCamera(float z)
+    {
+        var pos = transform.position;
+        pos.z = z + _distanceToBallPosition;
+        transform.position = pos;
     }
 }
