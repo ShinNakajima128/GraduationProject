@@ -12,6 +12,10 @@ public class ObjectManager : MonoBehaviour
     [Tooltip("Scene上に配置してある木")]
     [SerializeField]
     RoseTree[] _trees = default;
+
+    [Tooltip("トランプ兵を生成するGenerator")]
+    [SerializeField]
+    TrumpSolderGenerator _trumpGenerator = default;
     #endregion
     #region private
     #endregion
@@ -43,6 +47,8 @@ public class ObjectManager : MonoBehaviour
             return count;
         }
     }
+    public int CurrentRedTrumpCount => _trumpGenerator.CurrentRedTrumpCount;
+    public int CurrentBlackTrumpCount => _trumpGenerator.CurrentBlackTrumpCount;
     #endregion
 
     private void Start()
@@ -55,5 +61,7 @@ public class ObjectManager : MonoBehaviour
         {
             t.Deploy();
         }
+        _trumpGenerator.Return();
+        _trumpGenerator.Generate();
     }
 }

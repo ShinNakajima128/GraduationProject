@@ -23,7 +23,8 @@ public class Trump
 public enum Stage4TrumpType
 {
     Trump_Red,
-    Trump_Black
+    Trump_Black,
+    OFF
 }
 
 //public enum TrumpType
