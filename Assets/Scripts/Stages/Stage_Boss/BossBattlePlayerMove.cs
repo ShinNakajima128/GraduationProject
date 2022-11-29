@@ -27,7 +27,8 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
 
     private void Start()
     {
-        PlayerMovable(true);
+        PlayerMovable(false);
+        StageGame<BossStageManager>.Instance.CharacterMovable += PlayerMovable;
     }
 
     private void FixedUpdate()
