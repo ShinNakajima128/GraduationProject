@@ -109,6 +109,7 @@ public class LobbyManager : MonoBehaviour
             _provider.enabled = true;
             PlayerMove?.Invoke(true);
         }
+        GameManager.SaveStageResult(false);
     }
 
     /// <summary>

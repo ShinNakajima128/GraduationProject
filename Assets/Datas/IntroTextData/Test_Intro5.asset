@@ -13,11 +13,23 @@ MonoBehaviour:
   m_Name: Test_Intro5
   m_EditorClassIdentifier: 
   _messageType: 0
-  _texts:
-  - Actor: "\u30A2\u30EA\u30B9"
-    Message: "\u6700\u521D\u306E\u30E1\u30C3\u30BB\u30FC\u30B8"
-  - Actor: "\u30A6\u30B5\u30AE"
-    Message: "\u30E1\u30C3\u30BB\u30FC\u30B8\u4E2D\u76E4"
-  - Actor: "\u30A2\u30EA\u30B9"
-    Message: "\u30E1\u30C3\u30BB\u30FC\u30B8\u306E\u6700\u5F8C"
+  _dialog:
+  - Id: 0
+    Actor: "\u30A2\u30EA\u30B9"
+    _messages:
+    - "\u3053\u308C\u306F\u30CE\u30D9\u30EB\u30B2\u30FC\u30E0\u306E\u30C6\u30B9\u30C8\u3067\u3059\u3002"
+    - "\u7686\u3055\u3093\u521D\u3081\u307E\u3057\u3066\uFF01\u79C1\u306E\u540D\u524D\u306F\u30D7\u30EC\u30A4\u30E4\u30FC\u3067\u3059\u3002"
+    _screenEffectType: 0
+    Message: "\u3053\u308C\u306F\u30CE\u30D9\u30EB\u30B2\u30FC\u30E0\u306E\u30C6\u30B9\u30C8\u3067\u3059\u3002\n\u7686\u3055\u3093\u521D\u3081\u307E\u3057\u3066\uFF01\u79C1\u306E\u540D\u524D\u306F\u30D7\u30EC\u30A4\u30E4\u30FC\u3067\u3059\u3002"
+    ScreenEffect: 
+  - Id: 1
+    Actor: "\u30C1\u30B7\u30E3\u30CD\u30B3"
+    _messages:
+    - "\u6B21\u306B\u3001\u53CB\u9054\u306E\u3086\u306B\u3066\u3043\u3061\u3083\u3093\u3092\u7D39\u4ECB\u3057\u307E\u3059\u3002"
+    - "\u3086\u306B\u3066\u3043\u3061\u3083\u3093\u3001\u3069\u3046\u305E\uFF01"
+    _screenEffectType: 0
+    Message: "\u6B21\u306B\u3001\u53CB\u9054\u306E\u3086\u306B\u3066\u3043\u3061\u3083\u3093\u3092\u7D39\u4ECB\u3057\u307E\u3059\u3002\n\u3086\u306B\u3066\u3043\u3061\u3083\u3093\u3001\u3069\u3046\u305E\uFF01"
+    ScreenEffect: 
   _background: {fileID: 21300000, guid: 18985777e705bba4898c4fd43d49269e, type: 3}
+  m_spreadSheetURL: https://script.google.com/macros/s/AKfycbw3FW2v1qfLOKevuKsylzysH_W3cQgp0U0Kllh_qxHrsuwDptqNPZzns3DFucKmsIpLIw/exec
+  m_scenarioSheetName: Example

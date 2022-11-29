@@ -121,6 +121,7 @@ public class FallGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(4.0f);
 
+        GameManager.SaveStageResult(true);
         TransitionManager.SceneTransition(SceneType.Lobby);
     }
 }

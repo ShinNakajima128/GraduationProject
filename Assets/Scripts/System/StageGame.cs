@@ -20,6 +20,7 @@ public abstract class StageGame<T> : MonoBehaviour
     #endregion
     #region property
     public static StageGame<T> Instance { get; private set; }
+    public Action<QuizType> QuizSetUp { get; internal set; }
     #endregion
 
     protected void Awake()
