@@ -8,7 +8,8 @@ public class Stage3UIManager : MonoBehaviour
     {
         OrderUI,
         IngameUI,
-        BlackOutImage
+        BlackOutImage,
+        GameClear
     }
 
     [SerializeField]
@@ -25,6 +26,9 @@ public class Stage3UIManager : MonoBehaviour
 
     [SerializeField]
     private Image _blackOut;
+
+    [SerializeField]
+    private GameObject _gameClearPanel;
 
     /// <summary>
     /// オーダーのテキスト表示
@@ -55,6 +59,9 @@ public class Stage3UIManager : MonoBehaviour
                 break;
             case Type.BlackOutImage:
                 _blackOut.gameObject.SetActive(state);
+                break;
+            case Type.GameClear:
+                _gameClearPanel.SetActive(state);
                 break;
             default:
                 break;

@@ -17,7 +17,7 @@ public class Stage3GameManager : MonoBehaviour
     private CameraController _cameraCtrl;
 
     [SerializeField]
-    private OrderManager _order;
+    private OrderManager _orderMana;
 
     [SerializeField]
     private Stage3UIManager _uiManager;
@@ -59,26 +59,31 @@ public class Stage3GameManager : MonoBehaviour
                 break;
             case GameState.CreateOrder:
                 // オーダーの作成
-                var order = _order.CreateOrder(() => ChengeStage(GameState.MoveCamera));
+                var order = _orderMana.CreateOrder(() => ChengeStage(GameState.MoveCamera));
                 // お題のUI表示
                 _uiManager.DisplayOrder(order);
                 break;
             case GameState.MoveCamera:
                 // Orderの非表示
                 _uiManager.ChengeUIActivete(Stage3UIManager.Type.OrderUI, false);
-                // カメラの移動
+                // カメラの移動　移動後ステートの変更
                 _cameraCtrl.MoveRequest(() => ChengeStage(GameState.Throw));
-                // 暗転の処理
+                // 暗転処理
                 _uiManager.BeginBlackOut(_durationOfBlackOut);
                 break;
             case GameState.Throw:
+                // InGameUIの表示
+                _uiManager.ChengeUIActivete(Stage3UIManager.Type.IngameUI, true);
                 // 暗転パネルの非表示
                 _uiManager.ChengeUIActivete(Stage3UIManager.Type.BlackOutImage, false);
                 // 操作を開始
                 _player.BeginControl();
                 break;
             case GameState.Result:
-                Debug.Log("To Result");
+                if (_orderMana.IsCameClear())
+                {
+                    _uiManager.ChengeUIActivete(Stage3UIManager.Type.GameClear, true);
+                }
                 break;
             default:
                 break;

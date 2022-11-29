@@ -11,7 +11,7 @@ public class BallController : MonoBehaviour, IThrowable
     [SerializeField]
     private CameraController _camera;
 
-    private bool IsThrow { get; set; } = false;
+    private bool IsThrowed { get; set; } = false;
 
     private event Action OnGoaled;
     private Rigidbody _rb;
@@ -27,13 +27,13 @@ public class BallController : MonoBehaviour, IThrowable
     private void Update()
     {
         _direction = _rb.velocity;
-        if (IsThrow)
-            MoveCamera();
+        if (IsThrowed)
+            MoveCameraRequest();
     }
 
-    private void MoveCamera()
+    private void MoveCameraRequest()
     {
-        _camera.MoveCamera(this.transform.position.z);
+        _camera.MoveCamera(this.transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -43,13 +43,18 @@ public class BallController : MonoBehaviour, IThrowable
             Debug.Log("Goal");
             OnGoaled();
             this.gameObject.SetActive(false);
+            return;
         }
 
-        // 法線を取得
-        var normal = collision.contacts[0].normal;
-        // 反射ベクトルを取得
-        Vector3 result = Vector3.Reflect(_direction, normal);
-        _rb.velocity = result;
+        if (collision.gameObject.CompareTag("Block"))
+        {
+            // 法線を取得
+            var normal = collision.contacts[0].normal;
+            // 反射ベクトルを取得
+            Vector3 result = Vector3.Reflect(_direction, normal);
+            _rb.velocity = result;
+            return;
+        }
     }
     #endregion
 
@@ -72,7 +77,7 @@ public class BallController : MonoBehaviour, IThrowable
         transform.position = pos;
         transform.rotation = dir;
         _rb.velocity = transform.forward * _moveSpeed;
-        IsThrow = true;
+        IsThrowed = true;
     }
 
     public void AddCallBack(Action action)

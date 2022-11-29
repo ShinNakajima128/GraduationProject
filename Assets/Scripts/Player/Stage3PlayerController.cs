@@ -27,6 +27,9 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private BallController _ball;
 
+    [SerializeField]
+    private Animator _animator;
+
     private PlayerInput _pInput;
 
     public bool IsDebug = false;
@@ -135,6 +138,19 @@ public class Stage3PlayerController : MonoBehaviour
     #endregion
 
     #region Public Function
+    public void Throw()
+    {
+        // ボールの座標
+        var ballPosition = _throwPoint.position;
+        // ボールの向き
+        var ballDirection = this.transform.rotation;
+
+        var ball = _ball as IThrowable;
+
+        ball.Throw(ballPosition, ballDirection);
+        IsThrowed = true;
+    }
+
     /// <summary>
     /// Player操作の開始
     /// </summary>
@@ -223,15 +239,17 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.started)
         {
-            // ボールの座標
-            var ballPosition = _throwPoint.position;
-            // ボールの向き
-            var ballDirection = this.transform.rotation;
+            CanControl = false;
+            _animator.Play("Swing");
+        }
+    }
 
-            var ball = _ball as IThrowable;
-
-            ball.Throw(ballPosition, ballDirection);
-            IsThrowed = true;
+    public void LookForForward()
+    {
+        var rnd = UnityEngine.Random.Range(0, 3);
+        if (rnd == 2)
+        {
+            _animator.Play("LookForForward");
         }
     }
     #endregion

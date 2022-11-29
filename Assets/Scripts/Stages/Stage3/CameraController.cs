@@ -10,26 +10,38 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Transform _stopPoint;
 
+    [Header("カメラの移動にかける時間")]
     [SerializeField]
     private float _duration;
 
-    [SerializeField]
-    private float _distanceToBallPosition;
+    private bool Initialize = false;
 
     private void Start()
     {
         transform.position = _startPoint.position;
     }
 
+    /// <summary>
+    /// カメラの移動をリクエスト
+    /// </summary>
     public void MoveRequest(Action action = null)
     {
-        transform.DOMove(_stopPoint.position, _duration).OnComplete(() => action());
+        if (Initialize is false)
+        {
+            transform.DOMove(_stopPoint.position, _duration).OnComplete(() => action());
+        }
+        Initialize = true;
     }
 
-    public void MoveCamera(float z)
+    /// <summary>
+    /// 打った後のカメラ移動
+    /// </summary>
+    public void MoveCamera(Vector3 ballPos)
     {
-        var pos = transform.position;
-        pos.z = z + _distanceToBallPosition;
-        transform.position = pos;
+        var camPos = transform.position;
+        // ボールとの距離
+        var distance = Math.Abs(ballPos.z - camPos.z);
+        camPos.z = camPos.z + -distance;
+        // transform.position = camPos;
     }
 }

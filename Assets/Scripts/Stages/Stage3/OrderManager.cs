@@ -23,30 +23,40 @@ public class OrderManager : MonoBehaviour
         return _order;
     }
 
-    public bool CheckGameScore()
+    /// <summary>
+    /// ƒQ[ƒ€‚ÌƒNƒŠƒA”»’è
+    /// </summary>
+    public bool IsCameClear()
     {
-        switch (_order.CardType)
+        switch (_order.TargetCardType)
         {
             case CardType.None:
                 break;
             case CardType.Both:
-                if (_scoreConter.HitedCount >= _order.Count)
+                if (_scoreConter.HitedCount >= _order.ClearCount)
                 {
                     Debug.Log("Clear");
                     return true;
                 }
                 break;
             case CardType.Red:
-                if (_scoreConter)
+                if (_scoreConter.HitedRedCount >= _order.ClearCount)
                 {
-
+                    Debug.Log("Clear");
+                    return true;
                 }
                 break;
             case CardType.Black:
+                if (_scoreConter.HitedBlackCount >= _order.ClearCount)
+                {
+                    Debug.Log("Clear");
+                    return true;
+                }
                 break;
             default:
                 break;
         }
+        Debug.Log("Faild");
         return false;
     }
 }
