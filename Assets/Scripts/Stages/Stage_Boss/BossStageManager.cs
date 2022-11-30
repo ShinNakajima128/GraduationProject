@@ -132,7 +132,7 @@ public class BossStageManager : StageGame<BossStageManager>
             CharacterMovable?.Invoke(true);
             OnGameSetUp();
 
-            yield return _bossCtrl.BattlePhaseCoroutine();
+            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i);
         }
         
     }
