@@ -82,8 +82,14 @@ public class Stage3GameManager : MonoBehaviour
             case GameState.Result:
                 if (_orderMana.IsCameClear())
                 {
+                    GameManager.SaveStageResult(true);
                     _uiManager.ChengeUIActivete(Stage3UIManager.Type.GameClear, true);
                 }
+                else
+                {
+                    GameManager.SaveStageResult(false);
+                }
+                TransitionManager.SceneTransition(SceneType.Lobby);
                 break;
             default:
                 break;

@@ -34,6 +34,7 @@ public class CameraController : MonoBehaviour
     {
         if (Initialize is false)
         {
+            transform.DORotate(_stopPoint.transform.eulerAngles, _duration);
             transform.DOMove(_stopPoint.position, _duration).OnComplete(() => action());
         }
         Initialize = true;
