@@ -39,9 +39,17 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _battleCamera = default;
 
+    [Header("Objects")]
+    [Tooltip("戦闘中の移動可能範囲のエフェクト")]
+    [SerializeField]
+    GameObject _areaEffect = default;
+
     [Header("Component")]
     [SerializeField]
     MessagePlayer _messagePlayer = default;
+
+    [SerializeField]
+    BossController _bossCtrl = default;
     #endregion
     #region private
     /// <summary> 演出中かどうか </summary>
@@ -66,6 +74,7 @@ public class BossStageManager : StageGame<BossStageManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
+        _areaEffect.SetActive(true);
     }
 
     public override void OnGameStart()
@@ -118,7 +127,14 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator InGameCoroutine()
     {
-        yield return null;
+        for (int i = 0; i < _battleNum; i++)
+        {
+            CharacterMovable?.Invoke(true);
+            OnGameSetUp();
+
+            yield return _bossCtrl.BattlePhaseCoroutine();
+        }
+        
     }
 
     /// <summary>
@@ -156,10 +172,12 @@ public class BossStageManager : StageGame<BossStageManager>
                 break;
         }
     }
+
     void OnCloseup()
     {
         CameraBlend(CameraType.Direction_Closeup, _closeupTime);
     }
+
     void OnReset()
     {
         CameraBlend(CameraType.Direction_Closeup, _cameraBlendTime);
