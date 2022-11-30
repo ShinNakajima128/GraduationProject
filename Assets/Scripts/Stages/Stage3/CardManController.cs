@@ -16,6 +16,9 @@ public class CardManController : MonoBehaviour
     [SerializeField]
     private CardType _type;
 
+    [SerializeField]
+    private Stage3ScoreConter _conter;
+
     private Vector3 _defPos;
 
     private void Awake()
@@ -40,7 +43,8 @@ public class CardManController : MonoBehaviour
     {
         if (other.CompareTag("Ball"))
         {
-            this.gameObject.SetActive(false);
+            _conter.AddCount(_type);
+            gameObject.SetActive(false);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +14,8 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private float _width;
 
-    [Header("振り向ける最大値　※推奨(0 ～ 0.4)")]
+    [Header("振り向ける最大値")]
+    [Range(0f, 0.4f)]
     [SerializeField]
     private float _eulerMaxValue;
 
@@ -25,7 +27,14 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private BallController _ball;
 
+    [SerializeField]
+    private Animator _animator;
+
     private PlayerInput _pInput;
+
+    public bool IsDebug = false;
+
+    public Action OnCircleButtonStarted { get; private set; }
 
     // 投げ終わったか
     public bool IsThrowed { get; private set; } = false;
@@ -52,6 +61,11 @@ public class Stage3PlayerController : MonoBehaviour
         {
             ChengeActionMap("Stage3");
             CallBackRegist();
+        }
+
+        if (IsDebug)
+        {
+            CanControl = true;
         }
     }
 
@@ -105,25 +119,52 @@ public class Stage3PlayerController : MonoBehaviour
     /// <summary>
     /// 自身の座標の修正
     /// </summary>
-    private Vector3 FixPosition(Vector3 myPos)
+    private (Vector3, bool) FixPosition(Vector3 myPos)
     {
+        var isFix = false;
         if (myPos.x > _width)
         {
             myPos.x = _width;
+            isFix = true;
         }
         else if (myPos.x < -_width)
         {
             myPos.x = -_width;
+            isFix = true;
         }
 
-        return myPos;
+        return (myPos, isFix);
     }
     #endregion
 
     #region Public Function
-    public void Send()
+    public void Throw()
+    {
+        // ボールの座標
+        var ballPosition = _throwPoint.position;
+        // ボールの向き
+        var ballDirection = this.transform.rotation;
+
+        var ball = _ball as IThrowable;
+
+        ball.Throw(ballPosition, ballDirection);
+        IsThrowed = true;
+    }
+
+    /// <summary>
+    /// Player操作の開始
+    /// </summary>
+    public void BeginControl()
     {
         CanControl = true;
+    }
+
+    /// <summary>
+    /// 〇ボタンが押された時にする処理を追加
+    /// </summary>
+    public void RegistToOnCircleButton(Action action)
+    {
+        OnCircleButtonStarted += action;
     }
     #endregion
 
@@ -146,8 +187,16 @@ public class Stage3PlayerController : MonoBehaviour
         {
             // 横移動
             myPos.x = myPos.x + velue.x * _moveSpeed;
-            // 座標の修正
-            myPos = FixPosition(myPos);
+            // 座標の正規化と結果を取得
+            var fixedPos = FixPosition(myPos);
+            // 正規化した座標を取得
+            myPos = fixedPos.Item1;
+            // 正規化した場合は座標を移動しない
+            if (!fixedPos.Item2)
+            {
+                // ボールのx座標移動
+                _ball.SyncMovedTransorm(velue.x * _moveSpeed);
+            }
 
             this.transform.position = myPos;
         }
@@ -179,19 +228,28 @@ public class Stage3PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 〇ボタンが押された時
+    /// </summary>
     private void OnThrow(InputAction.CallbackContext context)
     {
+        OnCircleButtonStarted();
+
         if (!CanControl) return;
 
         if (context.started)
         {
-            var ballPosition = _throwPoint.position;
-            var ballDirection = this.transform.rotation;
+            CanControl = false;
+            _animator.Play("Swing");
+        }
+    }
 
-            var ball = _ball as IThrowable;
-
-            ball.Throw(ballPosition, ballDirection);
-            IsThrowed = true;
+    public void LookForForward()
+    {
+        var rnd = UnityEngine.Random.Range(0, 3);
+        if (rnd == 2)
+        {
+            _animator.Play("LookForForward");
         }
     }
     #endregion

@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class OrderManager : MonoBehaviour
 {
@@ -8,28 +7,56 @@ public class OrderManager : MonoBehaviour
     private Order[] _orders;
 
     [SerializeField]
-    private Button _agree;
-
-    [SerializeField]
-    private GameObject _panel;
+    private Stage3ScoreConter _scoreConter;
 
     private Order _order;
 
-    public void CreateOrder(Action action = null)
+    /// <summary>
+    /// お題の作成
+    /// </summary>
+    public Order CreateOrder(Action action = null)
     {
-        // オーダーの生成
-        var index = UnityEngine.Random.Range(0, _orders.Length);
+        Debug.Log("オーダーの作成");
+        // オーダーの生成 ※0は表示がバグってるから1から
+        var index = UnityEngine.Random.Range(1, _orders.Length);
         _order = _orders[index];
+        return _order;
+    }
 
-        // ボタンにメソッドを登録
-        _agree.onClick.AddListener(() => 
+    /// <summary>
+    /// ゲームのクリア判定
+    /// </summary>
+    public bool IsCameClear()
+    {
+        switch (_order.TargetCardType)
         {
-            action();
-            _panel.SetActive(false);
-            _agree.gameObject.SetActive(false);
-        });
-
-        // ボタンの有効化
-        _agree.gameObject.SetActive(true);
+            case CardType.None:
+                break;
+            case CardType.Both:
+                if (_scoreConter.HitedCount >= _order.ClearCount)
+                {
+                    Debug.Log("Clear");
+                    return true;
+                }
+                break;
+            case CardType.Red:
+                if (_scoreConter.HitedRedCount >= _order.ClearCount)
+                {
+                    Debug.Log("Clear");
+                    return true;
+                }
+                break;
+            case CardType.Black:
+                if (_scoreConter.HitedBlackCount >= _order.ClearCount)
+                {
+                    Debug.Log("Clear");
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+        Debug.Log("Faild");
+        return false;
     }
 }

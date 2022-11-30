@@ -1,31 +1,58 @@
+using DG.Tweening;
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    private float _speed;
+    private Transform _startPoint;
 
     [SerializeField]
-    private Vector3 _stopPoint;
+    private Transform _stopPoint;
 
-    public void MoveRequest(Action action = null)
+    [Header("カメラの移動にかける時間")]
+    [SerializeField]
+    private float _duration;
+
+    private bool Initialize = false;
+
+    // ボールとの距離
+    private float _distanceForBall;
+    private float _distanceToBall;
+
+    public bool HasBallPosition { get; private set; } = false;
+
+    private void Start()
     {
-        StartCoroutine(MoveAsync(action));
+        transform.position = _startPoint.position;
     }
 
-    private IEnumerator MoveAsync(Action action = null)
+    /// <summary>
+    /// カメラの移動をリクエスト
+    /// </summary>
+    public void MoveRequest(Action action = null)
     {
-        while (this.transform.position.z > _stopPoint.z)
+        if (Initialize is false)
         {
-            var pos = this.transform.position;
-            pos.z -= _speed;
-            this.transform.position = pos;
-            yield return null;
+            transform.DORotate(_stopPoint.transform.eulerAngles, _duration);
+            transform.DOMove(_stopPoint.position, _duration).OnComplete(() => action());
         }
-        // 移動が終わった時
-        action();
-        yield return null;
+        Initialize = true;
+    }
+
+    /// <summary>
+    /// 打った後のカメラ移動
+    /// </summary>
+    public void SendBallPosition(Vector3 ballPos)
+    {
+        var camPos = transform.position;
+        if (HasBallPosition is false)
+        {
+            // ボールとの距離
+            _distanceToBall = Math.Abs(ballPos.z - camPos.z);
+            HasBallPosition = true;
+        }
+        camPos.z = ballPos.z - _distanceToBall;
+        transform.position = camPos;
     }
 }
