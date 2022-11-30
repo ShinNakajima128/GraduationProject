@@ -16,6 +16,12 @@ public class CameraController : MonoBehaviour
 
     private bool Initialize = false;
 
+    // ボールとの距離
+    private float _distanceForBall;
+    private float _distanceToBall;
+
+    public bool HasBallPosition { get; private set; } = false;
+
     private void Start()
     {
         transform.position = _startPoint.position;
@@ -36,12 +42,16 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// 打った後のカメラ移動
     /// </summary>
-    public void MoveCamera(Vector3 ballPos)
+    public void SendBallPosition(Vector3 ballPos)
     {
         var camPos = transform.position;
-        // ボールとの距離
-        var distance = Math.Abs(ballPos.z - camPos.z);
-        camPos.z = camPos.z + -distance;
-        // transform.position = camPos;
+        if (HasBallPosition is false)
+        {
+            // ボールとの距離
+            _distanceToBall = Math.Abs(ballPos.z - camPos.z);
+            HasBallPosition = true;
+        }
+        camPos.z = ballPos.z - _distanceToBall;
+        transform.position = camPos;
     }
 }

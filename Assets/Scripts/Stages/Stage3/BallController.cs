@@ -33,7 +33,7 @@ public class BallController : MonoBehaviour, IThrowable
 
     private void MoveCameraRequest()
     {
-        _camera.MoveCamera(this.transform.position);
+        _camera.SendBallPosition(this.transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
