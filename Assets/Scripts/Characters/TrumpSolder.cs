@@ -39,7 +39,7 @@ public class TrumpSolder : MonoBehaviour
         }
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         int patternCount = 0;
 
@@ -55,7 +55,7 @@ public class TrumpSolder : MonoBehaviour
         _init = true;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         if (_isRandomPattern)
         {

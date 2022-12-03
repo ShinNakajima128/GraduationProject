@@ -25,6 +25,14 @@ public class BossController : MonoBehaviour
     [SerializeField]
     float _fallDownTime = 0.3f;
 
+    [Tooltip("攻撃後、停止している時間")]
+    [SerializeField]
+    float _stopTime = 3.0f;
+
+    [Tooltip("攻撃可能になるまでの時間")]
+    [SerializeField]
+    float _attackInterval = 3.0f;
+
     [Tooltip("ダウン時間")]
     [SerializeField]
     float _downTime = 3.0f;
@@ -42,6 +50,7 @@ public class BossController : MonoBehaviour
     #endregion
 
     #region private
+    Animator _anim;
     CharacterController _cc;
     Transform _playerTrans = default;
     BossState _currentBossState = default;
@@ -51,6 +60,7 @@ public class BossController : MonoBehaviour
     bool _isInBattle = false;
     bool _isWaiting = false;
     bool _isDamaged = false;
+    bool _isCanAttack = true;
     #endregion
     #region public
     #endregion
@@ -59,6 +69,7 @@ public class BossController : MonoBehaviour
 
     private void Awake()
     {
+        TryGetComponent(out _anim);
         TryGetComponent(out _cc);
     }
     void Start()
@@ -73,26 +84,7 @@ public class BossController : MonoBehaviour
         {
             if (!_isWaiting)
             {
-                switch (_currentBossState)
-                {
-                    case BossState.Idle:
-                        break;
-                    case BossState.Wait:
-                        break;
-                    case BossState.Direction:
-                        break;
-                    case BossState.Move:
-                        break;
-                    case BossState.Attack_Jump:
-                        StartCoroutine(JumpAttackCoroutine());
-                        break;
-                    case BossState.Down:
-                        break;
-                    case BossState.KnockOut:
-                        break;
-                    default:
-                        break;
-                }
+                
             }
         }
     }
@@ -112,6 +104,10 @@ public class BossController : MonoBehaviour
 
     private void OnMove()
     {
+        if (_currentBossState != BossState.Move)
+        {
+            _anim.CrossFadeInFixedTime("Move", 0.1f);
+        }
         _dir = _playerTrans.position - transform.position;
         _dir.y = 0;
 
@@ -120,20 +116,23 @@ public class BossController : MonoBehaviour
         _velocity = _dir.normalized * _moveSpeed;
         _cc.Move(_velocity * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, _playerTrans.position) < _attackDistance)
+        if (Vector3.Distance(transform.position, _playerTrans.position) < _attackDistance && _isCanAttack)
         {
-            StartCoroutine(ChangeState(BossState.Attack_Jump, 5.0f, () => 
-            {
-                StartCoroutine(ChangeState(BossState.Move));
-            }));
+            StartCoroutine(ChangeState(BossState.Attack_Jump));
         }
     }
     
     public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase)
     {
-        transform.DOMove(_startBattleTrans.position, 2.0f);
+        _anim.CrossFadeInFixedTime("Jump", 0.1f);
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.3f);
+
+        yield return transform.DOMove(_startBattleTrans.position, 1.0f).WaitForCompletion();
+
+        yield return new WaitForSeconds(1.0f);
+
+        _anim.CrossFadeInFixedTime("Idle", 0.1f);
 
         _currentBattlePhase = battlePhase;
 
@@ -155,46 +154,57 @@ public class BossController : MonoBehaviour
     IEnumerator JumpAttackCoroutine()
     {
         _isWaiting = true;
+        _isCanAttack = false;
 
         bool attackFinished = false;
+        
+        _anim.CrossFadeInFixedTime("Jump", 0.1f);
+        transform.DOLookAt(_playerTrans.position, 0.1f);
 
-        transform.DOMoveY(10.0f, _jumpUpTime);
+        yield return new WaitForSeconds(1.3f);
 
-        yield return new WaitForSeconds(_jumpUpTime);
+        transform.DOLookAt(_playerTrans.position, 0.1f,AxisConstraint.Y);
 
         switch (_currentBattlePhase)
         {
             case BossBattlePhase.First:
-                transform.DOMove(_playerTrans.position, _fallDownTime)
-                         .OnComplete(() =>
-                         {
-                             attackFinished = true;
-                             Debug.Log("着地");
-                         })
-                         .SetDelay(5);    
+                yield return transform.DOMove(_playerTrans.position, _fallDownTime)
+                                      .OnComplete(() =>
+                                      {
+                                          attackFinished = true;
+                                          Debug.Log("着地");
+                                      })
+                                      .WaitForCompletion();    
                 break;
             case BossBattlePhase.Second:
-                transform.DOMove(_playerTrans.position, _fallDownTime)
-                         .OnComplete(() =>
-                         {
-                             attackFinished = true;
-                             Debug.Log("着地");
-                         })
-                         .SetDelay(3.5f);
+                yield return transform.DOMove(_playerTrans.position, _fallDownTime)
+                                      .OnComplete(() =>
+                                      {
+                                          attackFinished = true;
+                                          Debug.Log("着地");
+                                      })
+                                      .WaitForCompletion();
+                //transform.DOMove(_playerTrans.position, _fallDownTime)
+                //         .OnComplete(() =>
+                //         {
+                //             attackFinished = true;
+                //             Debug.Log("着地");
+                //         })
+                //         .SetDelay(3.5f);
                 break;
             case BossBattlePhase.Third:
-                transform.DOMove(_playerTrans.position, _fallDownTime)
-                         .OnComplete(() =>
-                         {
-                             transform.DOMoveY(3.0f, 1.0f)
-                                      .OnComplete(() => 
-                                      {
-                                          transform.DOMove(_playerTrans.position, _fallDownTime)
-                                                   .SetDelay(5);
-                                      })
-                                      .SetLoops(2);
-                         })
-                         .SetDelay(3.5f);
+                //transform.DOMove(_playerTrans.position, _fallDownTime)
+                //         .OnComplete(() =>
+                //         {
+                //             transform.DOMoveY(3.0f, 1.0f)
+                //                      .OnComplete(() => 
+                //                      {
+                //                          transform.DOMove(_playerTrans.position, _fallDownTime)
+                //                                   .SetDelay(5);
+                //                      })
+                //                      .SetLoops(2);
+                //         })
+                //         .SetDelay(3.5f);
                 break;
             default:
                 break;
@@ -205,9 +215,10 @@ public class BossController : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(_stopTime);
 
         StartCoroutine(ChangeState(BossState.Move));
+        StartCoroutine(AttackInterval(_attackInterval));
         _isWaiting = false;
     }
 
@@ -215,9 +226,36 @@ public class BossController : MonoBehaviour
     {
         _currentBossState = state;
 
+        switch (_currentBossState)
+        {
+            case BossState.Idle:
+                break;
+            case BossState.Wait:
+                break;
+            case BossState.Direction:
+                break;
+            case BossState.Move:
+                _anim.CrossFadeInFixedTime("Move", 0.1f);
+                break;
+            case BossState.Attack_Jump:
+                StartCoroutine(JumpAttackCoroutine());
+                break;
+            case BossState.Down:
+                break;
+            case BossState.KnockOut:
+                break;
+            default:
+                break;
+        }
         yield return new WaitForSeconds(waitTime);
 
         action?.Invoke();
+    }
+    IEnumerator AttackInterval(float interval)
+    {
+        yield return new WaitForSeconds(interval);
+
+        _isCanAttack = true;
     }
 }
 

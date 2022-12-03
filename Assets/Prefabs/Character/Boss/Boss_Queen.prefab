@@ -972,6 +972,7 @@ GameObject:
   - component: {fileID: 3249399331853917172}
   - component: {fileID: 3067679242937454242}
   - component: {fileID: 2370825636060618223}
+  - component: {fileID: 6422767447871481237}
   m_Layer: 0
   m_Name: Boss_Queen
   m_TagString: Untagged
@@ -1011,6 +1012,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7af6af1d713fa144a8ebfef458810e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed: 5
+  _turnSpeed: 5
+  _jumpUpTime: 1.5
+  _fallDownTime: 0.3
+  _downTime: 3
+  _attackDistance: 2
+  _directionTrans: {fileID: 0}
+  _startBattleTrans: {fileID: 0}
 --- !u!143 &2370825636060618223
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1029,6 +1038,26 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &6422767447871481237
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761832288784941390}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a987ed06a67e86445933f7886f8f86bd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2847263155113187626
 GameObject:
   m_ObjectHideFlags: 0
