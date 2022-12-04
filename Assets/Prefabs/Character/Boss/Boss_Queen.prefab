@@ -1012,14 +1012,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7af6af1d713fa144a8ebfef458810e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
-  _turnSpeed: 5
+  _defaultMoveSpeed: 4
+  _turnSpeed: 10
   _jumpUpTime: 1.5
   _fallDownTime: 0.3
+  _attackInterval: 1.5
+  _phaseParams:
+  - Phase: 0
+    MoveSpeed: 6
+    ChaseTime: 5
+    CoolTime: 3
+    AttackCount: 1
+  - Phase: 1
+    MoveSpeed: 7
+    ChaseTime: 3.5
+    CoolTime: 3
+    AttackCount: 1
+  - Phase: 2
+    MoveSpeed: 8
+    ChaseTime: 3.5
+    CoolTime: 3
+    AttackCount: 3
   _downTime: 3
-  _attackDistance: 2
+  _attackDistance: 10
   _directionTrans: {fileID: 0}
   _startBattleTrans: {fileID: 0}
+  _debugMode: 1
+  _debugPhase: 0
 --- !u!143 &2370825636060618223
 CharacterController:
   m_ObjectHideFlags: 0

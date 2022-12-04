@@ -71,7 +71,6 @@ public class TrumpSolderManager : MonoBehaviour
                         break;
                 }
                 _trumpSolderList[index].transform.DOLocalRotate(dir, 0f);
-                Debug.Log($"{index + 1}êlñ⁄:{_trumpSolderList[index].DirType}:position:{_trumpSolderList[index].transform.localPosition}");
                 index++;
             }
         }

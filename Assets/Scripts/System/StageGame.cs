@@ -24,7 +24,7 @@ public abstract class StageGame<T> : MonoBehaviour
     public Action<QuizType> QuizSetUp { get; set; }
     #endregion
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         Instance = this;
     }

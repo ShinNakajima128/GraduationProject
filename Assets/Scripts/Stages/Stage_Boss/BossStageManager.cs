@@ -40,6 +40,10 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _battleCamera = default;
 
+    [Tooltip("ボスのジャンプ中に使用するカメラ")]
+    [SerializeField]
+    CinemachineVirtualCamera _jumpAttackCamera = default;
+
     [Header("Objects")]
     [Tooltip("戦闘中の移動可能範囲のエフェクト")]
     [SerializeField]
@@ -55,6 +59,7 @@ public class BossStageManager : StageGame<BossStageManager>
     #region private
     /// <summary> 演出中かどうか </summary>
     bool _isDirecting = false;
+    CinemachineImpulseSource _impulseSource;
     #endregion
     #region public
     public override event Action GameSetUp;
@@ -63,7 +68,14 @@ public class BossStageManager : StageGame<BossStageManager>
     public override event Action GameEnd;
     #endregion
     #region property
+    public static new BossStageManager Instance { get; private set; }
     #endregion
+
+    protected override void Awake()
+    {
+        Instance = this;
+        TryGetComponent(out _impulseSource);
+    }
 
     protected override void Start()
     {
@@ -87,6 +99,24 @@ public class BossStageManager : StageGame<BossStageManager>
     public override void OnGameEnd()
     {
         GameEnd?.Invoke();
+    }
+
+    /// <summary>
+    /// カメラを切り替える
+    /// </summary>
+    /// <param name="type"> 切り替え先のカメラの種類 </param>
+    /// <param name="blendTime"> 切り替えにかける時間 </param>
+    public static void CameraChange(CameraType type, float blendTime)
+    {
+        Instance.CameraBlend(type, blendTime);
+    }
+
+    /// <summary>
+    /// カメラを揺らす
+    /// </summary>
+    public static void CameraShake()
+    {
+        Instance._impulseSource.GenerateImpulse();
     }
 
     protected override IEnumerator GameStartCoroutine(Action action = null)
@@ -158,16 +188,25 @@ public class BossStageManager : StageGame<BossStageManager>
                 _directionCamera.Priority = 15;
                 _closeupCamera.Priority = 9;
                 _battleCamera.Priority = 9;
+                _jumpAttackCamera.Priority = 9;
                 break;
             case CameraType.Battle:
                 _directionCamera.Priority = 9;
                 _closeupCamera.Priority = 9;
                 _battleCamera.Priority = 15;
+                _jumpAttackCamera.Priority = 9;
                 break;
             case CameraType.Direction_Closeup:
                 _directionCamera.Priority = 9;
                 _closeupCamera.Priority = 15;
                 _battleCamera.Priority = 9;
+                _jumpAttackCamera.Priority = 9;
+                break;
+            case CameraType.JumpAttack:
+                _directionCamera.Priority = 9;
+                _closeupCamera.Priority = 9;
+                _battleCamera.Priority = 9;
+                _jumpAttackCamera.Priority = 15;
                 break;
             default:
                 break;
@@ -189,5 +228,6 @@ public enum CameraType
     Default,
     Direction,
     Battle,
-    Direction_Closeup
+    Direction_Closeup,
+    JumpAttack
 }
