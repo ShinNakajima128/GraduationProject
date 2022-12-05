@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using AliceProject;
+
 
 /// <summary>
 /// メッセージを再生するコンポーネント
