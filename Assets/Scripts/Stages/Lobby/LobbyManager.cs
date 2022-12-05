@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using AliceProject;
+using DG.Tweening;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -34,6 +36,9 @@ public class LobbyManager : MonoBehaviour
     [Header("UI")]
     [SerializeField]
     GameObject _stageDescriptionPanel = default;
+
+    [SerializeField]
+    CanvasGroup _stageDescriptionCanvas = default;
 
     [SerializeField]
     Text _stageNameText = default;
@@ -110,6 +115,7 @@ public class LobbyManager : MonoBehaviour
             PlayerMove?.Invoke(true);
         }
         GameManager.SaveStageResult(false);
+        OnFadeDescription(0f, 0f);
     }
 
     /// <summary>
@@ -118,7 +124,8 @@ public class LobbyManager : MonoBehaviour
     /// <param name="type"> 遷移先のステージのScene </param>
     public static void OnStageDescription(SceneType type)
     {
-        Instance._stageDescriptionPanel.SetActive(true);
+        //Instance._stageDescriptionPanel.SetActive(true);
+        Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
         Instance._stageNameText.text = Instance._stageDatas.FirstOrDefault(d => d.Type == type).SceneName;
         Instance.ApproachDoor?.Invoke();
@@ -129,10 +136,19 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     public static void OffStageDescription()
     {
-        Instance._stageDescriptionPanel.SetActive(false);
+        //Instance._stageDescriptionPanel.SetActive(false);
+        Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
         Instance._stageNameText.text = "";
         Instance.StepAwayDoor?.Invoke();
+    }
+
+    void OnFadeDescription(float value, float fadeTime)
+    {
+        DOTween.To(() => _stageDescriptionCanvas.alpha,
+                x => _stageDescriptionCanvas.alpha = x,
+                value,
+                fadeTime);
     }
 
     /// <summary>
