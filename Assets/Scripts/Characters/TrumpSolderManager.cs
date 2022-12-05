@@ -8,6 +8,15 @@ using DG.Tweening;
 public class TrumpSolderManager : MonoBehaviour
 {
     #region serialize
+    [Header("Variables")]
+    [Tooltip("構えてから突くまでの待機時間")]
+    [SerializeField]
+    float _waitTime = 2.0f;
+
+    [Tooltip("攻撃判定が残る時間")]
+    [SerializeField]
+    float _durationTime = 3.0f;
+
     [Header("Objects")]
     [Tooltip("トランプ兵のPrefab")]
     [SerializeField]
@@ -21,18 +30,14 @@ public class TrumpSolderManager : MonoBehaviour
     #endregion
     #region private
     List<BattleAreaTrumpSolder> _trumpSolderList = new List<BattleAreaTrumpSolder>();
-    readonly List<Animator> _frontTrumpAnims = new List<Animator>();
-    readonly List<Animator> _backTrumpAnims = new List<Animator>();
-    readonly List<Animator> _leftTrumpAnims = new List<Animator>();
-    readonly List<Animator> _rightTrumpAnims = new List<Animator>() ;
+    readonly List<BattleAreaTrumpSolder> _frontTrumps = new List<BattleAreaTrumpSolder>();
+    readonly List<BattleAreaTrumpSolder> _backTrumps = new List<BattleAreaTrumpSolder>();
+    readonly List<BattleAreaTrumpSolder> _leftTrumps = new List<BattleAreaTrumpSolder>();
+    readonly List<BattleAreaTrumpSolder> _rightTrumps = new List<BattleAreaTrumpSolder>() ;
     #endregion
     #region public
     #endregion
     #region property
-    public List<Animator> FrontTrumpAnims => _frontTrumpAnims;
-    public List<Animator> BackTrumpAnims => _backTrumpAnims;
-    public List<Animator> LeftTrumpAnims => _leftTrumpAnims;
-    public List<Animator> RightTrumpAnims => _rightTrumpAnims;
     #endregion
 
     private void Awake()
@@ -58,34 +63,118 @@ public class TrumpSolderManager : MonoBehaviour
         {
             for (int n = 0; n < _areaPositions[i].LineUpTrans.Length; n++)
             {
-                _trumpSolderList[index].transform.localPosition = _areaPositions[i].LineUpTrans[n].position;
-                _trumpSolderList[index].DirType = _areaPositions[i].DirectionType;
-                Vector3 dir = default;
+                var trump = _trumpSolderList[index];
 
-                var anim = _trumpSolderList[index].GetComponent<Animator>();
+                trump.transform.localPosition = _areaPositions[i].LineUpTrans[n].position;
+                trump.DirType = _areaPositions[i].DirectionType;
+                
+                Vector3 dir = default;
                 
                 switch (_trumpSolderList[index].DirType)
                 {
                     case DirectionType.Front:
                         dir.y = 0f;
-                        _frontTrumpAnims.Add(anim);
+                        _frontTrumps.Add(trump);
                         break;
                     case DirectionType.Back:
                         dir.y = 180f;
-                        _backTrumpAnims.Add(anim);
+                        _backTrumps.Add(trump);
                         break;
                     case DirectionType.Left:
-                        _leftTrumpAnims.Add(anim);
+                        _leftTrumps.Add(trump);
                         dir.y = 90f;
                         break;
                     case DirectionType.Right:
-                        _rightTrumpAnims.Add(anim);
+                        _rightTrumps.Add(trump);
                         dir.y = 270f;
                         break;
                 }
-                _trumpSolderList[index].transform.DOLocalRotate(dir, 0f);
+                trump.transform.DOLocalRotate(dir, 0f);
                 index++;
             }
+        }
+    }
+    public void OnTrumpSoldersAttack(DirectionType dir)
+    {
+        StartCoroutine(TrumpSoldersAttackCoroutine(dir));
+    }
+
+    IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir)
+    {
+        switch (dir)
+        {
+            case DirectionType.Front:
+                foreach (var t in _frontTrumps)
+                {
+                    t.OnAttack(_waitTime);
+                }
+                break;
+            case DirectionType.Back:
+                foreach (var t in _backTrumps)
+                {
+                    t.OnAttack(_waitTime);
+                }
+                break;
+            case DirectionType.Left:
+                foreach (var t in _leftTrumps)
+                {
+                    t.OnAttack(_waitTime);
+                }
+                break;
+            case DirectionType.Right:
+                foreach (var t in _rightTrumps)
+                {
+                    t.OnAttack(_waitTime);
+                }
+                break;
+            default:
+                break;
+        }
+        yield return new WaitForSeconds(_waitTime + 0.3f); //トランプ兵の攻撃するまでのモーションを待機
+
+        //当たり判定をONにする処理
+
+        yield return new WaitForSeconds(_durationTime);
+
+        switch (dir)
+        {
+            case DirectionType.Front:
+                foreach (var t in _frontTrumps)
+                {
+                    t.OnReturnToStandby();
+                }
+
+                //Frontの当たり判定をOFFにする
+                //
+                //
+                break;
+            case DirectionType.Back:
+                foreach (var t in _backTrumps)
+                {
+                    t.OnReturnToStandby();
+                }
+                //Backの当たり判定をOFFにする
+                //
+                //
+                break;
+            case DirectionType.Left:
+                foreach (var t in _leftTrumps)
+                {
+                    t.OnReturnToStandby();
+                }
+                //Leftの当たり判定をOFFにする
+                //
+                //
+                break;
+            case DirectionType.Right:
+                foreach (var t in _rightTrumps)
+                {
+                    t.OnReturnToStandby();
+                }
+                //Rightの当たり判定をOFFにする
+                //
+                //
+                break;
         }
     }
 }

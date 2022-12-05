@@ -43,6 +43,9 @@ public class BossController : MonoBehaviour
     [SerializeField]
     float _attackDistance = 2.0f;
 
+    [SerializeField]
+    float _bounceAttackInterval = 1.0f;
+
     [Header("Positions")]
     [SerializeField]
     Transform _directionTrans = default;
@@ -151,7 +154,7 @@ public class BossController : MonoBehaviour
         
         BossStageManager.CameraShake();
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
 
         _anim.CrossFadeInFixedTime("Idle", 0.1f);
 
@@ -228,7 +231,7 @@ public class BossController : MonoBehaviour
 
                 _anim.CrossFadeInFixedTime("Falling", 0.2f);
 
-                //yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(_bounceAttackInterval);
 
                 var bouncePosition = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 2.0f, _playerTrans.position.z);
 
@@ -236,7 +239,7 @@ public class BossController : MonoBehaviour
 
                 Vector3[] jumpPath = { transform.position, bouncePosition, new Vector3(bouncePosition.x, 0, bouncePosition.z)};
 
-                yield return transform.DOPath(jumpPath, 1.0f, PathType.Linear)
+                yield return transform.DOPath(jumpPath, _bounceAttackInterval, PathType.CubicBezier)
                                       .OnComplete(() => 
                                       {
                                           StartCoroutine(ChangeState(BossState.Landing));
