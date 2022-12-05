@@ -21,11 +21,18 @@ public class TrumpSolderManager : MonoBehaviour
     #endregion
     #region private
     List<BattleAreaTrumpSolder> _trumpSolderList = new List<BattleAreaTrumpSolder>();
+    readonly List<Animator> _frontTrumpAnims = new List<Animator>();
+    readonly List<Animator> _backTrumpAnims = new List<Animator>();
+    readonly List<Animator> _leftTrumpAnims = new List<Animator>();
+    readonly List<Animator> _rightTrumpAnims = new List<Animator>() ;
     #endregion
     #region public
     #endregion
     #region property
-
+    public List<Animator> FrontTrumpAnims => _frontTrumpAnims;
+    public List<Animator> BackTrumpAnims => _backTrumpAnims;
+    public List<Animator> LeftTrumpAnims => _leftTrumpAnims;
+    public List<Animator> RightTrumpAnims => _rightTrumpAnims;
     #endregion
 
     private void Awake()
@@ -55,18 +62,24 @@ public class TrumpSolderManager : MonoBehaviour
                 _trumpSolderList[index].DirType = _areaPositions[i].DirectionType;
                 Vector3 dir = default;
 
+                var anim = _trumpSolderList[index].GetComponent<Animator>();
+                
                 switch (_trumpSolderList[index].DirType)
                 {
                     case DirectionType.Front:
                         dir.y = 0f;
+                        _frontTrumpAnims.Add(anim);
                         break;
                     case DirectionType.Back:
                         dir.y = 180f;
+                        _backTrumpAnims.Add(anim);
                         break;
                     case DirectionType.Left:
+                        _leftTrumpAnims.Add(anim);
                         dir.y = 90f;
                         break;
                     case DirectionType.Right:
+                        _rightTrumpAnims.Add(anim);
                         dir.y = 270f;
                         break;
                 }
