@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
@@ -233,6 +234,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &1037068112
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,7 +841,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 9302814361711268, guid: e1c2d4b8688cdc245988f6d219c04111, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7212509086883398013, guid: e1c2d4b8688cdc245988f6d219c04111,
         type: 3}
@@ -961,6 +963,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212509087645101658, guid: e1c2d4b8688cdc245988f6d219c04111,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7212509087898063545, guid: e1c2d4b8688cdc245988f6d219c04111,
         type: 3}
