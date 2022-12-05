@@ -3276,6 +3276,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 620245763008731352, guid: f92906d7065a6d84fb6754501e8dd8f3,
+        type: 3}
+      propertyPath: _fadeTime
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 620245763008731352, guid: f92906d7065a6d84fb6754501e8dd8f3,
+        type: 3}
+      propertyPath: _loadTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 620245763008731353, guid: f92906d7065a6d84fb6754501e8dd8f3,
         type: 3}
       propertyPath: m_RootOrder
@@ -4066,6 +4076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
@@ -4084,6 +4095,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!114 &2033657979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4374,6 +4386,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3749895016044665674, guid: 0f88ab0bcd60b204dbe66b75c59f6115,
+        type: 3}
+      propertyPath: _moveSpeed
+      value: 6.25
       objectReference: {fileID: 0}
     - target: {fileID: 3749895016044665674, guid: 0f88ab0bcd60b204dbe66b75c59f6115,
         type: 3}
