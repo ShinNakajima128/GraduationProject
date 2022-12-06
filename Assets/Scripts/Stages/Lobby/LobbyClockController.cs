@@ -103,7 +103,9 @@ public class LobbyClockController : MonoBehaviour
             default:
                 break;
         }
-        _hourHand.DOLocalRotate(hourRotate, animTime);
+        _hourHand.DOLocalRotate(hourRotate, animTime)
+                 .SetDelay(derayTime);
+
         _minuteHand.DOLocalRotate(secondRotate, animTime)
             .OnComplete(() => 
             {

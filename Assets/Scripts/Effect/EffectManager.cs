@@ -17,7 +17,11 @@ public enum EffectType
     /// </summary>
     Obstacle,
     Swap,
-    DorMouse_Find
+    DorMouse_Find,
+    /// <summary>
+    /// ロビー時計が12時になった時のハート
+    /// </summary>
+    Heart
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>

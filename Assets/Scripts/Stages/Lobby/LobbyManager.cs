@@ -19,6 +19,9 @@ public class LobbyManager : MonoBehaviour
     Transform[] _startPlayerTrans = default;
 
     [SerializeField]
+    Transform _heartEffectTrans = default;
+
+    [SerializeField]
     GameObject _lobbyPanel = default;
 
     [SerializeField]
@@ -42,6 +45,9 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField]
     Text _stageNameText = default;
+
+    [SerializeField]
+    Image _StageImage = default;
 
     [SerializeField]
     Stage[] _stageDatas = default;
@@ -124,10 +130,13 @@ public class LobbyManager : MonoBehaviour
     /// <param name="type"> 遷移先のステージのScene </param>
     public static void OnStageDescription(SceneType type)
     {
-        //Instance._stageDescriptionPanel.SetActive(true);
         Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
-        Instance._stageNameText.text = Instance._stageDatas.FirstOrDefault(d => d.Type == type).SceneName;
+
+        var data = Instance._stageDatas.FirstOrDefault(d => d.Type == type);
+        
+        Instance._stageNameText.text = data.SceneName;
+        Instance._StageImage.sprite = data.StageSprite;
         Instance.ApproachDoor?.Invoke();
     }
 
@@ -136,10 +145,8 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     public static void OffStageDescription()
     {
-        //Instance._stageDescriptionPanel.SetActive(false);
         Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
-        Instance._stageNameText.text = "";
         Instance.StepAwayDoor?.Invoke();
     }
 
@@ -189,6 +196,32 @@ public class LobbyManager : MonoBehaviour
     }
 
     /// <summary>
+    /// カメラ、時計の演出
+    /// </summary>
+    void ClockDirection()
+    {
+        _clockCamera.Priority = 15; //演出用カメラをアクティブ化
+        Camera.main.LayerCullingToggle("Ornament", false); //ロビーのライトなどの装飾品を非表示にする
+
+        _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), action: () =>
+        {
+            GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
+
+            if (GameManager.Instance.CurrentClockState == ClockState.Twelve)
+            {
+                //ボスステージが出現する処理
+                StartCoroutine(OnBossStageaAppearCoroutine());
+            }
+            else
+            {
+                _clockCamera.Priority = 10;
+                Camera.main.LayerCullingToggle("Ornament", true);
+                StartCoroutine(OnPlayerMovable(3.0f));
+            } 
+        });
+    }
+
+    /// <summary>
     /// プレイヤーを操作可能にする
     /// </summary>
     /// <param name="Interval"> 可能になるまでの時間 </param>
@@ -201,21 +234,16 @@ public class LobbyManager : MonoBehaviour
         _provider.enabled = true;
     }
 
-    /// <summary>
-    /// カメラ、時計の演出
-    /// </summary>
-    void ClockDirection()
+    IEnumerator OnBossStageaAppearCoroutine()
     {
-        _clockCamera.Priority = 15; //演出用カメラをアクティブ化
-        Camera.main.LayerCullingToggle("Ornament", false); //ロビーのライトなどの装飾品を非表示にする
-
-        _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), action: () =>
-        {
-            GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
-            _clockCamera.Priority = 10;
-            Camera.main.LayerCullingToggle("Ornament", true);
-            StartCoroutine(OnPlayerMovable(3.0f));
-        });
+        EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
+        
+        yield return new WaitForSeconds(2.0f);
+        
+        Debug.Log("ボスステージ出現");
+        Camera.main.LayerCullingToggle("Ornament", true);
+        _clockCamera.Priority = 10;
+        StartCoroutine(OnPlayerMovable(3.0f));
     }
 }
 [Serializable]
@@ -223,5 +251,6 @@ public class Stage
 {
     public string SceneName;
     public SceneType Type;
+    public Sprite StageSprite;
 }
 
