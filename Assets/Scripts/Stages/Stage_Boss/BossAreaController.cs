@@ -19,21 +19,9 @@ public class BossAreaController : MonoBehaviour
     #region public
     #endregion
     #region property
-    ReactiveProperty<bool> _frontArea;
-    ReactiveProperty<bool> _backArea;
-    ReactiveProperty<bool> _leftArea;
-    ReactiveProperty<bool> _rightArea;
     #endregion
     void Start()
     {
-        //_frontArea.AddTo(_attackAreas[0].IsAttacked);
-        //_backArea.AddTo(_attackAreas[1]);
-        //_leftArea.AddTo(_attackAreas[2]);
-        //_rightArea.AddTo(_attackAreas[3]);
-
-        //_frontArea.Subscribe(_ =>
-        //{
-            
-        //});
+        
     }
 }

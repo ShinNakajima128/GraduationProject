@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using AliceProject;
+using UniRx;
 
 /// <summary>
 /// ボスステージの機能を管理するマネージャー
@@ -56,9 +57,14 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     BossController _bossCtrl = default;
     #endregion
+    #region public
+    public event Action<bool> OnInGame;
+    #endregion
     #region private
     /// <summary> 演出中かどうか </summary>
     bool _isDirecting = false;
+    /// <summary> 戦闘中かどうか </summary>
+    ReactiveProperty<bool> _isInBattle = new ReactiveProperty<bool>();
     CinemachineImpulseSource _impulseSource;
     #endregion
     #region public
@@ -75,6 +81,9 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         Instance = this;
         TryGetComponent(out _impulseSource);
+
+        //バトル中かどうかの値が変わった時に行う処理を登録
+        _isInBattle.Subscribe(_ => OnInGame.Invoke(_isInBattle.Value));
     }
 
     protected override void Start()
@@ -154,10 +163,13 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         _messagePlayer.Closeup += OnCloseup;
         _messagePlayer.Reset += OnReset;
+        _isInBattle.Value = false;
     }
 
     IEnumerator InGameCoroutine()
     {
+        _isInBattle.Value = true;
+
         for (int i = 0; i < _battleNum; i++)
         {
             CharacterMovable?.Invoke(true);

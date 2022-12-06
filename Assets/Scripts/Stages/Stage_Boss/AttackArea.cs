@@ -26,6 +26,7 @@ public class AttackArea : MonoBehaviour
     #region public
     #endregion
     #region property
+    public BoxCollider AttackAreaCollider => _attackArea;
     public bool IsAttacked { get; set; } = false;
     #endregion
 
