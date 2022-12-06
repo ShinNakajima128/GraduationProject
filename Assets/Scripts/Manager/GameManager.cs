@@ -24,7 +24,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     [SerializeField]
     ClockState _currentClockState = ClockState.Zero;
+
+    [Header("Debug:Lobby")]
+    [SerializeField]
+    bool _lobbyDebugMode = false;
+
+    [SerializeField]
+    ClockState _debugClockState = default;
     #endregion
+
     #region private
     Dictionary<Stages, bool> _stageStatusDic = new Dictionary<Stages, bool>();
     bool _isClearStaged = false;
@@ -108,8 +116,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         return s.Value;
     }
+    /// <summary>
+    /// 現在の時計の状況を確認する
+    /// </summary>
+    /// <returns> 時計のステータス </returns>
     public static ClockState CheckGameStatus()
     {
+        if (Instance._lobbyDebugMode)
+        {
+            return Instance._debugClockState;
+        }
+
         var count = Instance._stageStatusDic.Count(s => s.Value == true);
         Debug.Log(count);
         ClockState state = ClockState.Zero;
@@ -117,24 +134,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         switch (count)
         {
             case 0:
-                state = ClockState.Two;
+                state = ClockState.Three;
                 break;
             case 1:
-                state = ClockState.Four;
-                break;
-            case 2:
                 state = ClockState.Six;
                 break;
+            case 2:
+                state = ClockState.Nine;
+                break;
             case 3:
-                state = ClockState.Eight;
-                break;
-            case 4:
-                state = ClockState.Ten;
-                break;
-            case 5:
                 state = ClockState.Twelve;
                 break;
             default:
+                state = ClockState.Zero;
                 break;
         }
         return state;
