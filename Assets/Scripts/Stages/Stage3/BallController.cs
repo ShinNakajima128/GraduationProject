@@ -28,9 +28,23 @@ public class BallController : MonoBehaviour, IThrowable
     {
         _direction = _rb.velocity;
         if (IsThrowed)
+        {
+            Rotation();
             MoveCameraRequest();
+        }
     }
 
+    /// <summary>
+    /// ëOì]Ç∑ÇÈ
+    /// </summary>
+    private void Rotation()
+    {
+        transform.Rotate(new Vector3(3, 0, 0));
+    }
+
+    /// <summary>
+    /// ÉJÉÅÉâÇìÆÇ©Ç∑
+    /// </summary>
     private void MoveCameraRequest()
     {
         _camera.SendBallPosition(this.transform.position);
