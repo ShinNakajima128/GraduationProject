@@ -33,7 +33,7 @@ public class TrumpSolderManager : MonoBehaviour
     readonly List<BattleAreaTrumpSolder> _frontTrumps = new List<BattleAreaTrumpSolder>();
     readonly List<BattleAreaTrumpSolder> _backTrumps = new List<BattleAreaTrumpSolder>();
     readonly List<BattleAreaTrumpSolder> _leftTrumps = new List<BattleAreaTrumpSolder>();
-    readonly List<BattleAreaTrumpSolder> _rightTrumps = new List<BattleAreaTrumpSolder>() ;
+    readonly List<BattleAreaTrumpSolder> _rightTrumps = new List<BattleAreaTrumpSolder>();
     #endregion
     #region public
     #endregion
@@ -67,9 +67,9 @@ public class TrumpSolderManager : MonoBehaviour
 
                 trump.transform.localPosition = _areaPositions[i].LineUpTrans[n].position;
                 trump.DirType = _areaPositions[i].DirectionType;
-                
+
                 Vector3 dir = default;
-                
+
                 switch (_trumpSolderList[index].DirType)
                 {
                     case DirectionType.Front:
@@ -94,12 +94,12 @@ public class TrumpSolderManager : MonoBehaviour
             }
         }
     }
-    public void OnTrumpSoldersAttack(DirectionType dir, Action action = null)
+    public void OnTrumpSoldersAttack(DirectionType dir, Action start = null, Action finish = null)
     {
-        StartCoroutine(TrumpSoldersAttackCoroutine(dir, action));
+        StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
     }
 
-    IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action action)
+    IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action start, Action finish)
     {
         switch (dir)
         {
@@ -133,8 +133,11 @@ public class TrumpSolderManager : MonoBehaviour
         yield return new WaitForSeconds(_waitTime + 0.3f); //トランプ兵の攻撃するまでのモーションを待機
 
         //当たり判定をONにする処理
+        start?.Invoke();
 
         yield return new WaitForSeconds(_durationTime);
+
+        finish?.Invoke();
 
         switch (dir)
         {
@@ -177,8 +180,6 @@ public class TrumpSolderManager : MonoBehaviour
                 break;
         }
         yield return new WaitForSeconds(1.5f);
-
-        action?.Invoke();
     }
 }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using Cinemachine;
 using AliceProject;
 using UniRx;
+using DG.Tweening;
 
 /// <summary>
 /// ボスステージの機能を管理するマネージャー
@@ -46,6 +47,14 @@ public class BossStageManager : StageGame<BossStageManager>
     CinemachineVirtualCamera _jumpAttackCamera = default;
 
     [Header("Objects")]
+    [Tooltip("女王の演出位置")]
+    [SerializeField]
+    Transform _bossDirectionTrans = default;
+
+    [Tooltip("プレイヤーの初期位置")]
+    [SerializeField]
+    Transform _playerStartTrans = default;
+
     [Tooltip("戦闘中の移動可能範囲のエフェクト")]
     [SerializeField]
     GameObject _areaEffect = default;
@@ -61,6 +70,7 @@ public class BossStageManager : StageGame<BossStageManager>
     public event Action<bool> OnInGame;
     #endregion
     #region private
+    Transform _playerTrans;
     /// <summary> 演出中かどうか </summary>
     bool _isDirecting = false;
     /// <summary> 戦闘中かどうか </summary>
@@ -72,6 +82,7 @@ public class BossStageManager : StageGame<BossStageManager>
     public override event Action GameStart;
     public override event Action GamePause;
     public override event Action GameEnd;
+    public event Action DirectionSetUp;
     #endregion
     #region property
     public static new BossStageManager Instance { get; private set; }
@@ -81,6 +92,7 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         Instance = this;
         TryGetComponent(out _impulseSource);
+        _playerTrans = GameObject.FindGameObjectWithTag("Player").transform; //プレイヤーのTransformを取得
 
         //バトル中かどうかの値が変わった時に行う処理を登録
         _isInBattle.Subscribe(_ => OnInGame?.Invoke(_isInBattle.Value));
@@ -108,6 +120,11 @@ public class BossStageManager : StageGame<BossStageManager>
     public override void OnGameEnd()
     {
         GameEnd?.Invoke();
+    }
+
+    public void OnDirectionSetUp()
+    {
+        DirectionSetUp?.Invoke();
     }
 
     /// <summary>
@@ -176,8 +193,74 @@ public class BossStageManager : StageGame<BossStageManager>
             OnGameSetUp();
 
             yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i);
+
+            Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
+
+            yield return DirectionCoroutine((BossBattlePhase)i);
         }
-        
+
+        //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
+        TransitionManager.SceneTransition(SceneType.Lobby);
+    }
+
+    IEnumerator DirectionCoroutine(BossBattlePhase phase)
+    {
+        CharacterMovable?.Invoke(false);
+        OnDirectionSetUp();
+
+        CameraBlend(CameraType.Direction, 2.0f);
+
+        yield return new WaitForSeconds(2.0f);
+
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Angry, 0.1f);
+
+        MessageType message = default;
+
+        //現在のフェイズに合わせたテキストデータの種類を設定
+        switch (phase)
+        {
+            case BossBattlePhase.First:
+                message = MessageType.Stage_Boss_Down1;
+                break;
+            case BossBattlePhase.Second:
+                message = MessageType.Stage_Boss_Down2;
+                break;
+            case BossBattlePhase.Third:
+                message = MessageType.Stage_Boss_Down3;
+                break;
+        }
+
+        yield return _messagePlayer.PlayMessageCorountine(message);
+
+        yield return PartitioningBattleCoroutine();
+
+        CameraBlend(CameraType.Battle, _cameraBlendTime);
+
+        yield return new WaitForSeconds(_cameraBlendTime);
+    }
+
+    /// <summary>
+    /// 各オブジェクトの再配置。仕切り直しを行う
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator PartitioningBattleCoroutine()
+    {
+        TransitionManager.FadeIn(FadeType.Normal, () => 
+        {
+            //ボスの位置と向きを初期化
+            _bossCtrl.gameObject.transform.DOMove(_bossDirectionTrans.position, 0f);
+            _bossCtrl.gameObject.transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0f);
+            _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.1f);
+
+            //プレイヤーの位置と向きを初期化
+            _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
+            _playerTrans.DOLocalRotate(Vector3.zero, 0f);
+
+            TransitionManager.FadeOut(FadeType.Normal);
+        });
+
+        yield return new WaitForSeconds(3.5f); //画面のフェード演出終了まで待機
+
     }
 
     /// <summary>

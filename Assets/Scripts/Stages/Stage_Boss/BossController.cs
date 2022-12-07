@@ -75,8 +75,10 @@ public class BossController : MonoBehaviour, IDamagable
     bool _isDamaged = false;
     bool _isCanAttack = true;
     bool _isApproached = false;
+    bool _isInvincibled = false;
+    Coroutine _jumpCoroutine;
 
-    public bool IsInvincibled => throw new NotImplementedException();
+    public bool IsInvincibled => _isInvincibled;
     #endregion
     #region public
     #endregion
@@ -151,16 +153,15 @@ public class BossController : MonoBehaviour, IDamagable
     /// </summary>
     /// <param name="type"> 指定したアニメーション </param>
     /// <param name="fadeTime"> 遷移にかける時間 </param>
-    void PlayBossAnimation(BossAnimationType type, float fadeTime = 0.1f)
+    public void PlayBossAnimation(BossAnimationType type, float fadeTime = 0.1f)
     {
         _anim.CrossFadeInFixedTime(type.ToString(), fadeTime);
     }
-    
+
     /// <summary>
     /// 戦闘フェイズのコルーチン
     /// </summary>
     /// <param name="battlePhase"> 戦闘フェイズの種類 </param>
-    /// <returns></returns>
     public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase)
     {
         _isDamaged = false;
@@ -170,7 +171,7 @@ public class BossController : MonoBehaviour, IDamagable
         yield return new WaitForSeconds(1.3f);
 
         yield return transform.DOMove(_startBattleTrans.position, 1.0f).WaitForCompletion();
-        
+
         BossStageManager.CameraShake();
 
         yield return new WaitForSeconds(0.5f);
@@ -185,14 +186,11 @@ public class BossController : MonoBehaviour, IDamagable
         {
             yield return null;
         }
-        Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
     }
 
-    public IEnumerator DirectionPhaseCoroutine()
-    {
-        yield return null;
-    }
-
+    /// <summary>
+    /// ジャンプ攻撃のコルーチン
+    /// </summary>
     IEnumerator JumpAttack()
     {
         _isWaiting = true;
@@ -218,7 +216,7 @@ public class BossController : MonoBehaviour, IDamagable
         yield return transform.DOLocalMove(playerTop, _jumpUpTime).WaitForCompletion(); //ボスが飛び上がる
 
         transform.DOLookAt(_playerTrans.position, 0.1f, AxisConstraint.Y);
-        
+
         float timer = 0f;
 
         StartCoroutine(ChangeState(BossState.Chase));
@@ -247,25 +245,30 @@ public class BossController : MonoBehaviour, IDamagable
             {
                 yield return new WaitForSeconds(0.5f);
 
-                PlayBossAnimation(BossAnimationType.Falling, 0.2f);
+                PlayBossAnimation(BossAnimationType.JumpUp, 0.2f);
 
                 yield return new WaitForSeconds(_bounceAttackInterval);
 
-                var bouncePosition = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 2.0f, _playerTrans.position.z);
+                var playerPos = new Vector3(_playerTrans.position.x, _playerTrans.position.y, _playerTrans.position.z);
 
                 transform.DOLookAt(_playerTrans.position, 0.1f, AxisConstraint.Y);
 
-                Vector3[] jumpPath = { transform.position, bouncePosition, new Vector3(bouncePosition.x, 0, bouncePosition.z)};
+                Vector3[] jumpPath = { transform.position,
+                                       new Vector3(playerPos.x,1.0f, playerPos.z * 0.25f),
+                                       new Vector3(playerPos.x,  2.0f, playerPos.z * 0.5f),
+                                       new Vector3(playerPos.x,1.0f, playerPos.z * 0.75f),
+                                       new Vector3(playerPos.x, 0, playerPos.z) 
+                                     };
 
-                yield return transform.DOPath(jumpPath, _bounceAttackInterval, PathType.CubicBezier)
-                                      .OnComplete(() => 
+                yield return transform.DOPath(jumpPath, _bounceAttackInterval, PathType.CatmullRom)
+                                      .OnComplete(() =>
                                       {
                                           StartCoroutine(ChangeState(BossState.Landing));
                                           BossStageManager.CameraShake();
                                           Debug.Log("着地");
                                       })
                                       .WaitForCompletion();
-            }     
+            }
         }
 
         yield return new WaitForSeconds(param.CoolTime);
@@ -276,14 +279,42 @@ public class BossController : MonoBehaviour, IDamagable
         _isWaiting = false;
     }
 
-    IEnumerator DamageCoroutine()
+    /// <summary>
+    /// ダメージを受けた時のコルーチン
+    /// </summary>
+    /// <param name="action"> ダウン状態が終わった時に実行するAction </param>
+    /// <returns></returns>
+    IEnumerator DamageCoroutine(Action action)
     {
+        //攻撃中にダメージを受けた場合は攻撃処理を中断
+        if (_jumpCoroutine != null)
+        {
+            StopCoroutine(_jumpCoroutine);
+            _jumpCoroutine = null;
+
+            //攻撃時に使用している各値をリセット
+            _currentMoveSpeed = _defaultMoveSpeed;
+            _isWaiting = false;
+            _isCanAttack = true;
+
+            yield return null;
+        }
+
         PlayBossAnimation(BossAnimationType.Damage);
-        _isDamaged = true;
 
         yield return new WaitForSeconds(_downTime);
+
+        _isDamaged = true;
+        action?.Invoke();
     }
 
+    /// <summary>
+    /// ボスのステータスを変更する
+    /// </summary>
+    /// <param name="state"> 変更するステータス </param>
+    /// <param name="waitTime"> 変更後に行うアクションの待機時間 </param>
+    /// <param name="action"> 変更後に行うアクション </param>
+    /// <returns></returns>
     IEnumerator ChangeState(BossState state, float waitTime = 0.02f, Action action = null)
     {
         _currentBossState = state;
@@ -301,19 +332,24 @@ public class BossController : MonoBehaviour, IDamagable
                 PlayBossAnimation(BossAnimationType.Move);
                 break;
             case BossState.Attack_Jump:
-                StartCoroutine(JumpAttack());
+                _jumpCoroutine = StartCoroutine(JumpAttack());
                 break;
             case BossState.Landing:
                 PlayBossAnimation(BossAnimationType.Landing);
                 break;
             case BossState.Damage:
-                StartCoroutine(DamageCoroutine());
+                StartCoroutine(DamageCoroutine(action));
                 break;
             case BossState.KnockOut:
                 break;
             default:
                 break;
         }
+        if (_currentBossState == BossState.Damage)
+        {
+            yield break;
+        }
+
         yield return new WaitForSeconds(waitTime);
 
         action?.Invoke();
@@ -331,7 +367,18 @@ public class BossController : MonoBehaviour, IDamagable
     /// <param name="value"> 受けるダメージ </param>
     public void Damage(int value)
     {
-        StartCoroutine(ChangeState(BossState.Damage));
+        StartCoroutine(ChangeState(BossState.Damage, action: () => _isInvincibled = false));
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (other.TryGetComponent<IDamagable>(out var target))
+            {
+                target.Damage(1);
+            }
+        }
     }
 }
 

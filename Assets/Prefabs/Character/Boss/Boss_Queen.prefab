@@ -975,7 +975,7 @@ GameObject:
   - component: {fileID: 6422767447871481237}
   m_Layer: 0
   m_Name: Boss_Queen
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1015,26 +1015,27 @@ MonoBehaviour:
   _defaultMoveSpeed: 4
   _turnSpeed: 10
   _jumpUpTime: 1.5
-  _fallDownTime: 0.3
+  _fallDownTime: 0.5
   _attackInterval: 1.5
+  _downTime: 3
+  _attackDistance: 10
+  _bounceAttackInterval: 1
   _phaseParams:
   - Phase: 0
-    MoveSpeed: 6
-    ChaseTime: 5
+    MoveSpeed: 5
+    ChaseTime: 1
     CoolTime: 3
     AttackCount: 1
   - Phase: 1
-    MoveSpeed: 7
-    ChaseTime: 3.5
+    MoveSpeed: 5.5
+    ChaseTime: 1
     CoolTime: 3
     AttackCount: 1
   - Phase: 2
-    MoveSpeed: 8
-    ChaseTime: 3.5
+    MoveSpeed: 6
+    ChaseTime: 1
     CoolTime: 3
     AttackCount: 3
-  _downTime: 3
-  _attackDistance: 10
   _directionTrans: {fileID: 0}
   _startBattleTrans: {fileID: 0}
   _debugMode: 1

@@ -30,6 +30,7 @@ public class AttackArea : MonoBehaviour
                 if (!target.IsInvincibled)
                 {
                     target.Damage(1);
+                    Debug.Log(target.ToString());
                 }
             }
         }

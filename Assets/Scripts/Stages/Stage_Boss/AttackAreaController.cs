@@ -9,9 +9,14 @@ public class AttackAreaController : MonoBehaviour
     [SerializeField]
     DirectionType _directionType = default;
 
-    [Tooltip("UŒ‚”ÍˆÍ")]
+    [Header("Objects")]
+    [Tooltip("õ“G”ÍˆÍ")]
     [SerializeField]
-    BoxCollider _attackArea = default;
+    BoxCollider _searchArea = default;
+
+    [Tooltip("ƒ_ƒ[ƒW‚ð—^‚¦‚é”ÍˆÍ")]
+    [SerializeField]
+    AttackArea _attackArea = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -25,7 +30,7 @@ public class AttackAreaController : MonoBehaviour
     #endregion
     
     #region property
-    public BoxCollider AttackAreaCollider => _attackArea;
+    public BoxCollider AttackAreaCollider => _searchArea;
     public bool IsAttacked { get; set; } = false;
     #endregion
 
@@ -40,7 +45,17 @@ public class AttackAreaController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             IsAttacked = true;
-            _trumpMng.OnTrumpSoldersAttack(_directionType, () => IsAttacked = false);
+            
+            _trumpMng.OnTrumpSoldersAttack(_directionType,
+            start: () => 
+            {
+                _attackArea.AttackCollider.enabled = true;
+            },
+            finish:() => 
+            {
+                IsAttacked = false;
+                _attackArea.AttackCollider.enabled = false;
+            });
         }
     }
 }
