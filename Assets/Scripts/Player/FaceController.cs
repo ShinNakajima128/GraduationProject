@@ -173,6 +173,9 @@ public class FaceController : MonoBehaviour
     {
         float timer;
         float rand;
+        
+        ChangeMouseType(MouseType.Default);
+
         //u‚«‚Ìˆ—‚Ìƒ‹[ƒv
         while (_isBlinking)
         {

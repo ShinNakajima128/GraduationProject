@@ -11,6 +11,10 @@ using DG.Tweening;
 public class LobbyManager : MonoBehaviour
 {
     #region serialize
+    [Header("Variables")]
+    [SerializeField]
+    float _colorFadeTime = 2.0f;
+
     [Header("Objects")]
     [SerializeField]
     Transform _playerTrans = default;
@@ -35,6 +39,9 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField]
     CinemachineInputProvider _provider = default;
+
+    [SerializeField]
+    Renderer[] _handsRenderers = default;
 
     [Header("UI")]
     [SerializeField]
@@ -222,6 +229,25 @@ public class LobbyManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 12時になった時の時計の発光処理のコルーチン
+    /// </summary>
+    IEnumerator OnHandsEmission()
+    {
+        _handsRenderers[0].material.SetColor("_EmissionColor", Color.white);
+        _handsRenderers[1].material.SetColor("_EmissionColor", Color.white);
+
+        yield return new WaitForSeconds(0.1f);
+
+        Material mat = _handsRenderers[0].material;
+
+        mat.DOColor(Color.black, _colorFadeTime).OnUpdate(() =>
+        {
+            _handsRenderers[0].material.SetColor("_EmissionColor", mat.color);
+            _handsRenderers[1].material.SetColor("_EmissionColor", mat.color);
+        });
+    }
+
+    /// <summary>
     /// プレイヤーを操作可能にする
     /// </summary>
     /// <param name="Interval"> 可能になるまでの時間 </param>
@@ -236,6 +262,7 @@ public class LobbyManager : MonoBehaviour
 
     IEnumerator OnBossStageaAppearCoroutine()
     {
+        StartCoroutine(OnHandsEmission());
         EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         
         yield return new WaitForSeconds(2.0f);
