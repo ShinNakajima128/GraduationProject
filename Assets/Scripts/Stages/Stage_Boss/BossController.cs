@@ -6,7 +6,7 @@ using UnityEngine;
 using DG.Tweening;
 
 [RequireComponent(typeof(CharacterController))]
-public class BossController : MonoBehaviour
+public class BossController : MonoBehaviour, IDamagable
 {
     #region serialize
     [Header("Variables")]
@@ -30,11 +30,6 @@ public class BossController : MonoBehaviour
     [SerializeField]
     float _attackInterval = 3.0f;
 
-    [Header("Phase")]
-    [Tooltip("ボス戦の各フェイズのパラメーター")]
-    [SerializeField]
-    PhaseParameter[] _phaseParams = default;
-
     [Tooltip("ダウン時間")]
     [SerializeField]
     float _downTime = 3.0f;
@@ -45,6 +40,11 @@ public class BossController : MonoBehaviour
 
     [SerializeField]
     float _bounceAttackInterval = 1.0f;
+
+    [Header("Phase")]
+    [Tooltip("ボス戦の各フェイズのパラメーター")]
+    [SerializeField]
+    PhaseParameter[] _phaseParams = default;
 
     [Header("Positions")]
     [SerializeField]
@@ -75,6 +75,8 @@ public class BossController : MonoBehaviour
     bool _isDamaged = false;
     bool _isCanAttack = true;
     bool _isApproached = false;
+
+    public bool IsInvincibled => throw new NotImplementedException();
     #endregion
     #region public
     #endregion
@@ -91,6 +93,7 @@ public class BossController : MonoBehaviour
         _playerTrans = GameObject.FindGameObjectWithTag("Player").transform;
         _currentMoveSpeed = _defaultMoveSpeed;
         BossStageManager.Instance.CharacterMovable += BossMovable;
+        MessagePlayer.Instance.Closeup += () => PlayBossAnimation(BossAnimationType.Angry);
     }
 
     void FixedUpdate()
@@ -116,6 +119,7 @@ public class BossController : MonoBehaviour
         _dir = _playerTrans.position - transform.position;
         _dir.y = 0;
 
+        //プレイヤーに攻撃する距離まで近づいているかの判定結果を取得
         _isApproached = Vector3.Distance(transform.position, _playerTrans.position) < _attackDistance;
 
         if (_currentBossState == BossState.Move)
@@ -140,13 +144,28 @@ public class BossController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _turnSpeed * Time.deltaTime);
         _velocity = _dir.normalized * _defaultMoveSpeed;
         _cc.Move(_velocity * Time.deltaTime);
+    }
 
-        
+    /// <summary>
+    /// ボスのアニメーションを再生する
+    /// </summary>
+    /// <param name="type"> 指定したアニメーション </param>
+    /// <param name="fadeTime"> 遷移にかける時間 </param>
+    void PlayBossAnimation(BossAnimationType type, float fadeTime = 0.1f)
+    {
+        _anim.CrossFadeInFixedTime(type.ToString(), fadeTime);
     }
     
+    /// <summary>
+    /// 戦闘フェイズのコルーチン
+    /// </summary>
+    /// <param name="battlePhase"> 戦闘フェイズの種類 </param>
+    /// <returns></returns>
     public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase)
     {
-        _anim.CrossFadeInFixedTime("Jump", 0.1f);
+        _isDamaged = false;
+
+        PlayBossAnimation(BossAnimationType.Jump);
 
         yield return new WaitForSeconds(1.3f);
 
@@ -156,7 +175,7 @@ public class BossController : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        _anim.CrossFadeInFixedTime("Idle", 0.1f);
+        PlayBossAnimation(BossAnimationType.Idle);
 
         _currentBattlePhase = battlePhase;
 
@@ -166,8 +185,7 @@ public class BossController : MonoBehaviour
         {
             yield return null;
         }
-
-        yield return new WaitForSeconds(_downTime);
+        Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
     }
 
     public IEnumerator DirectionPhaseCoroutine()
@@ -187,7 +205,7 @@ public class BossController : MonoBehaviour
 
         var param = _phaseParams.FirstOrDefault(p => p.Phase == _currentBattlePhase); //現在のフェイズの各パラメーターを取得
 
-        _anim.CrossFadeInFixedTime("JumpUp", 0.1f);
+        PlayBossAnimation(BossAnimationType.JumpUp);
         _currentMoveSpeed = param.MoveSpeed;
         transform.DOLookAt(_playerTrans.position, 0.1f, AxisConstraint.Y);
 
@@ -229,7 +247,7 @@ public class BossController : MonoBehaviour
             {
                 yield return new WaitForSeconds(0.5f);
 
-                _anim.CrossFadeInFixedTime("Falling", 0.2f);
+                PlayBossAnimation(BossAnimationType.Falling, 0.2f);
 
                 yield return new WaitForSeconds(_bounceAttackInterval);
 
@@ -258,6 +276,14 @@ public class BossController : MonoBehaviour
         _isWaiting = false;
     }
 
+    IEnumerator DamageCoroutine()
+    {
+        PlayBossAnimation(BossAnimationType.Damage);
+        _isDamaged = true;
+
+        yield return new WaitForSeconds(_downTime);
+    }
+
     IEnumerator ChangeState(BossState state, float waitTime = 0.02f, Action action = null)
     {
         _currentBossState = state;
@@ -265,22 +291,23 @@ public class BossController : MonoBehaviour
         switch (_currentBossState)
         {
             case BossState.Idle:
-                _anim.CrossFadeInFixedTime("Move", 0.1f);
+                PlayBossAnimation(BossAnimationType.Idle);
                 break;
             case BossState.Wait:
                 break;
             case BossState.Direction:
                 break;
             case BossState.Move:
-                _anim.CrossFadeInFixedTime("Move", 0.1f);
+                PlayBossAnimation(BossAnimationType.Move);
                 break;
             case BossState.Attack_Jump:
                 StartCoroutine(JumpAttack());
                 break;
             case BossState.Landing:
-                _anim.CrossFadeInFixedTime("Landing", 0.1f);
+                PlayBossAnimation(BossAnimationType.Landing);
                 break;
-            case BossState.Down:
+            case BossState.Damage:
+                StartCoroutine(DamageCoroutine());
                 break;
             case BossState.KnockOut:
                 break;
@@ -296,6 +323,15 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(interval);
 
         _isCanAttack = true;
+    }
+
+    /// <summary>
+    /// 被弾
+    /// </summary>
+    /// <param name="value"> 受けるダメージ </param>
+    public void Damage(int value)
+    {
+        StartCoroutine(ChangeState(BossState.Damage));
     }
 }
 
@@ -315,10 +351,22 @@ public enum BossState
     Attack_Jump,
     /// <summary> 着地 </summary>
     Landing,
-    /// <summary> ダウン(戦闘は続く) </summary>
-    Down,
+    /// <summary> 被弾 </summary>
+    Damage,
     /// <summary> 倒された </summary>
     KnockOut
+}
+
+public enum BossAnimationType
+{
+    Idle,
+    Move,
+    Jump,
+    JumpUp,
+    Falling,
+    Landing,
+    Angry,
+    Damage
 }
 
 public enum BossBattlePhase

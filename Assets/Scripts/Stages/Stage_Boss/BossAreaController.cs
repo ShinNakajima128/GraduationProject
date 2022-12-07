@@ -9,7 +9,7 @@ public class BossAreaController : MonoBehaviour
     [Header("Objects")]
     [Tooltip("ƒgƒ‰ƒ“ƒv•º‚ÌUŒ‚”ÍˆÍ")]
     [SerializeField]
-    AttackArea[] _attackAreas = default;
+    AttackAreaController[] _attackAreas = default;
 
     [SerializeField]
     TrumpSolderManager _trumpSolderMng = default;
@@ -22,6 +22,14 @@ public class BossAreaController : MonoBehaviour
     #endregion
     void Start()
     {
-        
+        BossStageManager.Instance.OnInGame += AreaActivate;
+    }
+
+    void AreaActivate(bool isActive)
+    {
+        foreach (var a in _attackAreas)
+        {
+            a.AttackAreaCollider.enabled = isActive;
+        }
     }
 }

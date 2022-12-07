@@ -94,12 +94,12 @@ public class TrumpSolderManager : MonoBehaviour
             }
         }
     }
-    public void OnTrumpSoldersAttack(DirectionType dir)
+    public void OnTrumpSoldersAttack(DirectionType dir, Action action = null)
     {
-        StartCoroutine(TrumpSoldersAttackCoroutine(dir));
+        StartCoroutine(TrumpSoldersAttackCoroutine(dir, action));
     }
 
-    IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir)
+    IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action action)
     {
         switch (dir)
         {
@@ -176,6 +176,9 @@ public class TrumpSolderManager : MonoBehaviour
                 //
                 break;
         }
+        yield return new WaitForSeconds(1.5f);
+
+        action?.Invoke();
     }
 }
 

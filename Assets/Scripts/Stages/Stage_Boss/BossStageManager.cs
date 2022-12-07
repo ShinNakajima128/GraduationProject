@@ -83,7 +83,7 @@ public class BossStageManager : StageGame<BossStageManager>
         TryGetComponent(out _impulseSource);
 
         //ƒoƒgƒ‹’†‚©‚Ç‚¤‚©‚Ì’l‚ª•Ï‚í‚Á‚½Žž‚És‚¤ˆ—‚ð“o˜^
-        _isInBattle.Subscribe(_ => OnInGame.Invoke(_isInBattle.Value));
+        _isInBattle.Subscribe(_ => OnInGame?.Invoke(_isInBattle.Value));
     }
 
     protected override void Start()
