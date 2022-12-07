@@ -208,10 +208,26 @@ public class BossStageManager : StageGame<BossStageManager>
         CharacterMovable?.Invoke(false);
         OnDirectionSetUp();
 
+        //CameraBlend(CameraType.Direction, 2.0f);
+
+        yield return new WaitForSeconds(1.0f);
+
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Jump);
+        _bossCtrl.transform.DOLookAt(new Vector3(_bossDirectionTrans.position.x, 0f, _bossDirectionTrans.position.z), 0.5f);
+
+        yield return new WaitForSeconds(1.3f);
+
+        yield return _bossCtrl.gameObject.transform.DOMove(_bossDirectionTrans.position, 1.5f)
+                                                   .SetEase(Ease.OutQuint)
+                                                   .OnComplete(() => 
+                                                   {
+                                                       _bossCtrl.gameObject.transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.2f);
+                                                   }).WaitForCompletion();
+
         CameraBlend(CameraType.Direction, 2.0f);
 
         yield return new WaitForSeconds(2.0f);
-
+        
         _bossCtrl.PlayBossAnimation(BossAnimationType.Angry, 0.1f);
 
         MessageType message = default;
@@ -247,11 +263,6 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         TransitionManager.FadeIn(FadeType.Normal, () => 
         {
-            //ボスの位置と向きを初期化
-            _bossCtrl.gameObject.transform.DOMove(_bossDirectionTrans.position, 0f);
-            _bossCtrl.gameObject.transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0f);
-            _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.1f);
-
             //プレイヤーの位置と向きを初期化
             _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
             _playerTrans.DOLocalRotate(Vector3.zero, 0f);
@@ -261,6 +272,9 @@ public class BossStageManager : StageGame<BossStageManager>
 
         yield return new WaitForSeconds(3.5f); //画面のフェード演出終了まで待機
 
+        //トランプ兵の首を飛ばす演出の処理
+        Debug.Log("トランプ兵の首飛ぶ");
+        yield return new WaitForSeconds(2.0f);
     }
 
     /// <summary>

@@ -257,7 +257,7 @@ public class BossController : MonoBehaviour, IDamagable
                                        new Vector3(playerPos.x,1.0f, playerPos.z * 0.25f),
                                        new Vector3(playerPos.x,  2.0f, playerPos.z * 0.5f),
                                        new Vector3(playerPos.x,1.0f, playerPos.z * 0.75f),
-                                       new Vector3(playerPos.x, 0, playerPos.z) 
+                                       new Vector3(playerPos.x, 0, playerPos.z)
                                      };
 
                 yield return transform.DOPath(jumpPath, _bounceAttackInterval, PathType.CatmullRom)
@@ -377,6 +377,7 @@ public class BossController : MonoBehaviour, IDamagable
             if (other.TryGetComponent<IDamagable>(out var target))
             {
                 target.Damage(1);
+                Debug.Log("ボスがプレイヤーへダメージを与えた");
             }
         }
     }
