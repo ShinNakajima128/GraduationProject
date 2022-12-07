@@ -11,7 +11,7 @@ public class PlayerBase : MonoBehaviour
     IMovable _move;
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
         TryGetComponent(out _input);
         TryGetComponent(out _fc);

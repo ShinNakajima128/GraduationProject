@@ -57,7 +57,14 @@ public class MessagePlayer : MonoBehaviour
     public event Action Closeup;
     public event Action Reset;
     #region property
+    public static MessagePlayer Instance { get; private set; }
     #endregion
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         _actorText.text = "";
