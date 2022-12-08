@@ -973,6 +973,7 @@ GameObject:
   - component: {fileID: 3067679242937454242}
   - component: {fileID: 2370825636060618223}
   - component: {fileID: 6422767447871481237}
+  - component: {fileID: 7852610778293578401}
   m_Layer: 0
   m_Name: Boss_Queen
   m_TagString: Boss
@@ -1025,19 +1026,20 @@ MonoBehaviour:
     MoveSpeed: 5
     ChaseTime: 1
     CoolTime: 3
-    AttackCount: 1
+    BounceCount: 0
   - Phase: 1
     MoveSpeed: 5.5
     ChaseTime: 1
     CoolTime: 3
-    AttackCount: 1
+    BounceCount: 0
   - Phase: 2
     MoveSpeed: 6
     ChaseTime: 1
     CoolTime: 3
-    AttackCount: 3
+    BounceCount: 0
   _directionTrans: {fileID: 0}
   _startBattleTrans: {fileID: 0}
+  _bossShadow: {fileID: 0}
   _debugMode: 1
   _debugPhase: 0
 --- !u!143 &2370825636060618223
@@ -1078,6 +1080,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7852610778293578401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761832288784941390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27592c95c6cfee44aaabe19e63777ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2847263155113187626
 GameObject:
   m_ObjectHideFlags: 0

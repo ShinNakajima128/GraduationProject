@@ -64,6 +64,7 @@ public class BossController : MonoBehaviour, IDamagable
     #region private
     Animator _anim;
     CharacterController _cc;
+    BossShadow _bossShadow;
     Transform _playerTrans = default;
     BossState _currentBossState = default;
     BossBattlePhase _currentBattlePhase = default;
@@ -89,6 +90,7 @@ public class BossController : MonoBehaviour, IDamagable
     {
         TryGetComponent(out _anim);
         TryGetComponent(out _cc);
+        TryGetComponent(out _bossShadow);
     }
     void Start()
     {
@@ -166,11 +168,12 @@ public class BossController : MonoBehaviour, IDamagable
     public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase)
     {
         _isDamaged = false;
-
+        _bossShadow.ChangeShadowSize(0.1f, 0f);
         PlayBossAnimation(BossAnimationType.Jump);
 
         yield return new WaitForSeconds(1.3f);
 
+        _bossShadow.ChangeShadowSize(2f, 1.0f);
         yield return transform.DOMove(_startBattleTrans.position, 1.0f).WaitForCompletion();
 
         BossStageManager.CameraShake();
@@ -214,7 +217,10 @@ public class BossController : MonoBehaviour, IDamagable
 
         var playerTop = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 10.0f, _playerTrans.position.z);
 
-        yield return transform.DOLocalMove(playerTop, _jumpUpTime).WaitForCompletion(); //ƒ{ƒX‚ª”ò‚Ñã‚ª‚é
+        _bossShadow.ChangeShadowSize(0.6f, 1.5f);
+        yield return transform.DOLocalMove(playerTop, _jumpUpTime)
+                              .SetEase(Ease.OutCubic)
+                              .WaitForCompletion(); //ƒ{ƒX‚ª”ò‚Ñã‚ª‚é
 
         transform.DOLookAt(_playerTrans.position, 0.1f, AxisConstraint.Y);
 
@@ -229,8 +235,7 @@ public class BossController : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        BossStageManager.CameraChange(CameraType.Battle, 2f);
-
+        _bossShadow.ChangeShadowSize(2f, _jumpUpTime, Ease.InCubic);
         yield return transform.DOMove(_playerTrans.position, _fallDownTime)
                               .SetEase(Ease.InCubic)
                               .OnComplete(() =>
@@ -241,15 +246,17 @@ public class BossController : MonoBehaviour, IDamagable
                               })
                               .WaitForCompletion();
 
+        BossStageManager.CameraChange(CameraType.Battle, 2f);
+
         //’ÇŒ‚‰ñ”‚ª1‰ñˆÈã‚Ìê‡
-        if (param.AttackCount > 1)
+        if (param.BounceCount > 0)
         {
             PlayBossAnimation(BossAnimationType.Idle);
 
-            for (int i = 0; i < param.AttackCount; i++)
+            for (int i = 0; i < param.BounceCount; i++)
             {
-                yield return transform.DOLocalJump(transform.position + (transform.forward * 0.5f), 2f - (i * 0.5f), 1, 0.5f)
-                                      //.SetEase(Ease.OutExpo)
+                yield return transform.DOLocalJump(transform.position + (transform.forward * 1.5f), 1.5f, 1, 0.8f)
+                                      .SetEase(Ease.Linear)
                                       .WaitForCompletion();
             }
         }
@@ -420,6 +427,6 @@ public struct PhaseParameter
     public float ChaseTime;
     [Tooltip("UŒ‚Œã‚É’âŽ~‚·‚éŽžŠÔ")]
     public float CoolTime;
-    [Tooltip("UŒ‚‰ñ”"), Range(1, 10)]
-    public int AttackCount;
+    [Tooltip("ƒWƒƒƒ“ƒvUŒ‚Œã‚É’µ‚Ë‚é‰ñ”"), Range(0, 3)]
+    public int BounceCount;
 }
