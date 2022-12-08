@@ -217,7 +217,7 @@ public class BossController : MonoBehaviour, IDamagable
 
         var playerTop = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 10.0f, _playerTrans.position.z);
 
-        _bossShadow.ChangeShadowSize(0.6f, 1.5f);
+        _bossShadow.ChangeShadowSize(0f, 1.5f);
         yield return transform.DOLocalMove(playerTop, _jumpUpTime)
                               .SetEase(Ease.OutCubic)
                               .WaitForCompletion(); //É{ÉXÇ™îÚÇ—è„Ç™ÇÈ
@@ -242,6 +242,7 @@ public class BossController : MonoBehaviour, IDamagable
                               {
                                   StartCoroutine(ChangeState(BossState.Landing));
                                   BossStageManager.CameraShake();
+                                  EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
                                   Debug.Log("íÖín");
                               })
                               .WaitForCompletion();
@@ -258,6 +259,8 @@ public class BossController : MonoBehaviour, IDamagable
                 yield return transform.DOLocalJump(transform.position + (transform.forward * 1.5f), 1.5f, 1, 0.8f)
                                       .SetEase(Ease.Linear)
                                       .WaitForCompletion();
+
+                EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
             }
         }
 
