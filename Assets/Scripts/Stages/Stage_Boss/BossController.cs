@@ -146,6 +146,7 @@ public class BossController : MonoBehaviour, IDamagable
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _turnSpeed * Time.deltaTime);
         _velocity = _dir.normalized * _defaultMoveSpeed;
         _cc.Move(_velocity * Time.deltaTime);
+        Debug.Log("ˆÚ“®’†");
     }
 
     /// <summary>
@@ -230,46 +231,30 @@ public class BossController : MonoBehaviour, IDamagable
 
         BossStageManager.CameraChange(CameraType.Battle, 2f);
 
-        yield return transform.DOMoveY(0f, _fallDownTime)
-                             .OnComplete(() =>
-                             {
-                                 StartCoroutine(ChangeState(BossState.Landing));
-                                 BossStageManager.CameraShake();
-                                 Debug.Log("’…’n");
-                             })
-                             .WaitForCompletion();
+        yield return transform.DOMove(_playerTrans.position, _fallDownTime)
+                              .SetEase(Ease.InCubic)
+                              .OnComplete(() =>
+                              {
+                                  StartCoroutine(ChangeState(BossState.Landing));
+                                  BossStageManager.CameraShake();
+                                  Debug.Log("’…’n");
+                              })
+                              .WaitForCompletion();
 
+        //’ÇŒ‚‰ñ”‚ª1‰ñˆÈã‚Ìê‡
         if (param.AttackCount > 1)
         {
-            for (int i = 0; i < param.AttackCount - 1; i++)
+            PlayBossAnimation(BossAnimationType.Idle);
+
+            for (int i = 0; i < param.AttackCount; i++)
             {
-                yield return new WaitForSeconds(0.5f);
-
-                PlayBossAnimation(BossAnimationType.JumpUp, 0.2f);
-
-                yield return new WaitForSeconds(_bounceAttackInterval);
-
-                var playerPos = new Vector3(_playerTrans.position.x, _playerTrans.position.y, _playerTrans.position.z);
-
-                transform.DOLookAt(_playerTrans.position, 0.1f, AxisConstraint.Y);
-
-                Vector3[] jumpPath = { transform.position,
-                                       new Vector3(playerPos.x,1.0f, playerPos.z * 0.25f),
-                                       new Vector3(playerPos.x,  2.0f, playerPos.z * 0.5f),
-                                       new Vector3(playerPos.x,1.0f, playerPos.z * 0.75f),
-                                       new Vector3(playerPos.x, 0, playerPos.z)
-                                     };
-
-                yield return transform.DOPath(jumpPath, _bounceAttackInterval, PathType.CatmullRom)
-                                      .OnComplete(() =>
-                                      {
-                                          StartCoroutine(ChangeState(BossState.Landing));
-                                          BossStageManager.CameraShake();
-                                          Debug.Log("’…’n");
-                                      })
+                yield return transform.DOLocalJump(transform.position + (transform.forward * 0.5f), 2f - (i * 0.5f), 1, 0.5f)
+                                      //.SetEase(Ease.OutExpo)
                                       .WaitForCompletion();
             }
         }
+
+        StartCoroutine(ChangeState(BossState.Landing));
 
         yield return new WaitForSeconds(param.CoolTime);
 

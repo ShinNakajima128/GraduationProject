@@ -65,6 +65,10 @@ public class BossStageManager : StageGame<BossStageManager>
 
     [SerializeField]
     BossController _bossCtrl = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
     #region public
     public event Action<bool> OnInGame;
@@ -147,22 +151,27 @@ public class BossStageManager : StageGame<BossStageManager>
 
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
-        yield return new WaitForSeconds(1.5f);
-
-        //カメラをボスに寄せる
-        CameraBlend(CameraType.Direction, _cameraBlendTime);
-
-        yield return new WaitForSeconds(_cameraBlendTime);
-
-        //ボス戦開始時の演出を再生
-        StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start, () =>
+        if (!_debugMode)
         {
-            _isDirecting = true;
-        }));
 
-        yield return new WaitUntil(() => _isDirecting);
 
-        _isDirecting = false;
+            yield return new WaitForSeconds(1.5f);
+
+            //カメラをボスに寄せる
+            CameraBlend(CameraType.Direction, _cameraBlendTime);
+
+            yield return new WaitForSeconds(_cameraBlendTime);
+
+            //ボス戦開始時の演出を再生
+            StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start, () =>
+            {
+                _isDirecting = true;
+            }));
+
+            yield return new WaitUntil(() => _isDirecting);
+
+            _isDirecting = false;
+        }
 
         CameraBlend(CameraType.Battle, _cameraBlendTime);
 
@@ -221,7 +230,7 @@ public class BossStageManager : StageGame<BossStageManager>
                                                    .SetEase(Ease.OutQuint)
                                                    .OnComplete(() => 
                                                    {
-                                                       _bossCtrl.gameObject.transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.2f);
+                                                       _bossCtrl.gameObject.transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.5f);
                                                    }).WaitForCompletion();
 
         CameraBlend(CameraType.Direction, 2.0f);

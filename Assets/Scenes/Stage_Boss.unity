@@ -4047,6 +4047,7 @@ MonoBehaviour:
   _areaEffect: {fileID: 4707451330753904476}
   _messagePlayer: {fileID: 1461352429}
   _bossCtrl: {fileID: 3067679242937454243}
+  _debugMode: 1
 --- !u!114 &1167690487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7542,6 +7543,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
         type: 3}
+      propertyPath: _fallDownTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
+        type: 3}
       propertyPath: _directionTrans
       value: 
       objectReference: {fileID: 606277573}
@@ -7554,6 +7560,31 @@ PrefabInstance:
         type: 3}
       propertyPath: _bounceAttackInterval
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
+        type: 3}
+      propertyPath: _phaseParams.Array.data[0].CoolTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
+        type: 3}
+      propertyPath: _phaseParams.Array.data[1].CoolTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
+        type: 3}
+      propertyPath: _phaseParams.Array.data[2].CoolTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
+        type: 3}
+      propertyPath: _phaseParams.Array.data[0].ChaseTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
+        type: 3}
+      propertyPath: _phaseParams.Array.data[1].ChaseTime
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
         type: 3}
@@ -7573,7 +7604,7 @@ PrefabInstance:
     - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
         type: 3}
       propertyPath: _phaseParams.Array.data[0].AttackCount
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
         type: 3}
