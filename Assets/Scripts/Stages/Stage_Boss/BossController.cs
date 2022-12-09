@@ -41,6 +41,9 @@ public class BossController : MonoBehaviour, IDamagable
     [SerializeField]
     float _bounceAttackInterval = 1.0f;
 
+    [SerializeField]
+    float _minShadowSize = 0f;
+
     [Header("Phase")]
     [Tooltip("ボス戦の各フェイズのパラメーター")]
     [SerializeField]
@@ -217,7 +220,7 @@ public class BossController : MonoBehaviour, IDamagable
 
         var playerTop = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 10.0f, _playerTrans.position.z);
 
-        _bossShadow.ChangeShadowSize(0f, 1.5f);
+        _bossShadow.ChangeShadowSize(_minShadowSize, 1.5f + _jumpUpTime + param.ChaseTime);
         yield return transform.DOLocalMove(playerTop, _jumpUpTime)
                               .SetEase(Ease.OutCubic)
                               .WaitForCompletion(); //ボスが飛び上がる
@@ -235,9 +238,10 @@ public class BossController : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        _bossShadow.ChangeShadowSize(2f, _jumpUpTime, Ease.InCubic);
+        _bossShadow.ChangeShadowSize(2f, _jumpUpTime, Ease.InQuart);
+
         yield return transform.DOMove(_playerTrans.position, _fallDownTime)
-                              .SetEase(Ease.InCubic)
+                              .SetEase(Ease.InQuart)
                               .OnComplete(() =>
                               {
                                   StartCoroutine(ChangeState(BossState.Landing));
@@ -256,7 +260,7 @@ public class BossController : MonoBehaviour, IDamagable
 
             for (int i = 0; i < param.BounceCount; i++)
             {
-                yield return transform.DOLocalJump(transform.position + (transform.forward * 1.5f), 1.5f, 1, 0.8f)
+                yield return transform.DOLocalJump(transform.position + (transform.forward * 2f), 1.5f, 1, 0.8f)
                                       .SetEase(Ease.Linear)
                                       .WaitForCompletion();
 
