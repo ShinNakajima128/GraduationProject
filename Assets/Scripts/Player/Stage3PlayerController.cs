@@ -32,8 +32,6 @@ public class Stage3PlayerController : MonoBehaviour
 
     private PlayerInput _pInput;
 
-    public bool IsDebug = false;
-
     public Action OnCircleButtonStarted { get; private set; }
 
     /// <summary>
@@ -72,16 +70,15 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void Turn()
     {
+        if (!CanControl) return;
+
         if (IsInputTurnLeft)
         {
-            var euler = Quaternion.Euler(0f, -1f, 0f);
-            _ball.transform.rotation = _ball.transform.rotation * euler;
-
-            FixRotation(_ball.transform.rotation);
+            _ball.TurnLeft();
         }
         else if (IsInputTurnRight)
         {
-
+            _ball.TurnRight();
         }
     }
     #endregion
@@ -98,11 +95,6 @@ public class Stage3PlayerController : MonoBehaviour
         {
             ChengeActionMap("Stage3");
             CallBackRegist();
-        }
-
-        if (IsDebug)
-        {
-            CanControl = true;
         }
     }
 
@@ -121,8 +113,13 @@ public class Stage3PlayerController : MonoBehaviour
     {
         _pInput.actions["Move"].performed += OnMove;
         _pInput.actions["Move"].canceled += OnMove;
+
         _pInput.actions["TurnLeft"].started += OnTurnLeft;
+        _pInput.actions["TurnLeft"].canceled += OnTurnLeft;
+
         _pInput.actions["TurnRight"].started += OnToRight;
+        _pInput.actions["TurnRight"].canceled += OnToRight;
+
         _pInput.actions["Throw"].started += OnThrow;
     }
 
@@ -135,23 +132,6 @@ public class Stage3PlayerController : MonoBehaviour
         _pInput.actions["TurnLeft"].started -= OnTurnLeft;
         _pInput.actions["TurnRight"].started -= OnToRight;
         _pInput.actions["Throw"].started -= OnThrow;
-    }
-
-    /// <summary>
-    /// 正規化
-    /// </summary>
-    private void FixRotation(Quaternion rotation)
-    {
-        if (rotation.y > _eulerMaxValue)
-        {
-            rotation.y = _eulerMaxValue;
-        }
-        else if (rotation.y < -_eulerMaxValue)
-        {
-            rotation.y = -_eulerMaxValue;
-        }
-
-        this.transform.rotation = rotation;
     }
 
     /// <summary>
@@ -181,17 +161,11 @@ public class Stage3PlayerController : MonoBehaviour
         if (value != Vector2.zero)
         {
             // 横移動
-            myPos.x = myPos.x + value.x * _moveSpeed;
+            myPos.x = myPos.x + value.x * _moveSpeed * Time.deltaTime;
             // 座標の正規化と結果を取得
             var fixedPos = FixPosition(myPos);
             // 正規化した座標を取得
             myPos = fixedPos.Item1;
-            // 正規化した場合は座標を移動しないa
-            if (!fixedPos.Item2)
-            {
-                // ボールのx座標移動
-                _ball.SyncMovedTransorm(value.x * _moveSpeed);
-            }
 
             this.transform.position = myPos;
         }
@@ -206,12 +180,13 @@ public class Stage3PlayerController : MonoBehaviour
     {
         // ボールの座標
         var ballPosition = _throwPoint.position;
-        // ボールの向き
-        var ballDirection = this.transform.rotation;
+
+        // 親子関係の解消
+        _ball.gameObject.transform.parent = null;
 
         var ball = _ball as IThrowable;
 
-        ball.Throw(ballPosition, ballDirection);
+        ball.Throw(ballPosition);
         IsThrowed = true;
     }
 
@@ -235,8 +210,6 @@ public class Stage3PlayerController : MonoBehaviour
     #region InputSystem CallBacks
     public void OnMove(InputAction.CallbackContext context)
     {
-        Debug.Log("OnMove");
-
         if (!CanControl) return;
 
         // 投げ終えていたら何もしない
@@ -249,8 +222,6 @@ public class Stage3PlayerController : MonoBehaviour
         var value = context.ReadValue<Vector2>();
 
         InputedMoveValue = value;
-
-        Move(value);
     }
 
     private void OnTurnLeft(InputAction.CallbackContext context)
@@ -259,10 +230,11 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.started)
         {
-            var euler = Quaternion.Euler(0f, -1f, 0f);
-            _ball.transform.rotation = _ball.transform.rotation * euler;
-
-            FixRotation(this.transform.rotation);
+            IsInputTurnLeft = true;
+        }
+        else if (context.canceled)
+        {
+            IsInputTurnLeft = false;
         }
     }
 
@@ -272,10 +244,11 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.started)
         {
-            var euler = Quaternion.Euler(0f, 1f, 0f);
-            _ball.transform.rotation = _ball.transform.rotation * euler;
-
-            FixRotation(this.transform.rotation);
+            IsInputTurnRight = true;
+        }
+        else if (context.canceled)
+        {
+            IsInputTurnRight = false;
         }
     }
 
