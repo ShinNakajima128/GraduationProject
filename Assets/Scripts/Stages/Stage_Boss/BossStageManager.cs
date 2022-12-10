@@ -46,6 +46,10 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _jumpAttackCamera = default;
 
+    [Tooltip("トランプ兵を処刑する演出時のカメラ")]
+    [SerializeField]
+    CinemachineVirtualCamera _excuteCamera = default;
+
     [Tooltip("ボスを倒した時のカメラ")]
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
@@ -74,6 +78,10 @@ public class BossStageManager : StageGame<BossStageManager>
 
     [SerializeField]
     BossController _bossCtrl = default;
+
+    [Tooltip("トランプ兵の処刑の演出を行うComponent")]
+    [SerializeField]
+    ExcuteDirection _excuteDirection = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -180,6 +188,7 @@ public class BossStageManager : StageGame<BossStageManager>
             _isDirecting = false;
         }
 
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.5f);
         CameraBlend(CameraType.Battle, _cameraBlendTime);
 
         yield return new WaitForSeconds(_cameraBlendTime);
@@ -195,7 +204,7 @@ public class BossStageManager : StageGame<BossStageManager>
     protected override void Init()
     {
         _messagePlayer.Closeup += OnCloseup;
-        _messagePlayer.Reset += OnReset;
+        //_messagePlayer.Reset += OnReset;
         _isInBattle.Value = false;
     }
 
@@ -293,13 +302,15 @@ public class BossStageManager : StageGame<BossStageManager>
             _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
             _playerTrans.DOLocalRotate(Vector3.zero, 0f);
 
+            CameraBlend(CameraType.ExcuteTrump, 0.01f);
             TransitionManager.FadeOut(FadeType.Normal);
         });
 
-        yield return new WaitForSeconds(3.5f); //画面のフェード演出終了まで待機
-
         //トランプ兵の首を飛ばす演出の処理
-        Debug.Log("トランプ兵の首飛ぶ");
+        yield return _excuteDirection.ExcuteDirectionCoroutine();
+
+        CameraBlend(CameraType.Direction, 0.01f);
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle);
         yield return new WaitForSeconds(2.0f);
     }
 
@@ -329,30 +340,41 @@ public class BossStageManager : StageGame<BossStageManager>
                 _directionCamera.Priority = 9;
                 _closeupCamera.Priority = 9;
                 _battleCamera.Priority = 9;
+                _jumpAttackCamera.Priority = 9;
+                _finishCamera.Priority = 9;
+                _excuteCamera.Priority = 9;
                 break;
             case CameraType.Direction:
                 _directionCamera.Priority = 15;
                 _closeupCamera.Priority = 9;
                 _battleCamera.Priority = 9;
                 _jumpAttackCamera.Priority = 9;
+                _finishCamera.Priority = 9;
+                _excuteCamera.Priority = 9;
                 break;
             case CameraType.Battle:
                 _directionCamera.Priority = 9;
                 _closeupCamera.Priority = 9;
                 _battleCamera.Priority = 15;
                 _jumpAttackCamera.Priority = 9;
+                _finishCamera.Priority = 9;
+                _excuteCamera.Priority = 9;
                 break;
             case CameraType.Direction_Closeup:
                 _directionCamera.Priority = 9;
                 _closeupCamera.Priority = 15;
                 _battleCamera.Priority = 9;
                 _jumpAttackCamera.Priority = 9;
+                _finishCamera.Priority = 9;
+                _excuteCamera.Priority = 9;
                 break;
             case CameraType.JumpAttack:
                 _directionCamera.Priority = 9;
                 _closeupCamera.Priority = 9;
                 _battleCamera.Priority = 9;
                 _jumpAttackCamera.Priority = 15;
+                _finishCamera.Priority = 9;
+                _excuteCamera.Priority = 9;
                 break;
             case CameraType.FinishBattle:
                 _directionCamera.Priority = 9;
@@ -360,6 +382,15 @@ public class BossStageManager : StageGame<BossStageManager>
                 _battleCamera.Priority = 9;
                 _jumpAttackCamera.Priority = 9;
                 _finishCamera.Priority = 15;
+                _excuteCamera.Priority = 9;
+                break;
+            case CameraType.ExcuteTrump:
+                _directionCamera.Priority = 9;
+                _closeupCamera.Priority = 9;
+                _battleCamera.Priority = 9;
+                _jumpAttackCamera.Priority = 9;
+                _finishCamera.Priority = 9;
+                _excuteCamera.Priority = 15;
                 break;
             default:
                 break;
@@ -383,5 +414,6 @@ public enum CameraType
     Battle,
     Direction_Closeup,
     JumpAttack,
-    FinishBattle
+    FinishBattle,
+    ExcuteTrump
 }
