@@ -46,6 +46,10 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _jumpAttackCamera = default;
 
+    [Tooltip("ボスを倒した時のカメラ")]
+    [SerializeField]
+    CinemachineVirtualCamera _finishCamera = default;
+
     [Header("Objects")]
     [Tooltip("女王の演出位置")]
     [SerializeField]
@@ -58,6 +62,11 @@ public class BossStageManager : StageGame<BossStageManager>
     [Tooltip("戦闘中の移動可能範囲のエフェクト")]
     [SerializeField]
     GameObject _areaEffect = default;
+
+    [Header("UI")]
+    [Tooltip("戦闘終了時の画面")]
+    [SerializeField]
+    CanvasGroup _finishBattleCanvas = default;
 
     [Header("Component")]
     [SerializeField]
@@ -153,8 +162,6 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         if (!_debugMode)
         {
-
-
             yield return new WaitForSeconds(1.5f);
 
             //カメラをボスに寄せる
@@ -217,7 +224,17 @@ public class BossStageManager : StageGame<BossStageManager>
         CharacterMovable?.Invoke(false);
         OnDirectionSetUp();
 
-        //CameraBlend(CameraType.Direction, 2.0f);
+        if (_debugMode)
+        {
+            phase = BossBattlePhase.Third;
+        }
+
+        //最後のフェイズの場合は戦闘終了の演出を行う
+        if (phase == BossBattlePhase.Third)
+        {
+            yield return FinishBattleCoroutine();
+            yield break;
+        }
 
         yield return new WaitForSeconds(1.0f);
 
@@ -286,6 +303,17 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return new WaitForSeconds(2.0f);
     }
 
+    IEnumerator FinishBattleCoroutine()
+    {
+        CameraBlend(CameraType.FinishBattle, 2.0f);
+
+        yield return new WaitForSeconds(3.0f);
+
+        _finishBattleCanvas.alpha = 1;
+
+        yield return new WaitForSeconds(2.0f);
+    }
+
     /// <summary>
     /// 現在のカメラから別のカメラへ遷移する
     /// </summary>
@@ -326,6 +354,13 @@ public class BossStageManager : StageGame<BossStageManager>
                 _battleCamera.Priority = 9;
                 _jumpAttackCamera.Priority = 15;
                 break;
+            case CameraType.FinishBattle:
+                _directionCamera.Priority = 9;
+                _closeupCamera.Priority = 9;
+                _battleCamera.Priority = 9;
+                _jumpAttackCamera.Priority = 9;
+                _finishCamera.Priority = 15;
+                break;
             default:
                 break;
         }
@@ -347,5 +382,6 @@ public enum CameraType
     Direction,
     Battle,
     Direction_Closeup,
-    JumpAttack
+    JumpAttack,
+    FinishBattle
 }

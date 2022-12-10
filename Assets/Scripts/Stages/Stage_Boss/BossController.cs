@@ -34,6 +34,10 @@ public class BossController : MonoBehaviour, IDamagable
     [SerializeField]
     float _downTime = 3.0f;
 
+    [Tooltip("倒された時の時間")]
+    [SerializeField]
+    float _knockOutTime = 6.5f;
+
     [Tooltip("攻撃を開始するプレイヤーとの距離")]
     [SerializeField]
     float _attackDistance = 2.0f;
@@ -256,7 +260,7 @@ public class BossController : MonoBehaviour, IDamagable
         //追撃回数が1回以上の場合
         if (param.BounceCount > 0)
         {
-            PlayBossAnimation(BossAnimationType.Idle);
+            PlayBossAnimation(BossAnimationType.Bounce);
 
             for (int i = 0; i < param.BounceCount; i++)
             {
@@ -299,9 +303,17 @@ public class BossController : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        PlayBossAnimation(BossAnimationType.Damage);
-
-        yield return new WaitForSeconds(_downTime);
+        //3フェイズ目の時は倒されたモーションを再生
+        if (_currentBattlePhase == BossBattlePhase.Third)
+        {
+            PlayBossAnimation(BossAnimationType.Defeat);
+            yield return new WaitForSeconds(_knockOutTime);
+        }
+        else
+        {
+            PlayBossAnimation(BossAnimationType.Damage);
+            yield return new WaitForSeconds(_downTime);
+        }
 
         _isDamaged = true;
         action?.Invoke();
@@ -340,6 +352,7 @@ public class BossController : MonoBehaviour, IDamagable
                 StartCoroutine(DamageCoroutine(action));
                 break;
             case BossState.KnockOut:
+                PlayBossAnimation(BossAnimationType.Defeat);
                 break;
             default:
                 break;
@@ -413,7 +426,9 @@ public enum BossAnimationType
     Falling,
     Landing,
     Angry,
-    Damage
+    Damage,
+    Bounce,
+    Defeat
 }
 
 public enum BossBattlePhase
