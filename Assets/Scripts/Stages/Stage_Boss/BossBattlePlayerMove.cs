@@ -28,7 +28,8 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
     private void Start()
     {
         PlayerMovable(false);
-        StageGame<BossStageManager>.Instance.CharacterMovable += PlayerMovable;
+        BossStageManager.Instance.CharacterMovable += PlayerMovable;
+        BossStageManager.Instance.DirectionSetUp += ResetAnimation;
     }
 
     private void FixedUpdate()
@@ -70,5 +71,13 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
     void PlayerMovable(bool isMove)
     {
         _isMoving = isMove;
+    }
+
+    /// <summary>
+    /// プレイヤーのアニメーションをリセットする
+    /// </summary>
+    void ResetAnimation()
+    {
+        _anim.SetFloat("Move", 0f);
     }
 }

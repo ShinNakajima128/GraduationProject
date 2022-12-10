@@ -21,7 +21,11 @@ public enum EffectType
     /// <summary>
     /// ロビー時計が12時になった時のハート
     /// </summary>
-    Heart
+    Heart,
+    /// <summary>
+    /// 女王の着地時の衝撃波
+    /// </summary>
+    ShockWave
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>

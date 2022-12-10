@@ -781,7 +781,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &132531447328683537
 CapsuleCollider:
@@ -936,6 +936,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdbb07bf19d7f7d449be91de46512cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHP: 5
+  _blinksNum: 5
+  _blinksInterVal: 0.2
+  _playerModel: {fileID: 7289928644042374097}
 --- !u!114 &543450652944123419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -948,6 +952,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202e9eaf67324244ea61894f3542b10b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed: 4
+  _turnSpeed: 10
 --- !u!1 &1025773900866435707
 GameObject:
   m_ObjectHideFlags: 0

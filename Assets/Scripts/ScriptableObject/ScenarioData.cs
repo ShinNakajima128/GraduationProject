@@ -106,7 +106,10 @@ namespace AliceProject
         Intro,
         Tutorial,
         Stage1_End,
-        Stage_Boss_Start
+        Stage_Boss_Start,
+        Stage_Boss_Down1,
+        Stage_Boss_Down2,
+        Stage_Boss_Down3
     }
 }
 

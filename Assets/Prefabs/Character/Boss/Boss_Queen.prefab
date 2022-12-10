@@ -972,9 +972,11 @@ GameObject:
   - component: {fileID: 3249399331853917172}
   - component: {fileID: 3067679242937454242}
   - component: {fileID: 2370825636060618223}
+  - component: {fileID: 6422767447871481237}
+  - component: {fileID: 7852610778293578401}
   m_Layer: 0
   m_Name: Boss_Queen
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1011,6 +1013,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7af6af1d713fa144a8ebfef458810e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultMoveSpeed: 4
+  _turnSpeed: 10
+  _jumpUpTime: 1.5
+  _fallDownTime: 0.5
+  _attackInterval: 1.5
+  _downTime: 3
+  _attackDistance: 10
+  _bounceAttackInterval: 1
+  _phaseParams:
+  - Phase: 0
+    MoveSpeed: 5
+    ChaseTime: 1
+    CoolTime: 3
+    BounceCount: 0
+  - Phase: 1
+    MoveSpeed: 5.5
+    ChaseTime: 1
+    CoolTime: 3
+    BounceCount: 0
+  - Phase: 2
+    MoveSpeed: 6
+    ChaseTime: 1
+    CoolTime: 3
+    BounceCount: 0
+  _directionTrans: {fileID: 0}
+  _startBattleTrans: {fileID: 0}
+  _bossShadow: {fileID: 0}
+  _debugMode: 1
+  _debugPhase: 0
 --- !u!143 &2370825636060618223
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1029,6 +1060,38 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &6422767447871481237
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761832288784941390}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a987ed06a67e86445933f7886f8f86bd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7852610778293578401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761832288784941390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27592c95c6cfee44aaabe19e63777ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2847263155113187626
 GameObject:
   m_ObjectHideFlags: 0
