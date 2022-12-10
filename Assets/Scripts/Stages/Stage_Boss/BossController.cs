@@ -242,9 +242,9 @@ public class BossController : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        _bossShadow.ChangeShadowSize(2f, _jumpUpTime, Ease.InQuart);
+        _bossShadow.ChangeShadowSize(2f, _jumpUpTime, Ease.InQuint);
 
-        yield return transform.DOMove(_playerTrans.position, _fallDownTime)
+        yield return transform.DOMove(_playerTrans.position, param.FallTime)
                               .SetEase(Ease.InQuart)
                               .OnComplete(() =>
                               {
@@ -447,6 +447,8 @@ public struct PhaseParameter
     public float MoveSpeed;
     [Tooltip("’ÇÕ‚·‚éŠÔ")]
     public float ChaseTime;
+    [Tooltip("—‰º‚É‚©‚¯‚éŠÔ")]
+    public float FallTime;
     [Tooltip("UŒ‚Œã‚É’â~‚·‚éŠÔ")]
     public float CoolTime;
     [Tooltip("ƒWƒƒƒ“ƒvUŒ‚Œã‚É’µ‚Ë‚é‰ñ”"), Range(0, 3)]

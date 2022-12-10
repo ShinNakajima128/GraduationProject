@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ボス戦時にトランプ兵の処刑演出の機能を持つComponent
+/// </summary>
 public class ExcuteDirection : MonoBehaviour
 {
     #region serialize
@@ -46,7 +49,13 @@ public class ExcuteDirection : MonoBehaviour
 
         _bossAnim.CrossFadeInFixedTime("Angry", 0.2f);
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
+
+        foreach (var t in _trumpAnims)
+        {
+            t.CrossFadeInFixedTime("Attack_Setup", 0.2f);
+        }
+        yield return new WaitForSeconds(1.5f);
 
         _excutePanel.alpha = 1; //トランプ兵を処刑するモーションがない場合は暗転の演出
 

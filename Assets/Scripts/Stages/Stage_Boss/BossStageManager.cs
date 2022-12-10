@@ -166,6 +166,11 @@ public class BossStageManager : StageGame<BossStageManager>
         Instance._impulseSource.GenerateImpulse();
     }
 
+    /// <summary>
+    /// ゲーム開始時の演出のコルーチン
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
         if (!_debugMode)
@@ -188,11 +193,14 @@ public class BossStageManager : StageGame<BossStageManager>
             _isDirecting = false;
         }
 
-        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.5f);
+        //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
         CameraBlend(CameraType.Battle, _cameraBlendTime);
 
         yield return new WaitForSeconds(_cameraBlendTime);
 
+        action?.Invoke();
+        //インゲームの処理を開始
         StartCoroutine(InGameCoroutine());
     }
 
@@ -217,10 +225,12 @@ public class BossStageManager : StageGame<BossStageManager>
             CharacterMovable?.Invoke(true);
             OnGameSetUp();
 
+            //バトルフェイズを終了するまで待機
             yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i);
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
+            //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
         }
 
