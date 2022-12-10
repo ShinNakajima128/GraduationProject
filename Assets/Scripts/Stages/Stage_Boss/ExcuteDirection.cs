@@ -45,7 +45,7 @@ public class ExcuteDirection : MonoBehaviour
     {
         _directionModels.SetActive(true);
 
-        yield return new WaitForSeconds(3.0f); //画面のフェード演出終了まで待機
+        //yield return new WaitForSeconds(3.0f); //画面のフェード演出終了まで待機
 
         _bossAnim.CrossFadeInFixedTime("Angry", 0.2f);
 
@@ -62,13 +62,13 @@ public class ExcuteDirection : MonoBehaviour
         //処刑したと分かるSEの再生はここに記述
         Debug.Log("トランプ兵の首飛ぶ");
 
-        TransitionManager.FadeIn(FadeType.Normal, () => 
-        {
-            _excutePanel.alpha = 0;
-            _directionModels.SetActive(false);
-        });
+        TransitionManager.FadeIn(FadeType.Normal, 1.5f, action: () =>
+         {
+             _excutePanel.alpha = 0;
+             _directionModels.SetActive(false);
+         });
         yield return new WaitForSeconds(1.5f);
 
-        TransitionManager.FadeOut(FadeType.Normal);
+        TransitionManager.FadeOut(FadeType.Normal, 0.5f);
     }
 }

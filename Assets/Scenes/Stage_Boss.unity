@@ -1056,6 +1056,7 @@ GameObject:
   - component: {fileID: 219108032}
   - component: {fileID: 219108033}
   - component: {fileID: 219108034}
+  - component: {fileID: 219108035}
   m_Layer: 0
   m_Name: Cinemachine_Battle
   m_TagString: Untagged
@@ -1140,6 +1141,36 @@ MonoBehaviour:
     m_FrequencyGain: 1
     m_Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &219108035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 219108031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 1
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 0
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &230578988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1794,6 +1825,7 @@ Transform:
   - {fileID: 1597831138}
   - {fileID: 1151869270}
   - {fileID: 972219081}
+  - {fileID: 775081140}
   - {fileID: 1442463485}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -3313,6 +3345,86 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1001 &775081139
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 425551458}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.27
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_Name
+      value: BgMd_stage7_Test_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9a7257dcc1bb3744c8467260f29ed060,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9a7257dcc1bb3744c8467260f29ed060, type: 3}
+--- !u!4 &775081140 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9a7257dcc1bb3744c8467260f29ed060,
+    type: 3}
+  m_PrefabInstance: {fileID: 775081139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &778641217
 GameObject:
   m_ObjectHideFlags: 0
@@ -6568,7 +6680,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: ebd21c4859754194bb53c97772abe218,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ebd21c4859754194bb53c97772abe218,
         type: 3}
@@ -6629,6 +6741,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BgMd_stage7_Test_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ebd21c4859754194bb53c97772abe218,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebd21c4859754194bb53c97772abe218, type: 3}
@@ -7139,6 +7256,7 @@ GameObject:
   - component: {fileID: 1747192285}
   - component: {fileID: 1747192284}
   - component: {fileID: 1747192286}
+  - component: {fileID: 1747192287}
   m_Layer: 0
   m_Name: Cinemachine_Player
   m_TagString: Untagged
@@ -7314,6 +7432,29 @@ MonoBehaviour:
   m_Damping: 0
   m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
+--- !u!114 &1747192287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747192282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
+  m_UseCameraSpace: 1
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &1762986007
 GameObject:
   m_ObjectHideFlags: 0
@@ -10049,7 +10190,7 @@ PrefabInstance:
     - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
         type: 3}
       propertyPath: _minShadowSize
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3067679242937454242, guid: ba315c66f5a21d94fa6c44fd67e74ea4,
         type: 3}
