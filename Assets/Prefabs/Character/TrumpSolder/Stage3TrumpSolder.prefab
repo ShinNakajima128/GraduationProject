@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 846068663842870259}
   - component: {fileID: 3642489297349879108}
   - component: {fileID: 6597562131724644926}
+  - component: {fileID: 3963716613545191805}
+  - component: {fileID: 7350538191115036257}
   m_Layer: 0
   m_Name: Stage3TrumpSolder
   m_TagString: Untagged
@@ -66,10 +68,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 1
-  _radius: 2
   _isStoped: 0
   _type: 2
-  _conter: {fileID: 0}
+--- !u!65 &3963716613545191805
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69249832337918281}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.15, z: 0.22}
+  m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!95 &7350538191115036257
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69249832337918281}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2cb14dbac298a014bb81c9969c8de900, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &133545488547706861
 GameObject:
   m_ObjectHideFlags: 0

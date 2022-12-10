@@ -32,20 +32,54 @@ public class Stage3PlayerController : MonoBehaviour
 
     private PlayerInput _pInput;
 
-    public bool IsDebug = false;
-
     public Action OnCircleButtonStarted { get; private set; }
 
-    // 投げ終わったか
+    /// <summary>
+    /// 投げ終わったか
+    /// </summary>
     public bool IsThrowed { get; private set; } = false;
-    // 投げられるか
+    /// <summary>
+    /// 投げられるか
+    /// </summary>
     public bool CanControl { get; private set; } = false;
+
+    /// <summary>
+    /// 入力されている値
+    /// </summary>
+    private Vector2 InputedMoveValue { get; set; }
+
+    private bool IsInputTurnLeft { get; set; } = false;
+    private bool IsInputTurnRight { get; set; } = false;
     #endregion
 
     #region Unity Function
     private void Awake()
     {
         Initialize();
+    }
+
+    private void Update()
+    {
+        if (InputedMoveValue != Vector2.zero)
+        {
+            Move(InputedMoveValue);
+        }
+
+        Turn();
+    }
+
+    private void Turn()
+    {
+        if (!CanControl) return;
+
+        if (IsInputTurnLeft)
+        {
+            _ball.TurnLeft();
+        }
+        else if (IsInputTurnRight)
+        {
+            _ball.TurnRight();
+        }
     }
     #endregion
 
@@ -61,11 +95,6 @@ public class Stage3PlayerController : MonoBehaviour
         {
             ChengeActionMap("Stage3");
             CallBackRegist();
-        }
-
-        if (IsDebug)
-        {
-            CanControl = true;
         }
     }
 
@@ -83,8 +112,14 @@ public class Stage3PlayerController : MonoBehaviour
     private void CallBackRegist()
     {
         _pInput.actions["Move"].performed += OnMove;
-        _pInput.actions["ToLeft"].started += OnToLeft;
-        _pInput.actions["ToRight"].started += OnToRight;
+        _pInput.actions["Move"].canceled += OnMove;
+
+        _pInput.actions["TurnLeft"].started += OnTurnLeft;
+        _pInput.actions["TurnLeft"].canceled += OnTurnLeft;
+
+        _pInput.actions["TurnRight"].started += OnToRight;
+        _pInput.actions["TurnRight"].canceled += OnToRight;
+
         _pInput.actions["Throw"].started += OnThrow;
     }
 
@@ -94,26 +129,9 @@ public class Stage3PlayerController : MonoBehaviour
     private void CallBackUnRegist()
     {
         _pInput.actions["Move"].performed -= OnMove;
-        _pInput.actions["ToLeft"].started -= OnToLeft;
-        _pInput.actions["ToRight"].started -= OnToRight;
+        _pInput.actions["TurnLeft"].started -= OnTurnLeft;
+        _pInput.actions["TurnRight"].started -= OnToRight;
         _pInput.actions["Throw"].started -= OnThrow;
-    }
-
-    /// <summary>
-    /// 正規化
-    /// </summary>
-    private void FixRotation(Quaternion rotation)
-    {
-        if (rotation.y > _eulerMaxValue)
-        {
-            rotation.y = _eulerMaxValue;
-        }
-        else if (rotation.y < -_eulerMaxValue)
-        {
-            rotation.y = -_eulerMaxValue;
-        }
-
-        this.transform.rotation = rotation;
     }
 
     /// <summary>
@@ -135,19 +153,40 @@ public class Stage3PlayerController : MonoBehaviour
 
         return (myPos, isFix);
     }
+
+    private void Move(Vector2 value)
+    {
+        var myPos = this.transform.position;
+
+        if (value != Vector2.zero)
+        {
+            // 横移動
+            myPos.x = myPos.x + value.x * _moveSpeed * Time.deltaTime;
+            // 座標の正規化と結果を取得
+            var fixedPos = FixPosition(myPos);
+            // 正規化した座標を取得
+            myPos = fixedPos.Item1;
+
+            this.transform.position = myPos;
+        }
+    }
     #endregion
 
     #region Public Function
+    /// <summary>
+    /// AnimationEventに呼ばれる
+    /// </summary>
     public void Throw()
     {
         // ボールの座標
         var ballPosition = _throwPoint.position;
-        // ボールの向き
-        var ballDirection = this.transform.rotation;
+
+        // 親子関係の解消
+        _ball.gameObject.transform.parent = null;
 
         var ball = _ball as IThrowable;
 
-        ball.Throw(ballPosition, ballDirection);
+        ball.Throw(ballPosition);
         IsThrowed = true;
     }
 
@@ -180,38 +219,22 @@ public class Stage3PlayerController : MonoBehaviour
             return;
         }
 
-        var velue = context.ReadValue<Vector2>();
-        var myPos = this.transform.position;
+        var value = context.ReadValue<Vector2>();
 
-        if (velue != Vector2.zero)
-        {
-            // 横移動
-            myPos.x = myPos.x + velue.x * _moveSpeed;
-            // 座標の正規化と結果を取得
-            var fixedPos = FixPosition(myPos);
-            // 正規化した座標を取得
-            myPos = fixedPos.Item1;
-            // 正規化した場合は座標を移動しない
-            if (!fixedPos.Item2)
-            {
-                // ボールのx座標移動
-                _ball.SyncMovedTransorm(velue.x * _moveSpeed);
-            }
-
-            this.transform.position = myPos;
-        }
+        InputedMoveValue = value;
     }
 
-    private void OnToLeft(InputAction.CallbackContext context)
+    private void OnTurnLeft(InputAction.CallbackContext context)
     {
         if (!CanControl) return;
 
         if (context.started)
         {
-            var euler = Quaternion.Euler(0f, -1f, 0f);
-            this.transform.rotation = this.transform.rotation * euler;
-
-            FixRotation(this.transform.rotation);
+            IsInputTurnLeft = true;
+        }
+        else if (context.canceled)
+        {
+            IsInputTurnLeft = false;
         }
     }
 
@@ -221,10 +244,11 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.started)
         {
-            var euler = Quaternion.Euler(0f, 1f, 0f);
-            this.transform.rotation = this.transform.rotation * euler;
-
-            FixRotation(this.transform.rotation);
+            IsInputTurnRight = true;
+        }
+        else if (context.canceled)
+        {
+            IsInputTurnRight = false;
         }
     }
 

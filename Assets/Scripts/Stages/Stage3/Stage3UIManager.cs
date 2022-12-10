@@ -73,6 +73,6 @@ public class Stage3UIManager : MonoBehaviour
     /// </summary>
     public void BeginBlackOut(float duration)
     {
-        _blackOut.DOFade(1f, duration).SetEase(Ease.OutCubic);
+        _blackOut.DOFade(1f, duration).SetEase(Ease.OutExpo);
     }
 }

@@ -16,9 +16,7 @@ public class OrderManager : MonoBehaviour
     /// </summary>
     public Order CreateOrder(Action action = null)
     {
-        Debug.Log("オーダーの作成");
-        // オーダーの生成 ※0は表示がバグってるから1から
-        var index = UnityEngine.Random.Range(1, _orders.Length);
+        var index = UnityEngine.Random.Range(0, _orders.Length);
         _order = _orders[index];
         return _order;
     }
