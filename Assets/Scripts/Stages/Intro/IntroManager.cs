@@ -12,11 +12,11 @@ public class IntroManager : MonoBehaviour
 
     private void Start()
     {
-        TransitionManager.FadeOut(FadeType.Normal, () => 
-        {
-            StartCoroutine(StartIntro());
-        });
-        
+        TransitionManager.FadeOut(FadeType.Normal, action: () =>
+         {
+             StartCoroutine(StartIntro());
+         });
+
     }
     IEnumerator StartIntro()
     {

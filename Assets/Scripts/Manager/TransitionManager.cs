@@ -49,7 +49,7 @@ public class TransitionManager : MonoBehaviour
     /// <param name="action">  </param>
     public static void SceneTransition(SceneType scene, FadeType fade = default, Action action = null)
     {
-        FadeIn(fade, () => 
+        FadeIn(fade, action: () => 
         {
             action?.Invoke();
             Instance.StartCoroutine(Instance.LoadScene(scene, Instance._loadTime));
@@ -59,14 +59,14 @@ public class TransitionManager : MonoBehaviour
     /// <summary>
     /// 画面を徐々に映す
     /// </summary>
-    public static void FadeOut(FadeType fade, Action action = null)
+    public static void FadeOut(FadeType fade, float fadeTime = 1.5f, Action action = null)
     {
         switch (fade)
         {
             case FadeType.Normal:
                 Instance._fadeImage.enabled = true;
                 Instance._fadeImage.DOFade(1f, 0f);
-                Instance._fadeImage.DOFade(0f, Instance._fadeTime)
+                Instance._fadeImage.DOFade(0f, fadeTime)
                           .OnComplete(() =>
                           {
                               action?.Invoke();
@@ -81,14 +81,14 @@ public class TransitionManager : MonoBehaviour
     /// <summary>
     /// 画面を徐々に隠す
     /// </summary>
-    public static void FadeIn(FadeType fade, Action action = null)
+    public static void FadeIn(FadeType fade, float fadeTime = 1.5f, Action action = null)
     {
         switch (fade)
         {
             case FadeType.Normal:
                 Instance._fadeImage.enabled = true;
                 Instance._fadeImage.DOFade(0f, 0f);
-                Instance._fadeImage.DOFade(1f, Instance._fadeTime)
+                Instance._fadeImage.DOFade(1f, fadeTime)
                           .OnComplete(() =>
                           {
                               action?.Invoke();
@@ -122,7 +122,7 @@ public enum SceneType
     Stage4,
     Stage5,
     Stage6,
-    BossScene
+    Stage_Boss
 }
 public enum FadeType
 {

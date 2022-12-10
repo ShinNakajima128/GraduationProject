@@ -64,7 +64,7 @@ public class FallGameManager : MonoBehaviour
         OnGameStart();
     }
 
-    
+
     public void OnGameStart()
     {
         Init();
@@ -106,11 +106,11 @@ public class FallGameManager : MonoBehaviour
 
     IEnumerator GameEndCoroutine()
     {
-        TransitionManager.FadeIn(FadeType.Normal, () => 
-        {
-            _inGamePanel.SetActive(false);
-            TransitionManager.FadeOut(FadeType.Normal);
-        });
+        TransitionManager.FadeIn(FadeType.Normal, action: () =>
+         {
+             _inGamePanel.SetActive(false);
+             TransitionManager.FadeOut(FadeType.Normal);
+         });
         _informationText.gameObject.transform.DOLocalMoveY(300, 0f);
         yield return new WaitForSeconds(4.5f);
         _finishCamera.Priority = 12;
