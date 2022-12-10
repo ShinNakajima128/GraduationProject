@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class BallController : MonoBehaviour, IThrowable
 {
@@ -8,8 +9,15 @@ public class BallController : MonoBehaviour, IThrowable
     [SerializeField]
     private float _moveSpeed;
 
+    [Header("ボールの振り向き速度")]
+    [SerializeField]
+    private float _turnSpeed;
+
     [SerializeField]
     private CameraController _camera;
+
+    [SerializeField]
+    private GameObject _arrowImage;
 
     private bool IsThrowed { get; set; } = false;
 
@@ -28,9 +36,23 @@ public class BallController : MonoBehaviour, IThrowable
     {
         _direction = _rb.velocity;
         if (IsThrowed)
+        {
+            ForwardRotation();
             MoveCameraRequest();
+        }
     }
 
+    /// <summary>
+    /// 前転する
+    /// </summary>
+    private void ForwardRotation()
+    {
+        transform.Rotate(new Vector3(3, 0, 0));
+    }
+
+    /// <summary>
+    /// カメラを動かす
+    /// </summary>
     private void MoveCameraRequest()
     {
         _camera.SendBallPosition(this.transform.position);
@@ -60,29 +82,38 @@ public class BallController : MonoBehaviour, IThrowable
 
     #region Public Fucntion
     /// <summary>
-    /// 座標移動の同期
-    /// </summary>
-    public void SyncMovedTransorm(float addValue)
-    {
-        var pos = transform.position;
-        pos.x += addValue;
-        transform.position = pos;
-    }
-
-    /// <summary>
     /// 投げる
     /// </summary>
-    void IThrowable.Throw(Vector3 pos, Quaternion dir)
+    void IThrowable.Throw(Vector3 pos)
     {
         transform.position = pos;
-        transform.rotation = dir;
         _rb.velocity = transform.forward * _moveSpeed;
+        _arrowImage.gameObject.SetActive(false);
         IsThrowed = true;
     }
 
+    /// <summary>
+    /// ゴール時のアクション
+    /// </summary>
     public void AddCallBack(Action action)
     {
         OnGoaled += action;
+    }
+
+    /// <summary>
+    /// 左を向く
+    /// </summary>
+    public void TurnLeft()
+    {
+        transform.Rotate(0, -0.1f, 0);
+    }
+
+    /// <summary>
+    /// 右を向く
+    /// </summary>
+    public void TurnRight()
+    {
+        transform.Rotate(0, 0.1f, 0);
     }
     #endregion
 

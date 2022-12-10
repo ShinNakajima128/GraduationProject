@@ -17,7 +17,6 @@ public class CameraController : MonoBehaviour
     private bool Initialize = false;
 
     // ボールとの距離
-    private float _distanceForBall;
     private float _distanceToBall;
 
     public bool HasBallPosition { get; private set; } = false;
@@ -49,7 +48,7 @@ public class CameraController : MonoBehaviour
         if (HasBallPosition is false)
         {
             // ボールとの距離
-            _distanceToBall = Math.Abs(ballPos.z - camPos.z);
+            _distanceToBall = Math.Abs(ballPos.z - camPos.z) + 1f;
             HasBallPosition = true;
         }
         camPos.z = ballPos.z - _distanceToBall;

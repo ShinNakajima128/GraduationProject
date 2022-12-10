@@ -33,9 +33,17 @@ public class Stage3GameManager : MonoBehaviour
 
     [Header("暗転にかける時間")]
     [SerializeField]
-    private float _durationOfBlackOut;
+    private float _blackOutDuration;
+
+    [SerializeField]
+    private int _needClearCount;
 
     private GameState _state = GameState.None;
+
+    /// <summary>
+    /// ゲームクリアの回数
+    /// </summary>
+    private int _currentClearCount;
 
     private void Start()
     {
@@ -59,7 +67,7 @@ public class Stage3GameManager : MonoBehaviour
                 break;
             case GameState.CreateOrder:
                 // オーダーの作成
-                var order = _orderMana.CreateOrder(() => ChengeStage(GameState.MoveCamera));
+                var order = _orderMana.CreateOrder();
                 // お題のUI表示
                 _uiManager.DisplayOrder(order);
                 break;
@@ -69,7 +77,7 @@ public class Stage3GameManager : MonoBehaviour
                 // カメラの移動　移動後ステートの変更
                 _cameraCtrl.MoveRequest(() => ChengeStage(GameState.Throw));
                 // 暗転処理
-                _uiManager.BeginBlackOut(_durationOfBlackOut);
+                _uiManager.BeginBlackOut(_blackOutDuration);
                 break;
             case GameState.Throw:
                 // InGameUIの表示
@@ -82,19 +90,34 @@ public class Stage3GameManager : MonoBehaviour
             case GameState.Result:
                 if (_orderMana.IsCameClear())
                 {
-                    GameManager.SaveStageResult(true);
-                    _uiManager.ChengeUIActivete(Stage3UIManager.Type.GameClear, true);
+                    _currentClearCount++;
+                    CheckGameClear();
                 }
                 else
                 {
-                    GameManager.SaveStageResult(false);
+                    // GameManager.SaveStageResult(false);
                 }
-                TransitionManager.SceneTransition(SceneType.Lobby);
                 break;
             default:
                 break;
         }
 
         _state = next;
+    }
+
+    /// <summary>
+    /// ステージのクリアをしたか
+    /// </summary>
+    private void CheckGameClear()
+    {
+        if (_currentClearCount > _needClearCount)
+        {
+            _uiManager.ChengeUIActivete(Stage3UIManager.Type.GameClear, true);
+            GameManager.SaveStageResult(true);
+            TransitionManager.SceneTransition(SceneType.Lobby);
+        }
+        else
+        {
+        }
     }
 }
