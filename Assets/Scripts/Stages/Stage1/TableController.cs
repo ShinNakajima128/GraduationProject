@@ -16,6 +16,9 @@ public class TableController : MonoBehaviour, IEffectable
 
     [SerializeField]
     GameObject _chaseObject = default;
+
+    [SerializeField]
+    GameObject _trumpEffect = default;
     #endregion
     #region private
     bool _isEffected;
@@ -30,6 +33,11 @@ public class TableController : MonoBehaviour, IEffectable
     {
         _isEffected = false;
         transform.localPosition = Vector3.zero;
+    }
+
+    void OnDisable()
+    {
+        _trumpEffect.SetActive(false);
     }
     private void Start()
     {
@@ -47,7 +55,8 @@ public class TableController : MonoBehaviour, IEffectable
 
             if (!_isEffected)
             {
-                EffectManager.PlayEffect(EffectType.Obstacle, EffectPos.position);
+                //EffectManager.PlayEffect(EffectType.Obstacle, EffectPos.position);
+                _trumpEffect.SetActive(true);
                 StartCoroutine(SECoroutine());
                 _isEffected = true;
             }
