@@ -266,11 +266,12 @@ public class LobbyManager : MonoBehaviour
         EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         
         yield return new WaitForSeconds(2.0f);
-        
+
+        TransitionManager.SceneTransition(SceneType.Stage_Boss);
         Debug.Log("ボスステージ出現");
-        Camera.main.LayerCullingToggle("Ornament", true);
-        _clockCamera.Priority = 10;
-        StartCoroutine(OnPlayerMovable(3.0f));
+        //Camera.main.LayerCullingToggle("Ornament", true);
+        //_clockCamera.Priority = 10;
+        //StartCoroutine(OnPlayerMovable(3.0f));
     }
 }
 [Serializable]
