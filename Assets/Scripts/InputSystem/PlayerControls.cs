@@ -419,7 +419,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToLeft"",
+                    ""name"": ""TurnLeft"",
                     ""type"": ""Button"",
                     ""id"": ""8d95b1ab-cb21-4291-af2c-21b68933d666"",
                     ""expectedControlType"": ""Button"",
@@ -428,7 +428,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToRight"",
+                    ""name"": ""TurnRight"",
                     ""type"": ""Button"",
                     ""id"": ""e26ba21a-13ae-468d-8df0-43b93297f8b0"",
                     ""expectedControlType"": ""Button"",
@@ -533,7 +533,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToLeft"",
+                    ""action"": ""TurnLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -544,7 +544,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToLeft"",
+                    ""action"": ""TurnLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -555,7 +555,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToRight"",
+                    ""action"": ""TurnRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -566,7 +566,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToRight"",
+                    ""action"": ""TurnRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -992,8 +992,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Stage3 = asset.FindActionMap("Stage3", throwIfNotFound: true);
         m_Stage3_Move = m_Stage3.FindAction("Move", throwIfNotFound: true);
         m_Stage3_Throw = m_Stage3.FindAction("Throw", throwIfNotFound: true);
-        m_Stage3_ToLeft = m_Stage3.FindAction("ToLeft", throwIfNotFound: true);
-        m_Stage3_ToRight = m_Stage3.FindAction("ToRight", throwIfNotFound: true);
+        m_Stage3_TurnLeft = m_Stage3.FindAction("TurnLeft", throwIfNotFound: true);
+        m_Stage3_TurnRight = m_Stage3.FindAction("TurnRight", throwIfNotFound: true);
         // UIInput
         m_UIInput = asset.FindActionMap("UIInput", throwIfNotFound: true);
         m_UIInput_Submit = m_UIInput.FindAction("Submit", throwIfNotFound: true);
@@ -1196,16 +1196,16 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private IStage3Actions m_Stage3ActionsCallbackInterface;
     private readonly InputAction m_Stage3_Move;
     private readonly InputAction m_Stage3_Throw;
-    private readonly InputAction m_Stage3_ToLeft;
-    private readonly InputAction m_Stage3_ToRight;
+    private readonly InputAction m_Stage3_TurnLeft;
+    private readonly InputAction m_Stage3_TurnRight;
     public struct Stage3Actions
     {
         private @PlayerControls m_Wrapper;
         public Stage3Actions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Stage3_Move;
         public InputAction @Throw => m_Wrapper.m_Stage3_Throw;
-        public InputAction @ToLeft => m_Wrapper.m_Stage3_ToLeft;
-        public InputAction @ToRight => m_Wrapper.m_Stage3_ToRight;
+        public InputAction @TurnLeft => m_Wrapper.m_Stage3_TurnLeft;
+        public InputAction @TurnRight => m_Wrapper.m_Stage3_TurnRight;
         public InputActionMap Get() { return m_Wrapper.m_Stage3; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1221,12 +1221,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Throw.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnThrow;
                 @Throw.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnThrow;
                 @Throw.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnThrow;
-                @ToLeft.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToLeft;
-                @ToLeft.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToLeft;
-                @ToLeft.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToLeft;
-                @ToRight.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToRight;
-                @ToRight.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToRight;
-                @ToRight.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnToRight;
+                @TurnLeft.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnTurnLeft;
+                @TurnLeft.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnTurnLeft;
+                @TurnLeft.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnTurnLeft;
+                @TurnRight.started -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnTurnRight;
+                @TurnRight.performed -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnTurnRight;
+                @TurnRight.canceled -= m_Wrapper.m_Stage3ActionsCallbackInterface.OnTurnRight;
             }
             m_Wrapper.m_Stage3ActionsCallbackInterface = instance;
             if (instance != null)
@@ -1237,12 +1237,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Throw.started += instance.OnThrow;
                 @Throw.performed += instance.OnThrow;
                 @Throw.canceled += instance.OnThrow;
-                @ToLeft.started += instance.OnToLeft;
-                @ToLeft.performed += instance.OnToLeft;
-                @ToLeft.canceled += instance.OnToLeft;
-                @ToRight.started += instance.OnToRight;
-                @ToRight.performed += instance.OnToRight;
-                @ToRight.canceled += instance.OnToRight;
+                @TurnLeft.started += instance.OnTurnLeft;
+                @TurnLeft.performed += instance.OnTurnLeft;
+                @TurnLeft.canceled += instance.OnTurnLeft;
+                @TurnRight.started += instance.OnTurnRight;
+                @TurnRight.performed += instance.OnTurnRight;
+                @TurnRight.canceled += instance.OnTurnRight;
             }
         }
     }
@@ -1365,8 +1365,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
-        void OnToLeft(InputAction.CallbackContext context);
-        void OnToRight(InputAction.CallbackContext context);
+        void OnTurnLeft(InputAction.CallbackContext context);
+        void OnTurnRight(InputAction.CallbackContext context);
     }
     public interface IUIInputActions
     {
