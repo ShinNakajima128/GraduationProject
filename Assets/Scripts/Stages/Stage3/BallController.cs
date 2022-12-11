@@ -106,6 +106,7 @@ public class BallController : MonoBehaviour, IThrowable
     public void TurnLeft()
     {
         transform.Rotate(0, -0.1f, 0);
+        Debug.Log(transform.eulerAngles);
     }
 
     /// <summary>
