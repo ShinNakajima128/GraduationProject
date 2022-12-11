@@ -38,24 +38,24 @@ public class TeapotShuffle : MonoBehaviour
     //メモ
     //シャッフルする関数に指定する数字は0～5まで
 
-    IEnumerator Start()
-    {
-        if (_debugMode)
-        {
-            while (true)
-            {
-                int rand = UnityEngine.Random.Range(0, 6);
+    //IEnumerator Start()
+    //{
+    //    if (_debugMode)
+    //    {
+    //        while (true)
+    //        {
+    //            int rand = UnityEngine.Random.Range(0, 6);
 
-                yield return ShuffleTeapot(rand);
-            }
-        }
-    }
+    //            yield return ShuffleTeapot(rand);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// ティーカップをシャッフルする
     /// </summary>
     /// <param name="index"> シャッフルするカップの番号 </param>
-    public IEnumerator ShuffleTeapot(int index)
+    public IEnumerator ShuffleTeapot(Stage2MugcupController[] mugcups,int index)
     {
         var mainPositionType = (TeapotPositionType)index;  //メインのIndexを位置の種類へ変換
         var mainRandomTarget = (ReplaceTargetType)UnityEngine.Random.Range(0, 2); //交換先のカップを前にするか次にするかランダムで決める
@@ -108,6 +108,8 @@ public class TeapotShuffle : MonoBehaviour
 
         //タプルで交換したカップの配列位置を入れ替える
         (_teapots[index], _teapots[targetIndex]) = (_teapots[targetIndex], _teapots[index]);
+
+        (mugcups[index], mugcups[targetIndex]) = (mugcups[targetIndex], mugcups[index]);
 
         yield return null;
     }
