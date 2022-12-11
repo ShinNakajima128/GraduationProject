@@ -32,7 +32,7 @@ public class TrumpObstacle : MonoBehaviour
         if (_init)
         {
             _effect.Play();
-            transform.localRotation = _parent.localRotation;
+            //transform.localRotation = _parent.localRotation;
         }
     }
 

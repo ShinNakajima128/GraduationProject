@@ -33,6 +33,7 @@ public class TableController : MonoBehaviour, IEffectable
     {
         _isEffected = false;
         transform.localPosition = Vector3.zero;
+        StartCoroutine(SetupCoroutine());
     }
 
     void OnDisable()
@@ -61,6 +62,13 @@ public class TableController : MonoBehaviour, IEffectable
                 _isEffected = true;
             }
         }
+    }
+
+    IEnumerator SetupCoroutine()
+    {
+        yield return null;
+
+        transform.localRotation = _chaseObject.transform.localRotation;
     }
 
     IEnumerator SECoroutine()

@@ -3611,7 +3611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334522e4b07d189458533d9afded9544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _generateInterval: 4
+  _generateInterval: 15
   _generateTrans:
   - {fileID: 1683438275}
   - {fileID: 1246258391}
@@ -4540,24 +4540,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table
       objectReference: {fileID: 0}
-    - target: {fileID: 5707389154365129800, guid: 8e9a7d9eb5caf0b4cac29b7ef254fa1d,
+    - target: {fileID: 895231044218446386, guid: 8e9a7d9eb5caf0b4cac29b7ef254fa1d,
         type: 3}
-      propertyPath: _pushPower
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6039578981605930646, guid: 8e9a7d9eb5caf0b4cac29b7ef254fa1d,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6039578981605930646, guid: 8e9a7d9eb5caf0b4cac29b7ef254fa1d,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6039578981605930646, guid: 8e9a7d9eb5caf0b4cac29b7ef254fa1d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6287183440342542854, guid: 8e9a7d9eb5caf0b4cac29b7ef254fa1d,
@@ -5262,7 +5247,7 @@ PrefabInstance:
     - target: {fileID: 3749895016044665674, guid: 0f88ab0bcd60b204dbe66b75c59f6115,
         type: 3}
       propertyPath: _moveSpeed
-      value: 6.25
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3749895016044665674, guid: 0f88ab0bcd60b204dbe66b75c59f6115,
         type: 3}
@@ -5279,6 +5264,11 @@ PrefabInstance:
       propertyPath: m_UIInputModule
       value: 
       objectReference: {fileID: 2033657978}
+    - target: {fileID: 3749895016044665687, guid: 0f88ab0bcd60b204dbe66b75c59f6115,
+        type: 3}
+      propertyPath: m_Drag
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4092404783612470785, guid: 0f88ab0bcd60b204dbe66b75c59f6115,
         type: 3}
       propertyPath: m_Name
