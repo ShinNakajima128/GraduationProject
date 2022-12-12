@@ -55,6 +55,9 @@ public class Obstacle : MonoBehaviour
             case RotateType.Mirror:
                 randY = Random.Range(135, 245);
                 break;
+            case RotateType.Table:
+                randZ = Random.Range(-120, 120);
+                break;
             default:
                 break;
         }
@@ -114,6 +117,7 @@ public class Obstacle : MonoBehaviour
     {
         None,
         Random,
-        Mirror
+        Mirror,
+        Table
     }
 }

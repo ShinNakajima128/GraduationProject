@@ -118,7 +118,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _informationText.text = "スタート!";
 
         yield return new WaitForSeconds(1.5f);
-        
+
         action?.Invoke();
         _informationText.text = "";
     }
@@ -140,7 +140,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
             if (i > 0)
             {
-                TransitionManager.FadeIn(FadeType.Normal, () =>
+                TransitionManager.FadeIn(FadeType.Normal, action: () =>
                 {
                     if (!_debugMode)
                     {
@@ -151,7 +151,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
                         OnQuizSetUp(_debugQuizType);
                     }
                     _cameraTrans.DOMoveX(_startCameraPos.position.x, 0f);
-                    TransitionManager.FadeOut(FadeType.Normal, () =>
+                    TransitionManager.FadeOut(FadeType.Normal, action: () =>
                     {
                         Viewing(() =>
                         {

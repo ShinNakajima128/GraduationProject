@@ -195,7 +195,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
-        CameraBlend(CameraType.Battle, _cameraBlendTime);
+        CameraBlend(CameraType.Default, _cameraBlendTime);
 
         yield return new WaitForSeconds(_cameraBlendTime);
 
@@ -222,11 +222,14 @@ public class BossStageManager : StageGame<BossStageManager>
 
         for (int i = 0; i < _battleNum; i++)
         {
-            CharacterMovable?.Invoke(true);
             OnGameSetUp();
 
             //バトルフェイズを終了するまで待機
-            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i);
+            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i, () =>
+            {
+                CharacterMovable?.Invoke(true);
+                CameraBlend(CameraType.Battle, _cameraBlendTime);
+            });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
@@ -264,7 +267,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         yield return _bossCtrl.gameObject.transform.DOMove(_bossDirectionTrans.position, 1.5f)
                                                    .SetEase(Ease.OutQuint)
-                                                   .OnComplete(() => 
+                                                   .OnComplete(() =>
                                                    {
                                                        _bossCtrl.gameObject.transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.5f);
                                                    }).WaitForCompletion();
@@ -272,7 +275,7 @@ public class BossStageManager : StageGame<BossStageManager>
         CameraBlend(CameraType.Direction, 2.0f);
 
         yield return new WaitForSeconds(2.0f);
-        
+
         _bossCtrl.PlayBossAnimation(BossAnimationType.Angry, 0.1f);
 
         MessageType message = default;
@@ -295,7 +298,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         yield return PartitioningBattleCoroutine();
 
-        CameraBlend(CameraType.Battle, _cameraBlendTime);
+        CameraBlend(CameraType.Default, _cameraBlendTime);
 
         yield return new WaitForSeconds(_cameraBlendTime);
     }
@@ -306,15 +309,17 @@ public class BossStageManager : StageGame<BossStageManager>
     /// <returns></returns>
     IEnumerator PartitioningBattleCoroutine()
     {
-        TransitionManager.FadeIn(FadeType.Normal, () => 
-        {
+        TransitionManager.FadeIn(FadeType.Normal,0.2f, action: () =>
+         {
             //プレイヤーの位置と向きを初期化
             _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
-            _playerTrans.DOLocalRotate(Vector3.zero, 0f);
+             _playerTrans.DOLocalRotate(Vector3.zero, 0f);
 
-            CameraBlend(CameraType.ExcuteTrump, 0.01f);
-            TransitionManager.FadeOut(FadeType.Normal);
-        });
+             CameraBlend(CameraType.ExcuteTrump, 0.01f);
+             TransitionManager.FadeOut(FadeType.Normal, 0.2f);
+         });
+        ////プレイヤーの位置と向きを初期化
+
 
         //トランプ兵の首を飛ばす演出の処理
         yield return _excuteDirection.ExcuteDirectionCoroutine();

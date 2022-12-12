@@ -49,7 +49,7 @@ public class BossController : MonoBehaviour, IDamagable
     float _minShadowSize = 0f;
 
     [Header("Phase")]
-    [Tooltip("ボス戦の各フェイズのパラメーター")]
+    [Tooltip("ボス戦の各フェイズのパラメータ")]
     [SerializeField]
     PhaseParameter[] _phaseParams = default;
 
@@ -172,7 +172,7 @@ public class BossController : MonoBehaviour, IDamagable
     /// 戦闘フェイズのコルーチン
     /// </summary>
     /// <param name="battlePhase"> 戦闘フェイズの種類 </param>
-    public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase)
+    public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase, Action action = null)
     {
         _isDamaged = false;
         _bossShadow.ChangeShadowSize(0.1f, 0f);
@@ -185,7 +185,8 @@ public class BossController : MonoBehaviour, IDamagable
 
         BossStageManager.CameraShake();
 
-        yield return new WaitForSeconds(0.5f);
+        action?.Invoke();
+        yield return new WaitForSeconds(2.5f);
 
         PlayBossAnimation(BossAnimationType.Idle);
 
@@ -224,7 +225,9 @@ public class BossController : MonoBehaviour, IDamagable
 
         var playerTop = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 10.0f, _playerTrans.position.z);
 
-        _bossShadow.ChangeShadowSize(_minShadowSize, 1.5f + _jumpUpTime + param.ChaseTime);
+        _bossShadow.ChangeShadowSize(_minShadowSize, _jumpUpTime + param.ChaseTime); //影を徐々に小さくする
+
+        //プレイヤーの頭上へジャンプする
         yield return transform.DOLocalMove(playerTop, _jumpUpTime)
                               .SetEase(Ease.OutCubic)
                               .WaitForCompletion(); //ボスが飛び上がる
@@ -233,7 +236,7 @@ public class BossController : MonoBehaviour, IDamagable
 
         float timer = 0f;
 
-        StartCoroutine(ChangeState(BossState.Chase));
+        StartCoroutine(ChangeState(BossState.Chase)); //プレイヤーを追うステータスに切り替える
 
         //追跡時間が経過するまで処理を待機
         while (timer < param.ChaseTime)
@@ -242,10 +245,14 @@ public class BossController : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        _bossShadow.ChangeShadowSize(2f, _jumpUpTime, Ease.InQuint);
+        yield return null;
 
+        //ボスの影を徐々に大きくする
+        _bossShadow.ChangeShadowSize(2f, param.FallTime, Ease.InCubic);
+
+        //プレイヤーの現在地に着地する
         yield return transform.DOMove(_playerTrans.position, param.FallTime)
-                              .SetEase(Ease.InQuart)
+                              .SetEase(Ease.InCubic)
                               .OnComplete(() =>
                               {
                                   StartCoroutine(ChangeState(BossState.Landing));
@@ -255,6 +262,7 @@ public class BossController : MonoBehaviour, IDamagable
                               })
                               .WaitForCompletion();
 
+        //通常戦闘のカメラに切り替える
         BossStageManager.CameraChange(CameraType.Battle, 2f);
 
         //追撃回数が1回以上の場合
@@ -262,6 +270,7 @@ public class BossController : MonoBehaviour, IDamagable
         {
             PlayBossAnimation(BossAnimationType.Bounce);
 
+            //設定された回数だけバウンドを行う
             for (int i = 0; i < param.BounceCount; i++)
             {
                 yield return transform.DOLocalJump(transform.position + (transform.forward * 2f), 1.5f, 1, 0.8f)
@@ -274,6 +283,7 @@ public class BossController : MonoBehaviour, IDamagable
 
         StartCoroutine(ChangeState(BossState.Landing));
 
+        //攻撃後のクールタイム
         yield return new WaitForSeconds(param.CoolTime);
 
         StartCoroutine(ChangeState(BossState.Move));

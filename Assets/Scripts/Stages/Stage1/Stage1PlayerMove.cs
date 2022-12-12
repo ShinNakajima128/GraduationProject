@@ -6,7 +6,7 @@ using DG.Tweening;
 /// <summary>
 /// ステージ1のプレイヤーの移動機能を管理する
 /// </summary>
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
 public class Stage1PlayerMove : MonoBehaviour, IMovable
 {
     #region serialize
@@ -18,8 +18,8 @@ public class Stage1PlayerMove : MonoBehaviour, IMovable
     #endregion
 
     #region private
-    CharacterController _cc;
     Animator _anim;
+    Rigidbody _rb;
     Vector3 _dir;
     Vector3 _moveDir;
     bool _isMovable = false;
@@ -27,23 +27,33 @@ public class Stage1PlayerMove : MonoBehaviour, IMovable
 
     private void Awake()
     {
-        TryGetComponent(out _cc);
         TryGetComponent(out _anim);
+        TryGetComponent(out _rb);
     }
 
     private void Start()
     {
-        _cc.enabled = false;
+        _rb.Sleep();
         FallGameManager.Instance.GameStart += OnMove;
         FallGameManager.Instance.GameEnd += OffMove;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (_isMovable)
         {
-            _moveDir = _dir * _moveSpeed;
-            _cc.Move(_moveDir * Time.deltaTime);
+            _moveDir = _dir.normalized * _moveSpeed;
+
+            if (_moveDir != Vector3.zero)
+            {
+                _rb.velocity += _moveDir * Time.fixedDeltaTime;
+
+            }
+            //if (_moveDir != Vector3.zero)
+            //{
+            //    _cc.Move(_moveDir * Time.deltaTime);
+
+            //}
         }
     }
 
@@ -54,13 +64,13 @@ public class Stage1PlayerMove : MonoBehaviour, IMovable
 
     void OnMove()
     {
-        _cc.enabled = true;
+        
         _isMovable = true;
     }
 
     void OffMove()
     {
-        _cc.enabled = false;
+        _rb.Sleep();
         _isMovable = false;
         gameObject.transform.DOMoveY(_finishTrans.position.y - 3, 1.5f)
                             .OnComplete(() => 
@@ -77,5 +87,10 @@ public class Stage1PlayerMove : MonoBehaviour, IMovable
         _anim.Play("Landing");
         yield return new WaitForSeconds(3.0f);
         _anim.Play("Clear");
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject.name);
     }
 }
