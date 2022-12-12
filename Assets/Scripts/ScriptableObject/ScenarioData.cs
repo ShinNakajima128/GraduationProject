@@ -106,6 +106,7 @@ namespace AliceProject
         Intro,
         Tutorial,
         Stage1_End,
+        Lobby_ClockEnd,
         Stage_Boss_Start,
         Stage_Boss_Down1,
         Stage_Boss_Down2,

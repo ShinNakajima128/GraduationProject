@@ -40,7 +40,7 @@ public class TransitionManager : MonoBehaviour
 
     private void Start()
     {
-        FadeOut(_fadeType);
+        //FadeOut(_fadeType);
     }
     /// <summary>
     /// シーン遷移する
@@ -72,6 +72,12 @@ public class TransitionManager : MonoBehaviour
                               action?.Invoke();
                           });
                 break;
+            case FadeType.White:
+                Instance._fadeImage.DOColor(Color.white, fadeTime);
+                break;
+            case FadeType.Black:
+                Instance._fadeImage.DOColor(Color.black, fadeTime);
+                break;
             default:
                 Instance._fade.FadeOut(Instance._fadeTime, action);
                 break;
@@ -93,6 +99,20 @@ public class TransitionManager : MonoBehaviour
                           {
                               action?.Invoke();
                           });
+                break;
+            case FadeType.White:
+                Instance._fadeImage.DOColor(Color.white, fadeTime)
+                                   .OnComplete(() => 
+                                   {
+                                       action?.Invoke();
+                                   });
+                break;
+            case FadeType.Black:
+                Instance._fadeImage.DOColor(Color.black, fadeTime)
+                                   .OnComplete(() =>
+                                   {
+                                       action?.Invoke();
+                                   });
                 break;
             default:
                 Instance._fade.FadeIn(Instance._fadeTime, action);
@@ -127,5 +147,7 @@ public enum SceneType
 public enum FadeType
 {
     Normal,
+    White,
+    Black,
     Mask1
 }

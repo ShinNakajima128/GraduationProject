@@ -102,13 +102,23 @@ public class LobbyManager : MonoBehaviour
             //ロビーに初めて来たときはストーリーメッセージを再生
             if (IsFirstArrival)
             {
-                StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage1_End, () =>
+
+                yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage1_End);
+
+                TransitionManager.FadeIn(FadeType.White, action: () =>
+                {
+                    TransitionManager.FadeOut(FadeType.Normal);
+                });
+
+                yield return new WaitForSeconds(3.0f);
+
+                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_ClockEnd, ()=> 
                 {
                     ClockDirection();
-                }));
-                IsFirstArrival = false;
+                    IsFirstArrival = false;
+                });
             }
-            else 
+            else
             {
                 //未クリア且つステージをクリアしている場合は時計の演出を行う
                 if (!GameManager.CheckStageStatus() && GameManager.IsClearStaged)
@@ -141,7 +151,7 @@ public class LobbyManager : MonoBehaviour
         Instance._isApproached = true;
 
         var data = Instance._stageDatas.FirstOrDefault(d => d.Type == type);
-        
+
         Instance._stageNameText.text = data.SceneName;
         Instance._StageImage.sprite = data.StageSprite;
         Instance.ApproachDoor?.Invoke();
@@ -224,7 +234,7 @@ public class LobbyManager : MonoBehaviour
                 _clockCamera.Priority = 10;
                 Camera.main.LayerCullingToggle("Ornament", true);
                 StartCoroutine(OnPlayerMovable(3.0f));
-            } 
+            }
         });
     }
 
@@ -264,7 +274,7 @@ public class LobbyManager : MonoBehaviour
     {
         StartCoroutine(OnHandsEmission());
         EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
-        
+
         yield return new WaitForSeconds(2.0f);
 
         TransitionManager.SceneTransition(SceneType.Stage_Boss);
