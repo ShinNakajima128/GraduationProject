@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using AliceProject;
 
 /// <summary>
 /// イントロSceneの背景を操作するコンポーネント
@@ -27,11 +28,15 @@ public class BackgroundChanger : MonoBehaviour
     /// </summary>
     /// <param name="background"> 変更する背景 </param>
     /// <param name="action"> 変更後に実行するAction </param>
-    public void BackgroundChange(Sprite background, Action action = null)
+    public void BackgroundChange(ScenarioData data, Action action = null)
     {
+
+        var background = data.Background;
+
         if (background == null)
         {
             action?.Invoke();
+            Debug.Log("背景無し");
             return;
         }
 
