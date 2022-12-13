@@ -14,6 +14,9 @@ public class BackgroundController : MonoBehaviour
     [SerializeField]
     float _groundModelSpeed = 3.0f;
 
+    [SerializeField]
+    float _groundHeight = 2.5f;
+
     [Tooltip("地面のモデル")]
     [SerializeField]
     Transform _groundModel = default;
@@ -63,7 +66,7 @@ public class BackgroundController : MonoBehaviour
 
         SetScrollSpeed(new Vector2(0f, 0f), 0f);
         _groundModel.gameObject.SetActive(true);
-        _groundModel.DOMoveY(_finishTrans.position.y + 2.5f, 0);
+        _groundModel.DOMoveY(_finishTrans.position.y + _groundHeight, 0);
     }
     void SetScrollSpeed(Vector2 vector, float time, Action action = null)
     {

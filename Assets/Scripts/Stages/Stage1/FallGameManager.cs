@@ -63,7 +63,13 @@ public class FallGameManager : MonoBehaviour
         GameManager.UpdateCurrentStage(Stages.Stage1);
         OnGameStart();
         TransitionManager.FadeIn(FadeType.White, 0f);
-        TransitionManager.FadeOut(FadeType.Normal);
+        TransitionManager.FadeOut(FadeType.Normal, action: () =>
+        {
+            TransitionManager.FadeIn(FadeType.Black, 0f, action:() =>
+            {
+                TransitionManager.FadeOut(FadeType.Normal, 0f);
+            });
+        });
     }
 
 
