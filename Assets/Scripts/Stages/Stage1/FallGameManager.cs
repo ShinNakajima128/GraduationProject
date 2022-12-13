@@ -62,6 +62,8 @@ public class FallGameManager : MonoBehaviour
         _originPos = _playerTrans.position;
         GameManager.UpdateCurrentStage(Stages.Stage1);
         OnGameStart();
+        TransitionManager.FadeIn(FadeType.White, 0f);
+        TransitionManager.FadeOut(FadeType.Normal);
     }
 
 

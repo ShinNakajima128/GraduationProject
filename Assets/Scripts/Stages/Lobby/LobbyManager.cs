@@ -92,6 +92,7 @@ public class LobbyManager : MonoBehaviour
 
         if (!_debugMode)
         {
+            TransitionManager.FadeIn(FadeType.Normal, 0f);
             yield return null;
 
             _provider.enabled = false;
@@ -120,6 +121,8 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
+                TransitionManager.FadeOut(FadeType.Normal);
+
                 //未クリア且つステージをクリアしている場合は時計の演出を行う
                 if (!GameManager.CheckStageStatus() && GameManager.IsClearStaged)
                 {
