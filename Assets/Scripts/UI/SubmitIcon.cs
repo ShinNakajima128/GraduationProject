@@ -23,15 +23,6 @@ public class SubmitIcon : MonoBehaviour
     #region property
     #endregion
 
-
-    //private void OnEnable()
-    //{
-    //    if (_init)
-    //    {
-    //        OnAnimation();
-    //    }
-    //}
-
     private void Start()
     {
         _originPos = transform.localPosition;
