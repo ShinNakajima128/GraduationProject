@@ -58,7 +58,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434389808532962750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.363, y: 1.202, z: -0.278}
+  m_LocalPosition: {x: -0.363, y: 1.103, z: -0.388}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -120,7 +120,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5885317669952611220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.474, y: 1.382, z: -0.367}
+  m_LocalPosition: {x: 0.371, y: 1.147, z: -0.529}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -151,7 +151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6048003032710505656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.022000045, y: 1.564, z: -0.278}
+  m_LocalPosition: {x: -0.008, y: 1.542, z: -0.267}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 6328140126382468893}
   - component: {fileID: 6952936048819380408}
   - component: {fileID: 5159222152111838322}
+  - component: {fileID: 347995103}
   m_Layer: 0
   m_Name: RoseTree_C
   m_TagString: Untagged
@@ -183,7 +184,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6672576830850758055}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.15, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -243,3 +244,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &347995103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6672576830850758055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eff6a05ff5731b48a24d06e28923340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roseTrans:
+  - {fileID: 3765064511013944380}
+  - {fileID: 6401254296107802215}
+  - {fileID: 5039418066879705908}
+  _rosePrefab: {fileID: 4082868987405766524, guid: 27827e92402ba884db95ed639302c8aa,
+    type: 3}
+  _roseParent: {fileID: 2718329548905777050}

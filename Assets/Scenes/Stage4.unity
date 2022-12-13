@@ -2489,10 +2489,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2689043614071573049, guid: d0cfeb604d8baba45b5d3e09427979c0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.418
+      objectReference: {fileID: 0}
+    - target: {fileID: 8016181730926535178, guid: d0cfeb604d8baba45b5d3e09427979c0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.514
+      objectReference: {fileID: 0}
+    - target: {fileID: 8105364923435563428, guid: d0cfeb604d8baba45b5d3e09427979c0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.391
+      objectReference: {fileID: 0}
     - target: {fileID: 8314905815259474562, guid: d0cfeb604d8baba45b5d3e09427979c0,
         type: 3}
       propertyPath: m_Name
       value: RoseTree_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314905815259474562, guid: d0cfeb604d8baba45b5d3e09427979c0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8660327956975890488, guid: d0cfeb604d8baba45b5d3e09427979c0,
         type: 3}
@@ -2551,27 +2571,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0cfeb604d8baba45b5d3e09427979c0, type: 3}
---- !u!1 &249828767 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8314905815259474562, guid: d0cfeb604d8baba45b5d3e09427979c0,
-    type: 3}
-  m_PrefabInstance: {fileID: 249828766}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &249828768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249828767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eff6a05ff5731b48a24d06e28923340, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _roseTrans: []
-  _rosePrefab: {fileID: 0}
-  _roseParent: {fileID: 0}
 --- !u!1 &262128871
 GameObject:
   m_ObjectHideFlags: 0
@@ -3768,56 +3767,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoseTree_C
       objectReference: {fileID: 0}
+    - target: {fileID: 6672576830850758055, guid: 43140214f434eeb45989caeb2eca4d0c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43140214f434eeb45989caeb2eca4d0c, type: 3}
---- !u!1 &347995102 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6672576830850758055, guid: 43140214f434eeb45989caeb2eca4d0c,
-    type: 3}
-  m_PrefabInstance: {fileID: 347995101}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &347995103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 347995102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eff6a05ff5731b48a24d06e28923340, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _roseTrans:
-  - {fileID: 347995107}
-  - {fileID: 347995106}
-  - {fileID: 347995105}
-  _rosePrefab: {fileID: 0}
-  _roseParent: {fileID: 347995104}
---- !u!4 &347995104 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2718329548905777050, guid: 43140214f434eeb45989caeb2eca4d0c,
-    type: 3}
-  m_PrefabInstance: {fileID: 347995101}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &347995105 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5039418066879705908, guid: 43140214f434eeb45989caeb2eca4d0c,
-    type: 3}
-  m_PrefabInstance: {fileID: 347995101}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &347995106 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6401254296107802215, guid: 43140214f434eeb45989caeb2eca4d0c,
-    type: 3}
-  m_PrefabInstance: {fileID: 347995101}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &347995107 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3765064511013944380, guid: 43140214f434eeb45989caeb2eca4d0c,
-    type: 3}
-  m_PrefabInstance: {fileID: 347995101}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &362363449
 GameObject:
   m_ObjectHideFlags: 0
@@ -12154,7 +12110,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1113349302
 Transform:
   m_ObjectHideFlags: 0
@@ -23048,6 +23004,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoseTree_B
       objectReference: {fileID: 0}
+    - target: {fileID: 1223549684311232589, guid: d1ce23fd04fbfe840953f5bf345370d4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1995441359327709943, guid: d1ce23fd04fbfe840953f5bf345370d4,
         type: 3}
       propertyPath: m_RootOrder
@@ -23103,29 +23064,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2738984301445322807, guid: d1ce23fd04fbfe840953f5bf345370d4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.449
+      objectReference: {fileID: 0}
+    - target: {fileID: 6208399330313360414, guid: d1ce23fd04fbfe840953f5bf345370d4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 6208399330313360414, guid: d1ce23fd04fbfe840953f5bf345370d4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.398
+      objectReference: {fileID: 0}
+    - target: {fileID: 7708578780111888362, guid: d1ce23fd04fbfe840953f5bf345370d4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.443
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1ce23fd04fbfe840953f5bf345370d4, type: 3}
---- !u!1 &1945114400 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1223549684311232589, guid: d1ce23fd04fbfe840953f5bf345370d4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1945114399}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1945114401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945114400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eff6a05ff5731b48a24d06e28923340, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _roseTrans: []
-  _rosePrefab: {fileID: 0}
-  _roseParent: {fileID: 0}
 --- !u!1 &1950504774
 GameObject:
   m_ObjectHideFlags: 0

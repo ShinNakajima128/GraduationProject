@@ -6,39 +6,37 @@ public class Rose : MonoBehaviour
 {
     #region serialize
     [SerializeField]
-    RoseData _spriteData = default; 
+    GameObject[] _roseObjects = default;
+    
     [SerializeField]
     RoseType _currentRoseType = default;
     #endregion
     #region private
-    SpriteRenderer _sr;
     #endregion
     #region property
     public RoseType CurrentRoseType => _currentRoseType;
     #endregion
-    
-    private void Awake()
-    {
-        TryGetComponent(out _sr);
-    }
 
+    /// <summary>
+    /// ƒoƒ‰‚Ìó‘Ô‚ğİ’è‚·‚é
+    /// </summary>
     public void SetRoseType()
     {
-        
         RoseType rand = (RoseType)Random.Range(0, 3);
 
         switch (rand)
         {
             case RoseType.Hidden:
-                _sr.enabled = false;
+                _roseObjects[0].SetActive(false);
+                _roseObjects[1].SetActive(false);
                 break;
             case RoseType.Red:
-                _sr.enabled = true;
-                _sr.sprite = _spriteData.RoseSprites[0];
+                _roseObjects[0].SetActive(true);
+                _roseObjects[1].SetActive(false);
                 break;
             case RoseType.White:
-                _sr.enabled = true;
-                _sr.sprite = _spriteData.RoseSprites[1];
+                _roseObjects[0].SetActive(true);
+                _roseObjects[1].SetActive(false);
                 break;
             default:
                 break;
