@@ -11,7 +11,8 @@ public class UIInput : MonoBehaviour
 
     #region property
     public static UIInput Instance { get; private set; }
-    public static bool Submit => Instance._input.actions["Submit"].IsPressed();
+    //public static bool Submit => Instance._input.actions["Submit"].IsPressed();
+    public static bool Submit => Instance._input.actions["Submit"].WasPressedThisFrame();
     public static bool A => Instance._input.actions["A"].IsPressed();
     public static bool B => Instance._input.actions["B"].IsPressed();
     public static bool X => Instance._input.actions["X"].IsPressed();

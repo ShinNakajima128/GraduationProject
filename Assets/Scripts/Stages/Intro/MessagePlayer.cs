@@ -62,7 +62,7 @@ public class MessagePlayer : MonoBehaviour
 
     #region private
     bool _isChanged = false;
-    bool _isPressed = false;
+    bool _isSkiped = false;
     #endregion
     public event Action CameraShake;
     public event Action ConcentratedLine;
@@ -143,17 +143,28 @@ public class MessagePlayer : MonoBehaviour
                 foreach (var m in message)
                 {
                     _messageText.text += m;
-                    yield return new WaitForSeconds(_flowTime);
+
+                    if (!_isSkiped)
+                    {
+                        yield return WaitTimer(_flowTime);
+                    }                    
                 }
 
-                yield return new WaitForSeconds(_nextMessageInterval);
-                
+                if (!_isSkiped)
+                {
+                    yield return new WaitForSeconds(_nextMessageInterval);
+                }
                 _messageText.text += "\n";
             }
+            _isSkiped = false;
+
+            yield return new WaitForSeconds(0.05f);
 
             _submitIcon.SetActive(true); //入力を促すアイコンをアクティブにする
 
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
+
+            yield return new WaitForSeconds(0.05f);
         }
 
         _submitIcon.SetActive(false);
@@ -161,6 +172,33 @@ public class MessagePlayer : MonoBehaviour
         OnScreenEffect(ScreenEffectType.Reset);
         FadeMessageCanvas(0f, _messagePanelFadeTime);
         action?.Invoke();
+    }
+
+    /// <summary>
+    /// 指定した時間待機する
+    /// </summary>
+    /// <param name="time"> 待つ時間 </param>
+    /// <returns></returns>
+    IEnumerator WaitTimer(float time)
+    {
+        float timer = 0;
+
+        while (true)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= time)
+            {
+                yield break;
+            }
+            else if (UIInput.Submit)
+            {
+                _isSkiped = true;
+                yield return null;
+                yield break;
+            }
+            yield return null;
+        }
     }
 
     /// <summary>
