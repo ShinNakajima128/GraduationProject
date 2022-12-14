@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,7 +52,7 @@ public abstract class ObjectPool<T> : MonoBehaviour
     /// プーリングしたObjectをアクティブにする
     /// </summary>
     /// <returns></returns>
-    public void Use(Vector3 pos)
+    public void Use(Vector3 pos, Action<T> callback = null)
     {
         foreach (var go in _objectList)
         {
@@ -59,6 +60,13 @@ public abstract class ObjectPool<T> : MonoBehaviour
             {
                 go.SetActive(true);
                 go.transform.localPosition = pos;
+
+                //ObjectのComponentを使用する側へ渡す
+                var component = go.GetComponentInChildren<T>();
+                if (component != null)
+                {
+                    callback?.Invoke(component);
+                }
                 return;
             }
         }

@@ -19,11 +19,11 @@ public class ObstacleGenerator : MonoBehaviour
     [Header("Objects")]
     [Tooltip("áŠQ•¨‚ğ¶¬‚·‚éˆÊ’u")]
     [SerializeField]
-    Transform[] _generateTrans = default;
+    protected Transform[] _generateTrans = default;
 
     [Tooltip("¶¬‚·‚éáŠQ•¨‚ÌList")]
     [SerializeField]
-    List<ObstacleController> _obstacleList = new List<ObstacleController>();
+    protected List<ObstacleController> _obstacleList = new List<ObstacleController>();
     #endregion
     #region private
     bool _isInGamed;
@@ -43,7 +43,7 @@ public class ObstacleGenerator : MonoBehaviour
         FallGameManager.Instance.GameEnd += StopGenerate;
     }
 
-    void Generate(int index)
+    protected virtual void Generate(int index)
     {
         int randPos = Random.Range(0, _generateTrans.Length);
         _obstacleList[index].Use(_generateTrans[randPos].position);
