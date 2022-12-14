@@ -105,8 +105,9 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     public void TurnLeft()
     {
+        var rotY = transform.eulerAngles.y;
         transform.Rotate(0, -0.1f, 0);
-        Debug.Log(transform.eulerAngles);
+        Debug.Log(rotY);
     }
 
     /// <summary>
@@ -114,7 +115,9 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     public void TurnRight()
     {
+        var rotY = transform.eulerAngles.y;
         transform.Rotate(0, 0.1f, 0);
+        Debug.Log(rotY);
     }
     #endregion
 
