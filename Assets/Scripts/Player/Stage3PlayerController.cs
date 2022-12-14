@@ -173,6 +173,15 @@ public class Stage3PlayerController : MonoBehaviour
     #endregion
 
     #region Public Function
+    public void LookForForward()
+    {
+        var rnd = UnityEngine.Random.Range(0, 3);
+        if (rnd == 2)
+        {
+            _animator.Play("LookForForward");
+        }
+    }
+
     /// <summary>
     /// AnimationEvent‚ÉŒÄ‚Î‚ê‚é
     /// </summary>
@@ -268,13 +277,6 @@ public class Stage3PlayerController : MonoBehaviour
         }
     }
 
-    public void LookForForward()
-    {
-        var rnd = UnityEngine.Random.Range(0, 3);
-        if (rnd == 2)
-        {
-            _animator.Play("LookForForward");
-        }
-    }
+    
     #endregion
 }
