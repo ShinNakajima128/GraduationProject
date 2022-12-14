@@ -35,8 +35,8 @@ public class Rose : MonoBehaviour
                 _roseObjects[1].SetActive(false);
                 break;
             case RoseType.White:
-                _roseObjects[0].SetActive(true);
-                _roseObjects[1].SetActive(false);
+                _roseObjects[0].SetActive(false);
+                _roseObjects[1].SetActive(true);
                 break;
             default:
                 break;
