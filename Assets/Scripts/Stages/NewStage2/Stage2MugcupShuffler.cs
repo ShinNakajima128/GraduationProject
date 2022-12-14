@@ -9,6 +9,9 @@ public class Stage2MugcupShuffler : MonoBehaviour
     [SerializeField]
     private int[] _shuffleCounts;
 
+    [SerializeField]
+    private TeapotShuffle _shuffle;
+
     /// <summary>
     /// シャッフルのリクエスト
     /// </summary>
@@ -37,30 +40,12 @@ public class Stage2MugcupShuffler : MonoBehaviour
     /// </summary>
     private IEnumerator Type1ShuffleAsync(Stage2MugcupController[] mugcups, float duration, Action action = null)
     {
-        var isSwaped1 = false;
-        var isSwaped2 = false;
-
         for (int count = 0; count < _shuffleCounts[0]; count++)
         {
-            // フラグのリセット
-            isSwaped1 = false;
-            isSwaped2 = false;
-
             // 交換するカップのIndexを取得
             var indexes = Type1GetNumber(mugcups.Length);
 
-            // 交換の処理
-            Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[0], () => isSwaped1 = true);
-            Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[0], () => isSwaped2 = true);
-
-            // 配列の中身を入れ替える
-            Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
-
-            // フラグか切り替わるまで、待つ
-            while (!isSwaped1 || !isSwaped2)
-            {
-                yield return null;
-            }
+            yield return _shuffle.ShuffleTeapot(mugcups,indexes.Item1);
         }
         action?.Invoke();
     }
@@ -131,8 +116,8 @@ public class Stage2MugcupShuffler : MonoBehaviour
                     indexes = Type1GetNumber(mugcups.Length);
 
                     // 交換
-                    Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[1], () => isSwaped1 = true);
-                    Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[1], () => isSwaped2 = true);
+                    //Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[1], () => isSwaped1 = true);
+                    //Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[1], () => isSwaped2 = true);
 
                     // 配列の中身を入れ替える
                     Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
@@ -199,8 +184,8 @@ public class Stage2MugcupShuffler : MonoBehaviour
                     indexes = Type1GetNumber(mugcups.Length);
 
                     // 交換
-                    Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[2], () => isSwaped1 = true);
-                    Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[2], () => isSwaped2 = true);
+                    //Replace(mugcups, indexes.Item1, indexes.Item2, duration / _shuffleCounts[2], () => isSwaped1 = true);
+                    //Replace(mugcups, indexes.Item2, indexes.Item1, duration / _shuffleCounts[2], () => isSwaped2 = true);
 
                     // 配列の中身を入れ替える
                     Type1ReplaceForItemOfArray(mugcups, indexes.Item1, indexes.Item2);
@@ -286,13 +271,5 @@ public class Stage2MugcupShuffler : MonoBehaviour
         mugcups[index2] = item;
 
         action?.Invoke();
-    }
-
-    /// <summary>
-    /// 二つのオブジェクトの位置を入れ替える
-    /// </summary>
-    private void Replace(Stage2MugcupController[] mugcups, int index1, int index2, float duration, Action action = null)
-    {
-        mugcups[index1].transform.DOLocalMove(mugcups[index2].transform.localPosition, duration).OnComplete(() => action?.Invoke());
     }
 }
