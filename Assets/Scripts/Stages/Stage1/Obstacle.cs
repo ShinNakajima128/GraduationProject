@@ -16,6 +16,10 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     RotateType _rotateType = default;
 
+    [Tooltip("テーブルの生成する位置")]
+    [SerializeField]
+    TableGeneratePosition _generatePos = default;
+
     [Tooltip("移動速度")]
     [SerializeField]
     float _moveSpeed = 5.0f;
@@ -34,6 +38,16 @@ public class Obstacle : MonoBehaviour
     Quaternion _rotateValue = default;
     IDamagable _target;
     #endregion
+
+    public TableGeneratePosition GeneratePos
+    {
+        get => _generatePos;
+        set
+        {
+            _generatePos = value;
+            RotateFromGeneratePos();
+        }
+    }
 
     private void OnEnable()
     {
@@ -56,8 +70,7 @@ public class Obstacle : MonoBehaviour
                 randY = Random.Range(135, 245);
                 break;
             case RotateType.Table:
-                randZ = Random.Range(-120, 120);
-                break;
+                return;
             default:
                 break;
         }
@@ -102,7 +115,7 @@ public class Obstacle : MonoBehaviour
             {
                 _target = other.GetComponent<IDamagable>();
             }
-            
+
             if (!_target.IsInvincibled)
             {
                 _target.Damage(1);
@@ -113,6 +126,29 @@ public class Obstacle : MonoBehaviour
         }
     }
 
+    void RotateFromGeneratePos()
+    {
+        int randZ = 0;
+
+        switch (_generatePos)
+        {
+            case TableGeneratePosition.None:
+                break;
+            case TableGeneratePosition.Left:
+                randZ = Random.Range(-120, -30);
+                break;
+            case TableGeneratePosition.Center:
+                randZ = Random.Range(-120, 120);
+                break;
+            case TableGeneratePosition.Right:
+                randZ = Random.Range(40, 120);
+                break;
+            default:
+                break;
+        }
+        transform.DOLocalRotate(new Vector3(0, 0, randZ), 0f);
+    }
+
     enum RotateType
     {
         None,
@@ -120,4 +156,11 @@ public class Obstacle : MonoBehaviour
         Mirror,
         Table
     }
+}
+public enum TableGeneratePosition
+{
+    None,
+    Left,
+    Center,
+    Right
 }
