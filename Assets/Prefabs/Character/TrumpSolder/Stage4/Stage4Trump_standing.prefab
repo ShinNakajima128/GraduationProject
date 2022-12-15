@@ -1623,7 +1623,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8790570707990019672}
   - component: {fileID: 9112145446898211261}
-  - component: {fileID: 9112145446898211260}
+  - component: {fileID: 216900424}
   m_Layer: 0
   m_Name: Stage4Trump_standing
   m_TagString: Untagged
@@ -1668,7 +1668,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &9112145446898211260
+--- !u!114 &216900424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1677,13 +1677,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8265708200637146338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c6ccc151b1c2b149a7d66f20cc8a6e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 14ed6f3f9c10cce429f53a036c3b7f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _currentPatternType: 0
   _isRandomPattern: 1
   _patternRenderer: {fileID: 1673843396013149976}
-  _trumpType: 1
+  _directionType: 0
+  _maxSpeed: 5
+  _moveSpeed: 0
+  _isDirectionTrump: 0
 --- !u!1 &8374409302897324251
 GameObject:
   m_ObjectHideFlags: 0

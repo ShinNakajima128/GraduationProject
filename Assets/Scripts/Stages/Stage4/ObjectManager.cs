@@ -62,8 +62,8 @@ public class ObjectManager : MonoBehaviour
             return count;
         }
     }
-    public int CurrentRedTrumpCount => _trumpGenerator.CurrentRedTrumpCount;
-    public int CurrentBlackTrumpCount => _trumpGenerator.CurrentBlackTrumpCount;
+    //public int CurrentRedTrumpCount => _trumpGenerator.CurrentRedTrumpCount;
+    //public int CurrentBlackTrumpCount => _trumpGenerator.CurrentBlackTrumpCount;
     #endregion
 
     private void OnDisable()
@@ -74,7 +74,7 @@ public class ObjectManager : MonoBehaviour
     private void Start()
     {
         QuizGameManager.Instance.QuizSetUp += ObjectSetUp;
-        GroundSetup();
+        //GroundSetup();
     }
     void ObjectSetUp(QuizType quizType)
     {

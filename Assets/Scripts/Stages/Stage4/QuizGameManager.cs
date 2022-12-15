@@ -98,18 +98,19 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _informationText.text = "";
 
         //主人公キャラがスタート位置まで進む
-        _playerAnim.CrossFadeInFixedTime("Move", 0.1f);
+        _playerAnim.CrossFadeInFixedTime("Move", 0.2f);
         _playerTrans.DOMoveX(_startPlayerPos.position.x, 3.0f)
                     .OnComplete(() => 
                     {
-                        _playerAnim.CrossFadeInFixedTime("Idle", 0.1f);
+                        _playerAnim.CrossFadeInFixedTime("Idle", 0.2f);
                     })
                     .SetDelay(1.5f);
 
-        _directionTrumpSoldier.DOMoveX(-10f, 4.5f)
+        _directionTrumpSoldier.DOMoveX(0f, 4.5f)
                               .SetEase(Ease.Linear)
                               .OnComplete(() =>
                               {
+                                  _directionTrumpSoldier.gameObject.SetActive(false);
                                   StartCoroutine(GameStartCoroutine(() =>
                                   {
                                       GameStart?.Invoke();
@@ -165,6 +166,8 @@ public class QuizGameManager : StageGame<QuizGameManager>
                         OnQuizSetUp(_debugQuizType);
                     }
                     _playerTrans.DOMoveX(_startPlayerPos.position.x, 0f);
+                    _playerTrans.DOLocalRotate(new Vector3(0f, 90f, 0f), 0f);
+
                     TransitionManager.FadeOut(FadeType.Normal, action: () =>
                     {
                         Viewing(() =>
@@ -229,7 +232,8 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     .OnComplete(() =>
                     {
                         action?.Invoke();
-                        _playerAnim.CrossFadeInFixedTime("Idle", 0.1f);
+                        _playerTrans.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.25f);
+                        _playerAnim.CrossFadeInFixedTime("SitIdle", 0.3f);
                         Debug.Log("クイズ表示");
                     });
     }

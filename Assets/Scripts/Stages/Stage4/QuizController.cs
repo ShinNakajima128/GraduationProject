@@ -99,7 +99,7 @@ public class QuizController : MonoBehaviour
                 break;
             case QuizType.TrumpSolder:
                 _questionText.text = "トランプ兵の数は？";
-                _currentAnswerValue = manager.CurrentRedTrumpCount + manager.CurrentBlackTrumpCount;
+                //_currentAnswerValue = manager.CurrentRedTrumpCount + manager.CurrentBlackTrumpCount;
                 
                 ///トランプ兵を赤と黒で数え分けた場合の処理
                 //var randomTrumpType = (Stage4TrumpType)UnityEngine.Random.Range(0, 2);
@@ -120,8 +120,8 @@ public class QuizController : MonoBehaviour
                 break;
             case QuizType.All:
                 _questionText.text = "バラとトランプ兵の数は？";
-                _currentAnswerValue = manager.CurrentRedRoseCount + manager.CurrentWhiteRoseCount
-                                    + manager.CurrentRedTrumpCount + manager.CurrentBlackTrumpCount;
+                //_currentAnswerValue = manager.CurrentRedRoseCount + manager.CurrentWhiteRoseCount
+                //                   + manager.CurrentRedTrumpCount + manager.CurrentBlackTrumpCount;
                 break;
             default:
                 break;

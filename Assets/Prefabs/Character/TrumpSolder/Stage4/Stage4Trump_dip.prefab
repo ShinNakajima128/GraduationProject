@@ -460,7 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2566465793835891702}
   - component: {fileID: 2600637984365222943}
-  - component: {fileID: 2600637984365222936}
+  - component: {fileID: 1529051917}
   m_Layer: 0
   m_Name: Stage4Trump_dip
   m_TagString: Untagged
@@ -505,7 +505,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2600637984365222936
+--- !u!114 &1529051917
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -514,13 +514,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2942604991413035340}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c6ccc151b1c2b149a7d66f20cc8a6e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 14ed6f3f9c10cce429f53a036c3b7f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _currentPatternType: 0
   _isRandomPattern: 1
   _patternRenderer: {fileID: 5573527545972443830}
-  _trumpType: 4
+  _directionType: 4
+  _maxSpeed: 5
+  _moveSpeed: 0
+  _isDirectionTrump: 0
 --- !u!1 &3064875613476513636
 GameObject:
   m_ObjectHideFlags: 0

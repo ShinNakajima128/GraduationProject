@@ -170,7 +170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1230482187929993560}
   - component: {fileID: 1628390441759942325}
-  - component: {fileID: 1628390441759942326}
+  - component: {fileID: 1689617767}
   m_Layer: 0
   m_Name: Stage4Trump_loaf
   m_TagString: Untagged
@@ -216,7 +216,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1628390441759942326
+--- !u!114 &1689617767
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -225,13 +225,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1898370233177152482}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c6ccc151b1c2b149a7d66f20cc8a6e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 14ed6f3f9c10cce429f53a036c3b7f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _currentPatternType: 0
   _isRandomPattern: 1
   _patternRenderer: {fileID: 3427981945067501248}
-  _trumpType: 3
+  _directionType: 3
+  _maxSpeed: 5
+  _moveSpeed: 0
+  _isDirectionTrump: 0
 --- !u!1 &1978251329307354438
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,8 +21,6 @@ public class TrumpSolderGenerator : MonoBehaviour
     #region public
     #endregion
     #region property
-    public int CurrentRedTrumpCount => _trumpCtrl.ComponentList.Count(t => t.CurrentTrumpType == Stage4TrumpType.Trump_Red);
-    public int CurrentBlackTrumpCount => _trumpCtrl.ComponentList.Count(t => t.CurrentTrumpType == Stage4TrumpType.Trump_Black);
     #endregion
 
     /// <summary>

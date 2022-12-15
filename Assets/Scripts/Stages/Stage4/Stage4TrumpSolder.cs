@@ -3,77 +3,117 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stage4TrumpSolder : MonoBehaviour
+public class Stage4TrumpSolder : TrumpSolder
 {
     #region serialize
     [Header("Variable")]
     [SerializeField]
+    Stage4TrumpDirectionType _directionType = default;
+
+    [SerializeField]
     float _maxSpeed = 5.0f;
 
     [SerializeField]
-    float _moveSpeed = 2.0f;
-
-    [SerializeField]
-    Stage4TrumpType _trumpType = default;
-
-    [Header("Data")]
-    [SerializeField]
-    TrumpSolderData _data = default;
+    float _moveSpeed = 0f;
 
     [SerializeField]
     bool _isDirectionTrump = false;
     #endregion
     #region private
-    SpriteRenderer _renderer;
     bool _init = false;
+    Animator _anim;
     #endregion
     #region public
     #endregion
     #region property
-    public Stage4TrumpType CurrentTrumpType => _trumpType;
+    public Stage4TrumpDirectionType CurrentDirType
+    {
+        get => _directionType;
+    }
+
     public float CurrentMoveSpeed
     {
         get => _moveSpeed;
         set
         {
-            if (value <= 0)
-            {
-                value = 0.1f;
-            }
             _moveSpeed = value;
         }
     }
     #endregion
 
-    private void Awake()
+    protected override void Awake()
     {
-        TryGetComponent(out _renderer);
+        base.Awake();
         _init = true;
+        TryGetComponent(out _anim);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        ChangeAnimation(_directionType);
     }
 
     private void OnEnable()
     {
-        if (_init)
+        if (_init && _directionType == Stage4TrumpDirectionType.Walk) ;
         {
-            var randomTrumpType = (Stage4TrumpType)Random.Range(0, 2);
-            var sprite = _data.Trumps.FirstOrDefault(t => t.TrumpType == randomTrumpType).TrumpSprite; //一致した種類の画像データ差し替え
-            _renderer.sprite = sprite;
-            _trumpType = randomTrumpType;
             _moveSpeed = Random.Range(0.1f, _maxSpeed);
         }
     }
+
     private void OnDisable()
     {
         transform.localPosition = Vector3.zero;
-        _trumpType = Stage4TrumpType.OFF;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        //演出用のトランプ以外は左へ進む
-        if (!_isDirectionTrump)
+        //ステータスが「Walk」のトランプ兵は左へ進む
+        if (!_isDirectionTrump && _directionType == Stage4TrumpDirectionType.Walk)
         {
             transform.localPosition -= new Vector3(_moveSpeed * Time.deltaTime, 0f, 0f);
         }
     }
+
+    public void ChangeAnimation(Stage4TrumpDirectionType type)
+    {
+        switch (type)
+        {
+            case Stage4TrumpDirectionType.Standing:
+                _anim.CrossFadeInFixedTime("Stage4_Standing", 0.1f);
+                break;
+            case Stage4TrumpDirectionType.Walk:
+                _anim.CrossFadeInFixedTime("Stage4_Walk", 0.1f);
+                break;
+            case Stage4TrumpDirectionType.Paint:
+                _anim.CrossFadeInFixedTime("Stage4_Paint", 0.1f);
+                break;
+            case Stage4TrumpDirectionType.Loaf:
+                _anim.CrossFadeInFixedTime("Stage4_Loaf", 0.1f);
+                break;
+            case Stage4TrumpDirectionType.Dip:
+                _anim.CrossFadeInFixedTime("Stage4_Dip", 0.1f);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+/// <summary>
+/// Stage4のトランプ兵の演出の種類
+/// </summary>
+public enum Stage4TrumpDirectionType
+{
+    /// <summary> 直立 </summary>
+    Standing,
+    /// <summary> 歩く </summary>
+    Walk,
+    /// <summary> バラを塗っている </summary>
+    Paint,
+    /// <summary> サボり </summary>
+    Loaf,
+    /// <summary> ペンキをかき混ぜている </summary>
+    Dip
 }
