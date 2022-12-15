@@ -10,7 +10,10 @@ public class ObjectManager : MonoBehaviour
 {
     #region serialize
     [SerializeField]
-    int _groundNum = 20;
+    bool _isGenerate = false;
+
+    [SerializeField]
+    int _modelNum = 20;
 
     [SerializeField]
     float _generateInterval = 6.05f;
@@ -74,7 +77,11 @@ public class ObjectManager : MonoBehaviour
     private void Start()
     {
         QuizGameManager.Instance.QuizSetUp += ObjectSetUp;
-        //GroundSetup();
+
+        if (_isGenerate)
+        {
+            ModelSetup();
+        }
     }
     void ObjectSetUp(QuizType quizType)
     {
@@ -84,18 +91,18 @@ public class ObjectManager : MonoBehaviour
             t.Deploy();
         }
 
-        if (quizType != QuizType.TrumpSolder)
-        {
-            return;
-        }
+        //if (quizType != QuizType.TrumpSolder)
+        //{
+        //    return;
+        //}
 
         _trumpGenerator.Return();
         _trumpGenerator.Generate();
     }
 
-    void GroundSetup()
+    void ModelSetup()
     {
-        for (int i = 0; i < _groundNum; i++)
+        for (int i = 0; i < _modelNum; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, _generateModels.Length);
 
