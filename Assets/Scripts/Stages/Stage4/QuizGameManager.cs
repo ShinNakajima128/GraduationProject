@@ -96,10 +96,15 @@ public class QuizGameManager : StageGame<QuizGameManager>
     public override void OnGameStart()
     {
         _informationText.text = "";
-
-        //主人公キャラがスタート位置まで進む
-        _playerAnim.CrossFadeInFixedTime("Move", 0.2f);
+        _playerTrans.DOMove(_playerTrans.position, 1.4f)
+                    .OnComplete(() =>
+                    {
+                        //主人公キャラがスタート位置まで進む
+                        _playerAnim.CrossFadeInFixedTime("Move", 0.2f);
+                    });
+        
         _playerTrans.DOMoveX(_startPlayerPos.position.x, 3.0f)
+                    .SetEase(Ease.Linear)
                     .OnComplete(() => 
                     {
                         _playerAnim.CrossFadeInFixedTime("Idle", 0.2f);
