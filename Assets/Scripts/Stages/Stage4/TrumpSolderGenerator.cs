@@ -15,6 +15,9 @@ public class TrumpSolderGenerator : MonoBehaviour
     [SerializeField]
     Stage4TrumpManager _trumpMng = default;
 
+    [SerializeField]
+    RoseTree[] _trees = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _isAllPosGenerate = false;
@@ -28,11 +31,12 @@ public class TrumpSolderGenerator : MonoBehaviour
 
     #region private
     #endregion
-    
+
     #region public
     #endregion
-    
+
     #region property
+    public int CurrentActiveTrumpCount => _trumpMng.GetTrumpActiveCount();
     #endregion
 
     /// <summary>
@@ -56,15 +60,34 @@ public class TrumpSolderGenerator : MonoBehaviour
                         break;
                     }
 
-                    generateJudge = UnityEngine.Random.Range(0, 2) == 0;
-
-                    if (!generateJudge)
+                    //「塗る」トランプ兵を生成する処理の場合
+                    if (i == 2)
                     {
-                        continue;
+                        //バラの木の「左」のバラが「赤」で出現している場合のみトランプ兵を生成
+                        if (_trees[n].CurrentRose[0].CurrentRoseType == RoseType.Red)
+                        {
+                            _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
+                            generateCount++;
+                        }
+                    }
+                    else
+                    {
+                        generateJudge = UnityEngine.Random.Range(0, 3) == 0;
+
+                        if (!generateJudge)
+                        {
+                            continue;
+                        }
+
+                        _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
+                        generateCount++;
                     }
                 }
-                _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
-                generateCount++;
+                else
+                {
+                    _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
+                }
+                
             }
         }
     }

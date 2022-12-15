@@ -24,6 +24,7 @@ public class RoseTree : MonoBehaviour
     #region property
     public int RedRoseCount => _roses.Count(r => r.CurrentRoseType == RoseType.Red);
     public int WhiteRoseCount => _roses.Count(r => r.CurrentRoseType == RoseType.White);
+    public Rose[] CurrentRose => _roses;
     #endregion
 
     private void Start()

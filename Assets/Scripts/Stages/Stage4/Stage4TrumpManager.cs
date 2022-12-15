@@ -1,6 +1,8 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 /// <summary>
 /// Stage4のトランプ兵の管理をするマネージャー
@@ -67,11 +69,6 @@ public class Stage4TrumpManager : MonoBehaviour
         Setup();
     }
 
-    void Start()
-    {
-        
-    }
-
     public void Use(Stage4TrumpDirectionType type, Transform target)
     {
         ActivateTrump(type, target);
@@ -108,6 +105,19 @@ public class Stage4TrumpManager : MonoBehaviour
             t.gameObject.SetActive(false);
         }
 
+    }
+
+    public int GetTrumpActiveCount()
+    {
+        int total = 0;
+
+        total += _standingTrumpList.Count(t => t.gameObject.activeSelf);
+        total += _walkTrumpList.Count(t => t.gameObject.activeSelf);
+        total += _paintTrumpList.Count(t => t.gameObject.activeSelf);
+        total += _loafTrumpList.Count(t => t.gameObject.activeSelf);
+        total += _dipTrumpList.Count(t => t.gameObject.activeSelf);
+        Debug.Log($"トランプ兵の現在のアクティブ数{total}");
+        return total;
     }
 
     void Setup()
@@ -150,8 +160,6 @@ public class Stage4TrumpManager : MonoBehaviour
 
     void ActivateTrump(Stage4TrumpDirectionType type, Transform target)
     {
-        Debug.Log("呼ばれた");
-
         switch (type)
         {
             case Stage4TrumpDirectionType.Standing:

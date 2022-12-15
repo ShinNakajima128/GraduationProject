@@ -65,6 +65,8 @@ public class ObjectManager : MonoBehaviour
             return count;
         }
     }
+
+    public int CurrentTrumpCount => _trumpGenerator.CurrentActiveTrumpCount;
     //public int CurrentRedTrumpCount => _trumpGenerator.CurrentRedTrumpCount;
     //public int CurrentBlackTrumpCount => _trumpGenerator.CurrentBlackTrumpCount;
     #endregion

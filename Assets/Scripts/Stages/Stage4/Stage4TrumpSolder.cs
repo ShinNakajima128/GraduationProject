@@ -54,10 +54,17 @@ public class Stage4TrumpSolder : TrumpSolder
 
     private void OnEnable()
     {
-        if (_init && _directionType == Stage4TrumpDirectionType.Walk)
+        if (_init)
         {
-            _moveSpeed = Random.Range(0.1f, _maxSpeed);
+
         }
+
+        ChangeAnimation(_directionType);
+
+        //if (_directionType == Stage4TrumpDirectionType.Walk)
+        //{
+        //    _moveSpeed = Random.Range(0.1f, _maxSpeed);
+        //}
     }
 
     private void OnDisable()
