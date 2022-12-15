@@ -20,7 +20,6 @@ public class Stage4TrumpSolder : TrumpSolder
     bool _isDirectionTrump = false;
     #endregion
     #region private
-    bool _init = false;
     Animator _anim;
     #endregion
     #region public
@@ -44,7 +43,6 @@ public class Stage4TrumpSolder : TrumpSolder
     protected override void Awake()
     {
         base.Awake();
-        _init = true;
         TryGetComponent(out _anim);
     }
 
@@ -56,7 +54,7 @@ public class Stage4TrumpSolder : TrumpSolder
 
     private void OnEnable()
     {
-        if (_init && _directionType == Stage4TrumpDirectionType.Walk) ;
+        if (_init && _directionType == Stage4TrumpDirectionType.Walk)
         {
             _moveSpeed = Random.Range(0.1f, _maxSpeed);
         }

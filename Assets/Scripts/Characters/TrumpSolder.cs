@@ -23,7 +23,7 @@ public class TrumpSolder : MonoBehaviour
     Dictionary<TrumpPatternType, Vector2> _patternTypeDic = new Dictionary<TrumpPatternType, Vector2>();
     Material _patternMat;
     TrumpColorType _currentColorType = default;
-    bool _init = false;
+    protected bool _init = false;
     #endregion
     #region public
     #endregion
