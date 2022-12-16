@@ -1,13 +1,15 @@
 using UnityEngine;
 
-public class CardManController : MonoBehaviour
+public class Stage3TrumpSolderController : MonoBehaviour
 {
     [Header("移動速度")]
     [SerializeField]
     private float _moveSpeed;
 
-    [SerializeField]
-    private bool _isStoped;
+    /// <summary>
+    /// 停止しているか
+    /// </summary>
+    public bool IsStoped { get; set; } = false;
 
     private CardType _type;
 
@@ -15,7 +17,10 @@ public class CardManController : MonoBehaviour
 
     private bool _isHit = false;
 
-    private enum MoveDirection
+    /// <summary>
+    /// 進行方向
+    /// </summary>
+    public enum MoveDirection
     {
         None,
         Left,
@@ -31,7 +36,7 @@ public class CardManController : MonoBehaviour
 
     private void Start()
     {
-        SetMoveDirection(MoveDirection.Left);
+        SetStartMoveDirection(MoveDirection.Left);
     }
 
     private void Update()
@@ -45,14 +50,17 @@ public class CardManController : MonoBehaviour
         }
     }
 
-    private void SetMoveDirection(MoveDirection nextDirection)
+    /// <summary>
+    /// 最初の進行方向を指定
+    /// </summary>
+    public void SetStartMoveDirection(MoveDirection nextDirection)
     {
         _currentMoveDirection = nextDirection;
     }
 
     private void Move()
     {
-        if (_isStoped) return;
+        if (IsStoped) return;
 
         var pos = transform.position;
 
@@ -64,7 +72,7 @@ public class CardManController : MonoBehaviour
                 // 左に動く
                 pos.x = pos.x + -_moveSpeed * Time.deltaTime;
                 break;
-            // 右に動く
+                // 右に動く
             case MoveDirection.Right:
                 pos.x = pos.x + _moveSpeed * Time.deltaTime;
                 break;
@@ -75,9 +83,17 @@ public class CardManController : MonoBehaviour
         transform.position = pos;
     }
 
+    /// <summary>
+    /// カウンターの参照
+    /// </summary>
     public void SetCounter(Stage3ScoreConter counter)
     {
         Counter = counter;
+    }
+
+    public void Reset()
+    {
+        _isHit = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -95,10 +111,10 @@ public class CardManController : MonoBehaviour
                 case MoveDirection.None:
                     break;
                 case MoveDirection.Left:
-                    SetMoveDirection(MoveDirection.Right);
+                    SetStartMoveDirection(MoveDirection.Right);
                     break;
                 case MoveDirection.Right:
-                    SetMoveDirection(MoveDirection.Left);
+                    SetStartMoveDirection(MoveDirection.Left);
                     break;
                 default:
                     break;
