@@ -188,8 +188,8 @@ public class QuizController : MonoBehaviour
                 QuizType.WhiteRose => $"{sort[i]} <size=80>本</size>",
                 QuizType.RedAndWhiteRose => $"{sort[i]} <size=80>本</size>",
                 QuizType.TrumpSolder => $"{sort[i]} <size=80>人</size>",
-                QuizType.All => $"{sort[i]} <size=80>つ</size>",
-                _ => $"{sort[i]} <size=80>本</size>",
+                QuizType.All => $"{sort[i]}",
+                _ => $"{sort[i]} ",
             };
         }
 
