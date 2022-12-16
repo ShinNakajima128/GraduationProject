@@ -60,6 +60,15 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     Text _informationText = default;
 
+    [SerializeField]
+    CanvasGroup _questionPanelGroup = default;
+
+    [SerializeField]
+    Text _questionText = default;
+
+    [SerializeField]
+    GameObject[] _targetIcons = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -160,26 +169,37 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
             if (i > 0)
             {
+                bool isCompleted = false;
+
                 TransitionManager.FadeIn(FadeType.Normal, action: () =>
                 {
-                    if (!_debugMode)
-                    {
-                        OnQuizSetUp(currentQuizType);
-                    }
-                    else
-                    {
-                        OnQuizSetUp(_debugQuizType);
-                    }
+                    
                     _playerTrans.DOMoveX(_startPlayerPos.position.x, 0f);
                     _playerTrans.DOLocalRotate(new Vector3(0f, 90f, 0f), 0f);
 
                     TransitionManager.FadeOut(FadeType.Normal, action: () =>
                     {
-                        Viewing(() =>
-                        {
-                            isAnswerPhase = true;
-                        });
+                        isCompleted = true;
                     });
+                });
+
+                yield return new WaitUntil(() => isCompleted);
+
+                //数えるターゲットを表示
+                if (!_debugMode)
+                {
+                    OnQuizSetUp(currentQuizType);
+                    yield return QuestionCoroutine(currentQuizType);
+                }
+                else
+                {
+                    OnQuizSetUp(_debugQuizType);
+                    yield return QuestionCoroutine(_debugQuizType);
+                }
+
+                Viewing(() =>
+                {
+                    isAnswerPhase = true;
                 });
             }
             else
@@ -187,11 +207,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 if (!_debugMode)
                 {
                     OnQuizSetUp(currentQuizType);
+                    yield return QuestionCoroutine(currentQuizType);
                 }
                 else
                 {
                     OnQuizSetUp(_debugQuizType);
+                    yield return QuestionCoroutine(_debugQuizType);
                 }
+
                 Viewing(() =>
                 {
                     isAnswerPhase = true;
@@ -228,6 +251,52 @@ public class QuizGameManager : StageGame<QuizGameManager>
         TransitionManager.SceneTransition(SceneType.Lobby);
 
     }
+
+    IEnumerator QuestionCoroutine(QuizType type)
+    {
+        _questionText.text = "";
+        _questionPanelGroup.alpha = 1;
+
+        yield return new WaitForSeconds(1.5f);
+
+        switch (type)
+        {
+            case QuizType.RedRose:
+                _questionText.text = "赤バラ";
+                _targetIcons[0].SetActive(true);
+                break;
+            case QuizType.WhiteRose:
+                _questionText.text = "白バラ";
+                _targetIcons[1].SetActive(true);
+                break;
+            case QuizType.RedAndWhiteRose:
+                _questionText.text = "赤バラ＆白バラ";
+                _targetIcons[0].SetActive(true);
+                _targetIcons[1].SetActive(true);
+                break;
+            case QuizType.TrumpSolder:
+                _questionText.text = "トランプ兵";
+                _targetIcons[2].SetActive(true);
+                break;
+            case QuizType.All:
+                _questionText.text = "全部";
+                _targetIcons[0].SetActive(true);
+                _targetIcons[1].SetActive(true);
+                _targetIcons[2].SetActive(true);
+                break;
+            default:
+                break;
+        }
+
+        yield return new WaitForSeconds(2.5f);
+
+        _questionText.text = "";
+        _targetIcons[0].SetActive(false);
+        _targetIcons[1].SetActive(false);
+        _targetIcons[2].SetActive(false);
+        _questionPanelGroup.alpha = 0;
+    }
+
     void Viewing(Action action = null)
     {
         //ゲームの配置のセットアップ処理をここに記述
