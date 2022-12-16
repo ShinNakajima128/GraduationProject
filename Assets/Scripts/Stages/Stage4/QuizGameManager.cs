@@ -26,24 +26,24 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     float _viewingTime = 10.0f;
 
-    [Header("Camera")]
-    [Tooltip("カメラTransform")]
-    [SerializeField]
-    Transform _cameraTrans = default;
-
+    [Header("Directions")]
     [Tooltip("カメラの初期位置")]
     [SerializeField]
-    Transform _startCameraPos = default;
+    Transform _startPlayerPos = default;
 
     [Tooltip("カメラの到達位置")]
     [SerializeField]
-    Transform _endCameraTrans = default;
+    Transform _endPlayerTrans = default;
 
     [Tooltip("カメラのアニメーションの種類")]
     [SerializeField]
-    Ease _cameraEase = default;
+    Ease _playerMoveEase = default;
 
     [Header("Objects")]
+    [Tooltip("プレイヤーのTransform")]
+    [SerializeField]
+    Transform _playerTrans = default;
+
     [Tooltip("クイズコントローラー")]
     [SerializeField]
     QuizController _quizCtrl = default;
@@ -71,6 +71,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
     #region private
     /// <summary> 正解した回数 </summary>
     int _corectNum = 0;
+    Animator _playerAnim;
     #endregion
     #region public
     public override event Action GameSetUp;
@@ -81,6 +82,11 @@ public class QuizGameManager : StageGame<QuizGameManager>
     #region property
     #endregion
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _playerTrans.TryGetComponent(out _playerAnim);
+    }
     protected override void Start()
     {
         base.Start();
@@ -90,12 +96,26 @@ public class QuizGameManager : StageGame<QuizGameManager>
     public override void OnGameStart()
     {
         _informationText.text = "";
-        _cameraTrans.DOMoveX(_startCameraPos.position.x, 3.0f)
+        _playerTrans.DOMove(_playerTrans.position, 1.4f)
+                    .OnComplete(() =>
+                    {
+                        //主人公キャラがスタート位置まで進む
+                        _playerAnim.CrossFadeInFixedTime("Move", 0.2f);
+                    });
+        
+        _playerTrans.DOMoveX(_startPlayerPos.position.x, 3.0f)
+                    .SetEase(Ease.Linear)
+                    .OnComplete(() => 
+                    {
+                        _playerAnim.CrossFadeInFixedTime("Idle", 0.2f);
+                    })
                     .SetDelay(1.5f);
-        _directionTrumpSoldier.DOMoveX(-10f, 4.5f)
+
+        _directionTrumpSoldier.DOMoveX(0f, 4.5f)
                               .SetEase(Ease.Linear)
                               .OnComplete(() =>
                               {
+                                  _directionTrumpSoldier.gameObject.SetActive(false);
                                   StartCoroutine(GameStartCoroutine(() =>
                                   {
                                       GameStart?.Invoke();
@@ -150,7 +170,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     {
                         OnQuizSetUp(_debugQuizType);
                     }
-                    _cameraTrans.DOMoveX(_startCameraPos.position.x, 0f);
+                    _playerTrans.DOMoveX(_startPlayerPos.position.x, 0f);
+                    _playerTrans.DOLocalRotate(new Vector3(0f, 90f, 0f), 0f);
+
                     TransitionManager.FadeOut(FadeType.Normal, action: () =>
                     {
                         Viewing(() =>
@@ -209,11 +231,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
     void Viewing(Action action = null)
     {
         //ゲームの配置のセットアップ処理をここに記述
-        _cameraTrans.DOMoveX(_endCameraTrans.position.x, _viewingTime)
-                    .SetEase(_cameraEase)
+        _playerAnim.CrossFadeInFixedTime("Move", 0.1f);
+        _playerTrans.DOMoveX(_endPlayerTrans.position.x, _viewingTime)
+                    .SetEase(_playerMoveEase)
                     .OnComplete(() =>
                     {
                         action?.Invoke();
+                        _playerTrans.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.25f);
+                        _playerAnim.CrossFadeInFixedTime("SitIdle", 0.3f);
                         Debug.Log("クイズ表示");
                     });
     }

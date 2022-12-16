@@ -52,7 +52,7 @@ public abstract class ObjectPool<T> : MonoBehaviour
     /// プーリングしたObjectをアクティブにする
     /// </summary>
     /// <returns></returns>
-    public void Use(Vector3 pos, Action<T> callback = null)
+    public virtual void Use(Vector3 pos, Action<T> callback = null)
     {
         foreach (var go in _objectList)
         {
