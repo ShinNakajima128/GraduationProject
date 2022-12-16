@@ -7,11 +7,11 @@ public class RoseData : ScriptableObject
 {
     #region serialize
     [SerializeField]
-    Sprite[] _roseSprites = default;
+    GameObject[] _roseObject = default;
     #endregion
     #region private
     #endregion
     #region property
-    public Sprite[] RoseSprites => _roseSprites;
+    public GameObject[] RoseObject => _roseObject;
     #endregion
 }

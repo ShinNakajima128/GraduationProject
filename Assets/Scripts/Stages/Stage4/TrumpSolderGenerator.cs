@@ -7,22 +7,36 @@ using UnityEngine;
 public class TrumpSolderGenerator : MonoBehaviour
 {
     #region serialize
+    [Header("Variables")]
     [SerializeField]
-    TrumpSolderController _trumpCtrl = default;
+    GeneratePoint[] _generatePoints = default;
+
+    [Header("Components")]
+    [SerializeField]
+    Stage4TrumpManager _trumpMng = default;
 
     [SerializeField]
-    int _generateMaxCount = 5;
+    RoseTree[] _trees = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _isAllPosGenerate = false;
 
     [SerializeField]
-    GeneratePoint[] _points = default;
+    bool _isRootLineViewing = false;
+
+    [SerializeField]
+    Transform[] _walkTrumpRootPath = default;
     #endregion
+
     #region private
     #endregion
+
     #region public
     #endregion
+
     #region property
-    public int CurrentRedTrumpCount => _trumpCtrl.ComponentList.Count(t => t.CurrentTrumpType == Stage4TrumpType.Trump_Red);
-    public int CurrentBlackTrumpCount => _trumpCtrl.ComponentList.Count(t => t.CurrentTrumpType == Stage4TrumpType.Trump_Black);
+    public int CurrentActiveTrumpCount => _trumpMng.GetTrumpActiveCount();
     #endregion
 
     /// <summary>
@@ -30,33 +44,79 @@ public class TrumpSolderGenerator : MonoBehaviour
     /// </summary>
     public void Generate()
     {
-        for (int i = 0; i < _points.Length; i++)
+        int generateCount;
+        bool generateJudge;
+
+        for (int i = 0; i < _generatePoints.Length; i++)
         {
-            int generateCount = UnityEngine.Random.Range(0, _generateMaxCount);
+            generateCount = 0;
 
-            if (generateCount <= 0)
+            for (int n = 0; n < _generatePoints[i].Positions.Length; n++)
             {
-                continue;
-            }
-            for (int n = 0; n < generateCount; n++)
-            {
-                int randomIndex = UnityEngine.Random.Range(0, _points[i].Positions.Length);
+                if (!_isAllPosGenerate)
+                {
+                    if (generateCount >= _generatePoints[i].GenerateMaxCount)
+                    {
+                        break;
+                    }
 
-                _trumpCtrl.Use(_points[i].Positions[randomIndex].position);
+                    //「塗る」トランプ兵を生成する処理の場合
+                    if (i == 2)
+                    {
+                        //バラの木の「左」のバラが「赤」で出現している場合のみトランプ兵を生成
+                        if (_trees[n].CurrentRose[0].CurrentRoseType == RoseType.Red)
+                        {
+                            _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
+                            generateCount++;
+                        }
+                    }
+                    else
+                    {
+                        generateJudge = UnityEngine.Random.Range(0, 2) == 0;
+
+                        if (!generateJudge)
+                        {
+                            continue;
+                        }
+
+                        _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
+                        generateCount++;
+                    }
+                }
+                else
+                {
+                    _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
+                }
+                
             }
         }
     }
+
     /// <summary>
     /// 全て非アクティブにする
     /// </summary>
     public void Return()
     {
-        _trumpCtrl.Return();
+        _trumpMng.Return();
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (!_isRootLineViewing)
+        {
+            return;
+        }
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(_walkTrumpRootPath[0].position, _walkTrumpRootPath[1].position);
+
+    }
+#endif
 }
 
 [Serializable]
 public struct GeneratePoint
 {
+    public int GenerateMaxCount;
     public Transform[] Positions;
 }
