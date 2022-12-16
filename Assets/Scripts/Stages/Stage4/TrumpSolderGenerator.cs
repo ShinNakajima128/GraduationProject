@@ -72,7 +72,7 @@ public class TrumpSolderGenerator : MonoBehaviour
                     }
                     else
                     {
-                        generateJudge = UnityEngine.Random.Range(0, 3) == 0;
+                        generateJudge = UnityEngine.Random.Range(0, 2) == 0;
 
                         if (!generateJudge)
                         {

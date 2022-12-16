@@ -177,6 +177,15 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     _playerTrans.DOMoveX(_startPlayerPos.position.x, 0f);
                     _playerTrans.DOLocalRotate(new Vector3(0f, 90f, 0f), 0f);
 
+                    if (!_debugMode)
+                    {
+                        OnQuizSetUp(currentQuizType);
+                    }
+                    else
+                    {
+                        OnQuizSetUp(_debugQuizType);
+                    }
+
                     TransitionManager.FadeOut(FadeType.Normal, action: () =>
                     {
                         isCompleted = true;
@@ -188,12 +197,11 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 //数えるターゲットを表示
                 if (!_debugMode)
                 {
-                    OnQuizSetUp(currentQuizType);
+                    
                     yield return QuestionCoroutine(currentQuizType);
                 }
                 else
                 {
-                    OnQuizSetUp(_debugQuizType);
                     yield return QuestionCoroutine(_debugQuizType);
                 }
 
