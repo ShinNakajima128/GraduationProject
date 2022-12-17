@@ -15,6 +15,15 @@ public class IntroManager : MonoBehaviour
 
     private void Start()
     {
+        if (_nextSceneType == SceneType.Stage1_Fall)
+        {
+            AudioManager.PlayBGM(BGMType.Intro);
+        }
+        else
+        {
+            AudioManager.PlayBGM(BGMType.Ending);
+        }
+
         TransitionManager.FadeOut(FadeType.Normal, action: () =>
          {
              StartCoroutine(StartScenario());
