@@ -20,6 +20,9 @@ public class Stage3GameManager : MonoBehaviour
     private OrderManager _orderMana;
 
     [SerializeField]
+    private Stage3TrumpSolderManager _solderMana;
+
+    [SerializeField]
     private Stage3UIManager _uiManager;
 
     [SerializeField]
@@ -70,6 +73,8 @@ public class Stage3GameManager : MonoBehaviour
                 var order = _orderMana.CreateOrder();
                 // ‚¨‘è‚ÌUI•\Ž¦
                 _uiManager.DisplayOrder(order);
+
+                
                 break;
             case GameState.MoveCamera:
                 // Order‚Ì”ñ•\Ž¦
@@ -95,7 +100,7 @@ public class Stage3GameManager : MonoBehaviour
                 }
                 else
                 {
-                    // GameManager.SaveStageResult(false);
+                    ChengeStage(GameState.CreateOrder);
                 }
                 break;
             default:
