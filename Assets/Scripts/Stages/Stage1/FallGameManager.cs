@@ -60,6 +60,8 @@ public class FallGameManager : MonoBehaviour
     private void Start()
     {
         _originPos = _playerTrans.position;
+
+        AudioManager.PlayBGM(BGMType.Stage1);
         GameManager.UpdateCurrentStage(Stages.Stage1);
         OnGameStart();
         TransitionManager.FadeIn(FadeType.White, 0f);

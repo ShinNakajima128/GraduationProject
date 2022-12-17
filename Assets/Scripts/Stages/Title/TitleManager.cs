@@ -32,6 +32,8 @@ public class TitleManager : MonoBehaviour
     }
     private void Start()
     {
+        AudioManager.PlayBGM(BGMType.Title);
+        TransitionManager.FadeOut(FadeType.Normal);
         ButtonSetup();
     }
     void ButtonSetup()

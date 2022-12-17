@@ -46,6 +46,7 @@ public class Stage2GameManager : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.PlayBGM(BGMType.Stage2);
         GameManager.UpdateCurrentStage(_stages);
         _input.actions["Enter"].started += OnEnter;
         ChengeState(GameState.ZoomIn);
@@ -87,6 +88,10 @@ public class Stage2GameManager : MonoBehaviour
                         // ƒƒr[‚ÉˆÚ“®
                         GameManager.SaveStageResult(true);
                         TransitionManager.SceneTransition(SceneType.Lobby);
+                    }
+                    else
+                    {
+                        GameManager.SaveStageResult(false);
                     }
                     break;
                 default:

@@ -90,6 +90,15 @@ public class LobbyManager : MonoBehaviour
         SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
 
+        if (!IsFirstArrival)
+        {
+            AudioManager.PlayBGM(BGMType.Lobby);
+        }
+        else
+        {
+            EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
+        }
+
         if (!_debugMode)
         {
             TransitionManager.FadeIn(FadeType.Normal, 0f);
@@ -116,7 +125,7 @@ public class LobbyManager : MonoBehaviour
                 yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_ClockEnd, ()=> 
                 {
                     ClockDirection();
-                    IsFirstArrival = false;
+                    AudioManager.StopBGM(1.5f); //一旦曲を止める
                 });
             }
             else
@@ -140,6 +149,7 @@ public class LobbyManager : MonoBehaviour
             _provider.enabled = true;
             PlayerMove?.Invoke(true);
         }
+
         GameManager.SaveStageResult(false);
         OnFadeDescription(0f, 0f);
     }
@@ -242,6 +252,14 @@ public class LobbyManager : MonoBehaviour
     }
 
     /// <summary>
+    /// チェシャ猫と対面した時のBGMを再生
+    /// </summary>
+    void PlayMeetingBGM()
+    {
+        AudioManager.PlayBGM(BGMType.Lobby_MeetingCheshire);
+    }
+
+    /// <summary>
     /// 12時になった時の時計の発光処理のコルーチン
     /// </summary>
     IEnumerator OnHandsEmission()
@@ -268,6 +286,12 @@ public class LobbyManager : MonoBehaviour
     IEnumerator OnPlayerMovable(float Interval)
     {
         yield return new WaitForSeconds(Interval);
+
+        if (IsFirstArrival)
+        {
+            AudioManager.PlayBGM(BGMType.Lobby);
+            IsFirstArrival = false;
+        }
 
         PlayerMove?.Invoke(true);
         _provider.enabled = true;
