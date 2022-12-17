@@ -105,7 +105,7 @@ public class Stage2MugcupManager : MonoBehaviour
     /// <summary>
     /// シャッフル
     /// </summary>
-    public void BeginShuffle(ShuffleFase fase, Action action = null)
+    public void BeginShuffle(ShufflePhase fase, Action action = null)
     {
         Debug.Log("シャッフル開始のリクエスト");
         // 空いていたら、全て閉じてからシャッフルをする

@@ -55,7 +55,7 @@ public class DorMouse : MonoBehaviour
     /// マウスのアニメーションを再生
     /// </summary>
     /// <param name="state"> 再生するアニメーション </param>
-    public void OnAnimation(MouseState state,float duration)
+    public void OnAnimation(MouseState state, float duration)
     {
         switch (state)
         {

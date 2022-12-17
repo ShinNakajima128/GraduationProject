@@ -10,6 +10,9 @@ Material:
   m_Name: BgMt_Books_Stage2
   m_Shader: {fileID: 4800000, guid: 9294844b15dca184d914a632279b24e1, type: 3}
   m_ValidKeywords:
+  - EFFECT_HUE_VARIATION
+  - GEOM_TYPE_LEAF
+  - _METALLICGLOSSMAP
   - _REQUIRE_UV2
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -486,21 +489,21 @@ Material:
     - _ReflectionNormalStrength: 1
     - _RimApplyTransparency: 1
     - _RimBackfaceMask: 1
-    - _RimBlur: 0.65
-    - _RimBorder: 0.5
-    - _RimDirRange: 0
-    - _RimDirStrength: 0
+    - _RimBlur: 0.23
+    - _RimBorder: 0.33999997
+    - _RimDirRange: 0.51
+    - _RimDirStrength: 1
     - _RimEnableLighting: 1
-    - _RimFresnelPower: 3.5
-    - _RimIndirBlur: 0.1
-    - _RimIndirBorder: 0.5
+    - _RimFresnelPower: 2.9
+    - _RimIndirBlur: 1
+    - _RimIndirBorder: 0.85
     - _RimIndirRange: 0
     - _RimMainStrength: 0
     - _RimNormalStrength: 1
     - _RimShadowMask: 0.5
     - _RimVRParallaxStrength: 1
     - _Shadow2ndBlur: 0.574
-    - _Shadow2ndBorder: 0.732
+    - _Shadow2ndBorder: 0.74
     - _Shadow2ndNormalStrength: 1
     - _Shadow2ndReceive: 1
     - _Shadow3rdBlur: 0.1
@@ -509,7 +512,7 @@ Material:
     - _Shadow3rdReceive: 0
     - _ShadowBlur: 0.511
     - _ShadowBlurMaskLOD: 0
-    - _ShadowBorder: 0.899
+    - _ShadowBorder: 0.46
     - _ShadowBorderMaskLOD: 0
     - _ShadowBorderRange: 0.112
     - _ShadowColorType: 0
@@ -566,7 +569,7 @@ Material:
     - _UsePOM: 0
     - _UseParallax: 0
     - _UseReflection: 0
-    - _UseRim: 0
+    - _UseRim: 1
     - _UseShadow: 1
     - _VertexLightStrength: 0
     - _WorkflowMode: 1
@@ -628,7 +631,7 @@ Material:
     - _Main3rdDistanceFade: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _Main3rdTexDecalAnimation: {r: 1, g: 1, b: 1, a: 30}
     - _Main3rdTexDecalSubParam: {r: 1, g: 1, b: 0, a: 1}
-    - _MainTexHSVG: {r: 0, g: 1, b: 1, a: 1}
+    - _MainTexHSVG: {r: 0, g: 1, b: 2, a: 0.98}
     - _MainTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndColor: {r: 1, g: 1, b: 1, a: 1}
@@ -642,7 +645,7 @@ Material:
     - _ReflectionCubeColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0.65999997, g: 0.5, b: 0.47999996, a: 1}
     - _RimIndirColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Shadow2ndColor: {r: 0.18166606, g: 0.41973683, b: 0.5943396, a: 1}
+    - _Shadow2ndColor: {r: 0.43407682, g: 0.18039215, b: 0.59607846, a: 1}
     - _Shadow3rdColor: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAOShift: {r: 1, g: 0, b: 1, a: 0}
     - _ShadowAOShift2: {r: 1, g: 0, b: 1, a: 0}

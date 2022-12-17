@@ -10,23 +10,23 @@ public class Stage2MugcupShuffler : MonoBehaviour
     private int[] _shuffleCounts;
 
     [SerializeField]
-    private TeapotShuffle _shuffle;
+    private TeacupShuffler _shuffle;
 
     /// <summary>
     /// シャッフルのリクエスト
     /// </summary>
-    public void ShuffleRequest(ShuffleFase fase, Stage2MugcupController[] mugcups, float duration, Action action = null)
+    public void ShuffleRequest(ShufflePhase fase, Stage2MugcupController[] mugcups, float duration, Action action = null)
     {
         Debug.Log($"{fase}のShuffle");
         switch (fase)
         {
-            case ShuffleFase.One:
+            case ShufflePhase.One:
                 StartCoroutine(Type1ShuffleAsync(mugcups, duration, action));
                 break;
-            case ShuffleFase.Two:
+            case ShufflePhase.Two:
                 StartCoroutine(Type2ShuffleAsync(mugcups, duration, action));
                 break;
-            case ShuffleFase.Three:
+            case ShufflePhase.Three:
                 StartCoroutine(Type3ShuffleAsync(mugcups, duration, action));
                 break;
             default:
@@ -45,7 +45,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
             // 交換するカップのIndexを取得
             var indexes = Type1GetNumber(mugcups.Length);
 
-            yield return _shuffle.ShuffleTeapot(mugcups,indexes.Item1);
+            yield return _shuffle.ShuffleTeacup(mugcups,indexes.Item1);
         }
         action?.Invoke();
     }
