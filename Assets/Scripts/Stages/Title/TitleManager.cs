@@ -32,6 +32,7 @@ public class TitleManager : MonoBehaviour
     }
     private void Start()
     {
+        AudioManager.PlayBGM(BGMType.Title);
         ButtonSetup();
     }
     void ButtonSetup()
