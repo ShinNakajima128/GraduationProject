@@ -18,6 +18,7 @@ public class OrderManager : MonoBehaviour
     {
         var index = UnityEngine.Random.Range(0, _orders.Length);
         _order = _orders[index];
+        _scoreConter.DisplayTarget = _order.TargetType;
         return _order;
     }
 
@@ -26,7 +27,7 @@ public class OrderManager : MonoBehaviour
     /// </summary>
     public bool IsCameClear()
     {
-        switch (_order.TargetCardType)
+        switch (_order.TargetType)
         {
             case CardType.None:
                 break;

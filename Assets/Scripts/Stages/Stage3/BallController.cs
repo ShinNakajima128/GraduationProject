@@ -13,6 +13,10 @@ public class BallController : MonoBehaviour, IThrowable
     [SerializeField]
     private float _turnSpeed;
 
+    [Header("振り向ける最大値")]
+    [SerializeField]
+    private float _valueOfMaxTurn;
+
     [SerializeField]
     private CameraController _camera;
 
@@ -24,6 +28,11 @@ public class BallController : MonoBehaviour, IThrowable
     private event Action OnGoaled;
     private Rigidbody _rb;
     private Vector3 _direction;
+
+    /// <summary>
+    /// 振り向きの値(0が正面)
+    /// </summary>
+    private float _directionValue = 0;
     #endregion
 
     #region Unity Fucntion
@@ -105,9 +114,13 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     public void TurnLeft()
     {
-        var rotY = transform.eulerAngles.y;
-        transform.Rotate(0, -0.1f, 0);
-        Debug.Log(rotY);
+        var value = _directionValue - 0.1f;
+        // 最大値より大きければ
+        if (value > -_valueOfMaxTurn)
+        {
+            _directionValue = value;
+            transform.Rotate(0, -0.1f, 0);
+        }
     }
 
     /// <summary>
@@ -115,9 +128,14 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     public void TurnRight()
     {
-        var rotY = transform.eulerAngles.y;
-        transform.Rotate(0, 0.1f, 0);
-        Debug.Log(rotY);
+        var value = _directionValue + 0.1f;
+        // 最大値より小さければ
+        if (value < _valueOfMaxTurn)
+        {
+            _directionValue = value;
+            transform.Rotate(0, 0.1f, 0);
+        }
+        
     }
     #endregion
 

@@ -14,11 +14,6 @@ public class Stage3PlayerController : MonoBehaviour
     [SerializeField]
     private float _width;
 
-    [Header("U‚èŒü‚¯‚éÅ‘å’l")]
-    [Range(0f, 0.4f)]
-    [SerializeField]
-    private float _eulerMaxValue;
-
     [Header("“Š‚°‚éêŠ")]
     [SerializeField]
     private Transform _throwPoint;
