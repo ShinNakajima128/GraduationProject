@@ -20,6 +20,9 @@ public class Stage3GameManager : MonoBehaviour
     private OrderManager _orderMana;
 
     [SerializeField]
+    private Stage3TrumpSolderManager _solderMana;
+
+    [SerializeField]
     private Stage3UIManager _uiManager;
 
     [SerializeField]
@@ -78,16 +81,22 @@ public class Stage3GameManager : MonoBehaviour
                 _cameraCtrl.MoveRequest(() => ChengeStage(GameState.Throw));
                 // 暗転処理
                 _uiManager.BeginBlackOut(_blackOutDuration);
+                // トランプの配置
+                _solderMana.RequestSetSolder();
                 break;
             case GameState.Throw:
                 // InGameUIの表示
                 _uiManager.ChengeUIActivete(Stage3UIManager.Type.IngameUI, true);
+                // カウンターの表示
+                _scoreConter.ChengeCounterActivate(true);
                 // 暗転パネルの非表示
                 _uiManager.ChengeUIActivete(Stage3UIManager.Type.BlackOutImage, false);
                 // 操作を開始
                 _player.BeginControl();
                 break;
             case GameState.Result:
+                // カウンターの非表示
+                _scoreConter.ChengeCounterActivate(false);
                 if (_orderMana.IsCameClear())
                 {
                     _currentClearCount++;
@@ -95,7 +104,7 @@ public class Stage3GameManager : MonoBehaviour
                 }
                 else
                 {
-                    // GameManager.SaveStageResult(false);
+                    ChengeStage(GameState.CreateOrder);
                 }
                 break;
             default:
