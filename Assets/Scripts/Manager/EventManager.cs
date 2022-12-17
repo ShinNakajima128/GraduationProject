@@ -8,20 +8,12 @@ using System;
 /// </summary>
 public enum Events
 {
-    Setup,
-    StageStart,
-    StageEnd,
+    None,
     CameraShake,
-    GetKonpeitou,
-    BossBattleStart,
-    BossBattleEnd,
-    RebindWeaponAnimation,
-    OnHUD,
-    OffHUD,
-    OnMap,
-    ResetBossState,
-    OnSweetsOutline,
-    OffSweetsOutline
+    ConcentratedLine,
+    Closeup,
+    Reset,
+    Lobby_MeetingCheshire
 }
 
 /// <summary>

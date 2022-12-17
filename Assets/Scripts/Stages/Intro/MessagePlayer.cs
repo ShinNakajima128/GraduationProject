@@ -81,6 +81,10 @@ public class MessagePlayer : MonoBehaviour
     {
         _actorText.text = "";
         _messageText.text = "";
+        EventManager.ListenEvents(Events.CameraShake, CameraShake);
+        EventManager.ListenEvents(Events.ConcentratedLine, ConcentratedLine);
+        EventManager.ListenEvents(Events.Closeup, Closeup);
+        EventManager.ListenEvents(Events.Reset, Reset);
     }
 
     /// <summary>
@@ -133,7 +137,12 @@ public class MessagePlayer : MonoBehaviour
             _actorText.text = d[i].Actor;
             _actorIconImage.sprite = GetActorIcon(d[i].Actor);
             _messageText.text = "";
-            OnScreenEffect(d[i].EffectType);
+
+            if (d[i].EventType != Events.None)
+            {
+                EventManager.OnEvent(d[i].EventType);
+            }
+            //OnScreenEffect(d[i].EventType);
 
             foreach (var message in d[i].AllMessage)
             {
