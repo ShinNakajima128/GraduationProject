@@ -64,6 +64,7 @@ public class Stage3TrumpSolderManager : MonoBehaviour
     /// </summary>
     public void RequestSetSolder()
     {
+        Debug.Log("®—ñ");
         // ®—ñ‚Ìí—Ş‚ğæ“¾
         var num = UnityEngine.Random.Range(0, (int)LineUpPattern.Slant + 1);
         // ®—ñ

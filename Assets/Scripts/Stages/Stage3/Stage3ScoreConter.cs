@@ -9,7 +9,7 @@ public class Stage3ScoreConter : MonoBehaviour
     // テキスト
     private Text _counterText;
 
-    private CardType _displayTarget = CardType.None;
+    public CardType DisplayTarget { get; set; } = CardType.None;
 
     public int HitedCount { get; private set; }
     public int HitedRedCount { get; private set; }
@@ -63,7 +63,7 @@ public class Stage3ScoreConter : MonoBehaviour
     /// </summary>
     public void SetCounter()
     {
-        switch (_displayTarget)
+        switch (DisplayTarget)
         {
             case CardType.None:
                 break;
@@ -79,6 +79,6 @@ public class Stage3ScoreConter : MonoBehaviour
             default:
                 break;
         }
-        
+
     }
 }

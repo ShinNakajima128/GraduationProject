@@ -8,7 +8,7 @@ public class Order
     public string Name;
 
     [Header("倒すトランプ兵の種類")]
-    public CardType TargetCardType;
+    public CardType TargetType;
 
     [Header("お題の表示するテキスト")]
     public string DisplayText;
