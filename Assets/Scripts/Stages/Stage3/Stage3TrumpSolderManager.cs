@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -51,6 +52,11 @@ public class Stage3TrumpSolderManager : MonoBehaviour
     private void Start()
     {
         _trumpsArray = GetComponentsInChildren<Stage3TrumpSolderController>();
+
+        foreach (var item in _trumpsArray)
+        {
+            item.SetCounter(_stage3ScoreConter);
+        }
     }
 
     /// <summary>
@@ -59,7 +65,7 @@ public class Stage3TrumpSolderManager : MonoBehaviour
     public void RequestSetSolder()
     {
         // 整列の種類を取得
-        var num = Random.Range(0, (int)LineUpPattern.Slant + 1);
+        var num = UnityEngine.Random.Range(0, (int)LineUpPattern.Slant + 1);
         // 整列
         SetSolder(num);
     }
@@ -123,13 +129,25 @@ public class Stage3TrumpSolderManager : MonoBehaviour
     {
         var pos = _pointOfStraight.position;
 
-        for (int i = 0; i < _trumpsArray.Length; i++)
+        for (int index = 0; index < _trumpsArray.Length; index++)
         {
-            var trump = _trumpsArray[i];
+            var trump = _trumpsArray[index];
+
+            if (index % 2 == 0)
+            {
+                // トランプの種類を指定
+                trump.GetComponent<TrumpSolder>().ChangeRandomPattern(TrumpColorType.Red);
+                _trumpsArray[index].SetCardType(CardType.Red);
+            }
+            else
+            {
+                // トランプの種類を指定
+                trump.GetComponent<TrumpSolder>().ChangeRandomPattern(TrumpColorType.Black);
+                _trumpsArray[index].SetCardType(CardType.Black);
+            }
 
             // トランプの設定
             trump.Reset();
-            trump.IsStoped = true;
             trump.gameObject.transform.position = pos;
             pos.z = pos.z + _forwardDistance;
 
@@ -147,9 +165,6 @@ public class Stage3TrumpSolderManager : MonoBehaviour
         for (int index = 0; index < _trumpsArray.Length; index++)
         {
             _trumpsArray[index].gameObject.transform.position = pos;
-            // 参照の追加
-            _trumpsArray[index].SetCounter(_stage3ScoreConter);
-
             var card = _trumpsArray[index].gameObject.GetComponent<TrumpSolder>();
             if (index % 2 == 0)
             {

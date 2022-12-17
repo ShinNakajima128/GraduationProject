@@ -73,8 +73,6 @@ public class Stage3GameManager : MonoBehaviour
                 var order = _orderMana.CreateOrder();
                 // お題のUI表示
                 _uiManager.DisplayOrder(order);
-
-                
                 break;
             case GameState.MoveCamera:
                 // Orderの非表示
@@ -83,16 +81,22 @@ public class Stage3GameManager : MonoBehaviour
                 _cameraCtrl.MoveRequest(() => ChengeStage(GameState.Throw));
                 // 暗転処理
                 _uiManager.BeginBlackOut(_blackOutDuration);
+                // トランプの配置
+                _solderMana.RequestSetSolder();
                 break;
             case GameState.Throw:
                 // InGameUIの表示
                 _uiManager.ChengeUIActivete(Stage3UIManager.Type.IngameUI, true);
+                // カウンターの表示
+                _scoreConter.ChengeCounterActivate(true);
                 // 暗転パネルの非表示
                 _uiManager.ChengeUIActivete(Stage3UIManager.Type.BlackOutImage, false);
                 // 操作を開始
                 _player.BeginControl();
                 break;
             case GameState.Result:
+                // カウンターの非表示
+                _scoreConter.ChengeCounterActivate(false);
                 if (_orderMana.IsCameClear())
                 {
                     _currentClearCount++;
