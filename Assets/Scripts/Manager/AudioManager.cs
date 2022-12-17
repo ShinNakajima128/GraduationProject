@@ -8,7 +8,17 @@ using UnityEngine.Audio;
 public enum BGMType
 {
     /// <summary> タイトル画面 </summary>
-    Title, 
+    Title,
+    Intro,
+    Lobby,
+    Lobby_MeetingCheshire,
+    Stage1,
+    Stage2,
+    Stage3,
+    Stage4,
+    Boss_Before,
+    Boss_InGame,
+    Ending,
     /// <summary> ゲームオーバー </summary>
     Gameover
 }
@@ -109,6 +119,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 
     List<AudioSource> _seAudioSourceList = new List<AudioSource>();
     List<AudioSource> _voiceAudioSourceList = new List<AudioSource>();
+    bool _isStoping = false;
 
     void Awake()
     {
@@ -241,6 +252,15 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         Instance._bgmSource.Stop();
         Instance._bgmSource.clip = null;
     }
+
+    /// <summary>
+    /// 再生中のBGMの音量徐々に下げて停止する
+    /// </summary>
+    /// <param name="stopTime"> 停止するまでの時間 </param>
+    public static void StopBGM(float stopTime)
+    {
+        Instance.StartCoroutine(Instance.LowerVolume(stopTime));
+    }
     /// <summary>
     /// 再生中のSEを停止する
     /// </summary>
@@ -329,6 +349,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// <param name="afterBgm"> 変更後のBGM </param>
     IEnumerator SwitchingBgm(BGM afterBgm)
     {
+        _isStoping = false;
         float currentVol = _bgmSource.volume;
 
         while (_bgmSource.volume > 0)　//現在の音量を0にする
@@ -346,7 +367,32 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             yield return null;
         }
         _bgmSource.volume = currentVol;
+    }
 
+    /// <summary>
+    /// 音量を徐々に下げて停止するコルーチン
+    /// </summary>
+    /// <param name="time"> 停止するまでの時間 </param>
+    IEnumerator LowerVolume(float time)
+    {
+        float currentVol = _bgmSource.volume;
+        _isStoping = true;
+        
+        while (_bgmSource.volume > 0)　//現在の音量を0にする
+        {
+            _bgmSource.volume -= Time.deltaTime * currentVol / time;
+
+            //途中でBGM等が変更された場合は処理を中断
+            if (!_isStoping)
+            {
+                yield break;
+            }
+            yield return null;
+        }
+
+        _isStoping = false;
+        Instance._bgmSource.Stop();
+        Instance._bgmSource.clip = null;
     }
     #endregion
 
