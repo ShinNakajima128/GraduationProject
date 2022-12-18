@@ -33,6 +33,8 @@ public class Stage3TrumpSolderManager : MonoBehaviour
 
     private Stage3TrumpSolderController[] _trumpsArray;
 
+    public bool IsLineUp { get; private set; } = false;
+
     // “¹•
     const float ROAD_WIDTH = 2;
 
@@ -64,9 +66,14 @@ public class Stage3TrumpSolderManager : MonoBehaviour
     /// </summary>
     public void RequestSetSolder()
     {
+        if (IsLineUp) return;
+
         Debug.Log("®—ñ");
         // ®—ñ‚Ìí—Ş‚ğæ“¾
         var num = UnityEngine.Random.Range(0, (int)LineUpPattern.Slant + 1);
+
+        IsLineUp = true;
+
         // ®—ñ
         SetSolder(num);
     }
