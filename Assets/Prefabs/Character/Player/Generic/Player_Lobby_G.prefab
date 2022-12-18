@@ -280,9 +280,9 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16c156e15d82e8849b033f1a45dafc54, type: 2}
-  - {fileID: 2100000, guid: dc511e890cb003c478396068bf4b090b, type: 2}
-  - {fileID: 2100000, guid: d07aa3fec859a7c46b3a3e8796a94939, type: 2}
+  - {fileID: 2100000, guid: dcbffcae386be0a4faa06d64d7a08700, type: 2}
+  - {fileID: 2100000, guid: d8b9ff987ef4ba64dad9a7cc0123b741, type: 2}
+  - {fileID: 2100000, guid: 12d62a5d3a42d564ca4a4755ad303ffb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4959,6 +4959,30 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: ade9c65b-07f7-4290-92e5-ad65f473e147
     m_ActionName: Stage2/Enter[/XInputControllerWindows/buttonEast,/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 97964740-0d87-4fd8-a9c5-5ead4fb19282
+    m_ActionName: Stage2/PointerMove[/XInputControllerWindows/rightStick,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0187f5bb-0cd5-4894-abe7-aab13fdc04fe
+    m_ActionName: UIInput/Cancel[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6622802f-2fcf-41ef-bfe3-72e972d5aee4
+    m_ActionName: UIInput/Click[/XInputControllerWindows/buttonEast,/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a2ab286c-a2bf-4e9e-8c10-66f232eb3e26
+    m_ActionName: UIInput/Move[/XInputControllerWindows/leftStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows/leftStick/right,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a4240824-1a6e-40cd-a9f9-30c2bfb5717a
+    m_ActionName: Stage_Boss/Move[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8478e294-7e68-41e2-81b3-83bf6b561e63
+    m_ActionName: Stage_Boss/Camera[/XInputControllerWindows/rightStick,/Mouse/delta]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -5003,7 +5027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testFaceType: 0
-  _blinkInterval: 1.5
+  _blinkMaxInterval: 5
   _blinkSwitchTime: 0.03
   _testInterval: 1.5
   _faceTypes:
