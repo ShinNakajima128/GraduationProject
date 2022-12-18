@@ -27,7 +27,8 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     #endregion
 
     #region private
-    bool _isChoiced = false;
+    bool _result = false;
+    int _selectIndex;
     #endregion
 
     #region public
@@ -104,11 +105,88 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     {
         for (int i = 0; i < _phaseCount; i++)
         {
-            _isChoiced = false;
+            _result = false;
+            _selectIndex = -1;
 
-            yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i);
+            yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
 
-            yield return new WaitUntil(() => _isChoiced);
+            yield return _teacupManager.ChoicePhaseCoroutine((judge, index) => 
+            {
+                _result = judge;
+                _selectIndex = index;
+            });
+
+            yield return new WaitUntil(() => _selectIndex > -1);
+
+            //Debug.Log($"結果；{_result}");
+
+            if (_result)
+            {
+                _teacupManager.SelectCupOpen(_selectIndex);
+                _stage2Cameras.ChangeCamera(Stage2CameraType.CloseupMouse);
+
+                yield return new WaitForSeconds(0.1f);
+
+                _teacupManager.OnMouseAnimation(MouseState.WakeUp, 0.1f);
+
+                yield return new WaitForSeconds(2.4f);
+
+                //ここで正解のUIを表示
+                _infoText.text = "正解！";
+
+                yield return new WaitForSeconds(4.0f);
+            }
+            else
+            {
+                _teacupManager.SelectCupOpen(_selectIndex);
+
+                yield return new WaitForSeconds(1.5f);
+
+                _stage2Cameras.ChangeCamera(Stage2CameraType.Main, 1);
+
+                yield return new WaitForSeconds(1.0f);
+
+                _teacupManager.AllCupOpen();
+
+                yield return new WaitForSeconds(0.4f);
+
+                _teacupManager.OnMouseAnimation(MouseState.OpenEar, 0.2f);
+
+                yield return new WaitForSeconds(1.6f);
+
+                _stage2Cameras.ChangeCamera(Stage2CameraType.CloseupMouse);
+
+                yield return new WaitForSeconds(2.5f);
+
+                //失敗した場合はもう一度同じフェイズを開始
+                i--;
+            }
+
+            if (i < 2)
+            {
+                _infoText.text = "";
+                _teacupManager.AllCupDown();
+
+                yield return new WaitForSeconds(1.1f);
+
+                _teacupManager.OnMouseAnimation(MouseState.CloseEar, 0.1f);
+
+                yield return new WaitForSeconds(0.9f);
+
+                _stage2Cameras.ChangeCamera(Stage2CameraType.Ingame);
+
+                yield return new WaitForSeconds(2.5f);
+            }
+            else
+            {
+                _infoText.text = "ステージクリア！";
+
+                yield return new WaitForSeconds(2.0f);
+
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby);
+            }
+
         }
     }
 

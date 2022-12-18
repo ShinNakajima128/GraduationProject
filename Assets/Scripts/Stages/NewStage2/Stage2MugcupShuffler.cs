@@ -21,7 +21,7 @@ public class Stage2MugcupShuffler : MonoBehaviour
         switch (fase)
         {
             case ShufflePhase.One:
-                StartCoroutine(Type1ShuffleAsync(mugcups, duration, action));
+                //StartCoroutine(Type1ShuffleAsync(mugcups, duration, action));
                 break;
             case ShufflePhase.Two:
                 StartCoroutine(Type2ShuffleAsync(mugcups, duration, action));
@@ -38,17 +38,17 @@ public class Stage2MugcupShuffler : MonoBehaviour
     /// <summary>
     /// シャッフル
     /// </summary>
-    private IEnumerator Type1ShuffleAsync(Stage2MugcupController[] mugcups, float duration, Action action = null)
-    {
-        for (int count = 0; count < _shuffleCounts[0]; count++)
-        {
-            // 交換するカップのIndexを取得
-            var indexes = Type1GetNumber(mugcups.Length);
+    //private IEnumerator Type1ShuffleAsync(Stage2MugcupController[] mugcups, float duration, Action action = null)
+    //{
+    //    for (int count = 0; count < _shuffleCounts[0]; count++)
+    //    {
+    //        // 交換するカップのIndexを取得
+    //        var indexes = Type1GetNumber(mugcups.Length);
 
-            yield return _shuffle.ShuffleTeacup(mugcups,indexes.Item1);
-        }
-        action?.Invoke();
-    }
+    //        yield return _shuffle.ShuffleTeacup(mugcups,indexes.Item1);
+    //    }
+    //    action?.Invoke();
+    //}
 
     /// <summary>
     /// 入れ替える配列のIndexを取得

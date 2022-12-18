@@ -30,6 +30,7 @@ public class DorMouse : MonoBehaviour
     Animator _anim;
     Renderer _mouseRenderer;
     bool _isAwaking = false;
+    Coroutine blinkCoroutine;
     #endregion
     #region property
     #endregion
@@ -49,6 +50,7 @@ public class DorMouse : MonoBehaviour
                 yield return StartCoroutine(TestAnimation());
             }
         }
+        OnAnimation(MouseState.OpenEar, 0.05f);
     }
 
     /// <summary>
@@ -61,10 +63,16 @@ public class DorMouse : MonoBehaviour
         {
             case MouseState.WakeUp:
                 _isAwaking = true;
-                StartCoroutine(WakeUpMouseCoroutine());
+                blinkCoroutine = StartCoroutine(WakeUpMouseCoroutine());
                 break;
             default:
                 _isAwaking = false;
+                if (blinkCoroutine != null)
+                {
+                    StopCoroutine(blinkCoroutine);
+                    blinkCoroutine = null;
+                    _mouseRenderer.material = _mouseMaterials[0];
+                }
                 break;
         }
         _anim.CrossFadeInFixedTime(state.ToString(), duration);

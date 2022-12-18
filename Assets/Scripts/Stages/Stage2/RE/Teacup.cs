@@ -27,7 +27,7 @@ public class Teacup : MonoBehaviour
 
     #region property
     public Vector3 MousePos => _mouseTrans.position;
-    public bool IsInMouse { get => _isInMouse; set => IsInMouse = value; }
+    public bool IsInMouse { get => _isInMouse; set => _isInMouse = value; }
     #endregion
 
     public void UpCup()
@@ -41,6 +41,6 @@ public class Teacup : MonoBehaviour
         {
             _teacupCover.gameObject.SetActive(true);
         }
-        _teacupCover.DOLocalMoveY(0.04f, _animTime);
+        _teacupCover.DOLocalMoveY(0.044f, _animTime);
     }
 }
