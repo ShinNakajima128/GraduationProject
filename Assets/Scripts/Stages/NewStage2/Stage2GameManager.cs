@@ -40,7 +40,7 @@ public class Stage2GameManager : MonoBehaviour
     private Stages _stages;
 
     private GameState _state;
-    private ShuffleFase _currentShuffleFase;
+    private ShufflePhase _currentShuffleFase;
 
     private bool IsClear { get; set; } = false;
 
@@ -50,7 +50,7 @@ public class Stage2GameManager : MonoBehaviour
         GameManager.UpdateCurrentStage(_stages);
         _input.actions["Enter"].started += OnEnter;
         ChengeState(GameState.ZoomIn);
-        _currentShuffleFase = ShuffleFase.One;
+        _currentShuffleFase = ShufflePhase.One;
     }
 
     // 〇ボタンor左クリックが押された時
@@ -190,7 +190,7 @@ public class Stage2GameManager : MonoBehaviour
         // マウスを起き上がる
         _mouse.OnAnimation(MouseState.WakeUp, 0.5f);
 
-        if (_currentShuffleFase != ShuffleFase.Three)
+        if (_currentShuffleFase != ShufflePhase.Three)
         {
             // フェーズの切り替え
             _currentShuffleFase++;
@@ -216,7 +216,7 @@ public class Stage2GameManager : MonoBehaviour
                 });
             });
         }
-        else if (_currentShuffleFase == ShuffleFase.Three)
+        else if (_currentShuffleFase == ShufflePhase.Three)
         {
             _mugcupManager.OpenRequest(num);
             // UIの表示
