@@ -95,6 +95,9 @@ public class Stage3GameManager : MonoBehaviour
                 _player.BeginControl();
                 break;
             case GameState.Result:
+                // フラグの変更
+                _solderMana.IsLineUp = false;
+
                 // カウンターの非表示
                 _scoreConter.ChengeCounterActivate(false);
                 if (_orderMana.IsCameClear())
