@@ -1,4 +1,4 @@
-﻿public enum ShuffleFase
+﻿public enum ShufflePhase
 {
     One,
     Two,

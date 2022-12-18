@@ -5,14 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class TeapotShuffle : MonoBehaviour
+public class TeacupShuffler : MonoBehaviour
 {
     #region serialize
-    [Header("Variables")]
-    [Tooltip("シャッフルにかける時間")]
-    [SerializeField]
-    float _shuffleTime = 1.5f;
-
     [Header("Objects")]
     [Tooltip("各ティーポットのTransform")]
     [SerializeField]
@@ -29,8 +24,6 @@ public class TeapotShuffle : MonoBehaviour
     #region private
     #endregion
     #region public
-    /// <summary> 現在のシャッフルにかける時間 </summary>
-    public float CurrentShuffleTime { get => _shuffleTime; set => _shuffleTime = value; }
     #endregion
     #region property
     #endregion
@@ -46,7 +39,7 @@ public class TeapotShuffle : MonoBehaviour
             {
                 int rand = UnityEngine.Random.Range(0, 6);
 
-                yield return ShuffleTeapot(null, rand);
+                yield return ShuffleTeacup(null, rand);
             }
         }
     }
@@ -55,7 +48,7 @@ public class TeapotShuffle : MonoBehaviour
     /// ティーカップをシャッフルする
     /// </summary>
     /// <param name="index"> シャッフルするカップの番号 </param>
-    public IEnumerator ShuffleTeapot(Stage2MugcupController[] mugcups,int index)
+    public IEnumerator ShuffleTeacup(Teacup[] cups,int index, float shuffleTime = 1.5f)
     {
         var mainPositionType = (TeapotPositionType)index;  //メインのIndexを位置の種類へ変換
         var mainRandomTarget = (ReplaceTargetType)UnityEngine.Random.Range(0, 2); //交換先のカップを前にするか次にするかランダムで決める
@@ -102,20 +95,65 @@ public class TeapotShuffle : MonoBehaviour
                                 .PathTrans.Select(x => x.transform.position).ToArray();
 
         //２つのカップを入れ替えるアニメーションを再生。処理はカップのアニメーションが終わるまで待機
-        _teapots[index].DOPath(mainToTargetPath, _shuffleTime, PathType.CatmullRom);
-        yield return _teapots[targetIndex].DOPath(targetToMainPath, _shuffleTime, PathType.CatmullRom)
+        _teapots[index].DOPath(mainToTargetPath, shuffleTime, PathType.CatmullRom);
+        yield return _teapots[targetIndex].DOPath(targetToMainPath, shuffleTime, PathType.CatmullRom)
                                           .WaitForCompletion();
 
         //タプルで交換したカップの配列位置を入れ替える
         (_teapots[index], _teapots[targetIndex]) = (_teapots[targetIndex], _teapots[index]);
 
-        if (!_debugMode)
+        if (!_debugMode && cups != null)
         {
-            (mugcups[index], mugcups[targetIndex]) = (mugcups[targetIndex], mugcups[index]);
+            (cups[index], cups[targetIndex]) = (cups[targetIndex], cups[index]);
         }
 
         yield return null;
     }
+    public IEnumerator WarpTeacup(Teacup[] cups, int index, float warpTime = 0.5f)
+    {
+        var randomTarget = index;
+
+        //ワープ先のターゲットが決まるまでループ
+        while (index == randomTarget)
+        {
+            randomTarget = UnityEngine.Random.Range(0, 6);
+        }
+
+        EffectManager.PlayEffect(EffectType.Stage2_WarpStart, _teapots[index].transform.position);
+        EffectManager.PlayEffect(EffectType.Stage2_WarpStart, _teapots[randomTarget].transform.position);
+
+        yield return new WaitForSeconds(0.4f);
+
+        _teapots[index].gameObject.SetActive(false);
+        _teapots[randomTarget].gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(warpTime);
+
+        EffectManager.PlayEffect(EffectType.Stage2_WarpEnd, _teapots[index].transform.position);
+        EffectManager.PlayEffect(EffectType.Stage2_WarpEnd, _teapots[randomTarget].transform.position);
+
+        yield return new WaitForSeconds(0.4f);
+
+        _teapots[index].gameObject.SetActive(true);
+        _teapots[randomTarget].gameObject.SetActive(true);
+
+        var mainPos = _teapots[index].transform.position;
+        var targetPos = _teapots[randomTarget].transform.position;
+
+        _teapots[index].DOMove(targetPos, 0f);
+        _teapots[randomTarget].DOMove(mainPos, 0f);
+
+        //タプルで交換したカップの配列位置を入れ替える
+        (_teapots[index], _teapots[randomTarget]) = (_teapots[randomTarget], _teapots[index]);
+
+        if (!_debugMode && cups != null)
+        {
+            (cups[index], cups[randomTarget]) = (cups[randomTarget], cups[index]);
+        }
+
+        yield return new WaitForSeconds(warpTime);
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

@@ -25,7 +25,9 @@ public enum EffectType
     /// <summary>
     /// 女王の着地時の衝撃波
     /// </summary>
-    ShockWave
+    ShockWave,
+    Stage2_WarpStart,
+    Stage2_WarpEnd
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>
