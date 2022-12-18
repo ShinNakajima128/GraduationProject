@@ -70,17 +70,20 @@ public class QueenOrder : MonoBehaviour
     }
     private void Start()
     {
-        StartCoroutine(LetterAnimationCoroutine());
+        //StartCoroutine(LetterAnimationCoroutine());
     }
 
     /// <summary>
     /// お題を出題するアニメーションのコルーチン
     /// </summary>
-    public IEnumerator LetterAnimationCoroutine()
+    public IEnumerator LetterAnimationCoroutine(int round, string order)
     {
         AnimationSetup();
 
         yield return null;
+
+        _roundText.text = $"{round}";
+        _orderText.text = order;
 
         //手紙本体が画面上から降りる
         yield return _letterParentTrans.DOLocalMoveY(-60f, 1.5f)
@@ -160,3 +163,27 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.enabled = false;
     }
 }
+
+public struct OrderData
+{
+    public string OrderName;
+
+    public TrumpColorType TargetTrumpColor;
+    public int TargetNum;
+
+    public override string ToString()
+    {
+        string order = "";
+
+        if (TargetTrumpColor == TrumpColorType.Black)
+        {
+            order = $"<color=#353535>黒</color>のトランプ兵を{TargetNum}体倒せ！";
+        }
+        else
+        {
+            order = $"<color=#FD1919>赤</color>のトランプ兵を{TargetNum}体倒せ！";
+        }
+        return order;
+    }
+}
+
