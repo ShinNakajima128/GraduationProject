@@ -153,9 +153,8 @@ public class BossController : MonoBehaviour, IDamagable
         targetRotation.x = 0;
         targetRotation.z = 0;
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _turnSpeed * Time.deltaTime);
-        _velocity = _dir.normalized * _defaultMoveSpeed;
+        _velocity = _dir.normalized * _currentMoveSpeed;
         _cc.Move(_velocity * Time.deltaTime);
-        Debug.Log("ˆÚ“®’†");
     }
 
     /// <summary>
@@ -217,6 +216,7 @@ public class BossController : MonoBehaviour, IDamagable
 
         PlayBossAnimation(BossAnimationType.JumpUp);
         _currentMoveSpeed = param.MoveSpeed;
+        Debug.Log(_currentMoveSpeed);
         transform.DOLookAt(_playerTrans.position, 0.1f, AxisConstraint.Y);
 
         yield return new WaitForSeconds(1.3f);

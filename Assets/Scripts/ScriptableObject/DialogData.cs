@@ -12,7 +12,7 @@ public class DialogData
     [SerializeField]
     string[] _messages;
     [SerializeField]
-    ScreenEffectType _screenEffectType = default;
+    Events _screenEffectType = default;
     #endregion
 
     #region hide inspector
@@ -24,13 +24,13 @@ public class DialogData
 
     #region property
     public string[] AllMessage => _messages;
-    public ScreenEffectType EffectType => _screenEffectType;
+    public Events EventType => _screenEffectType;
     #endregion
     public void MessagesToArray()
     {
         string[] del = { "\n" };
         _messages = Message.Split(del, StringSplitOptions.None);
-        _screenEffectType = (ScreenEffectType)Enum.Parse(typeof(ScreenEffectType), ScreenEffect, true);
+        _screenEffectType = (Events)Enum.Parse(typeof(Events), ScreenEffect, true);
     }                                                 
 }
 

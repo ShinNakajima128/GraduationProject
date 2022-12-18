@@ -116,7 +116,7 @@ public class BossStageManager : StageGame<BossStageManager>
         _playerTrans = GameObject.FindGameObjectWithTag("Player").transform; //プレイヤーのTransformを取得
 
         //バトル中かどうかの値が変わった時に行う処理を登録
-        _isInBattle.Subscribe(_ => OnInGame?.Invoke(_isInBattle.Value));
+        _isInBattle.Subscribe(_ => OnInGame?.Invoke(_isInBattle.Value)).AddTo(this);
     }
 
     protected override void Start()
@@ -173,6 +173,9 @@ public class BossStageManager : StageGame<BossStageManager>
     /// <returns></returns>
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
+        yield return null;
+        AudioManager.PlayBGM(BGMType.Boss_Before);
+
         if (!_debugMode)
         {
             yield return new WaitForSeconds(1.5f);
@@ -196,6 +199,7 @@ public class BossStageManager : StageGame<BossStageManager>
         //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
         CameraBlend(CameraType.Default, _cameraBlendTime);
+        AudioManager.StopBGM(_cameraBlendTime / 2);
 
         yield return new WaitForSeconds(_cameraBlendTime);
 
@@ -219,6 +223,7 @@ public class BossStageManager : StageGame<BossStageManager>
     IEnumerator InGameCoroutine()
     {
         _isInBattle.Value = true;
+        AudioManager.PlayBGM(BGMType.Boss_InGame);
 
         for (int i = 0; i < _battleNum; i++)
         {
@@ -232,13 +237,14 @@ public class BossStageManager : StageGame<BossStageManager>
             });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
+            _areaEffect.SetActive(false);
 
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
         }
 
         //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
-        TransitionManager.SceneTransition(SceneType.Lobby);
+        TransitionManager.SceneTransition(SceneType.Ending);
     }
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
