@@ -33,7 +33,7 @@ public class Stage3TrumpSolderManager : MonoBehaviour
 
     private Stage3TrumpSolderController[] _trumpsArray;
 
-    public bool IsLineUp { get; private set; } = false;
+    public bool IsLineUp { get; set; } = false;
 
     // ìπïù
     const float ROAD_WIDTH = 2;
