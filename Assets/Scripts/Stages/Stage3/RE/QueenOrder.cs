@@ -10,8 +10,19 @@ using DG.Tweening;
 public class QueenOrder : MonoBehaviour
 {
     #region serialize
+    [Header("Variables")]
+    [SerializeField]
+    float _animTime = 0.5f;
+
+    [SerializeField]
+    float _waitTime = 0.5f;
+
     [Header("UI_Objects")]
-    [Tooltip("ŽèŽ†–{‘Ì‚ÌTransform")]
+    [Tooltip("ŽèŽ†‘S‘Ì‚ÌTransform")]
+    [SerializeField]
+    Transform _letterParentTrans = default;
+
+    [Tooltip("ŽèŽ†‚ÌTransform")]
     [SerializeField]
     Transform _letterTrans = default;
 
@@ -26,6 +37,10 @@ public class QueenOrder : MonoBehaviour
     [Tooltip("ŽèŽ†‚ÌãŠW(— )‚ÌTransform")]
     [SerializeField]
     Transform _letterCover_Inside = default;
+
+    [Tooltip("—‰¤‚ÌØŽè‚ÌImage")]
+    [SerializeField]
+    Image _queenStampImage = default;
 
     [Header("Texts")]
     [SerializeField]
@@ -68,41 +83,80 @@ public class QueenOrder : MonoBehaviour
         yield return null;
 
         //ŽèŽ†–{‘Ì‚ª‰æ–Êã‚©‚ç~‚è‚é
-        yield return _letterTrans.DOLocalMoveY(-60f, 2.0f)
+        yield return _letterParentTrans.DOLocalMoveY(-60f, 1.5f)
+                    .SetEase(Ease.OutQuad)
                     .WaitForCompletion();
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(_waitTime);
 
-        yield return _letterCover_Front.DOLocalRotate(new Vector3(90, 0, 0), 0.5f)
+        yield return _letterCover_Front.DOLocalRotate(new Vector3(90, 0, 0), _animTime)
                                        .SetEase(Ease.Linear)
                                        .WaitForCompletion();
 
         _letterCover_Front.gameObject.SetActive(false);
 
-        yield return _letterCover_Inside.DOLocalRotate(new Vector3(0, 0, 0), 0.5f)
+        yield return _letterCover_Inside.DOLocalRotate(new Vector3(0, 0, 0), _animTime)
                                         .SetEase(Ease.Linear)
                                         .WaitForCompletion();
         
         _letterCover_Inside.SetAsFirstSibling();
 
-        yield return _orderTrans.DOLocalMoveY(700, 0.5f)
+        yield return _orderTrans.DOLocalMoveY(700, _animTime)
                                 .WaitForCompletion();
 
         _orderTrans.SetParent(transform);
         _orderTrans.SetAsLastSibling();
-        
-        _orderTrans.DOScale(1, 0.5f).SetEase(Ease.Linear);
 
-        yield return _orderTrans.DOLocalMoveY(100, 1.0f)
+        yield return null;
+
+        _orderTrans.DOScale(1, _animTime).SetEase(Ease.Linear);
+
+        yield return _orderTrans.DOLocalMoveY(0, _animTime)
                                 .WaitForCompletion();
+
+        yield return new WaitForSeconds(_waitTime);
+
+        _queenStampImage.gameObject.transform.DOScale(10, 0f);
+        _queenStampImage.DOFade(0, 0f);
+
+        yield return null;
+
+        _queenStampImage.enabled = true;
+        _queenStampImage.gameObject.transform.SetAsLastSibling();
+        _queenStampImage.gameObject.transform.DOScale(1, _animTime);
+        yield return _queenStampImage.DOFade(1, _animTime)
+                                     .WaitForCompletion();
+
+        yield return _letterTrans.DOLocalRotate(new Vector3(0, 0, -10.5f), _animTime)
+                                 .SetEase(Ease.OutBounce)
+                                 .WaitForCompletion();
+
+        yield return new WaitUntil(() => UIInput.Submit);
+
+        _orderTrans.SetParent(_letterTrans);
+        _queenStampImage.transform.SetParent(_letterTrans);
+        _queenStampImage.transform.SetAsLastSibling();
+
+        yield return _letterParentTrans.DOLocalMoveY(-150, 0.5f)
+                                       .SetEase(Ease.InQuart)
+                                       .WaitForCompletion();
+        
+        yield return new WaitForSeconds(0.1f);
+
+        yield return _letterParentTrans.DOLocalMoveY(800, 0.5f)
+                                       .SetEase(Ease.OutQuart)
+                                       .WaitForCompletion();
     }
 
     void AnimationSetup()
     {
-        _letterTrans.DOLocalMoveY(760, 0f);
+        _letterParentTrans.DOLocalMoveY(760, 0f);
         _letterCover_Front.DOLocalRotate(_frontCoverOriginRotate.eulerAngles, 0f);
         _letterCover_Front.gameObject.SetActive(true);
         _letterCover_Inside.DOLocalRotate(_insideCoverOriginRotate.eulerAngles, 0f);
         _orderTrans.localScale = _orderOriginScale;
+        _orderTrans.SetParent(_letterTrans);
+        _orderTrans.SetSiblingIndex(1);
+        _queenStampImage.enabled = false;
     }
 }
