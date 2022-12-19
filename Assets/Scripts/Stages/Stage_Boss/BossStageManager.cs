@@ -129,7 +129,7 @@ public class BossStageManager : StageGame<BossStageManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
-        _areaEffect.SetActive(true);
+        _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
     }
 
     public override void OnGameStart()
@@ -237,7 +237,9 @@ public class BossStageManager : StageGame<BossStageManager>
             });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
-            _areaEffect.SetActive(false);
+
+            _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
+            //_areaEffect.SetActive(false);
 
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
@@ -304,9 +306,9 @@ public class BossStageManager : StageGame<BossStageManager>
 
         yield return PartitioningBattleCoroutine();
 
-        CameraBlend(CameraType.Default, _cameraBlendTime);
+        //CameraBlend(CameraType.Default, _cameraBlendTime);
 
-        yield return new WaitForSeconds(_cameraBlendTime);
+        //yield return new WaitForSeconds(_cameraBlendTime);
     }
 
     /// <summary>
@@ -330,7 +332,7 @@ public class BossStageManager : StageGame<BossStageManager>
         //トランプ兵の首を飛ばす演出の処理
         yield return _excuteDirection.ExcuteDirectionCoroutine();
 
-        CameraBlend(CameraType.Direction, 0.01f);
+        CameraBlend(CameraType.Default, 0.01f);
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle);
         yield return new WaitForSeconds(2.0f);
     }
