@@ -62,8 +62,8 @@ public class Obstacle : MonoBehaviour
             case RotateType.None:
                 break;
             case RotateType.Random:
-                randX = Random.Range(0, 360);
-                randY = Random.Range(0, 360);
+                randX = Random.Range(-15, 15);
+                randY = Random.Range(160, 200);
                 randZ = Random.Range(0, 360);
                 break;
             case RotateType.Mirror:
@@ -135,13 +135,13 @@ public class Obstacle : MonoBehaviour
             case TableGeneratePosition.None:
                 break;
             case TableGeneratePosition.Left:
-                randZ = Random.Range(-120, -30);
+                randZ = Random.Range(40, 120);
                 break;
             case TableGeneratePosition.Center:
                 randZ = Random.Range(-120, 120);
                 break;
             case TableGeneratePosition.Right:
-                randZ = Random.Range(40, 120);
+                randZ = Random.Range(-120, -30); 
                 break;
             default:
                 break;

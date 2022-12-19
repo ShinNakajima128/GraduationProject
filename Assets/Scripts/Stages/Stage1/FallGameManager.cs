@@ -64,10 +64,10 @@ public class FallGameManager : MonoBehaviour
         AudioManager.PlayBGM(BGMType.Stage1);
         GameManager.UpdateCurrentStage(Stages.Stage1);
         OnGameStart();
-        TransitionManager.FadeIn(FadeType.White, 0f);
+        TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
         TransitionManager.FadeOut(FadeType.Normal, action: () =>
         {
-            TransitionManager.FadeIn(FadeType.Black, 0f, action:() =>
+            TransitionManager.FadeIn(FadeType.Black_TransParent, 0f, action:() =>
             {
                 TransitionManager.FadeOut(FadeType.Normal, 0f);
             });
