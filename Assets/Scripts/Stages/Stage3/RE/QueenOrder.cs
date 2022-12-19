@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +11,17 @@ using DG.Tweening;
 public class QueenOrder : MonoBehaviour
 {
     #region serialize
+    [Header("Data")]
+    [Tooltip("お題のデータ")]
+    [SerializeField]
+    OrderData[] _data = default;
+
     [Header("Variables")]
+    [Tooltip("各アニメーションの時間")]
     [SerializeField]
     float _animTime = 0.5f;
 
+    [Tooltip("アニメーションの待機時間")]
     [SerializeField]
     float _waitTime = 0.5f;
 
@@ -60,6 +68,7 @@ public class QueenOrder : MonoBehaviour
     #endregion
 
     #region property
+    public OrderData[] Data => _data;
     #endregion
 
     private void Awake()
@@ -67,10 +76,6 @@ public class QueenOrder : MonoBehaviour
         _frontCoverOriginRotate = _letterCover_Front.localRotation;
         _insideCoverOriginRotate = _letterCover_Inside.localRotation;
         _orderOriginScale = _orderTrans.localScale;
-    }
-    private void Start()
-    {
-        //StartCoroutine(LetterAnimationCoroutine());
     }
 
     /// <summary>
@@ -86,32 +91,39 @@ public class QueenOrder : MonoBehaviour
         _orderText.text = order;
 
         //手紙本体が画面上から降りる
-        yield return _letterParentTrans.DOLocalMoveY(-60f, 1.5f)
+        yield return _letterParentTrans.DOLocalMoveY(-60f, 1.0f)
                     .SetEase(Ease.OutQuad)
                     .WaitForCompletion();
 
         yield return new WaitForSeconds(_waitTime);
 
+        //手紙の上蓋(表)が開く
         yield return _letterCover_Front.DOLocalRotate(new Vector3(90, 0, 0), _animTime)
                                        .SetEase(Ease.Linear)
                                        .WaitForCompletion();
 
+        //手紙の上蓋(表)を非アクティブにする
         _letterCover_Front.gameObject.SetActive(false);
 
+        //手紙の上蓋(裏)に差し替えて最後まで開く
         yield return _letterCover_Inside.DOLocalRotate(new Vector3(0, 0, 0), _animTime)
                                         .SetEase(Ease.Linear)
                                         .WaitForCompletion();
         
+        //手紙の上蓋のオブジェクトの優先度を下げて子オブジェクト内の奥に配置
         _letterCover_Inside.SetAsFirstSibling();
 
+        //お題が表示されているオブジェクトのアニメーション
         yield return _orderTrans.DOLocalMoveY(700, _animTime)
                                 .WaitForCompletion();
 
+        //お題のオブジェクトの優先度を上げて子オブジェクト内の手前に配置
         _orderTrans.SetParent(transform);
         _orderTrans.SetAsLastSibling();
 
         yield return null;
 
+        //お題のオブジェクトの大きさを元に戻す
         _orderTrans.DOScale(1, _animTime).SetEase(Ease.Linear);
 
         yield return _orderTrans.DOLocalMoveY(0, _animTime)
@@ -119,6 +131,7 @@ public class QueenOrder : MonoBehaviour
 
         yield return new WaitForSeconds(_waitTime);
 
+        //女王の切手のアニメーション開始
         _queenStampImage.gameObject.transform.DOScale(10, 0f);
         _queenStampImage.DOFade(0, 0f);
 
@@ -129,13 +142,16 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.gameObject.transform.DOScale(1, _animTime);
         yield return _queenStampImage.DOFade(1, _animTime)
                                      .WaitForCompletion();
+        //女王の切手のアニメーション終了
 
+        //手紙の傾きを変更
         yield return _letterTrans.DOLocalRotate(new Vector3(0, 0, -10.5f), _animTime)
                                  .SetEase(Ease.OutBounce)
                                  .WaitForCompletion();
 
         yield return new WaitUntil(() => UIInput.Submit);
 
+        //お題をフェードアウトさせる際にまとめて動かすための処理
         _orderTrans.SetParent(_letterTrans);
         _queenStampImage.transform.SetParent(_letterTrans);
         _queenStampImage.transform.SetAsLastSibling();
@@ -151,29 +167,46 @@ public class QueenOrder : MonoBehaviour
                                        .WaitForCompletion();
     }
 
+    /// <summary>
+    /// アニメーション前の各オブジェクトの初期化処理
+    /// </summary>
     void AnimationSetup()
     {
         _letterParentTrans.DOLocalMoveY(760, 0f);
+
+        _letterTrans.DOLocalRotate(Vector3.zero, 0f);
+        
         _letterCover_Front.DOLocalRotate(_frontCoverOriginRotate.eulerAngles, 0f);
         _letterCover_Front.gameObject.SetActive(true);
         _letterCover_Inside.DOLocalRotate(_insideCoverOriginRotate.eulerAngles, 0f);
+        _letterCover_Inside.SetAsLastSibling();
+
         _orderTrans.localScale = _orderOriginScale;
         _orderTrans.SetParent(_letterTrans);
         _orderTrans.SetSiblingIndex(1);
+        _orderTrans.DOScale(0.9f, 0f);
+        _orderTrans.DOLocalRotate(Vector3.zero, 0f);
+        _orderTrans.localPosition = new Vector3(0, 100, 0);
+        
         _queenStampImage.enabled = false;
+        _queenStampImage.transform.SetParent(transform);
+        _queenStampImage.transform.localPosition = new Vector3(-293, -278, 0);
     }
 }
 
+/// <summary>
+/// お題のデータ構造
+/// </summary>
+[Serializable]
 public struct OrderData
 {
     public string OrderName;
-
     public TrumpColorType TargetTrumpColor;
     public int TargetNum;
 
     public override string ToString()
     {
-        string order = "";
+        string order;
 
         if (TargetTrumpColor == TrumpColorType.Black)
         {
