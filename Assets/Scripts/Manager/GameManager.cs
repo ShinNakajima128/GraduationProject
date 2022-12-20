@@ -158,6 +158,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public static void GameReset()
     {
         Instance._currentClockState = ClockState.Zero;
+        LobbyManager.Reset();
 
         for (int i = 0; i < Instance._stageStatusDic.Count; i++)
         {

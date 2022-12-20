@@ -151,6 +151,9 @@ public class LobbyManager : MonoBehaviour
             {
                 TransitionManager.FadeOut(FadeType.Normal);
 
+                //画面フェード終了を待機
+                yield return new WaitForSeconds(1.5f);
+                
                 //未クリア且つステージをクリアしている場合は時計の演出を行う
                 if (!GameManager.CheckStageStatus() && GameManager.IsClearStaged)
                 {
@@ -169,7 +172,6 @@ public class LobbyManager : MonoBehaviour
             PlayerMove?.Invoke(true);
         }
 
-        LetterboxController.ActivateLetterbox(false);
         GameManager.SaveStageResult(false);
         OnFadeDescription(0f, 0f);
     }
@@ -251,7 +253,6 @@ public class LobbyManager : MonoBehaviour
     void ClockDirection()
     {
         _clockCamera.Priority = 15; //演出用カメラをアクティブ化
-        //ChangeCamera(1, 1);
         Camera.main.LayerCullingToggle("Ornament", false); //ロビーのライトなどの装飾品を非表示にする
         LetterboxController.ActivateLetterbox(true);
 
@@ -267,7 +268,6 @@ public class LobbyManager : MonoBehaviour
             else
             {
                 _clockCamera.Priority = 10;
-                //ChangeCamera(0, 1);
                 Camera.main.LayerCullingToggle("Ornament", true);
                 StartCoroutine(OnPlayerMovable(3.0f));
             }
@@ -280,6 +280,14 @@ public class LobbyManager : MonoBehaviour
     void PlayMeetingBGM()
     {
         AudioManager.PlayBGM(BGMType.Lobby_MeetingCheshire);
+    }
+
+    /// <summary>
+    /// ロビーの初回到達フラグをリセット
+    /// </summary>
+    public static void Reset()
+    {
+        IsFirstArrival = false;
     }
 
     /// <summary>
@@ -323,7 +331,7 @@ public class LobbyManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator OnPlayerMovable(float Interval)
     {
-        yield return new WaitForSeconds(Interval);
+        yield return new WaitForSeconds(Interval - 1);
 
         if (IsFirstArrival)
         {
@@ -331,10 +339,17 @@ public class LobbyManager : MonoBehaviour
             IsFirstArrival = false;
         }
 
+        LetterboxController.ActivateLetterbox(false);
+
+        yield return new WaitForSeconds(1.0f);
+
         PlayerMove?.Invoke(true);
         _provider.enabled = true;
     }
 
+    /// <summary>
+    /// ボス戦へ進むコルーチン
+    /// </summary>
     IEnumerator OnBossStageaAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
@@ -347,15 +362,13 @@ public class LobbyManager : MonoBehaviour
             _playerTrans.localPosition = _goingUnderTrans.position;
             _brain.m_DefaultBlend.m_Time = 0;
             _clock_ShakeCamera.Priority = 20;
-            //_clockCamera.Priority = 15;
-            //ChangeCamera(2, 1);
+           
             TransitionManager.FadeOut(FadeType.Normal, 0.5f);
         });
 
 
         yield return new WaitForSeconds(3.5f);
 
-        //ChangeCamera(3, 1);
         _goingUnderCamera.Priority = 25;
 
         float timer = 0;
