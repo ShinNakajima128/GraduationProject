@@ -27,7 +27,8 @@ public enum EffectType
     /// </summary>
     ShockWave,
     Stage2_WarpStart,
-    Stage2_WarpEnd
+    Stage2_WarpEnd,
+    Stage3_Goal
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>
