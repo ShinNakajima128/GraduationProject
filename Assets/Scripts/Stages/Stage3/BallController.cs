@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -23,11 +25,15 @@ public class BallController : MonoBehaviour, IThrowable
     [SerializeField]
     private GameObject _arrowImage;
 
+    [SerializeField]
+    Transform _parent = default;
+
     private bool IsThrowed { get; set; } = false;
 
     private event Action OnGoaled;
     private Rigidbody _rb;
     private Vector3 _direction;
+    private Vector3 _originPos;
 
     /// <summary>
     /// êUÇËå¸Ç´ÇÃíl(0Ç™ê≥ñ )
@@ -39,15 +45,22 @@ public class BallController : MonoBehaviour, IThrowable
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _originPos = transform.localPosition;
+    }
+
+    private void Start()
+    {
+        CroquetGameManager.Instance.GameSetUp += Setup;
     }
 
     private void Update()
     {
         _direction = _rb.velocity;
+
         if (IsThrowed)
         {
             ForwardRotation();
-            MoveCameraRequest();
+            //MoveCameraRequest();
         }
     }
 
@@ -72,8 +85,8 @@ public class BallController : MonoBehaviour, IThrowable
         if (collision.gameObject.name == "Goal")
         {
             Debug.Log("Goal");
-            OnGoaled();
-            this.gameObject.SetActive(false);
+            OnGoaled?.Invoke();
+            StartCoroutine(DelayVanishCoroutine());
             return;
         }
 
@@ -119,7 +132,7 @@ public class BallController : MonoBehaviour, IThrowable
         if (value > -_valueOfMaxTurn)
         {
             _directionValue = value;
-            transform.Rotate(0, -0.1f, 0);
+            transform.Rotate(0, -0.5f, 0);
         }
     }
 
@@ -133,12 +146,29 @@ public class BallController : MonoBehaviour, IThrowable
         if (value < _valueOfMaxTurn)
         {
             _directionValue = value;
-            transform.Rotate(0, 0.1f, 0);
+            transform.Rotate(0, 0.5f, 0);
         }
-        
+    }
+
+    void Setup()
+    {
+        gameObject.SetActive(true);
+        IsThrowed = false;
+        transform.SetParent(_parent);
+        transform.SetAsLastSibling();
+        transform.localPosition = _originPos;
+        transform.localRotation = default;
+
+        _arrowImage.gameObject.SetActive(true);
     }
     #endregion
 
     #region Private Function
     #endregion
+    IEnumerator DelayVanishCoroutine()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        gameObject.SetActive(false);
+    }
 }

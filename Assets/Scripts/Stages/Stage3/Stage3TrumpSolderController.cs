@@ -60,7 +60,10 @@ public class Stage3TrumpSolderController : MonoBehaviour
 
     private void Move()
     {
-        if (IsStoped) return;
+        if (IsStoped)
+        { 
+            return; 
+        }
 
         var pos = transform.position;
 
@@ -70,11 +73,11 @@ public class Stage3TrumpSolderController : MonoBehaviour
                 break;
             case MoveDirection.Left:
                 // ç∂Ç…ìÆÇ≠
-                pos.x = pos.x + -_moveSpeed * Time.deltaTime;
+                pos.x -= _moveSpeed * Time.deltaTime;
                 break;
                 // âEÇ…ìÆÇ≠
             case MoveDirection.Right:
-                pos.x = pos.x + _moveSpeed * Time.deltaTime;
+                pos.x += _moveSpeed * Time.deltaTime;
                 break;
             default:
                 break;

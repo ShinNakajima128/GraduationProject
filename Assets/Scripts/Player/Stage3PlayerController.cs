@@ -26,6 +26,7 @@ public class Stage3PlayerController : MonoBehaviour
     private Animator _animator;
 
     private PlayerInput _pInput;
+    private Vector3 _startPos;
 
     public Action OnCircleButtonStarted { get; private set; }
 
@@ -53,7 +54,13 @@ public class Stage3PlayerController : MonoBehaviour
         Initialize();
     }
 
-    private void Update()
+    private void Start()
+    {
+        CroquetGameManager.Instance.GameSetUp += Setup;
+        _startPos = transform.localPosition;
+    }
+
+    private void FixedUpdate()
     {
         if (InputedMoveValue != Vector2.zero)
         {
@@ -214,7 +221,11 @@ public class Stage3PlayerController : MonoBehaviour
     #region InputSystem CallBacks
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (!CanControl) return;
+        if (!CanControl)
+        {
+            InputedMoveValue = Vector2.zero;
+            return;
+        }
 
         // ìäÇ∞èIÇ¶ÇƒÇ¢ÇΩÇÁâΩÇ‡ÇµÇ»Ç¢
         if (IsThrowed)
@@ -261,17 +272,29 @@ public class Stage3PlayerController : MonoBehaviour
     /// </summary>
     private void OnThrow(InputAction.CallbackContext context)
     {
-        OnCircleButtonStarted();
+        //OnCircleButtonStarted?.Invoke();
 
         if (!CanControl) return;
 
         if (context.started)
         {
+            Debug.Log("Push");
             CanControl = false;
             _animator.Play("Swing");
         }
     }
 
+    public void GoalAction(Action action)
+    {
+        _ball.AddCallBack(action);
+    }
+
+    void Setup()
+    {
+        _animator.Play("Idle");
+        IsThrowed = false;
+        transform.localPosition = _startPos;
+    }
     
     #endregion
 }

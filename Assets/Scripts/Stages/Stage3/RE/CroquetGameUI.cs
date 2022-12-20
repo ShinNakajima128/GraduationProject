@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UniRx;
 
 public class CroquetGameUI : MonoBehaviour
 {
     #region serialize
+    [Header("UI_CanvasGroup")]
     [SerializeField]
     CanvasGroup _orderGroup = default;
 
@@ -13,14 +16,31 @@ public class CroquetGameUI : MonoBehaviour
 
     [SerializeField]
     CanvasGroup _goalDirectionGroup = default;
+
+    [Header("UI_Text")]
+    [SerializeField]
+    Text _currentRoundText = default;
+
+    [SerializeField]
+    Text _currentOrderText = default;
+
+    [SerializeField]
+    Text _redTrumpCountText = default;
+
+    [SerializeField]
+    Text _blackTrumpCountText = default;
+
+    [SerializeField]
+    Text _resultText = default;
     #endregion
 
     #region private
+    //ReactiveProperty<int> 
     #endregion
-    
+
     #region public
     #endregion
-    
+
     #region property
     #endregion
 
@@ -55,5 +75,31 @@ public class CroquetGameUI : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void SetTrumpCount(int redCount, int blackCount)
+    {
+        _redTrumpCountText.text = $"{redCount}";
+        _blackTrumpCountText.text  = $"{ blackCount}";
+    }
+
+    /// <summary>
+    /// お題のテキストをTextセットする
+    /// </summary>
+    /// <param name="round">現在のラウンド</param>
+    /// <param name="order"> お題 </param>
+    public void SetOrderText(int round, string order)
+    {
+        _currentRoundText.text = $"{round}";
+        _currentOrderText.text = order;
+    }
+
+    /// <summary>
+    /// 結果を表示する
+    /// </summary>
+    /// <param name="result"> お題の結果 </param>
+    public void SetResultText(string result)
+    {
+        _resultText.text = result;
     }
 }

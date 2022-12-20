@@ -157,10 +157,10 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.transform.SetAsLastSibling();
 
         yield return _letterParentTrans.DOLocalMoveY(-150, 0.5f)
-                                       .SetEase(Ease.InQuart)
+                                       .SetEase(Ease.OutQuad)
                                        .WaitForCompletion();
         
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.02f);
 
         yield return _letterParentTrans.DOLocalMoveY(800, 0.5f)
                                        .SetEase(Ease.OutQuart)
