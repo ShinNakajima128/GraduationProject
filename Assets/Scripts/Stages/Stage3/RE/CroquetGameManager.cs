@@ -41,8 +41,10 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
     #region private
     TrumpColorType _currentTargetTrumpColor;
+    /// <summary> “|‚·–Ú•W” </summary>
     int _currentTargetStrikeNum;
     bool _isGoaled = false;
+    /// <summary> “|‚µ‚½” </summary>
     int _currentStrikeNum = 0;
     int _successCount = 0;
     #endregion
@@ -74,6 +76,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
+        _currentTargetStrikeNum = 0;
     }
 
     public override void OnGameStart()
