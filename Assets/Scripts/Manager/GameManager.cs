@@ -151,4 +151,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
         return state;
     }
+
+    /// <summary>
+    /// ゲームの状態をリセットする
+    /// </summary>
+    public static void GameReset()
+    {
+        Instance._currentClockState = ClockState.Zero;
+
+        for (int i = 0; i < Instance._stageStatusDic.Count; i++)
+        {
+            Instance._stageStatusDic[(Stages)i] = false;
+        }
+
+        Debug.Log("データをリセットしました");
+    }
 }

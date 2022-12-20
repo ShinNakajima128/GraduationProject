@@ -30,11 +30,15 @@ public class TitleManager : MonoBehaviour
             _buttonDic.Add((ButtonType)i, _titleButtons[i]);
         }
     }
-    private void Start()
+    IEnumerator Start()
     {
         AudioManager.PlayBGM(BGMType.Title);
         TransitionManager.FadeOut(FadeType.Normal);
         ButtonSetup();
+
+        yield return null;
+
+        GameManager.GameReset();
     }
     void ButtonSetup()
     {
