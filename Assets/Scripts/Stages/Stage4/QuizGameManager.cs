@@ -98,6 +98,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
     }
     protected override void Start()
     {
+        AudioManager.PlayBGM(BGMType.Stage4);
         base.Start();
         OnGameStart();
     }

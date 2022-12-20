@@ -18,9 +18,6 @@ public class TransitionManager : MonoBehaviour
     [SerializeField]
     float _loadTime = 2.0f;
 
-    [SerializeField]
-    FadeType _fadeType = FadeType.Normal;
-
     [Header("Components")]
     [SerializeField]
     Fade _fade = default;
@@ -72,10 +69,10 @@ public class TransitionManager : MonoBehaviour
                               action?.Invoke();
                           });
                 break;
-            case FadeType.White:
+            case FadeType.White_default:
                 Instance._fadeImage.DOColor(Color.white, fadeTime);
                 break;
-            case FadeType.Black:
+            case FadeType.Black_default:
                 Instance._fadeImage.DOColor(Color.black, fadeTime);
                 break;
             default:
@@ -100,15 +97,29 @@ public class TransitionManager : MonoBehaviour
                               action?.Invoke();
                           });
                 break;
-            case FadeType.White:
+            case FadeType.White_default:
                 Instance._fadeImage.DOColor(Color.white, fadeTime)
                                    .OnComplete(() => 
                                    {
                                        action?.Invoke();
                                    });
                 break;
-            case FadeType.Black:
+            case FadeType.Black_default:
                 Instance._fadeImage.DOColor(Color.black, fadeTime)
+                                   .OnComplete(() =>
+                                   {
+                                       action?.Invoke();
+                                   });
+                break;
+            case FadeType.White_Transparent:
+                Instance._fadeImage.DOColor(new Color(1, 1, 1, 0), fadeTime)
+                                   .OnComplete(() =>
+                                   {
+                                       action?.Invoke();
+                                   });
+                break;
+            case FadeType.Black_TransParent:
+                Instance._fadeImage.DOColor(new Color(0, 0, 0, 0), fadeTime)
                                    .OnComplete(() =>
                                    {
                                        action?.Invoke();
@@ -137,8 +148,8 @@ public enum SceneType
     Intro,
     Lobby,
     Stage1_Fall,
-    Stage2,
-    Stage3,
+    RE_Stage2,
+    RE_Stage3,
     Stage4,
     Stage5,
     Stage6,
@@ -148,7 +159,9 @@ public enum SceneType
 public enum FadeType
 {
     Normal,
-    White,
-    Black,
+    White_default,
+    Black_default,
+    White_Transparent,
+    Black_TransParent,
     Mask1
 }

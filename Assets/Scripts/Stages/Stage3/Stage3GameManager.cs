@@ -50,11 +50,11 @@ public class Stage3GameManager : MonoBehaviour
 
     private void Start()
     {
-        ChengeStage(GameState.CreateOrder);
+        //ChengeStage(GameState.CreateOrder);
         // Zƒ{ƒ^ƒ“‚Éˆ—‚Ì“o˜^
-        _player.RegistToOnCircleButton(() => ChengeStage(GameState.MoveCamera));
+        //_player.RegistToOnCircleButton(() => ChengeStage(GameState.MoveCamera));
         // ƒS[ƒ‹Žž‚Ì‹““®‚Ì’Ç‰Á
-        _ball.AddCallBack(() => ChengeStage(GameState.Result));
+        //_ball.AddCallBack(() => ChengeStage(GameState.Result));
     }
 
     /// <summary>

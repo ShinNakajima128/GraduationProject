@@ -16,17 +16,17 @@ public class SubmitIcon : MonoBehaviour
     #endregion
     #region private
     Vector3 _originPos = default;
-    bool _init = false;
     #endregion
+
     #region public
     #endregion
+    
     #region property
     #endregion
 
     private void Start()
     {
         _originPos = transform.localPosition;
-        _init = true;
         OnAnimation();
     }
 

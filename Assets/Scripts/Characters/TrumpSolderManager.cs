@@ -99,6 +99,32 @@ public class TrumpSolderManager : MonoBehaviour
         StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
     }
 
+    /// <summary>
+    /// ëSÇƒÇÃÉgÉâÉìÉvï∫Çè≈ÇÁÇπÇÈ
+    /// </summary>
+    public void OnAllTrumpAnimation(string name)
+    {
+        foreach (var t in _frontTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _backTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _leftTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _rightTrumps)
+        {
+            t.OnAnimation(name);
+        }
+    }
+
     IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action start, Action finish)
     {
         switch (dir)

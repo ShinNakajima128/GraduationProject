@@ -19,6 +19,9 @@ public class TableController : MonoBehaviour, IEffectable
 
     [SerializeField]
     GameObject _trumpEffect = default;
+
+    [SerializeField]
+    Animator _tableAnimator = default;
     #endregion
     #region private
     bool _isEffected;
@@ -39,6 +42,7 @@ public class TableController : MonoBehaviour, IEffectable
     void OnDisable()
     {
         _trumpEffect.SetActive(false);
+        _tableAnimator.CrossFadeInFixedTime("Default", 0.1f);
     }
     private void Start()
     {
@@ -57,6 +61,7 @@ public class TableController : MonoBehaviour, IEffectable
             if (!_isEffected)
             {
                 //EffectManager.PlayEffect(EffectType.Obstacle, EffectPos.position);
+                _tableAnimator.CrossFadeInFixedTime("OnGimmick", 0.1f);
                 _trumpEffect.SetActive(true);
                 StartCoroutine(SECoroutine());
                 _isEffected = true;

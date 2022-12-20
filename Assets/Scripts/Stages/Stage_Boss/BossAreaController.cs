@@ -10,9 +10,6 @@ public class BossAreaController : MonoBehaviour
     [Tooltip("ƒgƒ‰ƒ“ƒv•º‚ÌUŒ‚”ÍˆÍ")]
     [SerializeField]
     AttackAreaController[] _attackAreas = default;
-
-    [SerializeField]
-    TrumpSolderManager _trumpSolderMng = default;
     #endregion
     #region private
     #endregion

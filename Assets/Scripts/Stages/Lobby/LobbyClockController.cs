@@ -35,7 +35,7 @@ public class LobbyClockController : MonoBehaviour
 
     void Start()
     {
-        //StartCoroutine(SecondHandMove());
+        StartCoroutine(SecondHandMove());
     }
 
     public void ChangeClockState(ClockState state, float animTime = 3f, float derayTime = 4.0f, Action action = null)

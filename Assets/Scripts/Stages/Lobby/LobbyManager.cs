@@ -29,6 +29,14 @@ public class LobbyManager : MonoBehaviour
     GameObject _lobbyPanel = default;
 
     [SerializeField]
+    Transform _mainStage = default;
+
+    [Tooltip("地下へ向かう際のプレイヤーの位置")]
+    [SerializeField]
+    Transform _goingUnderTrans = default;
+
+    [Header("Components")]
+    [SerializeField]
     MessagePlayer _messagePlayer = default;
 
     [SerializeField]
@@ -38,7 +46,16 @@ public class LobbyManager : MonoBehaviour
     CinemachineVirtualCamera _clockCamera = default;
 
     [SerializeField]
+    CinemachineVirtualCamera _clock_ShakeCamera = default;
+
+    [SerializeField]
+    CinemachineVirtualCamera _goingUnderCamera = default;
+
+    [SerializeField]
     CinemachineInputProvider _provider = default;
+
+    [SerializeField]
+    CinemachineBrain _brain = default;
 
     [SerializeField]
     Renderer[] _handsRenderers = default;
@@ -66,6 +83,7 @@ public class LobbyManager : MonoBehaviour
 
     #region private
     bool _isApproached = false;
+    CinemachineImpulseSource _impulse = default;
     #endregion
     #region property
     public static LobbyManager Instance { get; private set; }
@@ -83,6 +101,7 @@ public class LobbyManager : MonoBehaviour
     {
         Instance = this;
         _stageNameText.text = "";
+        TryGetComponent(out _impulse);
     }
 
     IEnumerator Start()
@@ -115,7 +134,7 @@ public class LobbyManager : MonoBehaviour
 
                 yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage1_End);
 
-                TransitionManager.FadeIn(FadeType.White, action: () =>
+                TransitionManager.FadeIn(FadeType.White_default, action: () =>
                 {
                     TransitionManager.FadeOut(FadeType.Normal);
                 });
@@ -150,6 +169,7 @@ public class LobbyManager : MonoBehaviour
             PlayerMove?.Invoke(true);
         }
 
+        LetterboxController.ActivateLetterbox(false);
         GameManager.SaveStageResult(false);
         OnFadeDescription(0f, 0f);
     }
@@ -231,7 +251,9 @@ public class LobbyManager : MonoBehaviour
     void ClockDirection()
     {
         _clockCamera.Priority = 15; //演出用カメラをアクティブ化
+        //ChangeCamera(1, 1);
         Camera.main.LayerCullingToggle("Ornament", false); //ロビーのライトなどの装飾品を非表示にする
+        LetterboxController.ActivateLetterbox(true);
 
         _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), action: () =>
         {
@@ -245,6 +267,7 @@ public class LobbyManager : MonoBehaviour
             else
             {
                 _clockCamera.Priority = 10;
+                //ChangeCamera(0, 1);
                 Camera.main.LayerCullingToggle("Ornament", true);
                 StartCoroutine(OnPlayerMovable(3.0f));
             }
@@ -260,10 +283,25 @@ public class LobbyManager : MonoBehaviour
     }
 
     /// <summary>
+    /// カメラを変更する
+    /// </summary>
+    /// <param name="index"> カメラの番号 </param>
+    /// <param name="weight"> カメラのウエイト </param>
+    //void ChangeCamera(int index, float weight)
+    //{
+    //    for (int i = 0; i < _mixingCamera.ChildCameras.Length; i++)
+    //    {
+    //        _mixingCamera.SetWeight(i, 0);
+    //    }
+    //    _mixingCamera.SetWeight(index, weight);
+    //}
+
+    /// <summary>
     /// 12時になった時の時計の発光処理のコルーチン
     /// </summary>
     IEnumerator OnHandsEmission()
     {
+        Debug.Log("Call");
         _handsRenderers[0].material.SetColor("_EmissionColor", Color.white);
         _handsRenderers[1].material.SetColor("_EmissionColor", Color.white);
 
@@ -304,7 +342,39 @@ public class LobbyManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-        TransitionManager.SceneTransition(SceneType.Stage_Boss);
+        TransitionManager.FadeIn(FadeType.Normal,0.5f, () =>
+        {
+            _playerTrans.localPosition = _goingUnderTrans.position;
+            _brain.m_DefaultBlend.m_Time = 0;
+            _clock_ShakeCamera.Priority = 20;
+            //_clockCamera.Priority = 15;
+            //ChangeCamera(2, 1);
+            TransitionManager.FadeOut(FadeType.Normal, 0.5f);
+        });
+
+
+        yield return new WaitForSeconds(3.5f);
+
+        //ChangeCamera(3, 1);
+        _goingUnderCamera.Priority = 25;
+
+        float timer = 0;
+        bool isFading = false;
+
+        yield return _mainStage.DOLocalMoveY(2f, 10f)
+                               .OnUpdate(() => 
+                               {
+                                   timer += Time.deltaTime;
+
+                                   if (timer >= 5.0f && !isFading)
+                                   {
+                                       TransitionManager.SceneTransition(SceneType.Stage_Boss);
+                                       isFading = true;
+                                   }
+                               })
+                               .SetLink(_mainStage.gameObject)
+                               .WaitForCompletion();
+
         Debug.Log("ボスステージ出現");
         //Camera.main.LayerCullingToggle("Ornament", true);
         //_clockCamera.Priority = 10;
