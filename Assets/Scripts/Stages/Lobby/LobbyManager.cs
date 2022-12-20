@@ -115,6 +115,7 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
+            AudioManager.StopBGM(1.0f);
             EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
         }
 
