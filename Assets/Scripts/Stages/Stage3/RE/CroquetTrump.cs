@@ -14,6 +14,7 @@ public class CroquetTrump : TrumpSolder
     #endregion
 
     #region private
+    Animator _anim;
     #endregion
 
     #region public
@@ -21,6 +22,14 @@ public class CroquetTrump : TrumpSolder
 
     #region property
     #endregion
+
+    private void OnEnable()
+    {
+        if (_init)
+        {
+            _anim.Play("Walk");
+        }
+    }
 
     private void OnDisable()
     {

@@ -18,6 +18,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     int _requiredSuccessCount = 3;
 
+    [SerializeField]
+    Transform[] _golaEffectTrans = default;
+
     [Header("Components")]
     [SerializeField]
     QueenOrder _order = default;
@@ -68,6 +71,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     protected override void Start()
     {
         AudioManager.PlayBGM(BGMType.Stage3);
+        LetterboxController.ActivateLetterbox(true);
         base.Start();
         Init();
         OnGameStart();
@@ -76,7 +80,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
-        _currentTargetStrikeNum = 0;
+        _currentStrikeNum = 0;
     }
 
     public override void OnGameStart()
@@ -147,12 +151,15 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
                 yield return new WaitForSeconds(3.0f);
 
+                //お題のアニメーションが終了するまで待機
                 yield return _order.LetterAnimationCoroutine(i + 1, data.ToString());
 
                 TransitionManager.FadeIn(FadeType.Normal, action: () =>
                 {
                     _cameraMng.ChangeCamera(CroquetCameraType.InGame, 0f);
                     _gameUI.ChangeUIGroup(CroquetGameState.InGame);
+
+                    LetterboxController.ActivateLetterbox(false, 0f);
                     TransitionManager.FadeOut(FadeType.Normal);
                 });
 
@@ -167,6 +174,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 //メモ：ここにハリネズミがゴールするまで処理を待機する処理を記述
                 yield return new WaitUntil(() => _isGoaled);
 
+                OnGoalEffect();
                 _isGoaled = false;
 
                 //ゴールした時にシュートの結果に応じて結果を演出を変更
@@ -178,6 +186,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                     {
                         _cameraMng.ChangeCamera(CroquetCameraType.Order, 0f);
                         _gameUI.ChangeUIGroup(CroquetGameState.Order);
+
+                        LetterboxController.ActivateLetterbox(true, 0f);
                         TransitionManager.FadeOut(FadeType.Normal);
                     });
 
@@ -185,18 +195,19 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 }
                 else
                 {
-                    if (_requiredSuccessCount >= _successCount)
+                    if (_successCount >= _requiredSuccessCount)
                     {
-                        _gameUI.ChangeUIGroup(CroquetGameState.Finish);
-
-                        yield return new WaitForSeconds(2.0f);
-
+                        //_gameUI.ChangeUIGroup(CroquetGameState.Finish);
+                        _gameUI.SetResultText("ステージクリア！");
                         GameManager.SaveStageResult(true);
                     }
                     else
                     {
+                        _gameUI.SetResultText("ステージ失敗…");
                         GameManager.SaveStageResult(false);
                     }
+
+                    yield return new WaitForSeconds(2.0f);
                     TransitionManager.SceneTransition(SceneType.Lobby);
                 }
             }
@@ -228,7 +239,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         {
             _gameUI.SetResultText("お題失敗…");
         }
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
     }
 
     protected override void Init()
@@ -248,9 +259,21 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         if (type == _currentTargetTrumpColor)
         {
             _currentStrikeNum++;
+            Debug.Log("当たり");
         }
 
         _gameUI.SetTrumpCount(_trumpMng.CurrentRedTrumpCount, _trumpMng.CurrentBlackTrumpCount);
+    }
+
+    /// <summary>
+    /// ゴールエフェクトを再生
+    /// </summary>
+    void OnGoalEffect()
+    {
+        for (int i = 0; i < _golaEffectTrans.Length; i++)
+        {
+            EffectManager.PlayEffect(EffectType.Stage3_Goal, _golaEffectTrans[i]);
+        }
     }
 }
 /// <summary>

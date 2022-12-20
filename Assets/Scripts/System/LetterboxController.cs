@@ -22,10 +22,6 @@ public class LetterboxController : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
         ActivateLetterbox(false, 0);
     }
 
