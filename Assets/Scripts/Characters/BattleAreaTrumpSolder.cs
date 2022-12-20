@@ -49,6 +49,14 @@ public class BattleAreaTrumpSolder : TrumpSolder
     }
 
     /// <summary>
+    /// 焦るモーションを再生
+    /// </summary>
+    public void OnAnimation(string name)
+    {
+        _anim.CrossFadeInFixedTime(name, 0.1f);
+    }
+
+    /// <summary>
     /// トランプ兵の攻撃処理のコルーチン
     /// </summary>
     /// <param name="waitTime"> 構えてから待機する時間 </param>

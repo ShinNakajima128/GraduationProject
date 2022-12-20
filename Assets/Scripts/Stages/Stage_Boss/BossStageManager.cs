@@ -83,6 +83,9 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     ExcuteDirection _excuteDirection = default;
 
+    [SerializeField]
+    TrumpSolderManager _trumpSolderMng = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -239,7 +242,7 @@ public class BossStageManager : StageGame<BossStageManager>
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
-            //_areaEffect.SetActive(false);
+            _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
 
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
@@ -322,6 +325,7 @@ public class BossStageManager : StageGame<BossStageManager>
             //プレイヤーの位置と向きを初期化
             _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
              _playerTrans.DOLocalRotate(Vector3.zero, 0f);
+             _trumpSolderMng.OnAllTrumpAnimation("Idle");
 
              CameraBlend(CameraType.ExcuteTrump, 0.01f);
              TransitionManager.FadeOut(FadeType.Normal, 0.2f);
