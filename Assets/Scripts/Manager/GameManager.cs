@@ -178,7 +178,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
         TransitionManager.FadeIn(FadeType.Normal, action: () =>
         {
-            GetStillController.ActiveGettingStillPanel(Stages.Stage3);
+            GetStillController.ActiveGettingStillPanel(stage);
 
             TransitionManager.FadeOut(FadeType.Normal);
         });

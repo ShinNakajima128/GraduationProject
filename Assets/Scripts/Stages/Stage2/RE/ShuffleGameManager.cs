@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using AliceProject;
 
 public class ShuffleGameManager : StageGame<ShuffleGameManager>
 {
@@ -134,7 +135,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 //Ç±Ç±Ç≈ê≥âÇÃUIÇï\é¶
                 _infoText.text = "ê≥âÅI";
 
-                yield return new WaitForSeconds(4.0f);
+                yield return new WaitForSeconds(2.5f);
             }
             else
             {
@@ -162,7 +163,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 i--;
             }
 
-            if (i < 2)
+            if (i < _phaseCount - 1)
             {
                 _infoText.text = "";
                 _teacupManager.AllCupDown();
@@ -183,10 +184,12 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
                 yield return new WaitForSeconds(2.0f);
 
+                _infoText.text = "";
+                yield return GameManager.GetStillDirectionCoroutine(Stages.Stage2, MessageType.GetStill_Stage2);
+
                 GameManager.SaveStageResult(true);
                 TransitionManager.SceneTransition(SceneType.Lobby);
             }
-
         }
     }
 

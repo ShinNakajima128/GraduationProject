@@ -207,17 +207,17 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         //_gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         _gameUI.SetResultText("ステージクリア！");
                         GameManager.SaveStageResult(true);
-                        yield return new WaitForSeconds(1.5f);
+                        yield return new WaitForSeconds(2.0f);
                         _gameUI.SetResultText("");
                         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
                     }
                     else
                     {
                         _gameUI.SetResultText("ステージ失敗…");
+                        yield return new WaitForSeconds(2.0f);
                         GameManager.SaveStageResult(false);
                     }
 
-                    yield return new WaitForSeconds(2.0f);
                     TransitionManager.SceneTransition(SceneType.Lobby);
                 }
             }

@@ -106,6 +106,8 @@ public class QuizGameManager : StageGame<QuizGameManager>
     public override void OnGameStart()
     {
         _informationText.text = "";
+        LetterboxController.ActivateLetterbox(true);
+
         _playerTrans.DOMove(_playerTrans.position, 1.4f)
                     .OnComplete(() =>
                     {
@@ -126,6 +128,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
                               .OnComplete(() =>
                               {
                                   _directionTrumpSoldier.gameObject.SetActive(false);
+                                  LetterboxController.ActivateLetterbox(false);
                                   StartCoroutine(GameStartCoroutine(() =>
                                   {
                                       GameStart?.Invoke();
@@ -249,13 +252,19 @@ public class QuizGameManager : StageGame<QuizGameManager>
         {
             _informationText.text = "ステージクリア！";
             GameManager.SaveStageResult(true);
+
+            yield return new WaitForSeconds(2.0f);
+            _informationText.text = "";
+
+            yield return GameManager.GetStillDirectionCoroutine(Stages.Stage4, AliceProject.MessageType.GetStill_Stage4);
         }
         else
         {
             _informationText.text = "ステージ失敗…";
             GameManager.SaveStageResult(false);
+            yield return new WaitForSeconds(1.0f);
         }
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.0f);
 
         TransitionManager.SceneTransition(SceneType.Lobby);
 
