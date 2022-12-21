@@ -234,15 +234,7 @@ public class LobbyManager : MonoBehaviour
             case Stages.Stage4:
                 _playerTrans.position = _startPlayerTrans[3].position;
                 _playerTrans.rotation = _startPlayerTrans[3].rotation;
-                break;
-            case Stages.Stage5:
-                _playerTrans.position = _startPlayerTrans[4].position;
-                _playerTrans.rotation = _startPlayerTrans[4].rotation;
-                break;
-            case Stages.Stage6:
-                _playerTrans.position = _startPlayerTrans[5].position;
-                _playerTrans.rotation = _startPlayerTrans[5].rotation;
-                break;
+                break;   
             default:
                 break;
         }
