@@ -242,12 +242,13 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
         if (result)
         {
-            _gameUI.SetResultText("お題達成！");
+            _gameUI.SetResultText("お題たっせい！");
+            _successCount++;
             OnGoalEffect();
         }
         else
         {
-            _gameUI.SetResultText("お題失敗…");
+            _gameUI.SetResultText("お題しっぱい…");
         }
         yield return new WaitForSeconds(2.0f);
     }
@@ -262,7 +263,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
         _player.CheckPointAction(() =>
         {
-            _cameraMng.ChangeCamera(CroquetCameraType.Goal, 2.0f);
+            _cameraMng.ChangeCamera(CroquetCameraType.Goal, 1.5f);
         });
     }
 
@@ -275,7 +276,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         if (type == _currentTargetTrumpColor)
         {
             _currentStrikeNum++;
-            Debug.Log("当たり");
         }
 
         switch (type)
