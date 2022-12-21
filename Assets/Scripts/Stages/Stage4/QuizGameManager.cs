@@ -177,7 +177,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
                 TransitionManager.FadeIn(FadeType.Normal, action: () =>
                 {
-                    
+                    _playerAnim.CrossFadeInFixedTime("Idle", 0.1f);
                     _playerTrans.DOMoveX(_startPlayerPos.position.x, 0f);
                     _playerTrans.DOLocalRotate(new Vector3(0f, 90f, 0f), 0f);
 
