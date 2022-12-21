@@ -112,20 +112,14 @@ public class TransitionManager : MonoBehaviour
                           });
                 break;
             case FadeType.White_default:
-                Instance._fadeImage.DOColor(new Color(1, 1, 1, 0), 0);
-                Instance._fadeImage.enabled = true;
-                Instance._fadeImage.DOFade(0f, 0f);
-                Instance._fadeImage.DOFade(1f, fadeTime)
+                Instance._fadeImage.DOColor(new Color(1, 1, 1, 1), fadeTime)
                           .OnComplete(() =>
                           {
                               action?.Invoke();
                           });
                 break;
             case FadeType.Black_default:
-                Instance._fadeImage.DOColor(new Color(0, 0, 0, 0), 0);
-                Instance._fadeImage.enabled = true;
-                Instance._fadeImage.DOFade(0f, 0f);
-                Instance._fadeImage.DOFade(1f, fadeTime)
+                Instance._fadeImage.DOColor(new Color(0, 0, 0, 1), fadeTime)
                           .OnComplete(() =>
                           {
                               action?.Invoke();

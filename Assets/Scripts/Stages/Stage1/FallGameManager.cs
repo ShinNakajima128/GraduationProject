@@ -132,6 +132,10 @@ public class FallGameManager : MonoBehaviour
         yield return new WaitForSeconds(4.0f);
 
         GameManager.SaveStageResult(true);
+        _informationText.text = "";
+
+        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, AliceProject.MessageType.GetStill_Stage1);
+
         TransitionManager.SceneTransition(SceneType.Lobby);
     }
 }

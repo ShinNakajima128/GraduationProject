@@ -44,15 +44,16 @@ public class BackgroundController : MonoBehaviour
     {
         _mat = _background.material;
         _propertyId = Shader.PropertyToID("Vector2_f819a373818e42bd843147b85c47a54d");
-        FallGameManager.Instance.GameStart += Init;
+        //FallGameManager.Instance.GameStart += Init;
         FallGameManager.Instance.GameEnd += FinishAnimation;
+        Init();
     }
 
     void Init()
     {
         _groundModel.position = _originPos;
         _groundModel.gameObject.SetActive(false);
-        SetScrollSpeed(new Vector2(0f, -0.04f), 0f);
+        SetScrollSpeed(new Vector2(0f, -0.03f), 0f);
     }
 
     void FinishAnimation()
