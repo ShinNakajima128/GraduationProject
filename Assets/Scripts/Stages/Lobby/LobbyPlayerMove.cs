@@ -17,6 +17,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     Rigidbody _rb;
     Animator _anim;
     Vector3 _dir;
+    Vector3 _inputMove;
     bool _isMoving;
     #endregion
 
@@ -41,9 +42,11 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
             }
             else
             {
-                Quaternion targetRotation = Quaternion.LookRotation(_dir);
+                _inputMove = Vector3.forward * _dir.y + Vector3.right * _dir.x;
+                _inputMove = Camera.main.transform.TransformDirection(_inputMove);
+                Quaternion targetRotation = Quaternion.LookRotation(_inputMove);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * _turnSpeed);
-                Vector3 velocity = _dir.normalized * _moveSpeed;
+                Vector3 velocity = _inputMove.normalized * _moveSpeed;
                 velocity.y = _rb.velocity.y;
                 _rb.velocity = velocity;
             }
@@ -54,9 +57,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
 
     public void SetDirection(Vector3 dir)
     {
-        _dir = Vector3.forward * dir.y + Vector3.right * dir.x;
-        _dir = Camera.main.transform.TransformDirection(_dir);    // メインカメラを基準に入力方向のベクトルを変換する
-        _dir.y = 0;  // y 軸方向はゼロにして水平方向のベクトルにする
+        _dir = dir;
     }
     void CharacterAnimation()
     {
