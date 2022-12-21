@@ -136,6 +136,7 @@ public class FallGameManager : MonoBehaviour
 
         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, AliceProject.MessageType.GetStill_Stage1);
 
+        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
     }
 }

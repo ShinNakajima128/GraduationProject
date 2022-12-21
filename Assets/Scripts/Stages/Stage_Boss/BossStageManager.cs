@@ -249,6 +249,7 @@ public class BossStageManager : StageGame<BossStageManager>
         }
 
         //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
+        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Ending);
     }
 
@@ -308,10 +309,6 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return _messagePlayer.PlayMessageCorountine(message);
 
         yield return PartitioningBattleCoroutine();
-
-        //CameraBlend(CameraType.Default, _cameraBlendTime);
-
-        //yield return new WaitForSeconds(_cameraBlendTime);
     }
 
     /// <summary>
@@ -336,7 +333,7 @@ public class BossStageManager : StageGame<BossStageManager>
         //トランプ兵の首を飛ばす演出の処理
         yield return _excuteDirection.ExcuteDirectionCoroutine();
 
-        CameraBlend(CameraType.Default, 0.01f);
+        CameraBlend(CameraType.Default, 0.02f);
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle);
         yield return new WaitForSeconds(2.0f);
     }

@@ -188,6 +188,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 yield return GameManager.GetStillDirectionCoroutine(Stages.Stage2, MessageType.GetStill_Stage2);
 
                 GameManager.SaveStageResult(true);
+                TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
                 TransitionManager.SceneTransition(SceneType.Lobby);
             }
         }

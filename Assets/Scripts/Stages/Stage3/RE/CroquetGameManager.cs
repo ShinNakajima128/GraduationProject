@@ -217,7 +217,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         yield return new WaitForSeconds(2.0f);
                         GameManager.SaveStageResult(false);
                     }
-
+                    TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
                     TransitionManager.SceneTransition(SceneType.Lobby);
                 }
             }

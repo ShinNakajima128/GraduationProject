@@ -266,6 +266,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
         }
         yield return new WaitForSeconds(1.0f);
 
+        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
 
     }
