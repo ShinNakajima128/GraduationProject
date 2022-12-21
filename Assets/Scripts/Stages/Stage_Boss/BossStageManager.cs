@@ -201,6 +201,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
+        LetterboxController.ActivateLetterbox(true);
         CameraBlend(CameraType.Default, _cameraBlendTime);
         AudioManager.StopBGM(_cameraBlendTime / 2);
 

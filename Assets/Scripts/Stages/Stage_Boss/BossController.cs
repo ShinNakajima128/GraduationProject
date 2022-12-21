@@ -183,6 +183,7 @@ public class BossController : MonoBehaviour, IDamagable
         yield return transform.DOMove(_startBattleTrans.position, 1.0f).WaitForCompletion();
 
         BossStageManager.CameraShake();
+        LetterboxController.ActivateLetterbox(false);
 
         action?.Invoke();
         yield return new WaitForSeconds(2.5f);
