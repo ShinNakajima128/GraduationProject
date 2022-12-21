@@ -193,7 +193,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         TransitionManager.FadeOut(FadeType.Normal);
                     });
 
-                    yield return new WaitForSeconds(3.5f);
+                    yield return new WaitForSeconds(2.0f);
                 }
                 else
                 {
