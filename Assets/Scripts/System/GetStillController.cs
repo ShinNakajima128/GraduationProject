@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
 /// スチル獲得時の機能を持つコンポーネント
@@ -11,12 +12,27 @@ using UnityEngine.UI;
 public class GetStillController : MonoBehaviour
 {
     #region serialize
+    [SerializeField]
+    float _frameAnimTime = 1.5f;
+
+    [SerializeField]
+    float _clearAnimTime = 0.5f;
+
+    [SerializeField]
+    Ease _frameEase = Ease.OutBounce;
+
     [Header("UI")]
     [SerializeField]
     CanvasGroup _stillPanelGroup = default;
 
     [SerializeField]
     Image _stillImage = default;
+
+    [SerializeField]
+    Image _clearImage = default;
+
+    [SerializeField]
+    Transform _StillFrameTrans = default;
 
     [Header("Data")]
     [SerializeField]
@@ -39,11 +55,22 @@ public class GetStillController : MonoBehaviour
         _stillPanelGroup.alpha = 0;
     }
 
-    public static void ActiveGettingStillPanel(Stages stage)
+    public static IEnumerator ActiveGettingStillPanel(Stages stage)
     {
         Instance.SetStageStill(stage);
 
         Instance._stillPanelGroup.alpha = 1;
+
+        Instance._StillFrameTrans.DOMoveY(1100, 0f);
+
+        yield return Instance._StillFrameTrans.DOLocalMoveY(26f, Instance._frameAnimTime)
+                                              .SetEase(Instance._frameEase)
+                                              .WaitForCompletion();
+
+        Instance._clearImage.enabled = true;
+
+        yield return Instance._clearImage.gameObject.transform.DOScale(1f, Instance._clearAnimTime)
+                                                              .WaitForCompletion();
     }
 
     /// <summary>
