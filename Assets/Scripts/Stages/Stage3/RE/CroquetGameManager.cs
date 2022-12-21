@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using AliceProject;
 
 /// <summary>
 /// クロッケーゲーム全体を管理するマネージャークラス
@@ -50,6 +51,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     TrumpColorType _currentTargetTrumpColor;
     /// <summary> 倒す目標数 </summary>
     int _currentTargetStrikeNum;
+    int _currentRedStrileNum = 0;
+    int _currentBlackStrikeNum = 0;
     bool _isGoaled = false;
     /// <summary> 倒した数 </summary>
     int _currentStrikeNum = 0;
@@ -85,6 +88,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     {
         GameSetUp?.Invoke();
         _currentStrikeNum = 0;
+        _currentRedStrileNum = 0;
+        _currentBlackStrikeNum = 0;
     }
 
     public override void OnGameStart()
@@ -148,7 +153,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 _currentTargetStrikeNum = data.TargetNum;
 
                 _gameUI.SetOrderText(i + 1, data.ToString());
-                _gameUI.SetTrumpCount(_trumpMng.CurrentRedTrumpCount, _trumpMng.CurrentBlackTrumpCount);
+                _gameUI.SetTrumpCount(_currentRedStrileNum, _currentBlackStrikeNum);
                 _gameUI.SetResultText("");
 
                 _cameraMng.ChangeCamera(CroquetCameraType.View, 3.0f);
@@ -202,6 +207,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         //_gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         _gameUI.SetResultText("ステージクリア！");
                         GameManager.SaveStageResult(true);
+                        yield return new WaitForSeconds(1.5f);
+                        _gameUI.SetResultText("");
+                        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
                     }
                     else
                     {
@@ -270,7 +278,19 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
             Debug.Log("当たり");
         }
 
-        _gameUI.SetTrumpCount(_trumpMng.CurrentRedTrumpCount, _trumpMng.CurrentBlackTrumpCount);
+        switch (type)
+        {
+            case TrumpColorType.Red:
+                _currentRedStrileNum++;
+                break;
+            case TrumpColorType.Black:
+                _currentBlackStrikeNum++;
+                break;
+            default:
+                break;
+        }
+
+        _gameUI.SetTrumpCount(_currentRedStrileNum, _currentBlackStrikeNum);
     }
 
     /// <summary>
