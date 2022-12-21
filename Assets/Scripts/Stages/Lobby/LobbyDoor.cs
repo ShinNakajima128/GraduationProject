@@ -42,6 +42,7 @@ public class LobbyDoor : MonoBehaviour
             .Where(_ => _submitIcon.activeSelf && UIInput.Submit)
             .Subscribe(_ =>
             {
+                TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
                 TransitionManager.SceneTransition(_sceneType);
             });
     }

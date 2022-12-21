@@ -280,7 +280,7 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     public static void Reset()
     {
-        IsFirstArrival = false;
+        IsFirstArrival = true;
     }
 
     /// <summary>
