@@ -35,6 +35,10 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     Transform _goingUnderTrans = default;
 
+    [Tooltip("演出用のチェシャ猫")]
+    [SerializeField]
+    GameObject[] _cheshireCats = default;
+
     [Header("Components")]
     [SerializeField]
     MessagePlayer _messagePlayer = default;
@@ -50,6 +54,9 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField]
     CinemachineVirtualCamera _goingUnderCamera = default;
+
+    [SerializeField]
+    CinemachineVirtualCamera _cheshireCatCamera = default;
 
     [SerializeField]
     CinemachineInputProvider _provider = default;
@@ -132,7 +139,6 @@ public class LobbyManager : MonoBehaviour
             //ロビーに初めて来たときはストーリーメッセージを再生
             if (IsFirstArrival)
             {
-
                 yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage1_End);
 
                 TransitionManager.FadeIn(FadeType.White_default, action: () =>
@@ -141,8 +147,32 @@ public class LobbyManager : MonoBehaviour
                 });
 
                 yield return new WaitForSeconds(3.0f);
+                
+                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_Visit, () => 
+                {
+                    TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+                    TransitionManager.FadeIn(FadeType.Normal, action: () =>
+                    {
+                        LetterboxController.ActivateLetterbox(true, 0f);
+                        _cheshireCats[0].SetActive(true);
+                        TransitionManager.FadeOut(FadeType.Normal);
+                    });
+                });
 
-                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_ClockEnd, ()=> 
+                yield return new WaitForSeconds(10.5f);
+
+                TransitionManager.FadeIn(FadeType.Normal, action: () =>
+                {
+                    LetterboxController.ActivateLetterbox(false, 0f);
+                    _cheshireCatCamera.Priority = 14;
+                    _cheshireCats[0].SetActive(false);
+                    _cheshireCats[1].SetActive(true);
+                    TransitionManager.FadeOut(FadeType.Normal);
+                });
+
+                yield return new WaitForSeconds(3.0f);
+
+                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_CheshireCat, ()=> 
                 {
                     ClockDirection();
                     AudioManager.StopBGM(1.5f); //一旦曲を止める
@@ -260,6 +290,7 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
+                _cheshireCatCamera.Priority = 10;
                 _clockCamera.Priority = 10;
                 Camera.main.LayerCullingToggle("Ornament", true);
                 StartCoroutine(OnPlayerMovable(3.0f));

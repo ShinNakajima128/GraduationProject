@@ -117,6 +117,8 @@ namespace AliceProject
         GetStill_Stage3,
         GetStill_Stage4,
         GetStill_Stage_Boss,
+        Lobby_Visit,
+        Lobby_CheshireCat
     }
 }
 
