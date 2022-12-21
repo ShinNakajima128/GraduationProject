@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// クロッケーゲーム全体を管理するマネージャークラス
@@ -36,6 +37,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
     [SerializeField]
     CroquetTrumpManager _trumpMng = default;
+
+    [SerializeField]
+    Transform _testModel = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -158,14 +162,13 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 {
                     _cameraMng.ChangeCamera(CroquetCameraType.InGame, 0f);
                     _gameUI.ChangeUIGroup(CroquetGameState.InGame);
+                    _player.BeginControl();
 
                     LetterboxController.ActivateLetterbox(false, 0f);
                     TransitionManager.FadeOut(FadeType.Normal);
                 });
 
-                yield return new WaitForSeconds(3.0f);
-
-                _player.BeginControl();
+                yield return new WaitForSeconds(1.5f);
 
                 yield return new WaitUntil(() => _player.IsThrowed);
 
@@ -174,7 +177,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 //メモ：ここにハリネズミがゴールするまで処理を待機する処理を記述
                 yield return new WaitUntil(() => _isGoaled);
 
-                OnGoalEffect();
                 _isGoaled = false;
 
                 //ゴールした時にシュートの結果に応じて結果を演出を変更
@@ -226,7 +228,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// <returns></returns>
     IEnumerator GoalDirectionCoroutine(bool result)
     {
-        _cameraMng.ChangeCamera(CroquetCameraType.Goal);
         _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
 
         yield return new WaitForSeconds(2.0f);
@@ -234,6 +235,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         if (result)
         {
             _gameUI.SetResultText("お題達成！");
+            OnGoalEffect();
         }
         else
         {
@@ -247,6 +249,12 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         _player.GoalAction(() =>
         {
             _isGoaled = true;
+            _testModel.DOShakeScale(0.5f,strength: 1f, vibrato:10);
+        });
+
+        _player.CheckPointAction(() =>
+        {
+            _cameraMng.ChangeCamera(CroquetCameraType.Goal, 2.0f);
         });
     }
 

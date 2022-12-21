@@ -19,6 +19,10 @@ public class CroquetTrumpManager : MonoBehaviour
     [SerializeField]
     float _sideMisalign = 0.1f;
 
+    [Tooltip("•Ç‚Ì’†S‚©‚ç‚Ì‹——£")]
+    [SerializeField]
+    float _centerWallDist = 0.5f;
+
     [Tooltip("¶‚Ì•Ç‚ÌTransform")]
     [SerializeField]
     Transform _leftWall = default;
@@ -82,18 +86,12 @@ public class CroquetTrumpManager : MonoBehaviour
         }
     }
 
-    IEnumerator Start()
-    {
-        yield return null;
-
-        if (_debugMode)
-        {
-            SetTrumpSolder(_debugAlignmentType);
-        }
-    }
-
     public void SetTrumpSolder(AlignmentType type)
     {
+        if (_debugMode)
+        {
+            type = _debugAlignmentType;
+        }
         foreach (var t in _trumpsList)
         {
             t.gameObject.SetActive(true);
@@ -168,7 +166,7 @@ public class CroquetTrumpManager : MonoBehaviour
                     leftPoint.x += _sideMisalign;
                     trump.ChangeMoveState(MoveDir.Left);
 
-                    if (leftPoint.x >= _rightWall.position.x - (_sideMisalign + 1f))
+                    if (leftPoint.x >= _rightWall.position.x - (_sideMisalign + _centerWallDist))
                     {
                         isLeftPoint_RightDir = false;
                     }
@@ -178,7 +176,7 @@ public class CroquetTrumpManager : MonoBehaviour
                     leftPoint.x -= _sideMisalign;
                     trump.ChangeMoveState(MoveDir.Right);
 
-                    if (leftPoint.x <= _leftWall.position.x + (_sideMisalign + 1f))
+                    if (leftPoint.x <= _leftWall.position.x + (_sideMisalign + _centerWallDist))
                     {
                         isLeftPoint_RightDir = true;
                     }
@@ -202,7 +200,7 @@ public class CroquetTrumpManager : MonoBehaviour
                 {
                     rightPoint.x += _sideMisalign;
 
-                    if (rightPoint.x >= _rightWall.position.x - (_sideMisalign + 1f))
+                    if (rightPoint.x >= _rightWall.position.x - (_sideMisalign + _centerWallDist))
                     {
                         isRightPoint_LeftDir = false;
                     }
@@ -211,7 +209,7 @@ public class CroquetTrumpManager : MonoBehaviour
                 {
                     rightPoint.x -= _sideMisalign;
 
-                    if (rightPoint.x <= _leftWall.position.x + (_sideMisalign + 1f))
+                    if (rightPoint.x <= _leftWall.position.x + (_sideMisalign + _centerWallDist))
                     {
                         isRightPoint_LeftDir = true;
                     }
@@ -258,11 +256,11 @@ public class CroquetTrumpManager : MonoBehaviour
                 trump.gameObject.transform.position = pos;
             }
 
-            if (pos.x >= _rightWall.position.x - (_sideMisalign + 1f))
+            if (pos.x >= _rightWall.position.x - (_sideMisalign + _centerWallDist))
             {
                 isRightDir = false;
             }
-            else if (pos.x <= _leftWall.position.x + (_sideMisalign + 1f))
+            else if (pos.x <= _leftWall.position.x + (_sideMisalign + _centerWallDist))
             {
                 isRightDir = true;
             }

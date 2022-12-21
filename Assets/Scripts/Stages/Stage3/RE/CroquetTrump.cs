@@ -34,6 +34,13 @@ public class CroquetTrump : TrumpSolder
     private void OnDisable()
     {
         transform.localPosition = Vector3.zero;
+        transform.DOLocalRotate(new Vector3(0f, 180f, 0f), 0f);
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        TryGetComponent(out _anim);
     }
 
     protected override void Start()
@@ -83,8 +90,22 @@ public class CroquetTrump : TrumpSolder
     /// </summary>
     IEnumerator BlowoffCoroutine()
     {
-        yield return transform.DOLocalMoveY(5, 1.0f)
-                              .SetEase(Ease.OutQuart);
+        int randomX = Random.Range(-3, 3);
+        Vector3 dir = new Vector3(randomX, 5f, 5f);
+
+        if (randomX < 0)
+        {
+            transform.DOLocalRotate(new Vector3(0, 0, -30), 0.2f);
+        }
+        else
+        {
+            transform.DOLocalRotate(new Vector3(0, 0, 30), 0.2f);
+        }
+
+        yield return transform.DOLocalMove(dir, 0.5f)
+                              .SetRelative(true)
+                              .SetEase(Ease.Linear)
+                              .WaitForCompletion();
 
         gameObject.SetActive(false);
     }

@@ -31,6 +31,7 @@ public class BallController : MonoBehaviour, IThrowable
     private bool IsThrowed { get; set; } = false;
 
     private event Action OnGoaled;
+    private event Action OnCheckPointed;
     private Rigidbody _rb;
     private Vector3 _direction;
     private Vector3 _originPos;
@@ -69,7 +70,7 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     private void ForwardRotation()
     {
-        transform.Rotate(new Vector3(3, 0, 0));
+        transform.Rotate(new Vector3(5, 0, 0));
     }
 
     /// <summary>
@@ -82,14 +83,6 @@ public class BallController : MonoBehaviour, IThrowable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Goal")
-        {
-            Debug.Log("Goal");
-            OnGoaled?.Invoke();
-            StartCoroutine(DelayVanishCoroutine());
-            return;
-        }
-
         if (collision.gameObject.CompareTag("Block"))
         {
             // ñ@ê¸ÇéÊìæ
@@ -99,6 +92,32 @@ public class BallController : MonoBehaviour, IThrowable
             _rb.velocity = result;
             return;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Checkpoint"))
+        {
+            if (IsThrowed)
+            {
+                OnCheckPointed?.Invoke();
+            }
+            return;
+        }
+
+        if (other.gameObject.name == "Goal")
+        {
+            if (IsThrowed)
+            {
+                Debug.Log("Goal");
+                OnGoaled?.Invoke();
+                StartCoroutine(DelayVanishCoroutine());
+                return;
+            }
+        }
+
+
     }
     #endregion
 
@@ -120,6 +139,11 @@ public class BallController : MonoBehaviour, IThrowable
     public void AddCallBack(Action action)
     {
         OnGoaled += action;
+    }
+
+    public void CheckPointCallBack(Action action)
+    {
+        OnCheckPointed += action;
     }
 
     /// <summary>
@@ -152,14 +176,15 @@ public class BallController : MonoBehaviour, IThrowable
 
     void Setup()
     {
-        gameObject.SetActive(true);
         IsThrowed = false;
         transform.SetParent(_parent);
         transform.SetAsLastSibling();
         transform.localPosition = _originPos;
         transform.localRotation = default;
 
+        gameObject.SetActive(true);
         _arrowImage.gameObject.SetActive(true);
+        _rb.velocity = Vector3.zero;
     }
     #endregion
 

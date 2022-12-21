@@ -289,6 +289,11 @@ public class Stage3PlayerController : MonoBehaviour
         _ball.AddCallBack(action);
     }
 
+    public void CheckPointAction(Action action)
+    {
+        _ball.CheckPointCallBack(action);
+    }
+
     void Setup()
     {
         _animator.Play("Idle");
