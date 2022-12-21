@@ -70,10 +70,24 @@ public class TransitionManager : MonoBehaviour
                           });
                 break;
             case FadeType.White_default:
-                Instance._fadeImage.DOColor(Color.white, fadeTime);
+                Instance._fadeImage.DOColor(new Color(1, 1, 1, 0), 0);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeImage.DOFade(1f, 0f);
+                Instance._fadeImage.DOFade(0f, fadeTime)
+                          .OnComplete(() =>
+                          {
+                              action?.Invoke();
+                          });
                 break;
             case FadeType.Black_default:
-                Instance._fadeImage.DOColor(Color.black, fadeTime);
+                Instance._fadeImage.DOColor(new Color(0, 0, 0, 0), 0);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeImage.DOFade(1f, 0f);
+                Instance._fadeImage.DOFade(0f, fadeTime)
+                          .OnComplete(() =>
+                          {
+                              action?.Invoke();
+                          });
                 break;
             default:
                 Instance._fade.FadeOut(Instance._fadeTime, action);
@@ -98,18 +112,24 @@ public class TransitionManager : MonoBehaviour
                           });
                 break;
             case FadeType.White_default:
-                Instance._fadeImage.DOColor(Color.white, fadeTime)
-                                   .OnComplete(() => 
-                                   {
-                                       action?.Invoke();
-                                   });
+                Instance._fadeImage.DOColor(new Color(1, 1, 1, 0), 0);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeImage.DOFade(0f, 0f);
+                Instance._fadeImage.DOFade(1f, fadeTime)
+                          .OnComplete(() =>
+                          {
+                              action?.Invoke();
+                          });
                 break;
             case FadeType.Black_default:
-                Instance._fadeImage.DOColor(Color.black, fadeTime)
-                                   .OnComplete(() =>
-                                   {
-                                       action?.Invoke();
-                                   });
+                Instance._fadeImage.DOColor(new Color(0, 0, 0, 0), 0);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeImage.DOFade(0f, 0f);
+                Instance._fadeImage.DOFade(1f, fadeTime)
+                          .OnComplete(() =>
+                          {
+                              action?.Invoke();
+                          });
                 break;
             case FadeType.White_Transparent:
                 Instance._fadeImage.DOColor(new Color(1, 1, 1, 0), fadeTime)

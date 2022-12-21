@@ -111,7 +111,12 @@ namespace AliceProject
         Stage_Boss_Down1,
         Stage_Boss_Down2,
         Stage_Boss_Down3,
-        Ending
+        Ending,
+        GetStill_Stage1,
+        GetStill_Stage2,
+        GetStill_Stage3,
+        GetStill_Stage4,
+        GetStill_Stage_Boss,
     }
 }
 

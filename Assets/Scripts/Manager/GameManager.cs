@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AliceProject;
 
 public enum Stages
 {
@@ -10,8 +11,6 @@ public enum Stages
     Stage2 = 1,
     Stage3 = 2,
     Stage4 = 3,
-    Stage5 = 4,
-    Stage6 = 5,
     Stage_Boss = 6,
     StageNum = 7
 }
@@ -166,5 +165,26 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
 
         Debug.Log("データをリセットしました");
+    }
+
+    /// <summary>
+    /// ステージクリア時のスチル獲得の演出を再生する
+    /// </summary>
+    /// <param name="stage"> クリアしたステージ </param>
+    /// <param name="type"> 再生するメッセージ </param>
+    /// <returns></returns>
+    public static IEnumerator GetStillDirectionCoroutine(Stages stage, MessageType type)
+    {
+        TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
+        TransitionManager.FadeIn(FadeType.Normal, action: () =>
+        {
+            GetStillController.ActiveGettingStillPanel(Stages.Stage3);
+
+            TransitionManager.FadeOut(FadeType.Normal);
+        });
+
+        yield return new WaitForSeconds(3.0f);
+
+        yield return MessagePlayer.Instance.PlayMessageCorountine(type);
     }
 }
