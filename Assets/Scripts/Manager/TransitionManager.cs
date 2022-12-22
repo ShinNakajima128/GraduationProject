@@ -38,6 +38,7 @@ public class TransitionManager : MonoBehaviour
     private void Start()
     {
         //FadeOut(_fadeType);
+        Cursor.visible = false;
     }
     /// <summary>
     /// シーン遷移する
