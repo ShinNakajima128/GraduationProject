@@ -44,6 +44,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
             {
                 _inputMove = Vector3.forward * _dir.y + Vector3.right * _dir.x;
                 _inputMove = Camera.main.transform.TransformDirection(_inputMove);
+                _inputMove.y = 0;
                 Quaternion targetRotation = Quaternion.LookRotation(_inputMove);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * _turnSpeed);
                 Vector3 velocity = _inputMove.normalized * _moveSpeed;
