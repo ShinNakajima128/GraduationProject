@@ -14,11 +14,12 @@ public class CheshireCat : MonoBehaviour
     float _moveSpeed = 1.5f;
 
     [SerializeField]
-    CheshireCatState _state = default;
+    CheshireCatState _currentState = default;
     #endregion
 
     #region private
     Animator _anim;
+    Coroutine _currentCoroutine;
     #endregion
 
     #region public
@@ -59,9 +60,50 @@ public class CheshireCat : MonoBehaviour
         }
     }
 
-    void ChangeState(CheshireCatState state)
+    /// <summary>
+    /// 指定したステータスのアクションを実行
+    /// </summary>
+    /// <param name="state"> ステータスの種類 </param>
+    void OnAction(CheshireCatState state)
     {
-        _state = state;
+        //以前のステータスのコルーチンを中断
+        if (_currentCoroutine != null)
+        {
+            StopCoroutine(_currentCoroutine);
+            _currentCoroutine = null;
+        }
+
+        switch (state)
+        {
+            case CheshireCatState.Idle:
+                _currentCoroutine = StartCoroutine(IdleCoroutine());
+                break;
+            case CheshireCatState.Idle_Lick:
+                break;
+            case CheshireCatState.LyingDown:
+                break;
+            case CheshireCatState.Walk:
+                break;
+            case CheshireCatState.FastWalk:
+                break;
+            case CheshireCatState.Jump:
+                break;
+            case CheshireCatState.Appearance:
+                break;
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// チェシャ猫のステータスを変更する
+    /// </summary>
+    /// <param name="state"> ステータスの種類 </param>
+    public void ChangeState(CheshireCatState state)
+    {
+        _currentState = state;
+
+        OnAction(_currentState);
     }
 }
 

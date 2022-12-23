@@ -154,7 +154,7 @@ public class LobbyManager : MonoBehaviour
                     TransitionManager.FadeIn(FadeType.Normal, action: () =>
                     {
                         LetterboxController.ActivateLetterbox(true, 0f);
-                        _cheshireCats[0].SetActive(true);
+                        LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Appearance);
                         TransitionManager.FadeOut(FadeType.Normal);
                     });
                 });
@@ -165,8 +165,7 @@ public class LobbyManager : MonoBehaviour
                 {
                     LetterboxController.ActivateLetterbox(false, 0f);
                     _cheshireCatCamera.Priority = 14;
-                    _cheshireCats[0].SetActive(false);
-                    _cheshireCats[1].SetActive(true);
+                    LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Movable);
                     TransitionManager.FadeOut(FadeType.Normal);
                 });
 
