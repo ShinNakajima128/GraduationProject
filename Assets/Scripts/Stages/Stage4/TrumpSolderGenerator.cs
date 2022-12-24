@@ -36,6 +36,9 @@ public class TrumpSolderGenerator : MonoBehaviour
     #endregion
 
     #region property
+    /// <summary>
+    /// 現在アクティブとなっているトランプ兵の数を取得
+    /// </summary>
     public int CurrentActiveTrumpCount => _trumpMng.GetTrumpActiveCount();
     #endregion
 
@@ -78,7 +81,6 @@ public class TrumpSolderGenerator : MonoBehaviour
                         {
                             continue;
                         }
-
                         _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
                         generateCount++;
                     }
@@ -87,7 +89,6 @@ public class TrumpSolderGenerator : MonoBehaviour
                 {
                     _trumpMng.Use((Stage4TrumpDirectionType)i, _generatePoints[i].Positions[n]);
                 }
-                
             }
         }
     }
@@ -114,6 +115,9 @@ public class TrumpSolderGenerator : MonoBehaviour
 #endif
 }
 
+/// <summary>
+/// トランプ兵の生成位置データ
+/// </summary>
 [Serializable]
 public struct GeneratePoint
 {
