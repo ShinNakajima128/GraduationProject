@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Stage4の蝶を管理するマネージャークラス
+/// </summary>
 public class ButterflyManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    #region serialize
+    #endregion
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    #region private
+    #endregion
+    
+    #region public
+    #endregion
+    
+    #region property
+    #endregion
 }

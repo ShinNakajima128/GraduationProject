@@ -14,6 +14,13 @@ public class Butterfly : MonoBehaviour
     [Header("Components")]
     [SerializeField]
     Renderer _butterfltRenderer = default;
+
+    [Header("Materials")]
+    [SerializeField]
+    Material _redMat = default;
+
+    [SerializeField]
+    Material _whiteMat = default;
     #endregion
 
     #region private
@@ -29,6 +36,27 @@ public class Butterfly : MonoBehaviour
     private void Awake()
     {
         TryGetComponent(out _anim);
+    }
+
+    /// <summary>
+    /// バラの色に応じて蝶のマテリアルを変更する
+    /// </summary>
+    /// <param name="type"> バラの種類 </param>
+    public void ChangeMaterial(RoseType type)
+    {
+        switch (type)
+        {
+            case RoseType.Hidden:
+                break;
+            case RoseType.Red:
+                _butterfltRenderer.material = _whiteMat;  //バラの色と逆の色にする
+                break;
+            case RoseType.White:
+                _butterfltRenderer.material = _redMat;
+                break;
+            default:
+                break;
+        }
     }
 }
 
