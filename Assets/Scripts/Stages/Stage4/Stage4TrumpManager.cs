@@ -69,6 +69,11 @@ public class Stage4TrumpManager : MonoBehaviour
         Setup();
     }
 
+    /// <summary>
+    /// トランプ兵を使用する
+    /// </summary>
+    /// <param name="type"> トランプ兵の種類 </param>
+    /// <param name="target"> 出現位置 </param>
     public void Use(Stage4TrumpDirectionType type, Transform target)
     {
         ActivateTrump(type, target);
@@ -107,6 +112,10 @@ public class Stage4TrumpManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 現在アクティブとなっているトランプ兵の数を取得する
+    /// </summary>
+    /// <returns> 出現しているトランプ兵の数 </returns>
     public int GetTrumpActiveCount()
     {
         int total = 0;
@@ -120,6 +129,9 @@ public class Stage4TrumpManager : MonoBehaviour
         return total;
     }
 
+    /// <summary>
+    /// トランプ兵オブジェクトのセットアップ
+    /// </summary>
     void Setup()
     {
         for (int i = 0; i < _standingPoolingCount; i++)
@@ -158,6 +170,11 @@ public class Stage4TrumpManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// トランプ兵をアクティブにする
+    /// </summary>
+    /// <param name="type"> トランプの種類 </param>
+    /// <param name="target"> 出現位置のTransform </param>
     void ActivateTrump(Stage4TrumpDirectionType type, Transform target)
     {
         switch (type)
