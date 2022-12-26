@@ -34,6 +34,10 @@ public class ObjectManager : MonoBehaviour
     [Tooltip("ƒgƒ‰ƒ“ƒv•º‚ğ¶¬‚·‚éGenerator")]
     [SerializeField]
     TrumpSolderGenerator _trumpGenerator = default;
+
+    [Tooltip("’±‚ğ¶¬‚·‚éGenerator")]
+    [SerializeField]
+    ButterflyGenerator _butterflyGenerator = default;
     #endregion
     #region private
     #endregion
@@ -93,10 +97,8 @@ public class ObjectManager : MonoBehaviour
             t.Deploy();
         }
 
-        //if (quizType != QuizType.TrumpSolder)
-        //{
-        //    return;
-        //}
+        _butterflyGenerator.Return();
+        _butterflyGenerator.OnGenerate(_trees);
 
         _trumpGenerator.Return();
         _trumpGenerator.Generate();

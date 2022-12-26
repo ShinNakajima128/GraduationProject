@@ -27,7 +27,7 @@ public class RoseTree : MonoBehaviour
     public Rose[] CurrentRose => _roses;
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         _roses = new Rose[_roseTrans.Length];
         for (int i = 0; i < _roses.Length; i++)

@@ -53,10 +53,27 @@ public class ButterflyManager : MonoBehaviour
     {
         foreach (var b in _butterflyList)
         {
-            b.gameObject.SetActive(true);
-            b.transform.localPosition = target.position;
-            b.ChangeMaterial(color);
-            b.ChangeState(state);
+            if (!b.gameObject.activeSelf)
+            {
+                b.gameObject.SetActive(true);
+                b.transform.localPosition = new Vector3(target.position.x, target.position.y, target.position.z - 0.1f);
+                b.ChangeMaterial(color);
+                b.ChangeState(state);
+                return;
+            }
+        }
+        Debug.LogError("使用可能な蝶オブジェクトがありませんでした");
+    }
+
+    /// <summary>
+    /// アクティブになっている蝶を全てOFFにする
+    /// </summary>
+    public void Return()
+    {
+        foreach (var b in _butterflyList)
+        {
+            b.gameObject.SetActive(false);
+            b.gameObject.transform.localPosition = Vector3.zero;
         }
     }
 }
