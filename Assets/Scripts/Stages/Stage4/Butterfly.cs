@@ -39,29 +39,69 @@ public class Butterfly : MonoBehaviour
     }
 
     /// <summary>
-    /// バラの色に応じて蝶のマテリアルを変更する
+    /// 蝶のマテリアル(色)を変更する
     /// </summary>
-    /// <param name="type"> バラの種類 </param>
-    public void ChangeMaterial(RoseType type)
+    /// <param name="color"> 色 </param>
+    public void ChangeMaterial(ButterflyColor color)
     {
-        switch (type)
+        switch (color)
         {
-            case RoseType.Hidden:
-                break;
-            case RoseType.Red:
-                _butterfltRenderer.material = _whiteMat;  //バラの色と逆の色にする
-                break;
-            case RoseType.White:
+            case ButterflyColor.Red:
                 _butterfltRenderer.material = _redMat;
+                break;
+            case ButterflyColor.White:
+                _butterfltRenderer.material = _whiteMat;
                 break;
             default:
                 break;
         }
     }
+
+    /// <summary>
+    /// 指定したステータスに変更する
+    /// </summary>
+    /// <param name="state"> 蝶のステータス </param>
+    public void ChangeState(ButterflyState state)
+    {
+        switch (state)
+        {
+            case ButterflyState.Idle:
+                break;
+            case ButterflyState.Flapping:
+                break;
+            case ButterflyState.Fly_Fast:
+                break;
+            case ButterflyState.Fly_Slow:
+                break;
+            case ButterflyState.Fly_VerySlow:
+                break;
+            default:
+                break;
+        }
+        _anim.CrossFadeInFixedTime(state.ToString(), 0.1f);
+    }
 }
 
-public enum ButterfltState
+public enum ButterflyState
 {
+    /// <summary> 蝶の状態 </summary>
     Idle,
-
+    /// <summary> 止まりながら羽を動かす </summary>
+    Flapping,
+    /// <summary> 羽ばたき(速め) </summary>
+    Fly_Fast,
+    /// <summary> 羽ばたき(遅め) </summary>
+    Fly_Slow,
+    /// <summary> 羽ばたき(かなり遅め) </summary>
+    Fly_VerySlow
 }
+
+/// <summary>
+/// 蝶の色
+/// </summary>
+public enum ButterflyColor
+{
+    Red,
+    White
+}
+
