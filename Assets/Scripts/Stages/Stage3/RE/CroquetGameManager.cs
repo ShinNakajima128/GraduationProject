@@ -163,17 +163,13 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 //お題のアニメーションが終了するまで待機
                 yield return _order.LetterAnimationCoroutine(i + 1, data.ToString());
 
-                TransitionManager.FadeIn(FadeType.Normal, action: () =>
-                {
-                    _cameraMng.ChangeCamera(CroquetCameraType.InGame, 0f);
-                    _gameUI.ChangeUIGroup(CroquetGameState.InGame);
-                    _player.BeginControl();
-
-                    LetterboxController.ActivateLetterbox(false, 0f);
-                    TransitionManager.FadeOut(FadeType.Normal);
-                });
+                _cameraMng.ChangeCamera(CroquetCameraType.InGame);
+                LetterboxController.ActivateLetterbox(false, 1.5f);
 
                 yield return new WaitForSeconds(1.5f);
+                
+                _gameUI.ChangeUIGroup(CroquetGameState.InGame);
+                _player.BeginControl();
 
                 yield return new WaitUntil(() => _player.IsThrowed);
 
