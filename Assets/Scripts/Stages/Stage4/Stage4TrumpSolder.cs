@@ -93,6 +93,9 @@ public class Stage4TrumpSolder : TrumpSolder
             case Stage4TrumpDirectionType.HideTree:
                 _anim.CrossFadeInFixedTime("Stage4_HideTree", 0.1f);
                 break;
+            case Stage4TrumpDirectionType.HideBucket:
+                _anim.CrossFadeInFixedTime("Stage4_HideBucket", 0.1f);
+                break;
             default:
                 break;
         }

@@ -35,6 +35,10 @@ public class Stage4TrumpManager : MonoBehaviour
     [SerializeField]
     int _hideTreePoolingCount = 6;
 
+    [Tooltip("「積まれたバケツに隠れる」トランプ兵をプールする数")]
+    [SerializeField]
+    int _hideBucketPoolingCount = 6;
+
     [Header("Objects")]
     [SerializeField]
     Transform[] _trumpParents = default;
@@ -56,6 +60,9 @@ public class Stage4TrumpManager : MonoBehaviour
 
     [SerializeField]
     Stage4TrumpSolder _hideTreeTrumpPrefab = default;
+
+    [SerializeField]
+    Stage4TrumpSolder _hideBucketTrumpPrefab = default;
     #endregion
 
     #region private
@@ -65,6 +72,7 @@ public class Stage4TrumpManager : MonoBehaviour
     List<Stage4TrumpSolder> _loafTrumpList = new List<Stage4TrumpSolder>();
     List<Stage4TrumpSolder> _dipTrumpList = new List<Stage4TrumpSolder>();
     List<Stage4TrumpSolder> _hideTreeTrumpList = new List<Stage4TrumpSolder>();
+    List<Stage4TrumpSolder> _hideBucketTrumpList = new List<Stage4TrumpSolder>();
     #endregion
     #region public
     #endregion
@@ -123,6 +131,10 @@ public class Stage4TrumpManager : MonoBehaviour
             t.gameObject.SetActive(false);
         }
 
+        foreach (var t in _hideBucketTrumpList)
+        {
+            t.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -139,6 +151,7 @@ public class Stage4TrumpManager : MonoBehaviour
         total += _loafTrumpList.Count(t => t.gameObject.activeSelf);
         total += _dipTrumpList.Count(t => t.gameObject.activeSelf);
         total += _hideTreeTrumpList.Count(t => t.gameObject.activeSelf);
+        total += _hideBucketTrumpList.Count(t => t.gameObject.activeSelf);
         Debug.Log($"トランプ兵の現在のアクティブ数{total}");
         return total;
     }
@@ -187,6 +200,13 @@ public class Stage4TrumpManager : MonoBehaviour
         {
             var trump = Instantiate(_hideTreeTrumpPrefab, _trumpParents[5]);
             _hideTreeTrumpList.Add(trump);
+            trump.gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < _hideBucketPoolingCount; i++)
+        {
+            var trump = Instantiate(_hideBucketTrumpPrefab, _trumpParents[6]);
+            _hideBucketTrumpList.Add(trump);
             trump.gameObject.SetActive(false);
         }
     }
@@ -277,6 +297,19 @@ public class Stage4TrumpManager : MonoBehaviour
                     }
                 }
                 Debug.LogError("使用可能な「木の裏に隠れる」のトランプ兵がありませんでした");
+                break;
+            case Stage4TrumpDirectionType.HideBucket:
+                foreach (var t in _hideBucketTrumpList)
+                {
+                    if (!t.gameObject.activeSelf)
+                    {
+                        t.gameObject.SetActive(true);
+                        t.transform.localPosition = target.position;
+                        t.transform.localRotation = target.localRotation;
+                        return;
+                    }
+                }
+                Debug.LogError("使用可能な「積まれたバケツに隠れる」のトランプ兵がありませんでした");
                 break;
             default:
                 break;
