@@ -54,17 +54,7 @@ public class Stage4TrumpSolder : TrumpSolder
 
     private void OnEnable()
     {
-        if (_init)
-        {
-
-        }
-
         ChangeAnimation(_directionType);
-
-        //if (_directionType == Stage4TrumpDirectionType.Walk)
-        //{
-        //    _moveSpeed = Random.Range(0.1f, _maxSpeed);
-        //}
     }
 
     private void OnDisable()
@@ -100,6 +90,9 @@ public class Stage4TrumpSolder : TrumpSolder
             case Stage4TrumpDirectionType.Dip:
                 _anim.CrossFadeInFixedTime("Stage4_Dip", 0.1f);
                 break;
+            case Stage4TrumpDirectionType.HideTree:
+                _anim.CrossFadeInFixedTime("Stage4_HideTree", 0.1f);
+                break;
             default:
                 break;
         }
@@ -120,5 +113,9 @@ public enum Stage4TrumpDirectionType
     /// <summary> サボり </summary>
     Loaf,
     /// <summary> ペンキをかき混ぜている </summary>
-    Dip
+    Dip,
+    /// <summary> 木の裏に隠れている </summary>
+    HideTree,
+    /// <summary> 積まれたバケツの裏に隠れている </summary>
+    HideBucket
 }
