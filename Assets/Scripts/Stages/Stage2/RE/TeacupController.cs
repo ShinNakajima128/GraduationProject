@@ -54,7 +54,7 @@ public class TeacupController : MonoBehaviour
                     break;
                 case ShufflePhase.Two:
 
-                    pattern = Random.Range(0, 3);
+                    pattern = Random.Range(0, 2);
 
                     if (pattern == 0)
                     {
@@ -68,7 +68,7 @@ public class TeacupController : MonoBehaviour
                     break;
                 case ShufflePhase.Three:
 
-                    pattern = Random.Range(0, 3);
+                    pattern = Random.Range(0, 2);
 
                     if (pattern == 0)
                     {

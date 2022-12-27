@@ -111,11 +111,17 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
             yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
 
+            if (i == 0)
+            {
+                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.Stage2_Start_CheshireCat);
+            }
+
             yield return _teacupManager.ChoicePhaseCoroutine((judge, index) => 
             {
                 _result = judge;
                 _selectIndex = index;
             });
+
 
             yield return new WaitUntil(() => _selectIndex > -1);
 
