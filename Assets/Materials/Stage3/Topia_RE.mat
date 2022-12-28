@@ -24,6 +24,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 9294844b15dca184d914a632279b24e1, type: 3}
   m_ValidKeywords:
   - EFFECT_HUE_VARIATION
+  - GEOM_TYPE_LEAF
   - _METALLICGLOSSMAP
   - _REQUIRE_UV2
   - _SPECGLOSSMAP
@@ -506,11 +507,11 @@ Material:
     - _RimBlur: 0.259
     - _RimBorder: 0
     - _RimDirRange: 0
-    - _RimDirStrength: 0
+    - _RimDirStrength: 0.852
     - _RimEnableLighting: 1
-    - _RimFresnelPower: 3.5
-    - _RimIndirBlur: 0.1
-    - _RimIndirBorder: 0.5
+    - _RimFresnelPower: 11
+    - _RimIndirBlur: 1
+    - _RimIndirBorder: 0.768
     - _RimIndirRange: 0
     - _RimMainStrength: 0.665
     - _RimNormalStrength: 1
@@ -537,7 +538,7 @@ Material:
     - _ShadowMaskType: 0
     - _ShadowNormalStrength: 1
     - _ShadowPostAO: 0
-    - _ShadowReceive: 0
+    - _ShadowReceive: 1
     - _ShadowStrength: 1
     - _ShadowStrengthMaskLOD: 0
     - _ShiftBackfaceUV: 0
@@ -646,7 +647,7 @@ Material:
     - _Main3rdDistanceFade: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _Main3rdTexDecalAnimation: {r: 1, g: 1, b: 1, a: 30}
     - _Main3rdTexDecalSubParam: {r: 1, g: 1, b: 0, a: 1}
-    - _MainTexHSVG: {r: 0.047, g: 0.89, b: 1.98, a: 0.85}
+    - _MainTexHSVG: {r: 0.003, g: 1, b: 1.2, a: 0.7}
     - _MainTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndColor: {r: 1, g: 1, b: 1, a: 1}
@@ -659,7 +660,7 @@ Material:
     - _ReflectionColor: {r: 1, g: 1, b: 1, a: 1}
     - _ReflectionCubeColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0.34327158, g: 0.4444853, b: 0.5377358, a: 1}
-    - _RimIndirColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimIndirColor: {r: 1.0000001, g: 1.0000001, b: 1.0000001, a: 1}
     - _Shadow2ndColor: {r: 0.3940014, g: 0.46014446, b: 0.5377358, a: 1}
     - _Shadow3rdColor: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAOShift: {r: 1, g: 0, b: 1, a: 0}
