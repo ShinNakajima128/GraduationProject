@@ -47,7 +47,9 @@ public class HideTrumpController : MonoBehaviour
             return;
         }
 
-        var distance = Vector3.Distance(_playerTrans.position, transform.position);
+        Vector3 trumpPos = new Vector3(transform.position.x, _playerTrans.position.y, _playerTrans.position.z);
+
+        var distance = Vector3.Distance(_playerTrans.position, trumpPos);
 
         if (distance <= _onActionDistance)
         {
