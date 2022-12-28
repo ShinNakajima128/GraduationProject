@@ -10,6 +10,8 @@ Material:
   m_Name: BgMt_Lobby
   m_Shader: {fileID: 4800000, guid: 9294844b15dca184d914a632279b24e1, type: 3}
   m_ValidKeywords:
+  - EFFECT_HUE_VARIATION
+  - _METALLICGLOSSMAP
   - _REQUIRE_UV2
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
@@ -501,8 +503,8 @@ Material:
     - _RimNormalStrength: 1
     - _RimShadowMask: 0.5
     - _RimVRParallaxStrength: 1
-    - _Shadow2ndBlur: 0.52
-    - _Shadow2ndBorder: 0.196
+    - _Shadow2ndBlur: 0.514
+    - _Shadow2ndBorder: 0.29
     - _Shadow2ndNormalStrength: 1
     - _Shadow2ndReceive: 1
     - _Shadow3rdBlur: 0.1
@@ -511,7 +513,7 @@ Material:
     - _Shadow3rdReceive: 0
     - _ShadowBlur: 0.4
     - _ShadowBlurMaskLOD: 0
-    - _ShadowBorder: 0.323
+    - _ShadowBorder: 0.529
     - _ShadowBorderMaskLOD: 0
     - _ShadowBorderRange: 0.08
     - _ShadowColorType: 0
@@ -569,7 +571,7 @@ Material:
     - _UsePOM: 0
     - _UseParallax: 0
     - _UseReflection: 0
-    - _UseRim: 0
+    - _UseRim: 1
     - _UseShadow: 1
     - _VertexLightStrength: 0
     - _WorkflowMode: 1
@@ -631,7 +633,7 @@ Material:
     - _Main3rdDistanceFade: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _Main3rdTexDecalAnimation: {r: 1, g: 1, b: 1, a: 30}
     - _Main3rdTexDecalSubParam: {r: 1, g: 1, b: 0, a: 1}
-    - _MainTexHSVG: {r: 0, g: 1, b: 1, a: 1}
+    - _MainTexHSVG: {r: 0, g: 1.15, b: 1, a: 1.22}
     - _MainTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndColor: {r: 1, g: 1, b: 1, a: 1}
