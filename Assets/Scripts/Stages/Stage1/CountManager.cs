@@ -25,7 +25,10 @@ public class CountManager : MonoBehaviour
     int _generateNum = 3;
 
     [SerializeField]
-    Text _countText = default;
+    Text _targetCountText = default;
+
+    [SerializeField]
+    Text _currentCountText = default;
     #endregion
 
     #region private
@@ -52,10 +55,17 @@ public class CountManager : MonoBehaviour
         FallGameManager.Instance.GetItem += GetAnimation;
         _targetCount = FallGameManager.Instance.TargetCount;
 
-        _countText.text = $"{_currentCount}–‡ / {_targetCount}–‡";
+        _targetCountText.text = $"{_targetCount.ToString("D2")}";
+        _currentCountText.text = $"<color=#C320B7>{_currentCount.Value.ToString("D2")}</color>";
         _currentCount.Subscribe(_ =>
         {
-            _countText.text = $"{_currentCount}–‡ / {_targetCount}–‡";
+            _currentCountText.text = $"<color=#C320B7>{_currentCount.Value.ToString("D2")}</color>";
+
+            _currentCountText.gameObject.transform.DOScale(1.5f, 0.12f)
+                                                  .OnComplete(() =>
+                                                  {
+                                                      _currentCountText.gameObject.transform.DOScale(1f, 0.12f);
+                                                  });
 
             if (_currentCount.Value >= _targetCount)
             {

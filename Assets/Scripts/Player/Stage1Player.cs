@@ -42,6 +42,7 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable
     public void Damage(int value)
     {
         StartCoroutine(DamageCoroutine());
+        FallGameManager.Instance.OnDamage(value);
     }
     IEnumerator DamageCoroutine()
     {

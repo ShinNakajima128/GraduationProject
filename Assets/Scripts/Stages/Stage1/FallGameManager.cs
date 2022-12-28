@@ -13,8 +13,13 @@ public class FallGameManager : MonoBehaviour
 {
     #region selialize
     [Header("Variable")]
+    [Tooltip("目標の枚数")]
     [SerializeField]
     int _targetCount = 10;
+
+    [Tooltip("最大HP")]
+    [SerializeField]
+    int _maxHP = 3;
 
     [Header("Objects")]
     [SerializeField]
@@ -51,6 +56,7 @@ public class FallGameManager : MonoBehaviour
     #region property
     public static FallGameManager Instance { get; private set; }
     public int TargetCount => _targetCount;
+    public int MaxHP => _maxHP;
     #endregion
 
     private void Awake()
@@ -60,11 +66,16 @@ public class FallGameManager : MonoBehaviour
     private void Start()
     {
         _originPos = _playerTrans.position;
+        _inGamePanel.SetActive(false);
 
         AudioManager.PlayBGM(BGMType.Stage1);
         GameManager.UpdateCurrentStage(Stages.Stage1);
+
+        HPManager.Instance.ChangeHPValue(_maxHP, true); //HPManagerに最大HPの値を登録
+        HPManager.Instance.LostHpAction += OnGameOver; //ゲームオーバー時の処理をHPManagerに登録
+
         OnGameStart();
-        TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
+        
         TransitionManager.FadeOut(FadeType.Normal, action: () =>
         {
             TransitionManager.FadeIn(FadeType.Black_TransParent, 0f, action:() =>
@@ -73,7 +84,6 @@ public class FallGameManager : MonoBehaviour
             });
         });
     }
-
 
     public void OnGameStart()
     {
@@ -91,11 +101,39 @@ public class FallGameManager : MonoBehaviour
         GetItem?.Invoke(effect);
     }
 
+    /// <summary>
+    /// ダメージを受ける処理
+    /// </summary>
+    /// <param name="damageValue"> 受けたダメージの値 </param>
+    public void OnDamage(int damageValue)
+    {
+        HPManager.Instance.ChangeHPValue(damageValue);
+        Debug.Log("ダメージを受けた");
+    }
+
+    /// <summary>
+    /// HPを回復する処理
+    /// </summary>
+    /// <param name="healValue"> 回復する値 </param>
+    public void OnHeal(int healValue)
+    {
+        HPManager.Instance.ChangeHPValue(healValue, true);
+        Debug.Log("HPを回復");
+    }
+
     public void OnGameEnd()
     {
         GameEnd?.Invoke();
         Debug.Log("ゲーム終了");
         StartCoroutine(GameEndCoroutine());
+    }
+
+    /// <summary>
+    /// ゲームオーバーの処理を実行
+    /// </summary>
+    void OnGameOver()
+    {
+        TransitionManager.SceneTransition(SceneType.Stage1_Fall);
     }
 
     void Init()
@@ -112,6 +150,7 @@ public class FallGameManager : MonoBehaviour
 
         action?.Invoke();
         _informationText.text = "";
+        _inGamePanel.SetActive(true);
     }
 
     IEnumerator GameEndCoroutine()
