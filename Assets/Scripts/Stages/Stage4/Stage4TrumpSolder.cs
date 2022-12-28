@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Stage4TrumpSolder : TrumpSolder
 {
@@ -18,12 +19,18 @@ public class Stage4TrumpSolder : TrumpSolder
 
     [SerializeField]
     bool _isDirectionTrump = false;
+
+    [SerializeField]
+    bool _isFliped = false;
     #endregion
+
     #region private
     Animator _anim;
     #endregion
+    
     #region public
     #endregion
+    
     #region property
     public Stage4TrumpDirectionType CurrentDirType
     {
@@ -67,7 +74,14 @@ public class Stage4TrumpSolder : TrumpSolder
         //ステータスが「Walk」のトランプ兵は左へ進む
         if (!_isDirectionTrump && _directionType == Stage4TrumpDirectionType.Walk)
         {
-            transform.localPosition -= new Vector3(_moveSpeed * Time.deltaTime, 0f, 0f);
+            if (!_isFliped)
+            {
+                transform.localPosition -= new Vector3(_moveSpeed * Time.deltaTime, 0f, 0f);
+            }
+            else
+            {
+                transform.localPosition += new Vector3(_moveSpeed * Time.deltaTime / 3, 0f, 0f);
+            }
         }
     }
 
@@ -80,6 +94,15 @@ public class Stage4TrumpSolder : TrumpSolder
                 break;
             case Stage4TrumpDirectionType.Walk:
                 _anim.CrossFadeInFixedTime("Stage4_Walk", 0.1f);
+
+                if (_isDirectionTrump)
+                {
+                    return;
+                }
+
+                _isFliped = Random.Range(0, 2) == 0;
+
+                StartCoroutine(FlipCoroutine());
                 break;
             case Stage4TrumpDirectionType.Paint:
                 _anim.CrossFadeInFixedTime("Stage4_Paint", 0.1f);
@@ -98,6 +121,20 @@ public class Stage4TrumpSolder : TrumpSolder
                 break;
             default:
                 break;
+        }
+    }
+
+    IEnumerator FlipCoroutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        if (_isFliped)
+        {
+            transform.DOLocalRotate(new Vector3(0, -220, 0), 0f);
+        }
+        else
+        {
+            transform.DOLocalRotate(new Vector3(0, -130, 0), 0f);
         }
     }
 }
