@@ -35,29 +35,18 @@ public class CheshireCat : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(IdleCoroutine());
+        ChangeState(_currentState);
     }
 
     /// <summary>
-    /// アイドルモーションのコルーチン。テスト用
+    /// チェシャ猫のステータスを変更する
     /// </summary>
-    /// <returns></returns>
-    IEnumerator IdleCoroutine()
+    /// <param name="state"> ステータスの種類 </param>
+    public void ChangeState(CheshireCatState state)
     {
-        int random;
+        _currentState = state;
 
-        while (true)
-        {
-            random = Random.Range(7, 10);
-
-            yield return new WaitForSeconds(random);
-
-            _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Lick.ToString(), 0.1f);
-
-            yield return new WaitForSeconds(2.3f);
-
-            _anim.CrossFadeInFixedTime(CheshireCatState.Idle.ToString(), 0.25f);
-        }
+        OnAction(_currentState);
     }
 
     /// <summary>
@@ -90,20 +79,34 @@ public class CheshireCat : MonoBehaviour
                 break;
             case CheshireCatState.Appearance:
                 break;
+            case CheshireCatState.Idle_Standing:
+                _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Standing.ToString(), 0.2f);
+                break;
             default:
                 break;
         }
     }
 
     /// <summary>
-    /// チェシャ猫のステータスを変更する
+    /// アイドルモーションのコルーチン。テスト用
     /// </summary>
-    /// <param name="state"> ステータスの種類 </param>
-    public void ChangeState(CheshireCatState state)
+    /// <returns></returns>
+    IEnumerator IdleCoroutine()
     {
-        _currentState = state;
+        int random;
 
-        OnAction(_currentState);
+        while (true)
+        {
+            random = Random.Range(7, 10);
+
+            yield return new WaitForSeconds(random);
+
+            _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Lick.ToString(), 0.1f);
+
+            yield return new WaitForSeconds(2.3f);
+
+            _anim.CrossFadeInFixedTime(CheshireCatState.Idle.ToString(), 0.25f);
+        }
     }
 }
 
@@ -124,6 +127,8 @@ public enum CheshireCatState
     FastWalk,
     /// <summary> ジャンプ </summary>
     Jump,
-    /// <summary> カメラワーク付きの登場演出(現状使用不可) </summary>
-    Appearance
+    /// <summary> カメラワーク付きの登場演出 </summary>
+    Appearance,
+    /// <summary> アイドル(立つ) </summary>
+    Idle_Standing
 }
