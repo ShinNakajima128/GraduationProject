@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerBase : MonoBehaviour
 {
     #region member variable
-    protected FaceController _fc;
+    protected AliceFaceController _fc;
     PlayerInput _input;
     IMovable _move;
     #endregion

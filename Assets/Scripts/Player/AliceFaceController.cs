@@ -38,7 +38,7 @@ public enum MouseType
     Thinking, /// çlÇ¶ÇÈ
     NUM /// å˚ÇÃéÌóﬁêî
 }
-public class FaceController : MonoBehaviour
+public class AliceFaceController : MonoBehaviour
 {
     #region serialize
     [Header("variables")]
@@ -114,13 +114,6 @@ public class FaceController : MonoBehaviour
         _init = true;
     }
 
-    //private IEnumerator Start()
-    //{
-    //    while (true)
-    //    {
-    //        yield return StartCoroutine(TestFaceAnimation());
-    //    }
-    //}
     /// <summary>
     /// ï\èÓÇïœçX
     /// </summary>
@@ -204,26 +197,6 @@ public class FaceController : MonoBehaviour
                 yield return null;
             }
         }
-    }
-
-    IEnumerator TestFaceAnimation()
-    {
-        yield return new WaitForSeconds(_testInterval);
-
-        ChangeFaceType(FaceType.Smile);
-        yield return new WaitForSeconds(_testInterval);
-        ChangeFaceType(FaceType.Blink);
-        yield return new WaitForSeconds(_testInterval * 2);
-        ChangeFaceType(FaceType.Cry);
-        yield return new WaitForSeconds(_testInterval);
-        ChangeFaceType(FaceType.Damage);
-        yield return new WaitForSeconds(_testInterval);
-        ChangeFaceType(FaceType.Angry);
-        yield return new WaitForSeconds(_testInterval);
-        ChangeFaceType(FaceType.Fancy);
-        yield return new WaitForSeconds(_testInterval);
-        ChangeFaceType(FaceType.Default);
-        yield return new WaitForSeconds(_testInterval);
     }
 }
 
