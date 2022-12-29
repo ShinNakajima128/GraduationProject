@@ -169,6 +169,8 @@ public class MessagePlayer : MonoBehaviour
 
             yield return new WaitForSeconds(0.05f);
 
+            EventManager.OnEvent(Events.FinishTalking);
+
             _submitIcon.SetActive(true); //入力を促すアイコンをアクティブにする
 
             yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機

@@ -13,7 +13,11 @@ public enum Events
     ConcentratedLine,
     Closeup,
     Reset,
-    Lobby_MeetingCheshire
+    Lobby_MeetingCheshire,
+    Cheshire_StartGrinning,
+    Cheshire_EndGrinning,
+    Cheshire_Talk,
+    FinishTalking
 }
 
 /// <summary>

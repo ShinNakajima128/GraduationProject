@@ -2186,6 +2186,7 @@ GameObject:
   - component: {fileID: 6827887149060121700}
   - component: {fileID: 6434305017902236553}
   - component: {fileID: 6434305017902236552}
+  - component: {fileID: 1054721359287288030}
   m_Layer: 0
   m_Name: CheshireCat
   m_TagString: Untagged
@@ -2243,6 +2244,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d0faa981ea59ff478f24a9e5c51e0b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed: 1.5
+  _currentState: 0
+--- !u!114 &1054721359287288030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6163835260910878430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edef93fc18d1b984b9827009453d0483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _blinkSwitchTime: 0.05
+  _broadlySwitchTime: 0.05
+  _talkSwitchTime: 0.1
+  _blinkMaxInterval: 5
+  _currentFaceType: 0
+  _catRenderer: {fileID: 2184383280752434950}
 --- !u!1 &6249328670765039050
 GameObject:
   m_ObjectHideFlags: 0
