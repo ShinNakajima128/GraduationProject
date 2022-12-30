@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 /// <summary>
 /// タイトル画面の機能を管理するマネージャー
@@ -30,6 +31,7 @@ public class TitleManager : MonoBehaviour
             _buttonDic.Add((ButtonType)i, _titleButtons[i]);
         }
     }
+
     IEnumerator Start()
     {
         AudioManager.PlayBGM(BGMType.Title);
