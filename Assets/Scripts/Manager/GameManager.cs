@@ -40,6 +40,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public Stages CurrentStage => _currentStage;
     public ClockState CurrentClockState => _currentClockState;
     public static bool IsClearStaged => Instance._isClearStaged;
+    public Dictionary<Stages, bool> StageSttatusDic => _stageStatusDic;
     #endregion
 
     private void Awake()
