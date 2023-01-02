@@ -15,6 +15,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     float _colorFadeTime = 2.0f;
 
+    [SerializeField]
+    LobbyUIState _currentUIState = default;
+
     [Header("Objects")]
     [SerializeField]
     Transform _playerTrans = default;
@@ -102,6 +105,7 @@ public class LobbyManager : MonoBehaviour
     public Action StepAwayDoor { get; set; }
     public Action<bool> PlayerMove { get; set; }
     public bool IsApproached => _isApproached;
+    public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
     #endregion
 
     private void Awake()
@@ -423,5 +427,12 @@ public class Stage
     public string SceneName;
     public SceneType Type;
     public Sprite StageSprite;
+}
+
+public enum LobbyUIState
+{
+    Default,
+    Album,
+    Option
 }
 

@@ -611,6 +611,24 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Y"",
+                    ""type"": ""Button"",
+                    ""id"": ""64de7b37-20bf-4773-a43e-cfe34e89108d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""A"",
+                    ""type"": ""Button"",
+                    ""id"": ""129031ab-540f-47e6-a725-29c39a17bcd9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -855,6 +873,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f320a6e-15a0-44a6-a788-214a03790bf7"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c20d4077-10bd-4330-94cc-9522e15a90d2"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""A"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1000,6 +1040,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_Cancel = m_UIInput.FindAction("Cancel", throwIfNotFound: true);
         m_UIInput_Click = m_UIInput.FindAction("Click", throwIfNotFound: true);
         m_UIInput_Move = m_UIInput.FindAction("Move", throwIfNotFound: true);
+        m_UIInput_Y = m_UIInput.FindAction("Y", throwIfNotFound: true);
+        m_UIInput_A = m_UIInput.FindAction("A", throwIfNotFound: true);
         // Stage_Boss
         m_Stage_Boss = asset.FindActionMap("Stage_Boss", throwIfNotFound: true);
         m_Stage_Boss_Move = m_Stage_Boss.FindAction("Move", throwIfNotFound: true);
@@ -1255,6 +1297,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_Cancel;
     private readonly InputAction m_UIInput_Click;
     private readonly InputAction m_UIInput_Move;
+    private readonly InputAction m_UIInput_Y;
+    private readonly InputAction m_UIInput_A;
     public struct UIInputActions
     {
         private @PlayerControls m_Wrapper;
@@ -1263,6 +1307,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Cancel => m_Wrapper.m_UIInput_Cancel;
         public InputAction @Click => m_Wrapper.m_UIInput_Click;
         public InputAction @Move => m_Wrapper.m_UIInput_Move;
+        public InputAction @Y => m_Wrapper.m_UIInput_Y;
+        public InputAction @A => m_Wrapper.m_UIInput_A;
         public InputActionMap Get() { return m_Wrapper.m_UIInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1284,6 +1330,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnMove;
+                @Y.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnY;
+                @Y.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnY;
+                @Y.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnY;
+                @A.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnA;
+                @A.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnA;
+                @A.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnA;
             }
             m_Wrapper.m_UIInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -1300,6 +1352,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Y.started += instance.OnY;
+                @Y.performed += instance.OnY;
+                @Y.canceled += instance.OnY;
+                @A.started += instance.OnA;
+                @A.performed += instance.OnA;
+                @A.canceled += instance.OnA;
             }
         }
     }
@@ -1374,6 +1432,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnY(InputAction.CallbackContext context);
+        void OnA(InputAction.CallbackContext context);
     }
     public interface IStage_BossActions
     {
