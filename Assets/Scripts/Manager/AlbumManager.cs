@@ -165,6 +165,11 @@ public class AlbumManager : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// アルバムを開く処理のコルーチン
+    /// </summary>
+    /// <param name="isOpened"> 開けるか閉じるかのフラグ </param>
+    /// <returns></returns>
     IEnumerator OnAlbumCoroutine(bool isOpened)
     {
         _isOpened = isOpened;
