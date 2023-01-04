@@ -16,6 +16,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     [SerializeField]
     Text _infoText = default;
 
+    [SerializeField]
+    Image[] _juggeInfo = default;
+
     [Header("Components")]
     [SerializeField]
     Stage2CameraManager _stage2Cameras = default;
@@ -139,9 +142,10 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 yield return new WaitForSeconds(2.4f);
 
                 //‚±‚±‚Å³‰ð‚ÌUI‚ð•\Ž¦
-                _infoText.text = "³‰ðI";
+                //_infoText.text = "³‰ðI";
+                _juggeInfo[0].enabled = true;
 
-                yield return new WaitForSeconds(2.5f);
+                yield return new WaitUntil(() => UIInput.Submit);
             }
             else
             {
@@ -161,7 +165,12 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
                 yield return new WaitForSeconds(1.6f);
 
+                _juggeInfo[1].enabled = true;
+
+                yield return new WaitUntil(() => UIInput.Submit);
+
                 _stage2Cameras.ChangeCamera(Stage2CameraType.CloseupMouse);
+                _juggeInfo[1].enabled = false;
 
                 yield return new WaitForSeconds(2.5f);
 
@@ -172,6 +181,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             if (i < _phaseCount - 1)
             {
                 _infoText.text = "";
+                _juggeInfo[0].enabled = false;
+                _juggeInfo[1].enabled = false;
+
                 _teacupManager.AllCupDown();
 
                 yield return new WaitForSeconds(1.1f);
@@ -211,6 +223,8 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         AudioManager.PlayBGM(BGMType.Stage2);
         _teacupManager.RandomHideMouse();
         _infoText.text = "";
+        _juggeInfo[0].enabled = false;
+        _juggeInfo[1].enabled = false;
     }
 }
 /// <summary>
