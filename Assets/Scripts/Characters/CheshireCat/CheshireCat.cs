@@ -42,18 +42,18 @@ public class CheshireCat : MonoBehaviour
     /// チェシャ猫のステータスを変更する
     /// </summary>
     /// <param name="state"> ステータスの種類 </param>
-    public void ChangeState(CheshireCatState state)
+    public void ChangeState(CheshireCatState state, float animBlend = 0.2f)
     {
         _currentState = state;
 
-        OnAction(_currentState);
+        OnAction(_currentState, animBlend);
     }
 
     /// <summary>
     /// 指定したステータスのアクションを実行
     /// </summary>
     /// <param name="state"> ステータスの種類 </param>
-    void OnAction(CheshireCatState state)
+    void OnAction(CheshireCatState state, float animBlend)
     {
         //以前のステータスのコルーチンを中断
         if (_currentCoroutine != null)
@@ -70,17 +70,20 @@ public class CheshireCat : MonoBehaviour
             case CheshireCatState.Idle_Lick:
                 break;
             case CheshireCatState.LyingDown:
+                _anim.CrossFadeInFixedTime(CheshireCatState.LyingDown.ToString(), animBlend);
                 break;
             case CheshireCatState.Walk:
+                _anim.CrossFadeInFixedTime(CheshireCatState.Walk.ToString(), animBlend);
                 break;
             case CheshireCatState.FastWalk:
+                _anim.CrossFadeInFixedTime(CheshireCatState.FastWalk.ToString(), animBlend);
                 break;
             case CheshireCatState.Jump:
                 break;
             case CheshireCatState.Appearance:
                 break;
             case CheshireCatState.Idle_Standing:
-                _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Standing.ToString(), 0.2f);
+                _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Standing.ToString(), animBlend);
                 break;
             default:
                 break;
