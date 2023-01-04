@@ -120,18 +120,18 @@ public class LobbyManager : MonoBehaviour
         SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
 
-        if (!IsFirstArrival)
-        {
-            AudioManager.PlayBGM(BGMType.Lobby);
-        }
-        else
-        {
-            AudioManager.StopBGM(1.0f);
-            EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
-        }
-
         if (!_debugMode)
         {
+            if (!IsFirstArrival)
+            {
+                AudioManager.PlayBGM(BGMType.Lobby);
+            }
+            else
+            {
+                AudioManager.StopBGM(1.0f);
+                EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
+            }
+
             TransitionManager.FadeIn(FadeType.Normal, 0f);
             yield return null;
 
@@ -202,6 +202,7 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
+            AudioManager.PlayBGM(BGMType.Lobby);
             _provider.enabled = true;
             PlayerMove?.Invoke(true);
         }
