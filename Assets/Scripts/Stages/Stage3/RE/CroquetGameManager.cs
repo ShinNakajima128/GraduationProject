@@ -238,15 +238,14 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
         if (result)
         {
-            _gameUI.SetResultText("‚¨‘è‚½‚Á‚¹‚¢I");
             _successCount++;
             OnGoalEffect();
         }
-        else
-        {
-            _gameUI.SetResultText("‚¨‘è‚µ‚Á‚Ï‚¢c");
-        }
-        yield return new WaitForSeconds(2.0f);
+
+        _gameUI.OnResultUI(result);
+        yield return new WaitUntil(() => UIInput.Submit);
+
+        _gameUI.OffResultUI();
     }
 
     protected override void Init()

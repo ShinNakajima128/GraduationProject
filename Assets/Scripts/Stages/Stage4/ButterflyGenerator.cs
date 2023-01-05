@@ -37,8 +37,6 @@ public class ButterflyGenerator : MonoBehaviour
                 //1/2ÇÃämó¶Ç≈í±Çê∂ê¨
                 if (random == 0)
                 {
-                    Debug.Log("í±ê∂ê¨");
-
                     var type = trees[i].CurrentRose[n].CurrentRoseType;
 
                     switch (type)
