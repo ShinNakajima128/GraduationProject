@@ -17,7 +17,8 @@ public enum Events
     Cheshire_StartGrinning,
     Cheshire_EndGrinning,
     Cheshire_Talk,
-    FinishTalking
+    FinishTalking,
+    Boss_GroundShake
 }
 
 /// <summary>

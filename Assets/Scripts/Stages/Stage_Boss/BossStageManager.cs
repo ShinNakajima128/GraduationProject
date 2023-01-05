@@ -68,6 +68,9 @@ public class BossStageManager : StageGame<BossStageManager>
     GameObject _areaEffect = default;
 
     [Header("UI")]
+    [SerializeField]
+    CanvasGroup _hpPanel = default;
+
     [Tooltip("戦闘終了時の画面")]
     [SerializeField]
     CanvasGroup _finishBattleCanvas = default;
@@ -220,8 +223,10 @@ public class BossStageManager : StageGame<BossStageManager>
     protected override void Init()
     {
         _messagePlayer.Closeup += OnCloseup;
+        HPManager.Instance.LostHpAction += OnBossStageGameOver;
         //_messagePlayer.Reset += OnReset;
         _isInBattle.Value = false;
+        _hpPanel.alpha = 0;
     }
 
     IEnumerator InGameCoroutine()
@@ -234,14 +239,20 @@ public class BossStageManager : StageGame<BossStageManager>
             OnGameSetUp();
 
             //バトルフェイズを終了するまで待機
-            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i, () =>
-            {
-                CharacterMovable?.Invoke(true);
-                CameraBlend(CameraType.Battle, _cameraBlendTime);
-            });
+            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i,
+                                  firstAction: () =>
+                                  {
+                                     CameraBlend(CameraType.Battle, _cameraBlendTime);
+                                  },
+                                  phaseStartAction: () => 
+                                  {
+                                      CharacterMovable?.Invoke(true);
+                                      _hpPanel.alpha = 1;
+                                  });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
+            _hpPanel.alpha = 0;
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
             _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
 
@@ -430,6 +441,11 @@ public class BossStageManager : StageGame<BossStageManager>
     void OnReset()
     {
         CameraBlend(CameraType.Direction_Closeup, _cameraBlendTime);
+    }
+
+    void OnBossStageGameOver()
+    {
+        TransitionManager.SceneTransition(SceneType.Stage_Boss);
     }
 }
 public enum CameraType
