@@ -53,7 +53,8 @@ public class AlbumManager : MonoBehaviour
                                  {
                                      ActivateAlbum(true);
                                      Debug.Log("アルバム表示");
-                                 });
+                                 })
+                                 .AddTo(this);
 
         this.UpdateAsObservable().Where(_ => _isOpened && 
                                              LobbyManager.Instance.CurrentUIState == LobbyUIState.Album && 
@@ -62,14 +63,17 @@ public class AlbumManager : MonoBehaviour
                                  {
                                      ActivateAlbum(false);
                                      Debug.Log("アルバム非表示");
-                                 });
+                                 })
+                                 .AddTo(this);
 
         //ページを進める/戻すボタンの処理を登録
         _pageSwitchButtons[0].OnClickAsObservable().Where(_ => _isOpened)
-                                                   .Subscribe(_ => OnPrevPage());
+                                                   .Subscribe(_ => OnPrevPage())
+                                                   .AddTo(this);
         
         _pageSwitchButtons[1].OnClickAsObservable().Where(_ => _isOpened)
-                                                   .Subscribe(_ => OnNextPage());
+                                                   .Subscribe(_ => OnNextPage())
+                                                   .AddTo(this);
     }
 
     /// <summary>
@@ -169,7 +173,6 @@ public class AlbumManager : MonoBehaviour
     /// アルバムを開く処理のコルーチン
     /// </summary>
     /// <param name="isOpened"> 開けるか閉じるかのフラグ </param>
-    /// <returns></returns>
     IEnumerator OnAlbumCoroutine(bool isOpened)
     {
         _isOpened = isOpened;
