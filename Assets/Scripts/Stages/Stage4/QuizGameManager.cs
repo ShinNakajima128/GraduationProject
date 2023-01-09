@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [Tooltip("クリアに必要な正解の数")]
     [SerializeField]
     int _requiredCorrectNum = 0;
+
+    [Tooltip("各難易度毎のクイズゲームの数値")]
+    [SerializeField]
+    QuizGameParameter[] _quizGameParams = default;
 
     [Tooltip("お題の数を数える時間")]
     [SerializeField]
@@ -80,8 +85,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     CinemachineBrain _brain = default;
 
+    [Header("Components")]
     [SerializeField]
     AliceFaceController _faceController = default;
+
+    [SerializeField]
+    TrumpSolderGenerator _trumpGenerator = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -96,6 +105,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
     int _corectNum = 0;
     Animator _playerAnim;
     #endregion
+
     #region public
     public override event Action GameSetUp;
     public override event Action GameStart;
@@ -122,6 +132,8 @@ public class QuizGameManager : StageGame<QuizGameManager>
     {
         _informationText.text = "";
         LetterboxController.ActivateLetterbox(true);
+        OnGameSetUp();
+
 
         _playerTrans.DOMove(_playerTrans.position, 1.4f)
                     .OnComplete(() =>
@@ -271,11 +283,13 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 _cheshireCats[1].gameObject.SetActive(true);
 
                 _cheshireCats[1].ChangeState(CheshireCatState.LyingDown, 0f);
+            });
 
-                TransitionManager.FadeOut(FadeType.Normal, 0.5f, () =>
-                {
-                    isCamerachanged = true;
-                });
+            yield return new WaitForSeconds(0.8f);
+
+            TransitionManager.FadeOut(FadeType.Normal, 0.5f, () =>
+            {
+                isCamerachanged = true;
             });
 
             yield return new WaitUntil(() => isCamerachanged);
@@ -394,6 +408,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _playerAnim.CrossFadeInFixedTime("Move", 0.1f);
         _cheshireCats[0].ChangeState(CheshireCatState.FastWalk);
 
+        
         _playerTrans.DOMoveX(_endPlayerTrans.position.x, _viewingTime)
                     .SetEase(_playerMoveEase)
                     .OnComplete(() =>
@@ -405,12 +420,43 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     });
     }
 
+    /// <summary>
+    /// クイズゲームのセットアップ
+    /// </summary>
     public override void OnGameSetUp()
     {
+        var param = _quizGameParams.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
+        _viewingTime = param.ViewingTime;
+        _trumpGenerator.SetGenerateCount(param);
+
+
         GameSetUp?.Invoke();
     }
+
+    /// <summary>
+    /// クイズのセットアップ
+    /// </summary>
+    /// <param name="type"></param>
     void OnQuizSetUp(QuizType type)
     {
         QuizSetUp?.Invoke(type);
     }
+}
+
+/// <summary>
+/// クイズゲームの各パラメーター
+/// </summary>
+[Serializable]
+public struct QuizGameParameter
+{
+    public string ParamName;
+    public DifficultyType DifficultyType;
+    public int ViewingTime;
+    public int StandingGenerateMaxCount;
+    public int WalkGenerateMaxCount;
+    public int PaintGenerateMaxCount;
+    public int LoafGenerateMaxCount;
+    public int DipGenerateMaxCount;
+    public int HideTreeGenerateMaxCount;
+    public int HideBucketGenerateMaxCount;
 }
