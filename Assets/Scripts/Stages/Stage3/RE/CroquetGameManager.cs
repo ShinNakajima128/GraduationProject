@@ -167,9 +167,30 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 LetterboxController.ActivateLetterbox(false, 1.5f);
 
                 yield return new WaitForSeconds(1.5f);
-                
+
                 _gameUI.ChangeUIGroup(CroquetGameState.InGame);
-                _player.BeginControl();
+
+                //初めてステージ3をプレイしている場合
+                if (GameManager.Instance.IsFirstVisitCurrentStage)
+                {
+                    //フェイズ毎の会話パートを再生
+                    switch (i)
+                    {
+                        case 0:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase1);
+                            break;
+                        case 1:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase2);
+                            break;
+                        case 2:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase3);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                _player.BeginControl(); //入力受付開始
 
                 yield return new WaitUntil(() => _player.IsThrowed);
 
