@@ -84,6 +84,15 @@ public class TeacupController : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 各フェイズのパラメーターをセットする
+    /// </summary>
+    /// <param name="parameters"> パラメーター </param>
+    public void SetParameter(ShuffleParameter[] parameters)
+    {
+        _params = parameters;
+    }
 }
 
 [System.Serializable]

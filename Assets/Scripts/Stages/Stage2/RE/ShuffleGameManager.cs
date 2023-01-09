@@ -12,6 +12,10 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     [SerializeField]
     int _phaseCount = 3;
 
+    [Tooltip("難易度毎のパラメーター")]
+    [SerializeField]
+    ShuffleGameParameter[] _gameParameters = default;
+
     [Header("UI")]
     [SerializeField]
     Text _infoText = default;
@@ -225,6 +229,10 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         _infoText.text = "";
         _juggeInfo[0].enabled = false;
         _juggeInfo[1].enabled = false;
+
+        //現在のゲームの難易度を取得して数値を反映
+        var paramIndex = (int)GameManager.Instance.CurrentGameDifficultyType;
+        _teacupCtrl.SetParameter(_gameParameters[paramIndex].Parameters);
     }
 }
 /// <summary>
@@ -235,4 +243,15 @@ public enum ShuffleGamePhase
     Shuffle_ExChange,
     Shuffle_ExChangeAndWarp,
     Shuffle_High_ExChangeAndWarp
+}
+
+/// <summary>
+/// シャッフルゲームの各難易度毎のパラメーター
+/// </summary>
+[Serializable]
+public struct ShuffleGameParameter
+{
+    public string ParamName;
+    public DifficultyType DifficultyType;
+    public ShuffleParameter[] Parameters;
 }
