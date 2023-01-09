@@ -45,7 +45,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     public override event Action GamePause;
     public override event Action GameEnd;
     #endregion
-    
+
     #region property
     public static new ShuffleGameManager Instance { get; private set; }
     #endregion
@@ -59,7 +59,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     {
         base.Start();
         OnGameStart();
-        Init();        
+        Init();
     }
 
     public override void OnGameSetUp()
@@ -94,7 +94,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         yield return new WaitForSeconds(1.1f);
 
         _teacupManager.OnMouseAnimation(MouseState.CloseEar);
-        
+
         yield return new WaitForSeconds(1.4f);
 
         _stage2Cameras.ChangeCamera(Stage2CameraType.Ingame);
@@ -116,14 +116,29 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             _result = false;
             _selectIndex = -1;
 
+            //シャッフル開始。終了するまで待機
             yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
 
-            if (i == 0)
+            //各フェイズ
+            switch (i)
             {
-                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.Stage2_Start_CheshireCat);
+                case 0:
+                    yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage2_Phase1);
+                    break;
+                case 1:
+                    yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage2_Phase2);
+                    break;
+                case 2:
+                    yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage2_Phase3);
+                    break;
+                default:
+                    break;
             }
 
-            yield return _teacupManager.ChoicePhaseCoroutine((judge, index) => 
+            yield return null;
+
+            //カップを選択するまで待機。選択したカップのデータをCallbackで取得
+            yield return _teacupManager.ChoicePhaseCoroutine((judge, index) =>
             {
                 _result = judge;
                 _selectIndex = index;
@@ -202,6 +217,8 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             }
             else
             {
+                _juggeInfo[0].enabled = false;
+                _juggeInfo[1].enabled = false;
                 _infoText.text = "ステージクリア！";
 
                 yield return new WaitForSeconds(2.0f);
