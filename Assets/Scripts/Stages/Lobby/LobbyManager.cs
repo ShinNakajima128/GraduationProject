@@ -419,7 +419,7 @@ public class LobbyManager : MonoBehaviour
 
                                    if (timer >= 5.0f && !isFading)
                                    {
-                                       TransitionManager.SceneTransition(SceneType.Stage_Boss);
+                                       TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_Heart);
                                        isFading = true;
                                    }
                                })
