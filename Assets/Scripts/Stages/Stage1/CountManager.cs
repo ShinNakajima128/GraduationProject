@@ -50,9 +50,12 @@ public class CountManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         FallGameManager.Instance.GetItem += GetAnimation;
+
+        yield return null;
+
         _targetCount = FallGameManager.Instance.TargetCount;
 
         _targetCountText.text = $"{_targetCount.ToString("D2")}";
@@ -71,7 +74,8 @@ public class CountManager : MonoBehaviour
             {
                 FallGameManager.Instance.OnGameEnd();
             }
-        });
+        })
+        .AddTo(this);
     }
 
     void GetAnimation(IEffectable effect)

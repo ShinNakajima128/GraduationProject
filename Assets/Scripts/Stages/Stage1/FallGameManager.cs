@@ -13,13 +13,13 @@ public class FallGameManager : MonoBehaviour
 {
     #region selialize
     [Header("Variable")]
-    [Tooltip("目標の枚数")]
-    [SerializeField]
-    int _targetCount = 10;
-
     [Tooltip("最大HP")]
     [SerializeField]
     int _maxHP = 3;
+
+    [Tooltip("各難易度のパラメーター")]
+    [SerializeField]
+    FallGameParameter[] _gamePrameters = default;
 
     [Header("Objects")]
     [SerializeField]
@@ -29,7 +29,7 @@ public class FallGameManager : MonoBehaviour
     Transform _startTrans = default;
 
     [SerializeField]
-    GameObject _inGamePanel = default;
+    CanvasGroup _inGamePanel = default;
 
     [SerializeField]
     Text _informationText = default;
@@ -42,6 +42,8 @@ public class FallGameManager : MonoBehaviour
     #endregion
 
     #region private
+    /// <summary> 目標の枚数 </summary>
+    int _targetCount;
     Vector3 _originPos;
     #endregion
 
@@ -66,7 +68,7 @@ public class FallGameManager : MonoBehaviour
     private void Start()
     {
         _originPos = _playerTrans.position;
-        _inGamePanel.SetActive(false);
+        _inGamePanel.alpha = 0;
 
         AudioManager.PlayBGM(BGMType.Stage1);
         GameManager.UpdateCurrentStage(Stages.Stage1);
@@ -140,6 +142,13 @@ public class FallGameManager : MonoBehaviour
     {
         _playerTrans.position = _originPos;
         _informationText.text = "";
+
+        var diffIndex = (int)GameManager.Instance.CurrentGameDifficultyType;
+
+        _targetCount = _gamePrameters[diffIndex].TargetCount;
+        ObstacleGenerator.Instance.SetInterval(_gamePrameters[diffIndex].ObstacleGenerateInterval);
+        TableGenerator.Instance.SetInterval(_gamePrameters[diffIndex].TableGenerateInterval);
+        WhitePaperGenerator.Instance.SetInterval(_gamePrameters[diffIndex].WhitePaperGenerateInterval);
     }
 
     IEnumerator GameStartCoroutine(Action action = null)
@@ -150,14 +159,14 @@ public class FallGameManager : MonoBehaviour
 
         action?.Invoke();
         _informationText.text = "";
-        _inGamePanel.SetActive(true);
+        _inGamePanel.alpha = 1;
     }
 
     IEnumerator GameEndCoroutine()
     {
         TransitionManager.FadeIn(FadeType.Normal, action: () =>
          {
-             _inGamePanel.SetActive(false);
+             _inGamePanel.alpha = 0;
              TransitionManager.FadeOut(FadeType.Normal);
          });
         _informationText.gameObject.transform.DOLocalMoveY(300, 0f);
@@ -178,4 +187,18 @@ public class FallGameManager : MonoBehaviour
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
     }
+}
+
+/// <summary>
+/// 落下ゲームの各難易度の数値
+/// </summary>
+[Serializable]
+public struct FallGameParameter
+{
+    public string ParamName;
+    public DifficultyType DifficultyType;
+    public int TargetCount;
+    public float ObstacleGenerateInterval;
+    public float TableGenerateInterval;
+    public float WhitePaperGenerateInterval;
 }

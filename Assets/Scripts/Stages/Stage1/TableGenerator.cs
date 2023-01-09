@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class TableGenerator : ObstacleGenerator
 {
+    #region property
+    public static new TableGenerator Instance { get; private set; }
+    #endregion
+
+    protected override void Awake()
+    {
+        Instance = this;
+    }
 
     protected override void Generate(int index)
     {
