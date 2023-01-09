@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
-
+using AliceProject;
 /// <summary>
 /// 落下ゲームの管理を行うマネージャークラス
 /// </summary>
@@ -138,6 +138,10 @@ public class FallGameManager : MonoBehaviour
         TransitionManager.SceneTransition(SceneType.Stage1_Fall);
     }
 
+
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
     void Init()
     {
         _playerTrans.position = _originPos;
@@ -153,6 +157,13 @@ public class FallGameManager : MonoBehaviour
 
     IEnumerator GameStartCoroutine(Action action = null)
     {
+        //初めてプレイする時はメッセージを表示
+        if (GameManager.Instance.IsFirstVisitCurrentStage)
+        {
+            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage1);
+            yield return new WaitForSeconds(0.5f);
+        }
+
         _informationText.text = "スタート!";
 
         yield return new WaitForSeconds(1.5f);
@@ -182,8 +193,9 @@ public class FallGameManager : MonoBehaviour
         GameManager.SaveStageResult(true);
         _informationText.text = "";
 
-        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, AliceProject.MessageType.GetStill_Stage1);
+        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, MessageType.GetStill_Stage1);
 
+        GameManager.UpdateFirstVisit(Stages.Stage1);
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
     }

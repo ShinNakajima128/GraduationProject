@@ -119,7 +119,18 @@ namespace AliceProject
         GetStill_Stage_Boss,
         Lobby_Visit,
         Lobby_CheshireCat,
-        Stage2_Start_CheshireCat
+        Stage2_Start_CheshireCat,
+        FirstVisit_Stage1,
+        FirstVisit_Stage2_Phase1,
+        FirstVisit_Stage2_Phase2,
+        FirstVisit_Stage2_Phase3,
+        FirstVisit_Stage3_Phase1,
+        FirstVisit_Stage3_Phase2,
+        FirstVisit_Stage3_Phase3,
+        FirstVisit_Stage3_Phase4,
+        FirstVisit_Stage4_Phase1,
+        FirstVisit_Stage4_Phase2,
+        FirstVisit_Stage4_Phase3
     }
 }
 
