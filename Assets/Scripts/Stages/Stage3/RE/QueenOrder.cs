@@ -192,6 +192,11 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.transform.SetParent(transform);
         _queenStampImage.transform.localPosition = new Vector3(-293, -278, 0);
     }
+
+    public void SetOrderData(OrderData[] data)
+    {
+        _data = data;
+    }
 }
 
 /// <summary>
@@ -210,11 +215,11 @@ public struct OrderData
 
         if (TargetTrumpColor == TrumpColorType.Black)
         {
-            order = $"<color=#353535>黒</color>のトランプ兵を{TargetNum}体倒せ！";
+            order = $"<color=#353535>黒</color>のトランプ兵を{TargetNum}体以上倒せ！";
         }
         else
         {
-            order = $"<color=#FD1919>赤</color>のトランプ兵を{TargetNum}体倒せ！";
+            order = $"<color=#D4216F>赤</color>のトランプ兵を{TargetNum}体以上倒せ！";
         }
         return order;
     }

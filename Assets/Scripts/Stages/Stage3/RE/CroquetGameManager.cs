@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,10 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [Tooltip("ステージにクリアに必要な回数")]
     [SerializeField]
     int _requiredSuccessCount = 3;
+
+    [Tooltip("難易度毎のゲームの数値")]
+    [SerializeField]
+    CroquetGameParameter[] _gameParameters = default;
 
     [SerializeField]
     Transform[] _golaEffectTrans = default;
@@ -90,6 +95,10 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         _currentStrikeNum = 0;
         _currentRedStrileNum = 0;
         _currentBlackStrikeNum = 0;
+
+        var param = _gameParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
+
+        _order.SetOrderData(param.OrderDatas);
     }
 
     public override void OnGameStart()
@@ -253,10 +262,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// <returns></returns>
     IEnumerator GoalDirectionCoroutine(bool result)
     {
-        _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
-
         yield return new WaitForSeconds(2.0f);
-
+        _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
+     
         if (result)
         {
             _successCount++;
@@ -329,4 +337,15 @@ public enum CroquetGameState
     InGame,
     GoalDirection,
     Finish
+}
+
+/// <summary>
+/// クロッケーゲームの難易度毎のパラメーター
+/// </summary>
+[Serializable]
+public struct CroquetGameParameter
+{
+    public string ParamName;
+    public DifficultyType DifficultyType;
+    public OrderData[] OrderDatas;
 }
