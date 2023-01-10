@@ -176,9 +176,9 @@ public class MessagePlayer : MonoBehaviour
             }
             _isSkiped = false;
 
-            yield return new WaitForSeconds(0.05f);
-
             EventManager.OnEvent(Events.FinishTalking);
+
+            yield return new WaitForSeconds(d[i].DisplayTime);
 
             _submitIcon.SetActive(true); //入力を促すアイコンをアクティブにする
 
