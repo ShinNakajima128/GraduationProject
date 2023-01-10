@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,9 @@ public class BossStageManager : StageGame<BossStageManager>
     [Tooltip("戦闘回数")]
     [SerializeField]
     int _battleNum = 3;
+
+    [SerializeField]
+    BossBattleParameter[] _battleParameters = default;
 
     [Tooltip("別のカメラへ遷移する際にかける時間")]
     [SerializeField]
@@ -136,6 +140,12 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         GameSetUp?.Invoke();
         _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
+
+        //現在の難易度のパラメーターを取得
+        var param = _battleParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
+
+        //パラメーターを反映
+        _bossCtrl.SetParameter(param.PhaseParameters);
     }
 
     public override void OnGameStart()
@@ -457,4 +467,15 @@ public enum CameraType
     JumpAttack,
     FinishBattle,
     ExcuteTrump
+}
+
+/// <summary>
+/// ボス戦のパラメーター
+/// </summary>
+[Serializable]
+public struct BossBattleParameter
+{
+    public string PramName;
+    public DifficultyType DifficultyType;
+    public PhaseParameter[] PhaseParameters;
 }

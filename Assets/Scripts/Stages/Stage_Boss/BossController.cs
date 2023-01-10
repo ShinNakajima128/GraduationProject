@@ -397,6 +397,15 @@ public class BossController : MonoBehaviour, IDamagable
         StartCoroutine(ChangeState(BossState.Damage, action: () => _isInvincibled = false));
     }
 
+    /// <summary>
+    /// パラメーターを設定する
+    /// </summary>
+    /// <param name="param"> 変更後のパラメーター </param>
+    public void SetParameter(PhaseParameter[] param)
+    {
+        _phaseParams = param;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
