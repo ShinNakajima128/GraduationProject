@@ -150,7 +150,7 @@ PrefabInstance:
         type: 3}
       propertyPath: maskTexture
       value: 
-      objectReference: {fileID: 2800000, guid: ea26d1b76c43b5641b425d057771db56, type: 3}
+      objectReference: {fileID: 2800000, guid: cad025533af7b974aa7421213c771bc4, type: 3}
     - target: {fileID: 620245763008731353, guid: f92906d7065a6d84fb6754501e8dd8f3,
         type: 3}
       propertyPath: m_RootOrder
@@ -1803,6 +1803,29 @@ MonoBehaviour:
   _pageSwitchButtons:
   - {fileID: 830578033}
   - {fileID: 919979499}
+--- !u!1 &343879486 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3336144164107573271, guid: f3b7188c2109dfa4bb0f45bdc6b2f69a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8332413862586407565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &343879491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343879486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 7a3768ff525739d479788a93305e628c, type: 2}
 --- !u!850595691 &348177054
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -8649,7 +8672,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh65978
+  m_Name: pb_Mesh173410
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10072,7 +10095,7 @@ PrefabInstance:
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
       propertyPath: _lobbyDebugMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
@@ -11465,7 +11488,7 @@ MonoBehaviour:
   - SceneName: "\u5973\u738B\u3068\u306E\u5BFE\u5CD9"
     Type: 9
     StageSprite: {fileID: 21300000, guid: 9e601642eea64b34d9db262a729e1573, type: 3}
-  _debugMode: 0
+  _debugMode: 1
 --- !u!4 &1637587111
 Transform:
   m_ObjectHideFlags: 0
@@ -18515,6 +18538,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -114.957634
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375252961151909587, guid: f3b7188c2109dfa4bb0f45bdc6b2f69a,
+        type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2392347430578022919, guid: f3b7188c2109dfa4bb0f45bdc6b2f69a,
         type: 3}

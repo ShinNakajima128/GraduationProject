@@ -329,20 +329,6 @@ public class LobbyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// カメラを変更する
-    /// </summary>
-    /// <param name="index"> カメラの番号 </param>
-    /// <param name="weight"> カメラのウエイト </param>
-    //void ChangeCamera(int index, float weight)
-    //{
-    //    for (int i = 0; i < _mixingCamera.ChildCameras.Length; i++)
-    //    {
-    //        _mixingCamera.SetWeight(i, 0);
-    //    }
-    //    _mixingCamera.SetWeight(index, weight);
-    //}
-
-    /// <summary>
     /// 12時になった時の時計の発光処理のコルーチン
     /// </summary>
     IEnumerator OnHandsEmission()
