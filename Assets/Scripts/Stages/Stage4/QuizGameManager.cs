@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cinemachine;
 using Unity.Collections;
 using UniRx;
 
@@ -21,6 +23,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [Tooltip("クリアに必要な正解の数")]
     [SerializeField]
     int _requiredCorrectNum = 0;
+
+    [Tooltip("各難易度毎のクイズゲームの数値")]
+    [SerializeField]
+    QuizGameParameter[] _quizGameParams = default;
 
     [Tooltip("お題の数を数える時間")]
     [SerializeField]
@@ -56,6 +62,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     Transform _directionTrumpSoldier = default;
 
+    [SerializeField]
+    CheshireCat[] _cheshireCats = default;
+
     [Header("UI")]
     [SerializeField]
     Text _informationText = default;
@@ -68,6 +77,20 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
     [SerializeField]
     GameObject[] _targetIcons = default;
+
+    [Header("Camera")]
+    [SerializeField]
+    CinemachineVirtualCamera _quizCamera = default;
+
+    [SerializeField]
+    CinemachineBrain _brain = default;
+
+    [Header("Components")]
+    [SerializeField]
+    AliceFaceController _faceController = default;
+
+    [SerializeField]
+    TrumpSolderGenerator _trumpGenerator = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -82,6 +105,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
     int _corectNum = 0;
     Animator _playerAnim;
     #endregion
+
     #region public
     public override event Action GameSetUp;
     public override event Action GameStart;
@@ -99,6 +123,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
     protected override void Start()
     {
         AudioManager.PlayBGM(BGMType.Stage4);
+        _brain.m_DefaultBlend.m_Time = 0f;
         base.Start();
         OnGameStart();
     }
@@ -107,18 +132,22 @@ public class QuizGameManager : StageGame<QuizGameManager>
     {
         _informationText.text = "";
         LetterboxController.ActivateLetterbox(true);
+        OnGameSetUp();
+
 
         _playerTrans.DOMove(_playerTrans.position, 1.4f)
                     .OnComplete(() =>
                     {
                         //主人公キャラがスタート位置まで進む
                         _playerAnim.CrossFadeInFixedTime("Move", 0.2f);
+                        _cheshireCats[0].ChangeState(CheshireCatState.FastWalk);
                     });
         
         _playerTrans.DOMoveX(_startPlayerPos.position.x, 3.0f)
                     .SetEase(Ease.Linear)
                     .OnComplete(() => 
                     {
+                        _cheshireCats[0].ChangeState(CheshireCatState.Idle_Standing);
                         _playerAnim.CrossFadeInFixedTime("Idle", 0.2f);
                     })
                     .SetDelay(1.5f);
@@ -177,7 +206,16 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
                 TransitionManager.FadeIn(FadeType.Normal, action: () =>
                 {
+                    _quizCamera.Priority = 0;
+
                     _playerAnim.CrossFadeInFixedTime("Idle", 0.1f);
+                    _faceController.ChangeFaceType(FaceType.Default);
+
+                    _cheshireCats[0].gameObject.SetActive(true);
+                    _cheshireCats[1].gameObject.SetActive(false);
+
+                    _cheshireCats[0].ChangeState(CheshireCatState.Idle_Standing);
+
                     _playerTrans.DOMoveX(_startPlayerPos.position.x, 0f);
                     _playerTrans.DOLocalRotate(new Vector3(0f, 90f, 0f), 0f);
 
@@ -234,13 +272,63 @@ public class QuizGameManager : StageGame<QuizGameManager>
             }
             yield return new WaitUntil(() => isAnswerPhase); //選択肢が表示されるのを待機
 
+            bool isCamerachanged = false;
+
+            TransitionManager.FadeIn(FadeType.Normal, 0.5f, action: () =>
+            {
+                _quizCamera.Priority = 30;
+                _playerAnim.CrossFadeInFixedTime("SitIdle", 0f);
+                _playerTrans.DOLocalRotate(new Vector3(0f, 225f, 0f), 0f);
+                _cheshireCats[0].gameObject.SetActive(false);
+                _cheshireCats[1].gameObject.SetActive(true);
+
+                _cheshireCats[1].ChangeState(CheshireCatState.LyingDown, 0f);
+            });
+
+            yield return new WaitForSeconds(0.8f);
+
+            TransitionManager.FadeOut(FadeType.Normal, 0.5f, () =>
+            {
+                isCamerachanged = true;
+            });
+
+            yield return new WaitUntil(() => isCamerachanged);
+
             if (!_debugMode)
             {
-                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, currentQuizType, x => _corectNum += x));
+                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, currentQuizType, x => 
+                {
+                    _corectNum += x;
+
+                    if (x == 1)
+                    {
+                        _playerAnim.CrossFadeInFixedTime("SitHappy", 0.2f);
+                        _faceController.ChangeFaceType(FaceType.Smile);
+                    }
+                    else
+                    {
+                        _playerAnim.CrossFadeInFixedTime("SitSad", 0.2f);
+                        _faceController.ChangeFaceType(FaceType.Cry);
+                    }
+                }));
             }
             else
             {
-                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, _debugQuizType, x => _corectNum += x));
+                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, _debugQuizType, x =>
+                {
+                    _corectNum += x;
+
+                    if (x == 1)
+                    {
+                        _playerAnim.CrossFadeInFixedTime("SitHappy", 0.2f);
+                        _faceController.ChangeFaceType(FaceType.Smile);
+                    }
+                    else
+                    {
+                        _playerAnim.CrossFadeInFixedTime("SitSad", 0.2f);
+                        _faceController.ChangeFaceType(FaceType.Cry);
+                    }
+                }));
             }
         }
 
@@ -320,23 +408,57 @@ public class QuizGameManager : StageGame<QuizGameManager>
     {
         //ゲームの配置のセットアップ処理をここに記述
         _playerAnim.CrossFadeInFixedTime("Move", 0.1f);
+        _cheshireCats[0].ChangeState(CheshireCatState.FastWalk);
+
+        
         _playerTrans.DOMoveX(_endPlayerTrans.position.x, _viewingTime)
                     .SetEase(_playerMoveEase)
                     .OnComplete(() =>
                     {
                         action?.Invoke();
-                        _playerTrans.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.25f);
-                        _playerAnim.CrossFadeInFixedTime("SitIdle", 0.3f);
+                        //_playerTrans.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.25f);
+                        _cheshireCats[0].ChangeState(CheshireCatState.Idle_Standing);
                         Debug.Log("クイズ表示");
                     });
     }
 
+    /// <summary>
+    /// クイズゲームのセットアップ
+    /// </summary>
     public override void OnGameSetUp()
     {
+        var param = _quizGameParams.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
+        _viewingTime = param.ViewingTime;
+        _trumpGenerator.SetGenerateCount(param);
+
+
         GameSetUp?.Invoke();
     }
+
+    /// <summary>
+    /// クイズのセットアップ
+    /// </summary>
+    /// <param name="type"></param>
     void OnQuizSetUp(QuizType type)
     {
         QuizSetUp?.Invoke(type);
     }
+}
+
+/// <summary>
+/// クイズゲームの各パラメーター
+/// </summary>
+[Serializable]
+public struct QuizGameParameter
+{
+    public string ParamName;
+    public DifficultyType DifficultyType;
+    public int ViewingTime;
+    public int StandingGenerateMaxCount;
+    public int WalkGenerateMaxCount;
+    public int PaintGenerateMaxCount;
+    public int LoafGenerateMaxCount;
+    public int DipGenerateMaxCount;
+    public int HideTreeGenerateMaxCount;
+    public int HideBucketGenerateMaxCount;
 }

@@ -32,6 +32,13 @@ public class CroquetGameUI : MonoBehaviour
 
     [SerializeField]
     Text _resultText = default;
+
+    [Header("UIObjects")]
+    [SerializeField]
+    GameObject _successImage = default;
+
+    [SerializeField]
+    GameObject _failureImage = default;
     #endregion
 
     #region private
@@ -46,7 +53,8 @@ public class CroquetGameUI : MonoBehaviour
 
     private void Start()
     {
-        
+        _successImage.SetActive(false);
+        _failureImage.SetActive(false);
     }
 
     /// <summary>
@@ -101,5 +109,23 @@ public class CroquetGameUI : MonoBehaviour
     public void SetResultText(string result)
     {
         _resultText.text = result;
+    }
+
+    public void OnResultUI(bool result)
+    {
+        if (result)
+        {
+            _successImage.SetActive(true);
+        }
+        else
+        {
+            _failureImage.SetActive(true);
+        }
+    }
+
+    public void OffResultUI()
+    {
+        _successImage.SetActive(false);
+        _failureImage.SetActive(false);
     }
 }

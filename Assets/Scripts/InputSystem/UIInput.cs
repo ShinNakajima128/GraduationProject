@@ -13,10 +13,10 @@ public class UIInput : MonoBehaviour
     public static UIInput Instance { get; private set; }
     //public static bool Submit => Instance._input.actions["Submit"].IsPressed();
     public static bool Submit => Instance._input.actions["Submit"].WasPressedThisFrame();
-    public static bool A => Instance._input.actions["A"].IsPressed();
-    public static bool B => Instance._input.actions["B"].IsPressed();
-    public static bool X => Instance._input.actions["X"].IsPressed();
-    public static bool Y => Instance._input.actions["Y"].IsPressed();
+    public static bool A => Instance._input.actions["A"].WasPressedThisFrame();
+    public static bool B => Instance._input.actions["B"].WasPressedThisFrame();
+    public static bool X => Instance._input.actions["X"].WasPressedThisFrame();
+    public static bool Y => Instance._input.actions["Y"].WasPressedThisFrame();
     #endregion
 
     private void Awake()

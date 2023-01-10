@@ -30,6 +30,15 @@ public class ObstacleGenerator : MonoBehaviour
     bool _isGenerating = false;
     #endregion
 
+    #region property
+    public static ObstacleGenerator Instance { get; private set; }
+    #endregion
+
+    protected virtual void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         if (!_isBackground)
@@ -107,6 +116,15 @@ public class ObstacleGenerator : MonoBehaviour
         {
             StartCoroutine(StopBackgroundModel());
         }
+    }
+
+    /// <summary>
+    /// ê∂ê¨éûä‘Çê›íËÇ∑ÇÈ
+    /// </summary>
+    /// <param name="value"> ê∂ê¨Ç∑ÇÈä‘äu </param>
+    public void SetInterval(float value)
+    {
+        _generateInterval = value;
     }
 }
 public enum ObstacleType

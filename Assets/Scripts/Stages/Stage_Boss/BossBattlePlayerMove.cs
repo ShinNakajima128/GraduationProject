@@ -10,6 +10,9 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
 
     [SerializeField]
     float _turnSpeed = 5.0f;
+
+    [SerializeField]
+    float _rigidTime = 1.0f;
     #endregion
 
     #region private
@@ -17,6 +20,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
     Animator _anim;
     Vector3 _dir;
     bool _isMoving;
+    Coroutine _stoppingCoroutine;
     #endregion
 
     private void Awake()
@@ -30,6 +34,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         PlayerMovable(false);
         BossStageManager.Instance.CharacterMovable += PlayerMovable;
         BossStageManager.Instance.DirectionSetUp += ResetAnimation;
+        EventManager.ListenEvents(Events.Boss_GroundShake, Stopping);
     }
 
     private void FixedUpdate()
@@ -50,6 +55,10 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
             }
 
             CharacterAnimation();
+        }
+        else
+        {
+            _rb.velocity = new Vector3(0f, _rb.velocity.y, 0f);
         }
     }
     public void SetDirection(Vector3 dir)
@@ -79,5 +88,35 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
     void ResetAnimation()
     {
         _anim.SetFloat("Move", 0f);
+    }
+
+    void Stopping()
+    {
+        //演出中はアニメーションのみ
+        if (!_isMoving)
+        {
+            _anim.CrossFadeInFixedTime("Stagger", 0.1f);
+        }
+        //戦闘中はしばらく動けなくなるコルーチンを開始
+        else
+        {
+            if (_stoppingCoroutine != null)
+            {
+                StopCoroutine(_stoppingCoroutine);
+                _stoppingCoroutine = null;
+            }
+
+            StartCoroutine(RigidCoroutine());
+        }
+    }
+
+    IEnumerator RigidCoroutine()
+    {
+        PlayerMovable(false);
+        _anim.CrossFadeInFixedTime("Stagger", 0.1f);
+
+        yield return new WaitForSeconds(_rigidTime);
+
+        PlayerMovable(true);
     }
 }

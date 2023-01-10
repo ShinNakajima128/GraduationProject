@@ -14,12 +14,21 @@ public class CheshireCat : MonoBehaviour
     float _moveSpeed = 1.5f;
 
     [SerializeField]
+    float _fadeTime = 1.0f;
+
+    [SerializeField]
     CheshireCatState _currentState = default;
+
+    [Header("Renderer")]
+    [SerializeField]
+    Renderer _cheshireRenderer = default;
     #endregion
 
     #region private
     Animator _anim;
     Coroutine _currentCoroutine;
+    Material _cheshireBodyMat;
+    Material _cheshireFaceMat;
     #endregion
 
     #region public
@@ -36,24 +45,89 @@ public class CheshireCat : MonoBehaviour
     private void Start()
     {
         ChangeState(_currentState);
+        EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
+        {
+            OnAction(CheshireCatState.Jump, 0.2f); 
+        });
+        _cheshireBodyMat = _cheshireRenderer.materials[0];
+        _cheshireFaceMat = _cheshireRenderer.materials[1];
+
+        _cheshireRenderer.materials[0] = _cheshireBodyMat;
+        _cheshireRenderer.materials[1] = _cheshireFaceMat;
     }
 
     /// <summary>
     /// チェシャ猫のステータスを変更する
     /// </summary>
     /// <param name="state"> ステータスの種類 </param>
-    public void ChangeState(CheshireCatState state)
+    public void ChangeState(CheshireCatState state, float animBlend = 0.2f)
     {
         _currentState = state;
 
-        OnAction(_currentState);
+        OnAction(_currentState, animBlend);
+    }
+
+    public void ActivateDissolve(bool isActive)
+    {
+        Debug.Log("Dissolve");
+        float bodyValue;
+        float faceValue;
+
+        if (isActive)
+        {
+            bodyValue = -1f;
+
+            DOTween.To(() => bodyValue,
+                v => bodyValue = v,
+                0f,
+                _fadeTime)
+                .OnUpdate(() => 
+                { 
+                    _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
+                });
+
+            faceValue = -1;
+
+            DOTween.To(() => faceValue,
+                v => faceValue = v,
+                0f,
+                _fadeTime)
+                .OnUpdate(() =>
+                {
+                    _cheshireFaceMat.SetVector("_DissolveParams", new Vector4(3, 1, faceValue, 0.1f));
+                });
+        }
+        else
+        {
+            bodyValue = 0f;
+
+            DOTween.To(() => bodyValue,
+                v => bodyValue = v,
+                -1f,
+                _fadeTime)
+                .OnUpdate(() =>
+                {
+                    _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
+                });
+
+            faceValue = 0f;
+
+            DOTween.To(() => faceValue,
+                v => faceValue = v,
+                -1f,
+                _fadeTime)
+                .OnUpdate(() =>
+                {
+                    _cheshireFaceMat.SetVector("_DissolveParams", new Vector4(3, 1, faceValue, 0.1f));
+                });
+        }
     }
 
     /// <summary>
     /// 指定したステータスのアクションを実行
     /// </summary>
     /// <param name="state"> ステータスの種類 </param>
-    void OnAction(CheshireCatState state)
+    void OnAction(CheshireCatState state, float animBlend)
     {
         //以前のステータスのコルーチンを中断
         if (_currentCoroutine != null)
@@ -70,17 +144,21 @@ public class CheshireCat : MonoBehaviour
             case CheshireCatState.Idle_Lick:
                 break;
             case CheshireCatState.LyingDown:
+                _anim.CrossFadeInFixedTime(CheshireCatState.LyingDown.ToString(), animBlend);
                 break;
             case CheshireCatState.Walk:
+                _anim.CrossFadeInFixedTime(CheshireCatState.Walk.ToString(), animBlend);
                 break;
             case CheshireCatState.FastWalk:
+                _anim.CrossFadeInFixedTime(CheshireCatState.FastWalk.ToString(), animBlend);
                 break;
             case CheshireCatState.Jump:
+                _anim.CrossFadeInFixedTime(CheshireCatState.Jump.ToString(), animBlend);
                 break;
             case CheshireCatState.Appearance:
                 break;
             case CheshireCatState.Idle_Standing:
-                _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Standing.ToString(), 0.2f);
+                _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Standing.ToString(), animBlend);
                 break;
             default:
                 break;

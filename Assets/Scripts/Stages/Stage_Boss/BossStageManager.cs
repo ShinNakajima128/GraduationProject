@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,9 @@ public class BossStageManager : StageGame<BossStageManager>
     [Tooltip("戦闘回数")]
     [SerializeField]
     int _battleNum = 3;
+
+    [SerializeField]
+    BossBattleParameter[] _battleParameters = default;
 
     [Tooltip("別のカメラへ遷移する際にかける時間")]
     [SerializeField]
@@ -68,6 +72,9 @@ public class BossStageManager : StageGame<BossStageManager>
     GameObject _areaEffect = default;
 
     [Header("UI")]
+    [SerializeField]
+    CanvasGroup _hpPanel = default;
+
     [Tooltip("戦闘終了時の画面")]
     [SerializeField]
     CanvasGroup _finishBattleCanvas = default;
@@ -133,6 +140,12 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         GameSetUp?.Invoke();
         _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
+
+        //現在の難易度のパラメーターを取得
+        var param = _battleParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
+
+        //パラメーターを反映
+        _bossCtrl.SetParameter(param.PhaseParameters);
     }
 
     public override void OnGameStart()
@@ -220,8 +233,10 @@ public class BossStageManager : StageGame<BossStageManager>
     protected override void Init()
     {
         _messagePlayer.Closeup += OnCloseup;
+        HPManager.Instance.LostHpAction += OnBossStageGameOver;
         //_messagePlayer.Reset += OnReset;
         _isInBattle.Value = false;
+        _hpPanel.alpha = 0;
     }
 
     IEnumerator InGameCoroutine()
@@ -234,14 +249,20 @@ public class BossStageManager : StageGame<BossStageManager>
             OnGameSetUp();
 
             //バトルフェイズを終了するまで待機
-            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i, () =>
-            {
-                CharacterMovable?.Invoke(true);
-                CameraBlend(CameraType.Battle, _cameraBlendTime);
-            });
+            yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i,
+                                  firstAction: () =>
+                                  {
+                                     CameraBlend(CameraType.Battle, _cameraBlendTime);
+                                  },
+                                  phaseStartAction: () => 
+                                  {
+                                      CharacterMovable?.Invoke(true);
+                                      _hpPanel.alpha = 1;
+                                  });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
+            _hpPanel.alpha = 0;
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
             _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
 
@@ -431,6 +452,11 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         CameraBlend(CameraType.Direction_Closeup, _cameraBlendTime);
     }
+
+    void OnBossStageGameOver()
+    {
+        TransitionManager.SceneTransition(SceneType.Stage_Boss);
+    }
 }
 public enum CameraType
 {
@@ -441,4 +467,15 @@ public enum CameraType
     JumpAttack,
     FinishBattle,
     ExcuteTrump
+}
+
+/// <summary>
+/// ボス戦のパラメーター
+/// </summary>
+[Serializable]
+public struct BossBattleParameter
+{
+    public string PramName;
+    public DifficultyType DifficultyType;
+    public PhaseParameter[] PhaseParameters;
 }

@@ -13,6 +13,8 @@ public class DialogData
     string[] _messages;
     [SerializeField]
     Events _screenEffectType = default;
+    [SerializeField]
+    float _displayTime = 0.05f;
     #endregion
 
     #region hide inspector
@@ -25,6 +27,7 @@ public class DialogData
     #region property
     public string[] AllMessage => _messages;
     public Events EventType => _screenEffectType;
+    public float DisplayTime => _displayTime;
     #endregion
     public void MessagesToArray()
     {

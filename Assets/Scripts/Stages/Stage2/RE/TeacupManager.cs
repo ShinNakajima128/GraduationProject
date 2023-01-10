@@ -13,6 +13,10 @@ public class TeacupManager : MonoBehaviour
     [SerializeField]
     DorMouse _mouse = default;
 
+    [Header("UI")]
+    [SerializeField]
+    GameObject _selectButtonInfo = default;
+
     [Header("Components")]
     [SerializeField]
     TeacupSelecter _selecter = default;
@@ -34,6 +38,7 @@ public class TeacupManager : MonoBehaviour
     void Start()
     {
         ButtonSetup();
+        _selectButtonInfo.SetActive(false);
     }
 
     /// <summary>
@@ -84,12 +89,11 @@ public class TeacupManager : MonoBehaviour
     public IEnumerator ChoicePhaseCoroutine(Action<bool, int> callback)
     {
         _selecter.SelectButtons[0].SelectButton.Select();
-
-        Debug.Log("‘I‘ð‘Ò‚¿");
+        _selectButtonInfo.SetActive(true);
 
         yield return new WaitUntil(() => _isChoiced);
 
-        Debug.Log("callback");
+        _selectButtonInfo.SetActive(false);
         callback?.Invoke(_isCorrect, _selectIndex);
         _isChoiced = false;
 

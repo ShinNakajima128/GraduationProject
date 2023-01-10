@@ -15,6 +15,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     float _colorFadeTime = 2.0f;
 
+    [SerializeField]
+    LobbyUIState _currentUIState = default;
+
     [Header("Objects")]
     [SerializeField]
     Transform _playerTrans = default;
@@ -102,6 +105,7 @@ public class LobbyManager : MonoBehaviour
     public Action StepAwayDoor { get; set; }
     public Action<bool> PlayerMove { get; set; }
     public bool IsApproached => _isApproached;
+    public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
     #endregion
 
     private void Awake()
@@ -116,18 +120,18 @@ public class LobbyManager : MonoBehaviour
         SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
 
-        if (!IsFirstArrival)
-        {
-            AudioManager.PlayBGM(BGMType.Lobby);
-        }
-        else
-        {
-            AudioManager.StopBGM(1.0f);
-            EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
-        }
-
         if (!_debugMode)
         {
+            if (!IsFirstArrival)
+            {
+                AudioManager.PlayBGM(BGMType.Lobby);
+            }
+            else
+            {
+                AudioManager.StopBGM(1.0f);
+                EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
+            }
+
             TransitionManager.FadeIn(FadeType.Normal, 0f);
             yield return null;
 
@@ -147,11 +151,12 @@ public class LobbyManager : MonoBehaviour
                 });
 
                 yield return new WaitForSeconds(3.0f);
-                
-                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_Visit, () => 
+
+                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_Visit, () =>
                 {
+                    //チェシャ猫登場演出
                     TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
-                    TransitionManager.FadeIn(FadeType.Normal, action: () =>
+                    TransitionManager.FadeIn(FadeType.Mask_CheshireCat, action: () =>
                     {
                         LetterboxController.ActivateLetterbox(true, 0f);
                         LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Appearance);
@@ -166,16 +171,25 @@ public class LobbyManager : MonoBehaviour
                     LetterboxController.ActivateLetterbox(false, 0f);
                     _cheshireCatCamera.Priority = 14;
                     LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Movable);
-                    TransitionManager.FadeOut(FadeType.Normal);
+                    TransitionManager.FadeOut(FadeType.Normal, 0f, () =>
+                    {
+                        TransitionManager.FadeOut(FadeType.Mask_CheshireCat);
+                    });
                 });
 
                 yield return new WaitForSeconds(3.0f);
 
-                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_CheshireCat, ()=> 
+                yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_CheshireCat, () =>
                 {
-                    ClockDirection();
-                    AudioManager.StopBGM(1.5f); //一旦曲を止める
+                    //チェシャ猫をディゾルブで非表示にする
+                    LobbyCheshireCatManager.Instance.MovableCat.ActivateDissolve(true);
                 });
+
+                yield return new WaitForSeconds(2.0f);
+
+                //時計の演出
+                ClockDirection();
+                AudioManager.StopBGM(1.5f); //一旦曲を止める
             }
             else
             {
@@ -183,7 +197,7 @@ public class LobbyManager : MonoBehaviour
 
                 //画面フェード終了を待機
                 yield return new WaitForSeconds(1.5f);
-                
+
                 //未クリア且つステージをクリアしている場合は時計の演出を行う
                 if (!GameManager.CheckStageStatus() && GameManager.IsClearStaged)
                 {
@@ -198,6 +212,7 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
+            AudioManager.PlayBGM(BGMType.Lobby);
             _provider.enabled = true;
             PlayerMove?.Invoke(true);
         }
@@ -263,7 +278,7 @@ public class LobbyManager : MonoBehaviour
             case Stages.Stage4:
                 _playerTrans.position = _startPlayerTrans[3].position;
                 _playerTrans.rotation = _startPlayerTrans[3].rotation;
-                break;   
+                break;
             default:
                 break;
         }
@@ -312,20 +327,6 @@ public class LobbyManager : MonoBehaviour
     {
         IsFirstArrival = true;
     }
-
-    /// <summary>
-    /// カメラを変更する
-    /// </summary>
-    /// <param name="index"> カメラの番号 </param>
-    /// <param name="weight"> カメラのウエイト </param>
-    //void ChangeCamera(int index, float weight)
-    //{
-    //    for (int i = 0; i < _mixingCamera.ChildCameras.Length; i++)
-    //    {
-    //        _mixingCamera.SetWeight(i, 0);
-    //    }
-    //    _mixingCamera.SetWeight(index, weight);
-    //}
 
     /// <summary>
     /// 12時になった時の時計の発光処理のコルーチン
@@ -380,14 +381,14 @@ public class LobbyManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-        TransitionManager.FadeIn(FadeType.Normal,0.5f, () =>
-        {
-            _playerTrans.localPosition = _goingUnderTrans.position;
-            _brain.m_DefaultBlend.m_Time = 0;
-            _clock_ShakeCamera.Priority = 20;
-           
-            TransitionManager.FadeOut(FadeType.Normal, 0.5f);
-        });
+        TransitionManager.FadeIn(FadeType.Normal, 0.5f, () =>
+         {
+             _playerTrans.localPosition = _goingUnderTrans.position;
+             _brain.m_DefaultBlend.m_Time = 0;
+             _clock_ShakeCamera.Priority = 20;
+
+             TransitionManager.FadeOut(FadeType.Normal, 0.5f);
+         });
 
 
         yield return new WaitForSeconds(3.5f);
@@ -398,13 +399,13 @@ public class LobbyManager : MonoBehaviour
         bool isFading = false;
 
         yield return _mainStage.DOLocalMoveY(2f, 10f)
-                               .OnUpdate(() => 
+                               .OnUpdate(() =>
                                {
                                    timer += Time.deltaTime;
 
                                    if (timer >= 5.0f && !isFading)
                                    {
-                                       TransitionManager.SceneTransition(SceneType.Stage_Boss);
+                                       TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_Heart);
                                        isFading = true;
                                    }
                                })
@@ -423,5 +424,12 @@ public class Stage
     public string SceneName;
     public SceneType Type;
     public Sprite StageSprite;
+}
+
+public enum LobbyUIState
+{
+    Default,
+    Album,
+    Option
 }
 

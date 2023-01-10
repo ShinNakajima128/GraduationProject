@@ -171,7 +171,7 @@ public class BossController : MonoBehaviour, IDamagable
     /// 戦闘フェイズのコルーチン
     /// </summary>
     /// <param name="battlePhase"> 戦闘フェイズの種類 </param>
-    public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase, Action action = null)
+    public IEnumerator BattlePhaseCoroutine(BossBattlePhase battlePhase, Action firstAction = null, Action phaseStartAction = null)
     {
         _isDamaged = false;
         _bossShadow.ChangeShadowSize(0.1f, 0f);
@@ -184,9 +184,11 @@ public class BossController : MonoBehaviour, IDamagable
 
         BossStageManager.CameraShake();
         LetterboxController.ActivateLetterbox(false);
+        EventManager.OnEvent(Events.Boss_GroundShake);
+        firstAction?.Invoke();
 
-        action?.Invoke();
         yield return new WaitForSeconds(2.5f);
+        phaseStartAction?.Invoke();
 
         PlayBossAnimation(BossAnimationType.Idle);
 
@@ -258,6 +260,7 @@ public class BossController : MonoBehaviour, IDamagable
                               {
                                   StartCoroutine(ChangeState(BossState.Landing));
                                   BossStageManager.CameraShake();
+                                  EventManager.OnEvent(Events.Boss_GroundShake);
                                   EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
                                   Debug.Log("着地");
                               })
@@ -279,6 +282,7 @@ public class BossController : MonoBehaviour, IDamagable
                                       .WaitForCompletion();
 
                 EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
+                EventManager.OnEvent(Events.Boss_GroundShake);
             }
         }
 
@@ -391,6 +395,15 @@ public class BossController : MonoBehaviour, IDamagable
     public void Damage(int value)
     {
         StartCoroutine(ChangeState(BossState.Damage, action: () => _isInvincibled = false));
+    }
+
+    /// <summary>
+    /// パラメーターを設定する
+    /// </summary>
+    /// <param name="param"> 変更後のパラメーター </param>
+    public void SetParameter(PhaseParameter[] param)
+    {
+        _phaseParams = param;
     }
 
     private void OnTriggerEnter(Collider other)

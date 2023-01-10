@@ -136,6 +136,15 @@ public class MessagePlayer : MonoBehaviour
         {
             _actorText.text = d[i].Actor;
             _actorIconImage.sprite = GetActorIcon(d[i].Actor);
+
+            if (d[i].Actor == "？？？")
+            {
+                _actorIconImage.color = Color.black;
+            }
+            else
+            {
+                _actorIconImage.color = Color.white;
+            }
             _messageText.text = "";
 
             if (d[i].EventType != Events.None)
@@ -167,9 +176,9 @@ public class MessagePlayer : MonoBehaviour
             }
             _isSkiped = false;
 
-            yield return new WaitForSeconds(0.05f);
-
             EventManager.OnEvent(Events.FinishTalking);
+
+            yield return new WaitForSeconds(d[i].DisplayTime);
 
             _submitIcon.SetActive(true); //入力を促すアイコンをアクティブにする
 
@@ -263,6 +272,9 @@ public class MessagePlayer : MonoBehaviour
                 break;
             case "女王":
                 icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen).Icon;
+                break;
+            case "？？？":
+                icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat).Icon;
                 break;
             default:
                 Debug.LogError("名前の指定が間違っています");

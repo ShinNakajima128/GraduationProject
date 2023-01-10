@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,10 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [Tooltip("ステージにクリアに必要な回数")]
     [SerializeField]
     int _requiredSuccessCount = 3;
+
+    [Tooltip("難易度毎のゲームの数値")]
+    [SerializeField]
+    CroquetGameParameter[] _gameParameters = default;
 
     [SerializeField]
     Transform[] _golaEffectTrans = default;
@@ -90,6 +95,10 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         _currentStrikeNum = 0;
         _currentRedStrileNum = 0;
         _currentBlackStrikeNum = 0;
+
+        var param = _gameParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
+
+        _order.SetOrderData(param.OrderDatas);
     }
 
     public override void OnGameStart()
@@ -167,9 +176,30 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 LetterboxController.ActivateLetterbox(false, 1.5f);
 
                 yield return new WaitForSeconds(1.5f);
-                
+
                 _gameUI.ChangeUIGroup(CroquetGameState.InGame);
-                _player.BeginControl();
+
+                //初めてステージ3をプレイしている場合
+                if (GameManager.Instance.IsFirstVisitCurrentStage)
+                {
+                    //フェイズ毎の会話パートを再生
+                    switch (i)
+                    {
+                        case 0:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase1);
+                            break;
+                        case 1:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase2);
+                            break;
+                        case 2:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase3);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                _player.BeginControl(); //入力受付開始
 
                 yield return new WaitUntil(() => _player.IsThrowed);
 
@@ -232,21 +262,19 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// <returns></returns>
     IEnumerator GoalDirectionCoroutine(bool result)
     {
-        _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
-
         yield return new WaitForSeconds(2.0f);
-
+        _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
+     
         if (result)
         {
-            _gameUI.SetResultText("お題たっせい！");
             _successCount++;
             OnGoalEffect();
         }
-        else
-        {
-            _gameUI.SetResultText("お題しっぱい…");
-        }
-        yield return new WaitForSeconds(2.0f);
+
+        _gameUI.OnResultUI(result);
+        yield return new WaitUntil(() => UIInput.Submit);
+
+        _gameUI.OffResultUI();
     }
 
     protected override void Init()
@@ -309,4 +337,15 @@ public enum CroquetGameState
     InGame,
     GoalDirection,
     Finish
+}
+
+/// <summary>
+/// クロッケーゲームの難易度毎のパラメーター
+/// </summary>
+[Serializable]
+public struct CroquetGameParameter
+{
+    public string ParamName;
+    public DifficultyType DifficultyType;
+    public OrderData[] OrderDatas;
 }

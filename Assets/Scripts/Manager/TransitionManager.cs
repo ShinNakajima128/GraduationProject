@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,13 @@ public class TransitionManager : MonoBehaviour
 
     [SerializeField]
     Image _fadeImage = default;
+
+    [SerializeField]
+    FadeImage _fadeMaskImage = default;
+
+    [Header("MaskData")]
+    [SerializeField]
+    MaskData _maskData = default;
     #endregion
 
     #region property
@@ -62,6 +70,7 @@ public class TransitionManager : MonoBehaviour
         switch (fade)
         {
             case FadeType.Normal:
+                Instance._fade.FadeOut(0f);
                 Instance._fadeImage.enabled = true;
                 Instance._fadeImage.DOFade(1f, 0f);
                 Instance._fadeImage.DOFade(0f, fadeTime)
@@ -71,6 +80,7 @@ public class TransitionManager : MonoBehaviour
                           });
                 break;
             case FadeType.White_default:
+                Instance._fade.FadeOut(0f);
                 Instance._fadeImage.DOColor(new Color(1, 1, 1, 0), 0);
                 Instance._fadeImage.enabled = true;
                 Instance._fadeImage.DOFade(1f, 0f);
@@ -81,6 +91,7 @@ public class TransitionManager : MonoBehaviour
                           });
                 break;
             case FadeType.Black_default:
+                Instance._fade.FadeOut(0f);
                 Instance._fadeImage.DOColor(new Color(0, 0, 0, 0), 0);
                 Instance._fadeImage.enabled = true;
                 Instance._fadeImage.DOFade(1f, 0f);
@@ -90,8 +101,40 @@ public class TransitionManager : MonoBehaviour
                               action?.Invoke();
                           });
                 break;
+            case FadeType.Mask_CheshireCat:
+                Instance._fade.FadeIn(0f, () => 
+                {
+                    Instance._fadeImage.DOFade(0f, 0f);
+                    var cheshireMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.CheshireCat);
+                    Instance._fadeImage.enabled = true;
+                    Instance._fadeMaskImage.UpdateMaskTexture(cheshireMaskData.MaskTexture);
+                    Instance._fadeMaskImage.material.color = cheshireMaskData.MaskColor;
+                    Instance._fade.FadeOut(Instance._fadeTime, action);
+                });
+                break;
+            case FadeType.Mask_Heart:
+                Instance._fade.FadeIn(0f, () => 
+                {
+                    Instance._fadeImage.DOFade(0f, 0f);
+                    var heartMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.Heart);
+                    Instance._fadeImage.enabled = true;
+                    Instance._fadeMaskImage.UpdateMaskTexture(heartMaskData.MaskTexture);
+                    Instance._fadeMaskImage.material.color = heartMaskData.MaskColor;
+                    Instance._fade.FadeOut(Instance._fadeTime, action);
+                });
+                break;
+            case FadeType.Mask_KeyHole:
+                Instance._fade.FadeIn(0f, () => 
+                {
+                    Instance._fadeImage.DOFade(0f, 0f);
+                    var keyholeMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.KeyHole);
+                    Instance._fadeImage.enabled = true;
+                    Instance._fadeMaskImage.UpdateMaskTexture(keyholeMaskData.MaskTexture);
+                    Instance._fadeMaskImage.material.color = keyholeMaskData.MaskColor;
+                    Instance._fade.FadeOut(Instance._fadeTime, action);
+                });
+                break;
             default:
-                Instance._fade.FadeOut(Instance._fadeTime, action);
                 break;
         }
     }
@@ -140,8 +183,40 @@ public class TransitionManager : MonoBehaviour
                                        action?.Invoke();
                                    });
                 break;
+            case FadeType.Mask_CheshireCat:
+                var cheshireMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.CheshireCat);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeMaskImage.UpdateMaskTexture(cheshireMaskData.MaskTexture);
+                Instance._fadeMaskImage.material.color = cheshireMaskData.MaskColor;
+                Instance._fadeImage.DOFade(0f, 0.05f)
+                                   .OnComplete(() =>
+                                   { 
+                                       Instance._fade.FadeIn(Instance._fadeTime, action);
+                                   });
+                break;
+            case FadeType.Mask_Heart:
+                var heartMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.Heart);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeMaskImage.UpdateMaskTexture(heartMaskData.MaskTexture);
+                Instance._fadeMaskImage.material.color = heartMaskData.MaskColor;
+                Instance._fadeImage.DOFade(0f, 0.05f)
+                                   .OnComplete(() =>
+                                   {
+                                       Instance._fade.FadeIn(Instance._fadeTime, action);
+                                   });
+                break;
+            case FadeType.Mask_KeyHole:
+                var keyholeMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.KeyHole);
+                Instance._fadeImage.enabled = true;
+                Instance._fadeMaskImage.UpdateMaskTexture(keyholeMaskData.MaskTexture);
+                Instance._fadeMaskImage.material.color = keyholeMaskData.MaskColor;
+                Instance._fadeImage.DOFade(0f, 0.05f)
+                                   .OnComplete(() =>
+                                   {
+                                       Instance._fade.FadeIn(Instance._fadeTime, action);
+                                   });
+                break;
             default:
-                Instance._fade.FadeIn(Instance._fadeTime, action);
                 break;
         }
     }
@@ -178,5 +253,7 @@ public enum FadeType
     Black_default,
     White_Transparent,
     Black_TransParent,
-    Mask1
+    Mask_CheshireCat,
+    Mask_Heart,
+    Mask_KeyHole
 }

@@ -101,6 +101,21 @@ public class TrumpSolderGenerator : MonoBehaviour
         _trumpMng.Return();
     }
 
+    /// <summary>
+    /// トランプ兵を生成する数を設定する
+    /// </summary>
+    /// <param name="param"> クイズゲームの数値 </param>
+    public void SetGenerateCount(QuizGameParameter param)
+    {
+        _generatePoints[0].GenerateMaxCount = param.StandingGenerateMaxCount;
+        _generatePoints[1].GenerateMaxCount = param.StandingGenerateMaxCount;
+        _generatePoints[2].GenerateMaxCount = param.StandingGenerateMaxCount;
+        _generatePoints[3].GenerateMaxCount = param.StandingGenerateMaxCount;
+        _generatePoints[4].GenerateMaxCount = param.StandingGenerateMaxCount;
+        _generatePoints[5].GenerateMaxCount = param.StandingGenerateMaxCount;
+        _generatePoints[6].GenerateMaxCount = param.StandingGenerateMaxCount;
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

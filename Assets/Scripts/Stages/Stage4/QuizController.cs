@@ -24,7 +24,7 @@ public class QuizController : MonoBehaviour
 
     [Header("UI")]
     [SerializeField]
-    GameObject _choicePanel = default;
+    CanvasGroup _choicePanel = default;
 
     [SerializeField]
     List<ChoiceButton> _choiceButtonList = new List<ChoiceButton>();
@@ -66,7 +66,9 @@ public class QuizController : MonoBehaviour
             });
         }
         EventSystem.current.firstSelectedGameObject.GetComponent<Button>().Select();
-        _choicePanel.SetActive(false);
+        _choicePanel.alpha = 0;
+        _questionText.text = "";
+        _AnswerTimeText.text = "";
     }
 
     /// <summary>
@@ -79,7 +81,8 @@ public class QuizController : MonoBehaviour
     {
         //選択状態のフラグをリセット
         _isChoiced = false;
-        _choicePanel.SetActive(true);
+        _choicePanel.alpha = 1;
+        _choiceButtonList[0].Button.Select();
 
         float timer = 0;
 
@@ -131,12 +134,14 @@ public class QuizController : MonoBehaviour
             callback?.Invoke(0);
         }
 
+        _choicePanel.alpha = 0;
+
         yield return new WaitForSeconds(_goToNextPhaseInterval);
 
         _questionText.text = "";
         _AnswerTimeText.text = "";
         EventSystem.current.firstSelectedGameObject.GetComponent<Button>().Select();
-        _choicePanel.SetActive(false);
+        
     }
 
     /// <summary>

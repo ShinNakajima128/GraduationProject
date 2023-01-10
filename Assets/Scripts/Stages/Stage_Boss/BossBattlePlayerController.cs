@@ -30,10 +30,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     bool _isInvincibled = false;
     public bool IsInvincibled => _isInvincibled;
 
-    public void Damage(int value)
-    {
-        StartCoroutine(DamageCoroutine(value));
-    }
+    
     #endregion
     #region public
     #endregion
@@ -43,18 +40,30 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     protected override void Awake()
     {
         base.Awake();
-        _currentHP.Value = _maxHP;
+        //_currentHP.Value = _maxHP;
     }
     void Start()
     {
         _fc.ChangeFaceType(FaceType.Blink);
+        HPManager.Instance.ChangeHPValue(_maxHP, true);
+    }
+
+    public void Damage(int value)
+    {
+        if (_isInvincibled)
+        {
+            return;
+        }
+
+        StartCoroutine(DamageCoroutine(value));
     }
 
     IEnumerator DamageCoroutine(int damageValue)
     {
         _isInvincibled = true;
         _fc.ChangeFaceType(FaceType.Damage);
-        _currentHP.Value -= damageValue;
+        HPManager.Instance.ChangeHPValue(damageValue);
+        //_currentHP.Value -= damageValue;
 
         var wait = new WaitForSeconds(_blinksInterVal);
 

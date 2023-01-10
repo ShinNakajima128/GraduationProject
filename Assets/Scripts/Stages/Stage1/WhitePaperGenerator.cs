@@ -22,6 +22,15 @@ public class WhitePaperGenerator : MonoBehaviour
     bool _isInGamed;
     #endregion
 
+    #region property
+    public static WhitePaperGenerator Instance { get; private set; }
+    #endregion
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         FallGameManager.Instance.GameStart += () => StartCoroutine(OnGenerate());
@@ -56,5 +65,14 @@ public class WhitePaperGenerator : MonoBehaviour
     {
         _wpc.Return();
         _isInGamed = false;
+    }
+
+    /// <summary>
+    /// ¶¬ŠÔ‚ğİ’è‚·‚é
+    /// </summary>
+    /// <param name="value"> ¶¬‚·‚éŠÔŠu </param>
+    public void SetInterval(float value)
+    {
+        _generateInterval = value;
     }
 }

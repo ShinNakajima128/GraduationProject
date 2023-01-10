@@ -5,24 +5,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using AliceProject;
 
-public enum Stages
-{
-    Stage1 = 0,
-    Stage2 = 1,
-    Stage3 = 2,
-    Stage4 = 3,
-    Stage_Boss = 6,
-    StageNum = 7
-}
 
+/// <summary>
+/// ゲーム全体を管理するマネージャークラス
+/// </summary>
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     #region serialize
+    [Tooltip("現在のステージ")]
     [SerializeField]
     Stages _currentStage = default;
 
+    [Tooltip("現在の時計の状態")]
     [SerializeField]
     ClockState _currentClockState = ClockState.Zero;
+
+    [Tooltip("現在のゲームの難易度")]
+    [SerializeField]
+    DifficultyType _currentGameDifficultyType = default;
 
     [Header("Debug:Lobby")]
     [SerializeField]
@@ -35,12 +35,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     #region private
     Dictionary<Stages, bool> _stageStatusDic = new Dictionary<Stages, bool>();
     bool _isClearStaged = false;
+    bool[] _isFirstVisitStages = new bool[(int)Stages.StageNum];
     #endregion
     #region property
     public Stages CurrentStage => _currentStage;
     public ClockState CurrentClockState => _currentClockState;
+    public DifficultyType CurrentGameDifficultyType => _currentGameDifficultyType;
     public static bool IsClearStaged => Instance._isClearStaged;
     public Dictionary<Stages, bool> StageSttatusDic => _stageStatusDic;
+    public bool IsFirstVisitCurrentStage => _isFirstVisitStages[(int)_currentStage];
     #endregion
 
     private void Awake()
@@ -56,6 +59,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         for (int i = 0; i < (int)Stages.StageNum; i++)
         {
             _stageStatusDic.Add((Stages)i, false);
+            _isFirstVisitStages[i] = true;
         }
     }
     /// <summary>
@@ -83,6 +87,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Instance._currentStage = stage;
         Instance._isClearStaged = false;
     }
+
+    /// <summary>
+    /// 訪れたステージをプレイ済みにする
+    /// </summary>
+    /// <param name="stage"> 訪れたステージ </param>
+    public static void UpdateFirstVisit(Stages stage)
+    {
+        Instance._isFirstVisitStages[(int)stage] = false;
+    }
+
     /// <summary>
     /// GameManagerが保持しているステージのクリア状況を確認する
     /// </summary>
@@ -153,6 +167,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     }
 
     /// <summary>
+    /// 難易度を変更する
+    /// </summary>
+    /// <param name="type"> 設定する難易度 </param>
+    public static void ChangeGameDifficult(DifficultyType type)
+    {
+        Instance._currentGameDifficultyType = type;
+    }
+
+    /// <summary>
     /// ゲームの状態をリセットする
     /// </summary>
     public static void GameReset()
@@ -163,6 +186,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         for (int i = 0; i < Instance._stageStatusDic.Count; i++)
         {
             Instance._stageStatusDic[(Stages)i] = false;
+            Instance._isFirstVisitStages[i] = true;
         }
 
         Debug.Log("データをリセットしました");
@@ -189,3 +213,27 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         yield return MessagePlayer.Instance.PlayMessageCorountine(type);
     }
 }
+
+/// <summary>
+/// ステージの種類
+/// </summary>
+public enum Stages
+{
+    Stage1 = 0,
+    Stage2 = 1,
+    Stage3 = 2,
+    Stage4 = 3,
+    Stage_Boss = 4,
+    StageNum = 5
+}
+
+/// <summary>
+/// 難易度の種類
+/// </summary>
+public enum DifficultyType
+{
+    Easy,
+    Normal,
+    Hard
+}
+

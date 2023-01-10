@@ -28,6 +28,7 @@ public class LobbyCheshireCatManager : MonoBehaviour
 
     #region property
     public static LobbyCheshireCatManager Instance { get; private set; }
+    public CheshireCat MovableCat => _movableCat;
     #endregion
 
     private void Awake()
