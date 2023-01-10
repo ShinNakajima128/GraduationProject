@@ -34,6 +34,17 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         PlayerMovable(false);
         BossStageManager.Instance.CharacterMovable += PlayerMovable;
         BossStageManager.Instance.DirectionSetUp += ResetAnimation;
+        BossStageManager.Instance.GameOver += () =>
+        {
+            if (_stoppingCoroutine != null)
+            {
+                StopCoroutine(_stoppingCoroutine);
+                _stoppingCoroutine = null;
+            }
+            ResetAnimation();
+            PlayerMovable(false);
+            _anim.CrossFadeInFixedTime("Death", 0.1f);
+        };
         EventManager.ListenEvents(Events.Boss_GroundShake, Stopping);
     }
 
@@ -106,7 +117,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
                 _stoppingCoroutine = null;
             }
 
-            StartCoroutine(RigidCoroutine());
+            _stoppingCoroutine = StartCoroutine(RigidCoroutine());
         }
     }
 

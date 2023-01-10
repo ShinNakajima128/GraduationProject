@@ -28,13 +28,12 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
     /// <summary> ñ≥ìGèÛë‘Ç©Ç«Ç§Ç© </summary>
     bool _isInvincibled = false;
-    public bool IsInvincibled => _isInvincibled;
-
-    
+    Coroutine _damageCoroutine;
     #endregion
     #region public
     #endregion
     #region property
+    public bool IsInvincibled => _isInvincibled;
     #endregion
 
     protected override void Awake()
@@ -46,6 +45,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     {
         _fc.ChangeFaceType(FaceType.Blink);
         HPManager.Instance.ChangeHPValue(_maxHP, true);
+        BossStageManager.Instance.GameOver += StopAction;
     }
 
     public void Damage(int value)
@@ -55,7 +55,20 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
             return;
         }
 
-        StartCoroutine(DamageCoroutine(value));
+        _damageCoroutine = StartCoroutine(DamageCoroutine(value));
+    }
+
+    void StopAction()
+    {
+        if (_damageCoroutine != null)
+        {
+            StopCoroutine(_damageCoroutine);
+            _damageCoroutine = null;
+            _playerModel.SetActive(true);
+        }
+
+        _isInvincibled = true;
+        _fc.ChangeFaceType(FaceType.Damage);
     }
 
     IEnumerator DamageCoroutine(int damageValue)
@@ -76,5 +89,6 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
         _isInvincibled = false;
         _playerModel.SetActive(true);
         _fc.ChangeFaceType(FaceType.Blink);
+        _damageCoroutine = null;
     }
 }
