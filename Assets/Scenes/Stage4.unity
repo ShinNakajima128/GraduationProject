@@ -10147,8 +10147,8 @@ MonoBehaviour:
   _brain: {fileID: 506926358}
   _faceController: {fileID: 7287221556264009973}
   _trumpGenerator: {fileID: 593655838}
-  _debugMode: 0
-  _debugQuizType: 3
+  _debugMode: 1
+  _debugQuizType: 2
 --- !u!1 &288564837
 GameObject:
   m_ObjectHideFlags: 0
@@ -10709,6 +10709,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: MessagePlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 7212509087898063545, guid: e1c2d4b8688cdc245988f6d219c04111,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5dd8ff312bfbf0e41845639fd6e2032a,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1c2d4b8688cdc245988f6d219c04111, type: 3}
 --- !u!1001 &303441267
@@ -34445,8 +34451,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1295722120}
   - {fileID: 1605895816}
+  - {fileID: 1295722120}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -37289,10 +37295,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: d447d491b319500469b022c5355236db, type: 3}
-    m_FontSize: 80
+    m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 8
+    m_MinSize: 7
     m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -45063,7 +45069,7 @@ RectTransform:
   - {fileID: 873739112}
   - {fileID: 715487243}
   m_Father: {fileID: 976154991}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -56019,7 +56025,7 @@ RectTransform:
   - {fileID: 642413718}
   - {fileID: 1728112622}
   m_Father: {fileID: 976154991}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

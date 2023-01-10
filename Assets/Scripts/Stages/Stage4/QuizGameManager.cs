@@ -321,10 +321,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     if (x == 1)
                     {
                         _playerAnim.CrossFadeInFixedTime("SitHappy", 0.2f);
+                        _faceController.ChangeFaceType(FaceType.Smile);
                     }
                     else
                     {
                         _playerAnim.CrossFadeInFixedTime("SitSad", 0.2f);
+                        _faceController.ChangeFaceType(FaceType.Cry);
                     }
                 }));
             }
