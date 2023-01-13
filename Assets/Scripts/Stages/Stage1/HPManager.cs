@@ -35,6 +35,7 @@ public class HPManager : MonoBehaviour
 
     #region public
     public event Action LostHpAction;
+    public bool IsMaxHP => _currentHP.Value == 3;
     #endregion
 
     #region property
@@ -81,9 +82,21 @@ public class HPManager : MonoBehaviour
         }
         else
         {
+            if (_currentHP.Value >= 3)
+            {
+                return;
+            }
             _currentHP.Value += value;
             Debug.Log("HP‰ñ•œ");
         }
+    }
+
+    /// <summary>
+    /// ‘Ì—Í‚ð‘S‰õ‚³‚¹‚é
+    /// </summary>
+    public void RecoveryHP()
+    {
+        _currentHP.Value = 3;
     }
 
     /// <summary>

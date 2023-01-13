@@ -265,15 +265,25 @@ public class BossStageManager : StageGame<BossStageManager>
                                   {
                                       CharacterMovable?.Invoke(true);
                                       _hpPanel.alpha = 1;
-                                      _debrisGenerator.StartGenerate();
+
+                                      if (i > 0)
+                                      {
+                                          _debrisGenerator.StartGenerate();
+                                      }
                                   });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
             _hpPanel.alpha = 0;
+            HPManager.Instance.RecoveryHP();
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
             _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
-            _debrisGenerator.StopGenerate();
+
+            if (_debrisGenerator.IsGenerating)
+            {
+                _debrisGenerator.StopGenerate();
+            }
+
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
         }

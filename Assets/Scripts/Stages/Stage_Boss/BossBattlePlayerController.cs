@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class BossBattlePlayerController : PlayerBase, IDamagable
+public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
 {
     #region serialize
     [Header("Variables")]
@@ -25,7 +25,6 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     #endregion
 
     #region private
-    ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
     /// <summary> 無敵状態かどうか </summary>
     bool _isInvincibled = false;
     Coroutine _damageCoroutine;
@@ -34,6 +33,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     #endregion
     #region property
     public bool IsInvincibled => _isInvincibled;
+    public bool IsMaxHP { get; private set; } = true;
     #endregion
 
     protected override void Awake()
@@ -48,6 +48,10 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
         BossStageManager.Instance.GameOver += StopAction;
     }
 
+    /// <summary>
+    /// ダメージを受ける
+    /// </summary>
+    /// <param name="value"> ダメージ量 </param>
     public void Damage(int value)
     {
         if (_isInvincibled)
@@ -56,6 +60,20 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
         }
 
         _damageCoroutine = StartCoroutine(DamageCoroutine(value));
+    }
+
+    /// <summary>
+    /// 体力を回復する
+    /// </summary>
+    /// <param name="value"> 回復量 </param>
+    public void Heal(int value)
+    {
+        HPManager.Instance.ChangeHPValue(value, true);
+        
+        if (HPManager.Instance.IsMaxHP)
+        {
+            IsMaxHP = true;
+        }
     }
 
     void StopAction()
@@ -75,8 +93,8 @@ public class BossBattlePlayerController : PlayerBase, IDamagable
     {
         _isInvincibled = true;
         _fc.ChangeFaceType(FaceType.Damage);
+        IsMaxHP = false;
         HPManager.Instance.ChangeHPValue(damageValue);
-        //_currentHP.Value -= damageValue;
 
         var wait = new WaitForSeconds(_blinksInterVal);
 
