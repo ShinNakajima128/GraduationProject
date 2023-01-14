@@ -46,6 +46,7 @@ public class DebrisGenerator : MonoBehaviour
     #endregion
 
     #region property
+    public bool IsGenerating { get; private set; } = false;
     #endregion
 
     private void Awake()
@@ -123,6 +124,8 @@ public class DebrisGenerator : MonoBehaviour
 
         _debrisCtrl.Return();
         _debrisShadowCtrl.Return();
+
+        IsGenerating = false;
     }
 
     /// <summary>
@@ -151,6 +154,8 @@ public class DebrisGenerator : MonoBehaviour
     IEnumerator GenerateIntervalCoroutine(int generateCount)
     {
         var interval = new WaitForSeconds(_sometimeGenerateInterval);
+
+        IsGenerating = true;
 
         for (int i = 0; i < generateCount; i++)
         {
