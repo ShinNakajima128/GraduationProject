@@ -50,6 +50,10 @@ public class QueenOrder : MonoBehaviour
     [SerializeField]
     Image _queenStampImage = default;
 
+    [Tooltip("ゲームスタート時に表示するアイコンObject")]
+    [SerializeField]
+    GameObject _gameStartIcon = default;
+
     [Header("Texts")]
     [SerializeField]
     Text _roundText = default;
@@ -149,12 +153,15 @@ public class QueenOrder : MonoBehaviour
                                  .SetEase(Ease.OutBounce)
                                  .WaitForCompletion();
 
+        _gameStartIcon.SetActive(true);
+
         yield return new WaitUntil(() => UIInput.Submit);
 
         //お題をフェードアウトさせる際にまとめて動かすための処理
         _orderTrans.SetParent(_letterTrans);
         _queenStampImage.transform.SetParent(_letterTrans);
         _queenStampImage.transform.SetAsLastSibling();
+        _gameStartIcon.SetActive(false);
 
         yield return _letterParentTrans.DOLocalMoveY(-150, 0.5f)
                                        .SetEase(Ease.OutQuad)
@@ -191,6 +198,8 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.enabled = false;
         _queenStampImage.transform.SetParent(transform);
         _queenStampImage.transform.localPosition = new Vector3(-293, -278, 0);
+
+        _gameStartIcon.SetActive(false);
     }
 
     public void SetOrderData(OrderData[] data)
