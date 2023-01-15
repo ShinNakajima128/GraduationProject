@@ -30,6 +30,7 @@ public class Debris : MonoBehaviour
     #endregion
 
     #region public
+    public bool IsItemGenerate { get; set; } = false;
     #endregion
 
     #region property
@@ -47,6 +48,7 @@ public class Debris : MonoBehaviour
             EffectManager.PlayEffect(EffectType.Debris_Landing, transform.position);
         }
         transform.localPosition = new Vector3(0, transform.localPosition.y + _startHeight, 0);
+        IsItemGenerate = false;
     }
     
     /// <summary>
@@ -61,6 +63,10 @@ public class Debris : MonoBehaviour
                  .OnComplete(() => 
                  {
                      //EffectManager.PlayEffect(EffectType.Debris_Landing, transform.position);
+                     if (IsItemGenerate)
+                     {
+                         ItemGenerator.Instance.Generate(transform.position);
+                     }
                      gameObject.SetActive(false);
                      _shadowActivateAction?.Invoke();
                  })

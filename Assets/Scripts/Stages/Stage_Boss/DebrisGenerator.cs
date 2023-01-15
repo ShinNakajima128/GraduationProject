@@ -15,6 +15,10 @@ public class DebrisGenerator : MonoBehaviour
     [SerializeField]
     float _sometimeGenerateInterval = 0.2f;
 
+    [Tooltip("回復アイテムが発生する確率")]
+    [SerializeField, Range(0f, 1f)]
+    float _itemGeneratePercent = 0.3f;
+
     [Header("Objects")]
     [Tooltip("障害物を生成する位置")]
     [SerializeField]
@@ -28,6 +32,10 @@ public class DebrisGenerator : MonoBehaviour
     [Tooltip("がれきの影のController")]
     [SerializeField]
     DebrisShadowController _debrisShadowCtrl = default;
+
+    [Tooltip("回復アイテムのGenerator")]
+    [SerializeField]
+    ItemGenerator _itemGenerator = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -181,6 +189,15 @@ public class DebrisGenerator : MonoBehaviour
                         {
                             d.SetShadow(shadow);
                         }
+
+                        int percent = Random.Range(0, 10);
+
+                        //指定したアイテム生成確率を超えたらアイテムを発生させる
+                        if (_itemGeneratePercent >= percent / 10.0f)
+                        {
+                            d.IsItemGenerate = true;
+                        }
+                        print(percent / 10.0f);
                     });
                 });
                 shadow = s.gameObject;
