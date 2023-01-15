@@ -369,24 +369,23 @@ public class QuizGameManager : StageGame<QuizGameManager>
         switch (type)
         {
             case QuizType.RedRose:
-                _questionText.text = "赤バラ";
+                //_questionText.text = "赤バラ";
                 _targetIcons[0].SetActive(true);
                 break;
             case QuizType.WhiteRose:
-                _questionText.text = "白バラ";
+                //_questionText.text = "白バラ";
                 _targetIcons[1].SetActive(true);
                 break;
             case QuizType.RedAndWhiteRose:
-                _questionText.text = "赤バラ＆白バラ";
-                _targetIcons[0].SetActive(true);
-                _targetIcons[1].SetActive(true);
-                break;
-            case QuizType.TrumpSolder:
-                _questionText.text = "トランプ兵";
+                //_questionText.text = "赤バラ＆白バラ";
                 _targetIcons[2].SetActive(true);
                 break;
+            case QuizType.TrumpSolder:
+                //_questionText.text = "トランプ兵";
+                _targetIcons[3].SetActive(true);
+                break;
             case QuizType.All:
-                _questionText.text = "全部";
+                //_questionText.text = "全部";
                 _targetIcons[0].SetActive(true);
                 _targetIcons[1].SetActive(true);
                 _targetIcons[2].SetActive(true);
