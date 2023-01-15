@@ -18,7 +18,7 @@ public class TableController : MonoBehaviour, IEffectable
     GameObject _chaseObject = default;
 
     [SerializeField]
-    GameObject _trumpEffect = default;
+    TrumpObstacle _tableTrump = default;
 
     [SerializeField]
     Animator _tableAnimator = default;
@@ -41,7 +41,7 @@ public class TableController : MonoBehaviour, IEffectable
 
     void OnDisable()
     {
-        _trumpEffect.SetActive(false);
+        _tableTrump.gameObject.SetActive(false);
         _tableAnimator.CrossFadeInFixedTime("Default", 0.1f);
     }
     private void Start()
@@ -60,9 +60,9 @@ public class TableController : MonoBehaviour, IEffectable
 
             if (!_isEffected)
             {
-                //EffectManager.PlayEffect(EffectType.Obstacle, EffectPos.position);
                 _tableAnimator.CrossFadeInFixedTime("OnGimmick", 0.1f);
-                _trumpEffect.SetActive(true);
+                _tableTrump.gameObject.SetActive(true);
+                _tableTrump.OffPushing();
                 StartCoroutine(SECoroutine());
                 _isEffected = true;
             }

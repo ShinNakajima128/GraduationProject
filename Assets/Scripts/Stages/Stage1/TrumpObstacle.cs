@@ -16,6 +16,8 @@ public class TrumpObstacle : MonoBehaviour
     ParticleSystem _effect;
     Rigidbody _rb;
     bool _init = false;
+    bool _isPushing = true;
+    Coroutine _pushCoroutine;
     #endregion
     #region public
     #endregion
@@ -41,7 +43,19 @@ public class TrumpObstacle : MonoBehaviour
         if (_init)
         {
             _effect.Stop();
+            _isPushing = true;
+
+            if (_pushCoroutine != null)
+            {
+                StopCoroutine(_pushCoroutine);
+                _pushCoroutine = null;
+            }
         }
+    }
+
+    public void OffPushing()
+    {
+        _pushCoroutine = StartCoroutine(OffPushingCoroutine());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,7 +66,6 @@ public class TrumpObstacle : MonoBehaviour
             {
                 _rb = other.GetComponent<Rigidbody>();
             }
-            //_rb.AddForce(_pushPower * _parent.up, ForceMode.Impulse);
         }
     }
 
@@ -60,7 +73,17 @@ public class TrumpObstacle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            _rb.AddForce(_pushPower * _parent.up, ForceMode.Force);
+            if (_isPushing)
+            {
+                _rb.AddForce(_pushPower * _parent.up, ForceMode.Force);
+            }
         }
+    }
+
+    IEnumerator OffPushingCoroutine()
+    {
+        yield return new WaitForSeconds(2.5f);
+
+        _isPushing = false;
     }
 }
