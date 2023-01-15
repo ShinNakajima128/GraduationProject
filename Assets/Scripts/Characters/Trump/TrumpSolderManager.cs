@@ -27,6 +27,9 @@ public class TrumpSolderManager : MonoBehaviour
 
     [SerializeField]
     BossAreaPositions[] _areaPositions = default;
+
+    [SerializeField]
+    GameObject[] _attackRangeEffect = default;
     #endregion
     #region private
     List<BattleAreaTrumpSolder> _trumpSolderList = new List<BattleAreaTrumpSolder>();
@@ -134,32 +137,42 @@ public class TrumpSolderManager : MonoBehaviour
                 {
                     t.OnAttack(_waitTime);
                 }
+                _attackRangeEffect[0].SetActive(true);
                 break;
             case DirectionType.Back:
                 foreach (var t in _backTrumps)
                 {
                     t.OnAttack(_waitTime);
                 }
+                _attackRangeEffect[1].SetActive(true);
                 break;
             case DirectionType.Left:
                 foreach (var t in _leftTrumps)
                 {
                     t.OnAttack(_waitTime);
                 }
+                _attackRangeEffect[2].SetActive(true);
                 break;
             case DirectionType.Right:
                 foreach (var t in _rightTrumps)
                 {
                     t.OnAttack(_waitTime);
                 }
+                _attackRangeEffect[3].SetActive(true);
                 break;
             default:
                 break;
         }
-        yield return new WaitForSeconds(_waitTime + 0.3f); //トランプ兵の攻撃するまでのモーションを待機
+        yield return new WaitForSeconds(_waitTime); //トランプ兵の攻撃するまでのモーションを待機
 
         //当たり判定をONにする処理
         start?.Invoke();
+
+        //攻撃範囲のエフェクトを全て非アクティブにする
+        foreach (var effect in _attackRangeEffect)
+        {
+            effect.SetActive(false);
+        }
 
         yield return new WaitForSeconds(_durationTime);
 
