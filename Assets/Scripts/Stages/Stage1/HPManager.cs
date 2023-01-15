@@ -34,6 +34,7 @@ public class HPManager : MonoBehaviour
     #endregion
 
     #region public
+    public event Action DamageAction;
     public event Action LostHpAction;
     public bool IsMaxHP => _currentHP.Value == 3;
     #endregion
@@ -42,6 +43,7 @@ public class HPManager : MonoBehaviour
     public static HPManager Instance { get; private set; }
     /// <summary> åªç›ÇÃHP </summary>
     public ReactiveProperty<int> CurrentHP => _currentHP;
+    public bool IsLosted => _isLosted;
     #endregion
 
     private void Awake()
@@ -79,6 +81,11 @@ public class HPManager : MonoBehaviour
         {
             _currentHP.Value -= value;
             _hpGaugeUITrans.DOShakePosition(0.25f, 20, 30, fadeOut: false);
+
+            if (_currentHP.Value > 0)
+            {
+                DamageAction?.Invoke();
+            }
         }
         else
         {

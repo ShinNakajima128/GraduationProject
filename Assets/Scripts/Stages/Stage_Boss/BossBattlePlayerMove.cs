@@ -46,6 +46,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
             _anim.CrossFadeInFixedTime("Death", 0.1f);
         };
         EventManager.ListenEvents(Events.Boss_GroundShake, Stopping);
+        HPManager.Instance.DamageAction += () => { _anim.CrossFadeInFixedTime("Damage", 0.2f); };
     }
 
     private void FixedUpdate()
@@ -103,6 +104,12 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
 
     void Stopping()
     {
+        //既にHPが消失している場合は処理を行わない
+        if (HPManager.Instance.IsLosted)
+        {
+            return;
+        }
+
         //演出中はアニメーションのみ
         if (!_isMoving)
         {

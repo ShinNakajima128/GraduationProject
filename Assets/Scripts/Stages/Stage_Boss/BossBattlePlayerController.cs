@@ -28,6 +28,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     /// <summary> 無敵状態かどうか </summary>
     bool _isInvincibled = false;
     Coroutine _damageCoroutine;
+    BossBattlePlayerMove _playerMove;
     #endregion
     #region public
     #endregion
@@ -39,6 +40,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     protected override void Awake()
     {
         base.Awake();
+        TryGetComponent(out _playerMove);
         //_currentHP.Value = _maxHP;
     }
     void Start()
@@ -89,8 +91,19 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         _fc.ChangeFaceType(FaceType.Damage);
     }
 
+    /// <summary>
+    /// ダメージ演出のコルーチン
+    /// </summary>
+    /// <param name="damageValue"> ダメージの値 </param>
+    /// <returns></returns>
     IEnumerator DamageCoroutine(int damageValue)
     {
+        //既にHPが消失している場合は処理を行わない
+        if (HPManager.Instance.IsLosted)
+        {
+            yield break;
+        }
+
         _isInvincibled = true;
         _fc.ChangeFaceType(FaceType.Damage);
         IsMaxHP = false;
