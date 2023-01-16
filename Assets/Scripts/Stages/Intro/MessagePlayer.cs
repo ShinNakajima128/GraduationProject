@@ -146,6 +146,7 @@ public class MessagePlayer : MonoBehaviour
                 _actorIconImage.color = Color.white;
             }
             _messageText.text = "";
+            _messageText.fontSize = d[i].FontSize;
 
             if (d[i].EventType != Events.None)
             {
