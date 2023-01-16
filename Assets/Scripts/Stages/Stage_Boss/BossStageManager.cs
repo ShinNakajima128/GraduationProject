@@ -58,6 +58,9 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
 
+    [SerializeField]
+    DirectionCameraManager _directionCameraMng = default;
+
     [Header("Objects")]
     [Tooltip("—‰¤‚Ì‰‰oˆÊ’u")]
     [SerializeField]

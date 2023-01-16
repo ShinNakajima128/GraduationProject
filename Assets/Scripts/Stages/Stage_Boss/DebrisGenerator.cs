@@ -19,6 +19,9 @@ public class DebrisGenerator : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     float _itemGeneratePercent = 0.3f;
 
+    [SerializeField]
+    float _nextGenerateInterval = 5.0f;
+
     [Header("Objects")]
     [Tooltip("è·äQï®Çê∂ê¨Ç∑ÇÈà íu")]
     [SerializeField]
@@ -151,7 +154,16 @@ public class DebrisGenerator : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        var interval = new WaitForSeconds(_debugGenerateInterval);
+        WaitForSeconds interval = default;
+
+        if (_debugMode)
+        {
+            interval = new WaitForSeconds(_debugGenerateInterval);
+        }
+        else
+        {
+            interval = new WaitForSeconds(_nextGenerateInterval); 
+        }
 
         while (true)
         {
