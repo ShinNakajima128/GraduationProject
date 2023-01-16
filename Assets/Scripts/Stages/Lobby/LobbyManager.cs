@@ -70,6 +70,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     Renderer[] _handsRenderers = default;
 
+    [SerializeField]
+    DirectionCameraManager _directionCameraMng = default;
+
     [Header("UI")]
     [SerializeField]
     GameObject _stageDescriptionPanel = default;
@@ -93,7 +96,6 @@ public class LobbyManager : MonoBehaviour
 
     #region private
     bool _isApproached = false;
-    CinemachineImpulseSource _impulse = default;
     #endregion
     #region property
     public static LobbyManager Instance { get; private set; }
@@ -112,7 +114,6 @@ public class LobbyManager : MonoBehaviour
     {
         Instance = this;
         _stageNameText.text = "";
-        TryGetComponent(out _impulse);
     }
 
     IEnumerator Start()
@@ -130,6 +131,12 @@ public class LobbyManager : MonoBehaviour
             {
                 AudioManager.StopBGM(1.0f);
                 EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
+                EventManager.ListenEvents(Events.Lobby_Introduction, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction)));
+                EventManager.ListenEvents(Events.Alice_Surprised, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_AliceAndCheshireTalking)));
+                EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
+                {
+                    _directionCameraMng.ResetCamera();
+                });
             }
 
             TransitionManager.FadeIn(FadeType.Normal, 0f);
@@ -150,6 +157,18 @@ public class LobbyManager : MonoBehaviour
                     TransitionManager.FadeOut(FadeType.Normal);
                 });
 
+                yield return new WaitForSeconds(1.5f);
+
+                yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_FirstVisit);
+
+                TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+                TransitionManager.FadeIn(FadeType.Black_default, action: () =>
+                {
+                    _directionCameraMng.ResetCamera(CameraDirectionType.Lobby_FirstVisit, 0f);
+                    StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Alice_Front));
+                    TransitionManager.FadeOut(FadeType.Normal);
+                });
+
                 yield return new WaitForSeconds(3.0f);
 
                 yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_Visit, () =>
@@ -158,6 +177,7 @@ public class LobbyManager : MonoBehaviour
                     TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
                     TransitionManager.FadeIn(FadeType.Mask_CheshireCat, action: () =>
                     {
+                        _directionCameraMng.ResetCamera(CameraDirectionType.Lobby_Alice_Front, 0f);
                         LetterboxController.ActivateLetterbox(true, 0f);
                         LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Appearance);
                         TransitionManager.FadeOut(FadeType.Normal);
@@ -184,6 +204,8 @@ public class LobbyManager : MonoBehaviour
                     //チェシャ猫をディゾルブで非表示にする
                     LobbyCheshireCatManager.Instance.MovableCat.ActivateDissolve(true);
                 });
+
+                _directionCameraMng.ResetBlendTime();
 
                 yield return new WaitForSeconds(2.0f);
 

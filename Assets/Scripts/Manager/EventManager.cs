@@ -25,7 +25,8 @@ public enum Events
     Alice_Surprised,
     Alice_Retry,
     Alice_Rise,
-    Alice_Death
+    Alice_Death,
+    Lobby_Introduction
 }
 
 /// <summary>
