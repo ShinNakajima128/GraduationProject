@@ -78,6 +78,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     GameObject[] _targetIcons = default;
 
+    [SerializeField]
+    GameObject _gameStartIcon = default;
+
     [Header("Camera")]
     [SerializeField]
     CinemachineVirtualCamera _quizCamera = default;
@@ -133,7 +136,6 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _informationText.text = "";
         LetterboxController.ActivateLetterbox(true);
         OnGameSetUp();
-
 
         _playerTrans.DOMove(_playerTrans.position, 1.4f)
                     .OnComplete(() =>
@@ -389,8 +391,13 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 break;
         }
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.5f);
 
+        _gameStartIcon.SetActive(true);
+
+        yield return new WaitUntil(() => UIInput.Submit);
+
+        _gameStartIcon.SetActive(false);
         _questionText.text = "";
         _targetIcons[0].SetActive(false);
         _targetIcons[1].SetActive(false);
