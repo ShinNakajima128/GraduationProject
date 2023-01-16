@@ -412,7 +412,6 @@ public class LobbyManager : MonoBehaviour
              TransitionManager.FadeOut(FadeType.Normal, 0.5f);
          });
 
-
         yield return new WaitForSeconds(3.5f);
 
         _goingUnderCamera.Priority = 25;
@@ -427,6 +426,7 @@ public class LobbyManager : MonoBehaviour
 
                                    if (timer >= 5.0f && !isFading)
                                    {
+                                       GameManager.ChangeLobbyState(LobbyState.Under);
                                        TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_Heart);
                                        isFading = true;
                                    }
