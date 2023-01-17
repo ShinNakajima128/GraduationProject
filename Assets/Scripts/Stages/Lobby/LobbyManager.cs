@@ -178,6 +178,7 @@ public class LobbyManager : MonoBehaviour
                     TransitionManager.FadeIn(FadeType.Mask_CheshireCat, action: () =>
                     {
                         _directionCameraMng.ResetCamera(CameraDirectionType.Lobby_Alice_Front, 0f);
+                        _directionCameraMng.SetBlendTime(3.0f);
                         LetterboxController.ActivateLetterbox(true, 0f);
                         LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Appearance);
                         TransitionManager.FadeOut(FadeType.Normal);
@@ -427,7 +428,7 @@ public class LobbyManager : MonoBehaviour
                                    if (timer >= 5.0f && !isFading)
                                    {
                                        GameManager.ChangeLobbyState(LobbyState.Under);
-                                       TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_Heart);
+                                       TransitionManager.SceneTransition(SceneType.UnderLobby);
                                        isFading = true;
                                    }
                                })

@@ -137,6 +137,11 @@ public class DirectionCameraManager : MonoBehaviour
     {
         _brain.m_DefaultBlend.m_Time = _originBlendTime;
     }
+
+    public void SetBlendTime(float blendTime)
+    {
+        _brain.m_DefaultBlend.m_Time = blendTime;
+    }
 }
 
 /// <summary>
