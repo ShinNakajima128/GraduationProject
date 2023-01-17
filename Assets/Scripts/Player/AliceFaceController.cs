@@ -14,7 +14,8 @@ public enum FaceType
     Angry,
     Fancy,
     Cry,
-    Rotation
+    Rotation,
+    Talking
 }
 
 public enum EyeType
@@ -53,6 +54,9 @@ public class AliceFaceController : MonoBehaviour
     float _blinkSwitchTime = 0.03f;
 
     [SerializeField]
+    float _mouseSwitchTime = 0.1f;
+
+    [SerializeField]
     float _testInterval = 1.5f;
 
     [SerializeField]
@@ -69,6 +73,7 @@ public class AliceFaceController : MonoBehaviour
     Material _eyeMat;
     Material _mouseMat;
     bool _isBlinking = false;
+    bool _isTalking = false;
     bool _init = false;
     Coroutine _blinkCoroutine;
     #endregion
@@ -132,6 +137,10 @@ public class AliceFaceController : MonoBehaviour
                 _blinkCoroutine = null;
             }
             _blinkCoroutine = StartCoroutine(BlinkCoroutine());
+        }
+        else if (type == FaceType.Talking)
+        {
+
         }
         else
         {
@@ -202,6 +211,19 @@ public class AliceFaceController : MonoBehaviour
                 timer += Time.deltaTime;
                 yield return null;
             }
+        }
+    }
+
+    IEnumerator TalkingCoroutine()
+    {
+        //口パクの処理のループ
+        while (_isTalking)
+        {
+            var randomType = (MouseType)UnityEngine.Random.Range(0, 3);
+
+            yield return new WaitForSeconds(_mouseSwitchTime);
+
+            ChangeMouseType(randomType);
         }
     }
 }
