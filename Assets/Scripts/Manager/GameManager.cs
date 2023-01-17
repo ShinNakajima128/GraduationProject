@@ -20,6 +20,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField]
     ClockState _currentClockState = ClockState.Zero;
 
+    [Tooltip("現在のロビーの状態")]
+    [SerializeField]
+    LobbyState _currentLobbyState = default;
+
     [Tooltip("現在のゲームの難易度")]
     [SerializeField]
     DifficultyType _currentGameDifficultyType = default;
@@ -40,6 +44,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     #region property
     public Stages CurrentStage => _currentStage;
     public ClockState CurrentClockState => _currentClockState;
+    public LobbyState CurrentLobbyState => _currentLobbyState;
     public DifficultyType CurrentGameDifficultyType => _currentGameDifficultyType;
     public static bool IsClearStaged => Instance._isClearStaged;
     public Dictionary<Stages, bool> StageSttatusDic => _stageStatusDic;
@@ -117,6 +122,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public static void SaveStageResult(bool result)
     {
         Instance._isClearStaged = result;
+    }
+
+    /// <summary>
+    /// 現在のロビーの状態を変更する
+    /// </summary>
+    /// <param name="state"> 設定するロビーの状態 </param>
+    public static void ChangeLobbyState(LobbyState state)
+    {
+        Instance._currentLobbyState = state;
     }
 
     /// <summary>
@@ -211,6 +225,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         yield return GetStillController.ActiveGettingStillPanel(stage);
 
         yield return MessagePlayer.Instance.PlayMessageCorountine(type);
+        ChangeLobbyState(LobbyState.Default);
     }
 }
 
@@ -235,5 +250,14 @@ public enum DifficultyType
     Easy,
     Normal,
     Hard
+}
+
+/// <summary>
+/// ロビーの状態
+/// </summary>
+public enum LobbyState
+{
+    Default,
+    Under
 }
 

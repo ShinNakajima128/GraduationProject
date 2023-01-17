@@ -34,7 +34,19 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         PlayerMovable(false);
         BossStageManager.Instance.CharacterMovable += PlayerMovable;
         BossStageManager.Instance.DirectionSetUp += ResetAnimation;
+        BossStageManager.Instance.GameOver += () =>
+        {
+            if (_stoppingCoroutine != null)
+            {
+                StopCoroutine(_stoppingCoroutine);
+                _stoppingCoroutine = null;
+            }
+            ResetAnimation();
+            PlayerMovable(false);
+            _anim.CrossFadeInFixedTime("Death", 0.1f);
+        };
         EventManager.ListenEvents(Events.Boss_GroundShake, Stopping);
+        HPManager.Instance.DamageAction += () => { _anim.CrossFadeInFixedTime("Damage", 0.2f); };
     }
 
     private void FixedUpdate()
@@ -92,6 +104,12 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
 
     void Stopping()
     {
+        //既にHPが消失している場合は処理を行わない
+        if (HPManager.Instance.IsLosted)
+        {
+            return;
+        }
+
         //演出中はアニメーションのみ
         if (!_isMoving)
         {
@@ -106,7 +124,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
                 _stoppingCoroutine = null;
             }
 
-            StartCoroutine(RigidCoroutine());
+            _stoppingCoroutine = StartCoroutine(RigidCoroutine());
         }
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,7 @@ public abstract class ObjectPool<T> : MonoBehaviour
 
     #region property
     public List<T> ComponentList => _componentList;
+    public int CurrentActiveCount => _objectList.Count(o => o.activeSelf);
     #endregion
 
     protected virtual void Start()

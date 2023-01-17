@@ -1,0 +1,79 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+
+public class UnderLobbyManager : MonoBehaviour
+{
+    #region serialize
+    [SerializeField]
+    Stage _bossStageData = default;
+
+    [Header("UI")]
+    [SerializeField]
+    GameObject _stageDescriptionPanel = default;
+
+    [SerializeField]
+    CanvasGroup _stageDescriptionCanvas = default;
+
+    [SerializeField]
+    Text _stageNameText = default;
+
+    [SerializeField]
+    Image _StageImage = default;
+    #endregion
+
+    #region private
+    bool _isApproached = false;
+    #endregion
+
+    #region public
+    /// <summary> ドアに近づいた時のAction </summary>
+    public Action ApproachDoor { get; set; }
+    /// <summary> ドアから離れた時のAction </summary>
+    public Action StepAwayDoor { get; set; }
+    #endregion
+
+    #region property
+    public static UnderLobbyManager Instance { get; private set; }
+    #endregion
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    /// <summary>
+    /// ステージの詳細を表示する
+    /// </summary>
+    /// <param name="type"> 遷移先のステージのScene </param>
+    public static void OnStageDescription()
+    {
+        Instance.OnFadeDescription(1f, 0.3f);
+        Instance._isApproached = true;
+
+        Instance._stageNameText.text = Instance._bossStageData.SceneName;
+        Instance._StageImage.sprite = Instance._bossStageData.StageSprite;
+        Instance.ApproachDoor?.Invoke();
+    }
+
+    /// <summary>
+    /// ステージの詳細を非表示する
+    /// </summary>
+    public static void OffStageDescription()
+    {
+        Instance.OnFadeDescription(0f, 0.3f);
+        Instance._isApproached = false;
+        Instance.StepAwayDoor?.Invoke();
+    }
+
+    void OnFadeDescription(float value, float fadeTime)
+    {
+        DOTween.To(() => _stageDescriptionCanvas.alpha,
+                x => _stageDescriptionCanvas.alpha = x,
+                value,
+                fadeTime);
+    }
+}

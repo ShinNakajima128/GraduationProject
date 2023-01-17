@@ -18,7 +18,15 @@ public enum Events
     Cheshire_EndGrinning,
     Cheshire_Talk,
     FinishTalking,
-    Boss_GroundShake
+    Boss_GroundShake,
+    Alice_Yes,
+    Alice_No,
+    Alice_Overlook,
+    Alice_Surprised,
+    Alice_Retry,
+    Alice_Rise,
+    Alice_Death,
+    Lobby_Introduction
 }
 
 /// <summary>

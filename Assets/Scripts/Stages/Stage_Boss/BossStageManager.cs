@@ -58,6 +58,9 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
 
+    [SerializeField]
+    DirectionCameraManager _directionCameraMng = default;
+
     [Header("Objects")]
     [Tooltip("女王の演出位置")]
     [SerializeField]
@@ -93,13 +96,19 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     TrumpSolderManager _trumpSolderMng = default;
 
+    [Tooltip("がれきのGenerator")]
+    [SerializeField]
+    DebrisGenerator _debrisGenerator = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
     #endregion
+
     #region public
     public event Action<bool> OnInGame;
     #endregion
+    
     #region private
     Transform _playerTrans;
     /// <summary> 演出中かどうか </summary>
@@ -114,6 +123,7 @@ public class BossStageManager : StageGame<BossStageManager>
     public override event Action GamePause;
     public override event Action GameEnd;
     public event Action DirectionSetUp;
+    public event Action GameOver;
     #endregion
     #region property
     public static new BossStageManager Instance { get; private set; }
@@ -258,13 +268,24 @@ public class BossStageManager : StageGame<BossStageManager>
                                   {
                                       CharacterMovable?.Invoke(true);
                                       _hpPanel.alpha = 1;
+
+                                      if (i > 0)
+                                      {
+                                          _debrisGenerator.StartGenerate();
+                                      }
                                   });
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
             _hpPanel.alpha = 0;
+            HPManager.Instance.RecoveryHP();
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
             _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
+
+            if (_debrisGenerator.IsGenerating)
+            {
+                _debrisGenerator.StopGenerate();
+            }
 
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
@@ -453,9 +474,22 @@ public class BossStageManager : StageGame<BossStageManager>
         CameraBlend(CameraType.Direction_Closeup, _cameraBlendTime);
     }
 
+    /// <summary>
+    /// ゲームオーバー演出を再生する
+    /// </summary>
     void OnBossStageGameOver()
     {
+        StartCoroutine(GameOverCoroutine());
+    }
+
+    IEnumerator GameOverCoroutine()
+    {
+        GameOver?.Invoke();
+
+        yield return new WaitForSeconds(2.0f);
+
         TransitionManager.SceneTransition(SceneType.Stage_Boss);
+
     }
 }
 public enum CameraType

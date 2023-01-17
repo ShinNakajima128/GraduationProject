@@ -78,6 +78,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     GameObject[] _targetIcons = default;
 
+    [SerializeField]
+    GameObject _gameStartIcon = default;
+
     [Header("Camera")]
     [SerializeField]
     CinemachineVirtualCamera _quizCamera = default;
@@ -133,7 +136,6 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _informationText.text = "";
         LetterboxController.ActivateLetterbox(true);
         OnGameSetUp();
-
 
         _playerTrans.DOMove(_playerTrans.position, 1.4f)
                     .OnComplete(() =>
@@ -361,7 +363,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
     IEnumerator QuestionCoroutine(QuizType type)
     {
-        _questionText.text = "";
+        _questionText.text = $"{(int)type + 1}";
         _questionPanelGroup.alpha = 1;
 
         yield return new WaitForSeconds(1.5f);
@@ -369,24 +371,18 @@ public class QuizGameManager : StageGame<QuizGameManager>
         switch (type)
         {
             case QuizType.RedRose:
-                _questionText.text = "赤バラ";
                 _targetIcons[0].SetActive(true);
                 break;
             case QuizType.WhiteRose:
-                _questionText.text = "白バラ";
                 _targetIcons[1].SetActive(true);
                 break;
             case QuizType.RedAndWhiteRose:
-                _questionText.text = "赤バラ＆白バラ";
-                _targetIcons[0].SetActive(true);
-                _targetIcons[1].SetActive(true);
-                break;
-            case QuizType.TrumpSolder:
-                _questionText.text = "トランプ兵";
                 _targetIcons[2].SetActive(true);
                 break;
+            case QuizType.TrumpSolder:
+                _targetIcons[3].SetActive(true);
+                break;
             case QuizType.All:
-                _questionText.text = "全部";
                 _targetIcons[0].SetActive(true);
                 _targetIcons[1].SetActive(true);
                 _targetIcons[2].SetActive(true);
@@ -395,8 +391,13 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 break;
         }
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.5f);
 
+        _gameStartIcon.SetActive(true);
+
+        yield return new WaitUntil(() => UIInput.Submit);
+
+        _gameStartIcon.SetActive(false);
         _questionText.text = "";
         _targetIcons[0].SetActive(false);
         _targetIcons[1].SetActive(false);
