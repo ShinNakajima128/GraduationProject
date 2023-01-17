@@ -30,6 +30,10 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     private void Start()
     {
         LobbyManager.Instance.PlayerMove += PlayerMovable;
+        EventManager.ListenEvents(Events.Alice_Yes, () => { OnAnimation(AliceDirectionAnimType.Yes); });
+        EventManager.ListenEvents(Events.Alice_No, () => { OnAnimation(AliceDirectionAnimType.No); });
+        EventManager.ListenEvents(Events.Alice_Surprised, () => { OnAnimation(AliceDirectionAnimType.Surprised); });
+        EventManager.ListenEvents(Events.Alice_Overlook, () => { OnAnimation(AliceDirectionAnimType.Overlook); });
     }
 
     private void FixedUpdate()
@@ -74,4 +78,28 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     {
         _isMoving = isMove;
     }
+
+    /// <summary>
+    /// アニメーションを再生する
+    /// </summary>
+    /// <param name="type"> アニメーションの種類 </param>
+    /// <param name="fixedTime"> 切り替わるまでの時間 </param>
+    void OnAnimation(AliceDirectionAnimType type, float fixedTime = 0.2f)
+    {
+        _anim.CrossFadeInFixedTime(type.ToString(), fixedTime);
+    }
+}
+
+/// <summary>
+/// アリスのアニメーションの種類
+/// </summary>
+public enum AliceDirectionAnimType
+{
+    Yes,
+    No,
+    Death,
+    Retry,
+    Rise,
+    Overlook,
+    Surprised
 }

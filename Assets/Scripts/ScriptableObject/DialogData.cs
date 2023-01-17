@@ -15,6 +15,8 @@ public class DialogData
     Events _screenEffectType = default;
     [SerializeField]
     float _displayTime = 0.05f;
+    [SerializeField]
+    int _fontSize = 35;
     #endregion
 
     #region hide inspector
@@ -28,6 +30,7 @@ public class DialogData
     public string[] AllMessage => _messages;
     public Events EventType => _screenEffectType;
     public float DisplayTime => _displayTime;
+    public int FontSize => _fontSize;
     #endregion
     public void MessagesToArray()
     {

@@ -70,6 +70,7 @@ public class AliceFaceController : MonoBehaviour
     Material _mouseMat;
     bool _isBlinking = false;
     bool _init = false;
+    Coroutine _blinkCoroutine;
     #endregion
     #region property
     #endregion
@@ -125,7 +126,12 @@ public class AliceFaceController : MonoBehaviour
         {
             _isBlinking = true;
 
-            StartCoroutine(BlinkCoroutine());
+            if (_blinkCoroutine != null)
+            {
+                StopCoroutine(_blinkCoroutine);
+                _blinkCoroutine = null;
+            }
+            _blinkCoroutine = StartCoroutine(BlinkCoroutine());
         }
         else
         {

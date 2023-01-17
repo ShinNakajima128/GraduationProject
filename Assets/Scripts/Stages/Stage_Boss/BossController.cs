@@ -282,7 +282,7 @@ public class BossController : MonoBehaviour, IDamagable
                                       .WaitForCompletion();
 
                 EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
-                EventManager.OnEvent(Events.Boss_GroundShake);
+                //EventManager.OnEvent(Events.Boss_GroundShake); //’Ç‰Á‚Ì’…’n‚Å‚à’n–Ê‚ð—h‚ç‚·
             }
         }
 
