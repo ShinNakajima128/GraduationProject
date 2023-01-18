@@ -54,8 +54,8 @@ public enum SEType
     Item_Countup,
     /// <summary> アイテム:紙が飛び散る </summary>
     Object_Scatter,
-    Finding
-
+    Finding,
+    Gameover_Jingle
 }
 public enum VOICEType
 {
