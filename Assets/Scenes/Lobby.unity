@@ -9464,7 +9464,7 @@ MonoBehaviour:
   m_ActionsAsset: {fileID: -944628639613478452, guid: cbfc9062f7e19c6478621389149f8fb8,
     type: 3}
   m_PointAction: {fileID: 0}
-  m_MoveAction: {fileID: 2334443663314331874, guid: cbfc9062f7e19c6478621389149f8fb8,
+  m_MoveAction: {fileID: 8266248930815838882, guid: cbfc9062f7e19c6478621389149f8fb8,
     type: 3}
   m_SubmitAction: {fileID: 8320252316876801105, guid: cbfc9062f7e19c6478621389149f8fb8,
     type: 3}
@@ -12384,7 +12384,7 @@ PrefabInstance:
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
       propertyPath: _lobbyDebugMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
@@ -12394,7 +12394,7 @@ PrefabInstance:
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
       propertyPath: _currentClockState
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1610790708330346727, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
@@ -14341,13 +14341,13 @@ MonoBehaviour:
     StageSprite: {fileID: 21300000, guid: 83ff9b1c12d1a5f4ca3c7a7ac95a0ce0, type: 3}
   - SceneName: "\u304A\u8336\u4F1A\u306E\u30C6\u30A3\u30FC\u30AB\u30C3\u30D7\u30B7\u30E3\u30C3\u30D5\u30EB"
     Type: 5
-    StageSprite: {fileID: 21300000, guid: e0e78f06853597848b5df6cf30772b67, type: 3}
+    StageSprite: {fileID: 21300000, guid: 5a6e611ae88ced94f805b7de4e5ddd4f, type: 3}
   - SceneName: "\u5973\u738B\u306E\u304A\u57CE\u306E\u30AF\u30ED\u30C3\u30B1\u30FC\u30B7\u30E7\u30C3\u30C8"
     Type: 6
     StageSprite: {fileID: 21300000, guid: 494db6f88ad039947a4b9bb5e89e0534, type: 3}
   - SceneName: "\u30AB\u30A6\u30F3\u30C8\u30B2\u30FC\u30E0in\u30D0\u30E9\u5712"
     Type: 7
-    StageSprite: {fileID: 21300000, guid: 5a6e611ae88ced94f805b7de4e5ddd4f, type: 3}
+    StageSprite: {fileID: 21300000, guid: e0e78f06853597848b5df6cf30772b67, type: 3}
   _debugMode: 1
 --- !u!4 &1637587111
 Transform:
@@ -16272,6 +16272,7 @@ MonoBehaviour:
   _cursorTrans:
   - {fileID: 1444119447}
   - {fileID: 160481477}
+  _tutorialGroup: {fileID: 0}
 --- !u!1001 &2006492747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16727,6 +16728,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92594ed4471a88c4490d3bd1f5a52a78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _leftTipsGroup: {fileID: 0}
+  _rightTipsGroup: {fileID: 0}
 --- !u!1 &2035941260
 GameObject:
   m_ObjectHideFlags: 0
