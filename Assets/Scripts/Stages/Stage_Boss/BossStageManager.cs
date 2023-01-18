@@ -116,7 +116,9 @@ public class BossStageManager : StageGame<BossStageManager>
     /// <summary> 戦闘中かどうか </summary>
     ReactiveProperty<bool> _isInBattle = new ReactiveProperty<bool>();
     CinemachineImpulseSource _impulseSource;
+    Coroutine _currentGameCoroutine;
     #endregion
+
     #region public
     public override event Action GameSetUp;
     public override event Action GameStart;
@@ -232,7 +234,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         action?.Invoke();
         //インゲームの処理を開始
-        StartCoroutine(InGameCoroutine());
+        _currentGameCoroutine = StartCoroutine(InGameCoroutine());
     }
 
     protected override IEnumerator GameEndCoroutine(Action action = null)
@@ -247,6 +249,12 @@ public class BossStageManager : StageGame<BossStageManager>
         //_messagePlayer.Reset += OnReset;
         _isInBattle.Value = false;
         _hpPanel.alpha = 0;
+    }
+
+    void Gameover()
+    {
+        StopCoroutine(_currentGameCoroutine);
+        _currentGameCoroutine = null;
     }
 
     IEnumerator InGameCoroutine()
@@ -484,12 +492,17 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator GameOverCoroutine()
     {
+        yield return null;
+
         GameOver?.Invoke();
 
-        yield return new WaitForSeconds(2.0f);
+        Gameover();
 
-        TransitionManager.SceneTransition(SceneType.Stage_Boss);
-
+        TransitionManager.FadeIn(FadeType.Black_default,fadeTime: 2.0f, action: () =>
+        {
+            GameoverDirection.Instance.ActivateGameoverUI(true);
+            TransitionManager.FadeOut(FadeType.Black_default, fadeTime: 2.0f);
+        });
     }
 }
 public enum CameraType
