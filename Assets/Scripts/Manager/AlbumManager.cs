@@ -42,7 +42,14 @@ public class AlbumManager : MonoBehaviour
 
     public void Start()
     {
-        LobbyManager.Instance.PlayerMove += ActivatePanel;
+        if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+        {
+            LobbyManager.Instance.PlayerMove += ActivatePanel;
+        }
+        else
+        {
+
+        }
 
         //ƒAƒ‹ƒoƒ€‚ÌŠJ•Âˆ—‚ð“o˜^
         this.UpdateAsObservable().Where(_ => _isCanOpened &&

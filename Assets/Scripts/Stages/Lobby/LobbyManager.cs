@@ -258,6 +258,8 @@ public class LobbyManager : MonoBehaviour
         Instance._stageNameText.text = data.SceneName;
         Instance._StageImage.sprite = data.StageSprite;
         Instance.ApproachDoor?.Invoke();
+
+        StageDescriptionUI.Instance.ActiveDescription(type);
     }
 
     /// <summary>
@@ -268,6 +270,8 @@ public class LobbyManager : MonoBehaviour
         Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
         Instance.StepAwayDoor?.Invoke();
+
+        StageDescriptionUI.Instance.InActiceDescription();
     }
 
     void OnFadeDescription(float value, float fadeTime)
@@ -319,6 +323,7 @@ public class LobbyManager : MonoBehaviour
         _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), action: () =>
         {
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
+            ClockUI.Instance.SetClockUI(GameManager.Instance.CurrentClockState);
 
             if (GameManager.Instance.CurrentClockState == ClockState.Twelve)
             {
