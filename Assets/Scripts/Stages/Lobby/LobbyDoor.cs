@@ -11,9 +11,6 @@ public class LobbyDoor : MonoBehaviour
     [Tooltip("‘JˆÚæ‚ÌScene")]
     [SerializeField]
     SceneType _sceneType = default;
-
-    [SerializeField]
-    GameObject _submitIcon = default;
     #endregion
 
     #region private
@@ -29,22 +26,12 @@ public class LobbyDoor : MonoBehaviour
             if (_isVicinity.Value)
             {
                 LobbyManager.OnStageDescription(_sceneType);
-                _submitIcon.SetActive(true);
             }
             else
             {
                 LobbyManager.OffStageDescription();
-                _submitIcon.SetActive(false);
             }
         });
-
-        this.UpdateAsObservable()
-            .Where(_ => _submitIcon.activeSelf && UIInput.Submit)
-            .Subscribe(_ =>
-            {
-                //TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
-                TransitionManager.SceneTransition(_sceneType, FadeType.Mask_KeyHole);
-            });
     }
 
     private void OnTriggerEnter(Collider other)

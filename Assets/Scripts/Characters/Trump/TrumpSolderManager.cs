@@ -128,6 +128,11 @@ public class TrumpSolderManager : MonoBehaviour
         }
     }
 
+    public void SetupTrumpSolders()
+    {
+
+    }
+
     IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action start, Action finish)
     {
         switch (dir)
