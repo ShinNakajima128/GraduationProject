@@ -228,6 +228,7 @@ public class LobbyManager : MonoBehaviour
                 }
                 else
                 {
+                    TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
                     StartCoroutine(OnPlayerMovable(1.5f));
                     Debug.Log("クリア済みステージ");
                 }
@@ -235,6 +236,7 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
+            TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
             AudioManager.PlayBGM(BGMType.Lobby);
             _provider.enabled = true;
             PlayerMove?.Invoke(true);
