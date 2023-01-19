@@ -101,5 +101,6 @@ public enum AliceDirectionAnimType
     Retry,
     Rise,
     Overlook,
-    Surprised
+    Surprised,
+    SitIdle
 }
