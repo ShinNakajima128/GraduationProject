@@ -21,7 +21,13 @@ public class GameoverDirection : MonoBehaviour
     Button[] _gameoverSelectButtons = default;
 
     [SerializeField]
-    Text _returnText = default;
+    Sprite[] _returnButtonSprite = default;
+
+    [SerializeField]
+    Transform _cursorImageTrans = default;
+
+    [SerializeField]
+    Transform[] _cursorPosTrans = default;
 
     [Header("Components")]
     [SerializeField]
@@ -38,6 +44,7 @@ public class GameoverDirection : MonoBehaviour
     #region private
     bool _isActiveUI = false;
     SceneType _currentSceneType = default;
+    Image _returnButtonImage = default;
     #endregion
 
     #region public
@@ -51,6 +58,8 @@ public class GameoverDirection : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        _gameoverSelectButtons[1].gameObject.TryGetComponent(out _returnButtonImage);
     }
 
     private IEnumerator Start()
@@ -68,6 +77,21 @@ public class GameoverDirection : MonoBehaviour
         {
             ActivateGameoverUI(false);
         }
+    }
+
+    public void OnGameoverDirection()
+    {
+        StartCoroutine(GameoverDirectionCoroutine());
+    }
+
+    IEnumerator GameoverDirectionCoroutine()
+    {
+        TransitionManager.FadeIn(FadeType.Mask_KeyHole, 2.0f);
+
+        yield return new WaitForSeconds(3.0f);
+
+        TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
+        ActivateGameoverUI(true);
     }
 
     /// <summary>
@@ -102,10 +126,9 @@ public class GameoverDirection : MonoBehaviour
 
         selectEntry.callback.AddListener(eventData =>
         {
-            //_cursorImage.transform.localPosition = _cursorTrans[0].localPosition;
             Debug.Log("カーソルを左に移動");
-            _gameoverSelectButtons[0].transform.DOScale(1.1f, 0.25f);
-            _gameoverSelectButtons[1].transform.DOScale(1f, 0.25f);
+            _cursorImageTrans.SetParent(_gameoverSelectButtons[0].transform);
+            _cursorImageTrans.localPosition = _cursorPosTrans[0].localPosition;
         });
         trigger.triggers.Add(selectEntry);
 
@@ -127,10 +150,9 @@ public class GameoverDirection : MonoBehaviour
 
         selectEntry2.callback.AddListener(eventData =>
         {
-            //_cursorImage.transform.localPosition = _cursorTrans[1].localPosition;
+            _cursorImageTrans.SetParent(_gameoverSelectButtons[1].transform);
+            _cursorImageTrans.localPosition = _cursorPosTrans[1].localPosition;
             Debug.Log("カーソルを右に移動");
-            _gameoverSelectButtons[1].transform.DOScale(1.1f, 0.25f);
-            _gameoverSelectButtons[0].transform.DOScale(1f, 0.25f);
         });
         trigger2.triggers.Add(selectEntry2);
 
@@ -152,23 +174,23 @@ public class GameoverDirection : MonoBehaviour
         {
             case Stages.Stage1:
                 _currentSceneType = SceneType.Stage1_Fall;
-                _returnText.text = "記憶の間にもどる";
+                _returnButtonImage.sprite = _returnButtonSprite[0];
                 break;
             case Stages.Stage2:
                 _currentSceneType = SceneType.RE_Stage2;
-                _returnText.text = "記憶の間にもどる";
+                _returnButtonImage.sprite = _returnButtonSprite[0];
                 break;
             case Stages.Stage3:
                 _currentSceneType = SceneType.RE_Stage3;
-                _returnText.text = "記憶の間にもどる";
+                _returnButtonImage.sprite = _returnButtonSprite[0];
                 break;
             case Stages.Stage4:
                 _currentSceneType = SceneType.Stage4;
-                _returnText.text = "記憶の間にもどる";
+                _returnButtonImage.sprite = _returnButtonSprite[0];
                 break;
             case Stages.Stage_Boss:
                 _currentSceneType = SceneType.Stage_Boss;
-                _returnText.text = "忘却の間にもどる";
+                _returnButtonImage.sprite = _returnButtonSprite[1];
                 break;
             default:
                 break;
