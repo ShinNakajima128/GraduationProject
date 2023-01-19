@@ -17,6 +17,9 @@ public class CroquetGameUI : MonoBehaviour
     [SerializeField]
     CanvasGroup _goalDirectionGroup = default;
 
+    [SerializeField]
+    CanvasGroup _hpGroup = default;
+
     [Header("UI_Text")]
     [SerializeField]
     Text _currentRoundText = default;
@@ -73,16 +76,22 @@ public class CroquetGameUI : MonoBehaviour
                 _orderGroup.alpha = 1;
                 _inGameGroup.alpha = 0;
                 _goalDirectionGroup.alpha = 0;
+
+                _hpGroup.alpha = 0;
                 break;
             case CroquetGameState.InGame:
                 _orderGroup.alpha = 0;
                 _inGameGroup.alpha = 1;
                 _goalDirectionGroup.alpha = 0;
+
+                _hpGroup.alpha = 1;
                 break;
             case CroquetGameState.GoalDirection:
                 _orderGroup.alpha = 0;
                 _inGameGroup.alpha = 0;
                 _goalDirectionGroup.alpha = 1;
+
+                _hpGroup.alpha = 1;
                 break;
             default:
                 break;
@@ -115,6 +124,10 @@ public class CroquetGameUI : MonoBehaviour
         _resultText.text = result;
     }
 
+    /// <summary>
+    /// ゲームの結果画面を表示する
+    /// </summary>
+    /// <param name="result"></param>
     public void OnResultUI(bool result)
     {
         if (result)
@@ -127,11 +140,17 @@ public class CroquetGameUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 次へ進むUIを表示する
+    /// </summary>
     public void OnNextUI()
     {
         _nextImage.SetActive(true);
     }
 
+    /// <summary>
+    /// 次へ進むUIを非表示する
+    /// </summary>
     public void OffResultUI()
     {
         _successImage.SetActive(false);

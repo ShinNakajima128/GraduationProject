@@ -73,6 +73,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     CanvasGroup _questionPanelGroup = default;
 
     [SerializeField]
+    CanvasGroup _hpGroup = default;
+
+    [SerializeField]
     Text _questionText = default;
 
     [SerializeField]
@@ -107,6 +110,8 @@ public class QuizGameManager : StageGame<QuizGameManager>
     /// <summary> ê≥âÇµÇΩâÒêî </summary>
     int _corectNum = 0;
     Animator _playerAnim;
+    Coroutine _gameCoroutine;
+    bool _isFailured = false;
     #endregion
 
     #region public
@@ -126,6 +131,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
     protected override void Start()
     {
         AudioManager.PlayBGM(BGMType.Stage4);
+        HPManager.Instance.LostHpAction += OnGameover;
         _brain.m_DefaultBlend.m_Time = 0f;
         base.Start();
         OnGameStart();
@@ -135,6 +141,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     {
         _informationText.text = "";
         LetterboxController.ActivateLetterbox(true);
+        HPManager.Instance.RecoveryHP();
+        HPManager.Instance.ChangeHPValue(2);
+
         OnGameSetUp();
 
         _playerTrans.DOMove(_playerTrans.position, 1.4f)
@@ -163,7 +172,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
                                   StartCoroutine(GameStartCoroutine(() =>
                                   {
                                       GameStart?.Invoke();
-                                      StartCoroutine(InGameCoroutine());
+                                      _gameCoroutine = StartCoroutine(InGameCoroutine());
                                   }));
                               })
                               .SetDelay(2.5f);
@@ -202,13 +211,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
             isAnswerPhase = false;
             currentQuizType = (QuizType)i;
 
-            if (i > 0)
+            if (i > 0 || _isFailured)
             {
                 bool isCompleted = false;
 
                 TransitionManager.FadeIn(FadeType.Normal, action: () =>
                 {
                     _quizCamera.Priority = 0;
+                    _hpGroup.alpha = 0;
 
                     _playerAnim.CrossFadeInFixedTime("Idle", 0.1f);
                     _faceController.ChangeFaceType(FaceType.Default);
@@ -296,9 +306,13 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
             yield return new WaitUntil(() => isCamerachanged);
 
+            _hpGroup.alpha = 1;
+
+            //ëIëéàÇï\é¶
             if (!_debugMode)
             {
-                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, currentQuizType, x => 
+                yield return StartCoroutine(_quizCtrl.OnChoicePhaseCoroutine(_objectMng, currentQuizType, 
+                x => 
                 {
                     _corectNum += x;
 
@@ -306,11 +320,15 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     {
                         _playerAnim.CrossFadeInFixedTime("SitHappy", 0.2f);
                         _faceController.ChangeFaceType(FaceType.Smile);
+                        _isFailured = false;
                     }
                     else
                     {
                         _playerAnim.CrossFadeInFixedTime("SitSad", 0.2f);
                         _faceController.ChangeFaceType(FaceType.Cry);
+                        HPManager.Instance.ChangeHPValue(1);
+                        _isFailured = true;
+                        i--;
                     }
                 }));
             }
@@ -329,6 +347,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     {
                         _playerAnim.CrossFadeInFixedTime("SitSad", 0.2f);
                         _faceController.ChangeFaceType(FaceType.Cry);
+                        HPManager.Instance.ChangeHPValue(1);
                     }
                 }));
             }
@@ -358,7 +377,6 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
-
     }
 
     IEnumerator QuestionCoroutine(QuizType type)
@@ -431,7 +449,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
         var param = _quizGameParams.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
         _viewingTime = param.ViewingTime;
         _trumpGenerator.SetGenerateCount(param);
-
+        _hpGroup.alpha = 0;
 
         GameSetUp?.Invoke();
     }
@@ -443,6 +461,21 @@ public class QuizGameManager : StageGame<QuizGameManager>
     void OnQuizSetUp(QuizType type)
     {
         QuizSetUp?.Invoke(type);
+    }
+
+    void OnGameover()
+    {
+        StartCoroutine(GameoverDirectionCoroutine());
+    }
+
+    IEnumerator GameoverDirectionCoroutine()
+    {
+        StopCoroutine(_gameCoroutine);
+        _gameCoroutine = null;
+
+        yield return new WaitForSeconds(2.5f);
+
+        GameoverDirection.Instance.OnGameoverDirection();
     }
 }
 
