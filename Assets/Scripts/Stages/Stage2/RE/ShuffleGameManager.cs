@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using AliceProject;
+using DG.Tweening;
 
 public class ShuffleGameManager : StageGame<ShuffleGameManager>
 {
@@ -21,7 +22,13 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     Text _infoText = default;
 
     [SerializeField]
-    Image[] _juggeInfo = default;
+    CanvasGroup _hpGroup = default;
+
+    [SerializeField]
+    GameObject[] _juggeInfo = default;
+
+    [SerializeField]
+    GameObject _nextInfo = default;
 
     [Header("Components")]
     [SerializeField]
@@ -101,7 +108,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
         yield return new WaitForSeconds(2.5f);
 
-        _infoText.text = "Start!";
+        _infoText.text = "スタート！";
 
         yield return new WaitForSeconds(2.0f);
 
@@ -115,6 +122,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         {
             _result = false;
             _selectIndex = -1;
+            _hpGroup.alpha = 1;
 
             //シャッフル開始。終了するまで待機
             yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
@@ -144,10 +152,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 _selectIndex = index;
             });
 
-
             yield return new WaitUntil(() => _selectIndex > -1);
-
-            //Debug.Log($"結果；{_result}");
 
             if (_result)
             {
@@ -162,7 +167,11 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
                 //ここで正解のUIを表示
                 //_infoText.text = "正解！";
-                _juggeInfo[0].enabled = true;
+                _juggeInfo[0].SetActive(true);
+
+                yield return new WaitForSeconds(1.5f);
+
+                _nextInfo.SetActive(true);
 
                 yield return new WaitUntil(() => UIInput.Submit);
             }
@@ -184,12 +193,24 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
                 yield return new WaitForSeconds(1.6f);
 
-                _juggeInfo[1].enabled = true;
+                _juggeInfo[1].SetActive(true);
+                HPManager.Instance.ChangeHPValue(1);
+
+                yield return new WaitForSeconds(1.5f);
+
+                //体力が「0」になったらゲームオーバー演出
+                if (HPManager.Instance.CurrentHP.Value <= 0)
+                {
+                    GameoverDirection.Instance.OnGameoverDirection();
+                    yield break;
+                }
+                _nextInfo.SetActive(true);
 
                 yield return new WaitUntil(() => UIInput.Submit);
 
                 _stage2Cameras.ChangeCamera(Stage2CameraType.CloseupMouse);
-                _juggeInfo[1].enabled = false;
+                _juggeInfo[1].SetActive(false);
+                _nextInfo.SetActive(false);
 
                 yield return new WaitForSeconds(2.5f);
 
@@ -200,8 +221,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             if (i < _phaseCount - 1)
             {
                 _infoText.text = "";
-                _juggeInfo[0].enabled = false;
-                _juggeInfo[1].enabled = false;
+                _juggeInfo[0].SetActive(false);
+                _juggeInfo[1].SetActive(false);
+                _nextInfo.SetActive(false);
 
                 _teacupManager.AllCupDown();
 
@@ -217,8 +239,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             }
             else
             {
-                _juggeInfo[0].enabled = false;
-                _juggeInfo[1].enabled = false;
+                _juggeInfo[0].SetActive(false);
+                _juggeInfo[1].SetActive(false);
+                _nextInfo.SetActive(false);
                 _infoText.text = "ステージクリア！";
 
                 yield return new WaitForSeconds(2.0f);
@@ -242,10 +265,14 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     {
         TransitionManager.FadeOut(FadeType.Normal);
         AudioManager.PlayBGM(BGMType.Stage2);
+        HPManager.Instance.RecoveryHP();
+
         _teacupManager.RandomHideMouse();
         _infoText.text = "";
-        _juggeInfo[0].enabled = false;
-        _juggeInfo[1].enabled = false;
+        _hpGroup.alpha = 0;
+        _juggeInfo[0].SetActive(false);
+        _juggeInfo[1].SetActive(false);
+        _nextInfo.SetActive(false);
 
         //現在のゲームの難易度を取得して数値を反映
         var paramIndex = (int)GameManager.Instance.CurrentGameDifficultyType;

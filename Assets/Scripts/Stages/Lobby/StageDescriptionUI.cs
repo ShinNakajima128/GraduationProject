@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 /// <summary>
 /// 各ステージの詳細を表示するUIの機能を持つコンポーネント
@@ -91,6 +92,8 @@ public class StageDescriptionUI : MonoBehaviour
             if (_isActiveUI)
             {
                 Debug.Log("チュートリアル表示");
+                _descriptionButtons[0].transform.DOLocalMoveY(_descriptionButtons[0].transform.localPosition.y - 15, 0.05f)
+                                                   .SetLoops(2, LoopType.Yoyo);
             }
         });
 
@@ -112,6 +115,8 @@ public class StageDescriptionUI : MonoBehaviour
             if (_isActiveUI)
             {
                 TransitionManager.SceneTransition(_currentSelectScene);
+                _descriptionButtons[1].transform.DOLocalMoveY(_descriptionButtons[1].transform.localPosition.y - 15, 0.05f)
+                                                   .SetLoops(2, LoopType.Yoyo);
             }
         });
     }
