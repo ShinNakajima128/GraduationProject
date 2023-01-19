@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,11 +29,12 @@ public class StageDescriptionUI : MonoBehaviour
 
     [Tooltip("チュートリアル画面")]
     [SerializeField]
-    CanvasGroup _tutorialGroup = default;
+    StageTutorial _tutorial = default;
     #endregion
 
     #region private
     bool _isActiveUI = false;
+    bool _isButtonClicking = false;
     SceneType _currentSelectScene = default;
     #endregion
 
@@ -51,6 +53,14 @@ public class StageDescriptionUI : MonoBehaviour
     private void Start()
     {
         ButtonSetup();
+
+        this.UpdateAsObservable()
+            .Where(_ => _tutorial.IsActivateTutorial && UIInput.A && !_isButtonClicking)
+            .Subscribe(_ =>
+            {
+                OffTutorialPanel();
+            })
+            .AddTo(this);
     }
 
     /// <summary>
@@ -81,6 +91,12 @@ public class StageDescriptionUI : MonoBehaviour
 
         selectEntry.callback.AddListener(eventData =>
         {
+            //チュートリアル画面を開いている場合は処理を行わない
+            if (_tutorial.IsActivateTutorial)
+            {
+                return;
+            }
+            _cursorImage.transform.SetParent(_descriptionButtons[0].transform);
             _cursorImage.transform.localPosition = _cursorTrans[0].localPosition;
             Debug.Log("カーソルを左に移動");
         });
@@ -91,9 +107,66 @@ public class StageDescriptionUI : MonoBehaviour
         {
             if (_isActiveUI)
             {
-                Debug.Log("チュートリアル表示");
+                //チュートリアル画面を開いている場合は処理を行わない
+                if (_tutorial.IsActivateTutorial || _isButtonClicking)
+                {
+                    return;
+                }
                 _descriptionButtons[0].transform.DOLocalMoveY(_descriptionButtons[0].transform.localPosition.y - 15, 0.05f)
-                                                   .SetLoops(2, LoopType.Yoyo);
+                                                .SetLoops(2, LoopType.Yoyo);
+                _isButtonClicking = true;
+                Debug.Log("チュートリアル表示");
+
+                switch (_currentSelectScene)
+                {
+                    
+                    case SceneType.Stage1_Fall:
+                        _tutorial.TutorialSetup(Stages.Stage1, () => 
+                        {
+                            TransitionManager.SceneTransition(SceneType.Stage1_Fall, FadeType.Mask_KeyHole);
+                        });
+                        break;
+                    case SceneType.RE_Stage2:
+                        _tutorial.TutorialSetup(Stages.Stage2, () =>
+                        {
+                            TransitionManager.SceneTransition(SceneType.RE_Stage2, FadeType.Mask_KeyHole);
+                        });
+                        break;
+                    case SceneType.RE_Stage3:
+                        _tutorial.TutorialSetup(Stages.Stage3, () =>
+                        {
+                            TransitionManager.SceneTransition(SceneType.RE_Stage3, FadeType.Mask_KeyHole);
+                        });
+                        break;
+                    case SceneType.Stage4:
+                        _tutorial.TutorialSetup(Stages.Stage4, () =>
+                        {
+                            TransitionManager.SceneTransition(SceneType.Stage4, FadeType.Mask_KeyHole);
+                        });
+                        break;
+                    case SceneType.Stage_Boss:
+                        _tutorial.TutorialSetup(Stages.Stage_Boss, () =>
+                        {
+                            TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_KeyHole);
+                        });
+                        break;
+                    default:
+                        Debug.LogError($"ステージの指定が間違っています{_currentSelectScene}");
+                        break;
+                }
+
+                TransitionManager.FadeIn(FadeType.Mask_CheshireCat,
+                              　  0.5f,
+                            　    () =>
+                            　    {
+                            　        _tutorial.ActivateTutorialUI(true); //チュートリアルを表示する
+                              　      TransitionManager.FadeOut(FadeType.Mask_CheshireCat,
+                                    　0.5f,
+                            　        () =>
+                               　     {
+                              　          _isButtonClicking = false;
+                              　      });
+                             　   });
             }
         });
 
@@ -104,6 +177,13 @@ public class StageDescriptionUI : MonoBehaviour
 
         selectEntry2.callback.AddListener(eventData =>
         {
+            //チュートリアル画面を開いている場合は処理を行わない
+            if (_tutorial.IsActivateTutorial)
+            {
+                return;
+            }
+
+            _cursorImage.transform.SetParent(_descriptionButtons[1].transform);
             _cursorImage.transform.localPosition = _cursorTrans[1].localPosition;
             Debug.Log("カーソルを右に移動");
         });
@@ -114,10 +194,39 @@ public class StageDescriptionUI : MonoBehaviour
         {
             if (_isActiveUI)
             {
+                //チュートリアル画面を開いている場合と、ボタンを押している場合は処理を行わない
+                if (_tutorial.IsActivateTutorial || _isButtonClicking)
+                {
+                    return;
+                }
+
+                _isButtonClicking = true;
                 TransitionManager.SceneTransition(_currentSelectScene);
                 _descriptionButtons[1].transform.DOLocalMoveY(_descriptionButtons[1].transform.localPosition.y - 15, 0.05f)
                                                    .SetLoops(2, LoopType.Yoyo);
             }
         });
+    }
+
+    void OffTutorialPanel()
+    {
+        StartCoroutine(OffTutorialCoroutine());
+    }
+
+    IEnumerator OffTutorialCoroutine()
+    {
+        _isButtonClicking = true;
+        TransitionManager.FadeIn(FadeType.Mask_CheshireCat,
+                         0.5f,
+                         () => 
+                         {
+                             _tutorial.ActivateTutorialUI(false);
+                             TransitionManager.FadeOut(FadeType.Mask_CheshireCat, 0.5f);
+                         });
+
+        yield return new WaitForSeconds(1.5f);
+        
+        _isButtonClicking = false;
+        _descriptionButtons[0].Select();
     }
 }

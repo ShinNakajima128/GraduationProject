@@ -629,6 +629,33 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftCrossKey"",
+                    ""type"": ""Button"",
+                    ""id"": ""ade900f4-441e-4d41-8aa4-33c1146483f4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightCrossKey"",
+                    ""type"": ""Button"",
+                    ""id"": ""eeb2ae62-ebf1-4ef0-88a0-984768340931"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""B"",
+                    ""type"": ""Button"",
+                    ""id"": ""b31cd3ec-dce7-49c1-90e2-b52e4c39a35d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -862,6 +889,39 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""A"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49c99eb8-3ba2-4d16-8d6e-cbea6636f16e"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftCrossKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eecdc2b9-8c4b-4473-9527-6d7338bee6f8"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightCrossKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1cde4d1-748c-4854-b4c7-c9755e113f46"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""B"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1009,6 +1069,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_Move = m_UIInput.FindAction("Move", throwIfNotFound: true);
         m_UIInput_Y = m_UIInput.FindAction("Y", throwIfNotFound: true);
         m_UIInput_A = m_UIInput.FindAction("A", throwIfNotFound: true);
+        m_UIInput_LeftCrossKey = m_UIInput.FindAction("LeftCrossKey", throwIfNotFound: true);
+        m_UIInput_RightCrossKey = m_UIInput.FindAction("RightCrossKey", throwIfNotFound: true);
+        m_UIInput_B = m_UIInput.FindAction("B", throwIfNotFound: true);
         // Stage_Boss
         m_Stage_Boss = asset.FindActionMap("Stage_Boss", throwIfNotFound: true);
         m_Stage_Boss_Move = m_Stage_Boss.FindAction("Move", throwIfNotFound: true);
@@ -1266,6 +1329,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_Move;
     private readonly InputAction m_UIInput_Y;
     private readonly InputAction m_UIInput_A;
+    private readonly InputAction m_UIInput_LeftCrossKey;
+    private readonly InputAction m_UIInput_RightCrossKey;
+    private readonly InputAction m_UIInput_B;
     public struct UIInputActions
     {
         private @PlayerControls m_Wrapper;
@@ -1276,6 +1342,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_UIInput_Move;
         public InputAction @Y => m_Wrapper.m_UIInput_Y;
         public InputAction @A => m_Wrapper.m_UIInput_A;
+        public InputAction @LeftCrossKey => m_Wrapper.m_UIInput_LeftCrossKey;
+        public InputAction @RightCrossKey => m_Wrapper.m_UIInput_RightCrossKey;
+        public InputAction @B => m_Wrapper.m_UIInput_B;
         public InputActionMap Get() { return m_Wrapper.m_UIInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1303,6 +1372,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @A.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnA;
                 @A.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnA;
                 @A.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnA;
+                @LeftCrossKey.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnLeftCrossKey;
+                @LeftCrossKey.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnLeftCrossKey;
+                @LeftCrossKey.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnLeftCrossKey;
+                @RightCrossKey.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRightCrossKey;
+                @RightCrossKey.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRightCrossKey;
+                @RightCrossKey.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRightCrossKey;
+                @B.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnB;
+                @B.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnB;
+                @B.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnB;
             }
             m_Wrapper.m_UIInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -1325,6 +1403,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @A.started += instance.OnA;
                 @A.performed += instance.OnA;
                 @A.canceled += instance.OnA;
+                @LeftCrossKey.started += instance.OnLeftCrossKey;
+                @LeftCrossKey.performed += instance.OnLeftCrossKey;
+                @LeftCrossKey.canceled += instance.OnLeftCrossKey;
+                @RightCrossKey.started += instance.OnRightCrossKey;
+                @RightCrossKey.performed += instance.OnRightCrossKey;
+                @RightCrossKey.canceled += instance.OnRightCrossKey;
+                @B.started += instance.OnB;
+                @B.performed += instance.OnB;
+                @B.canceled += instance.OnB;
             }
         }
     }
@@ -1401,6 +1488,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnY(InputAction.CallbackContext context);
         void OnA(InputAction.CallbackContext context);
+        void OnLeftCrossKey(InputAction.CallbackContext context);
+        void OnRightCrossKey(InputAction.CallbackContext context);
+        void OnB(InputAction.CallbackContext context);
     }
     public interface IStage_BossActions
     {
