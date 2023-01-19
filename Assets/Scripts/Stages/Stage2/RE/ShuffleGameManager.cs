@@ -22,6 +22,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     Text _infoText = default;
 
     [SerializeField]
+    CanvasGroup _hpGroup = default;
+
+    [SerializeField]
     GameObject[] _juggeInfo = default;
 
     [SerializeField]
@@ -119,6 +122,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         {
             _result = false;
             _selectIndex = -1;
+            _hpGroup.alpha = 1;
 
             //シャッフル開始。終了するまで待機
             yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
@@ -190,9 +194,16 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 yield return new WaitForSeconds(1.6f);
 
                 _juggeInfo[1].SetActive(true);
+                HPManager.Instance.ChangeHPValue(1);
 
                 yield return new WaitForSeconds(1.5f);
 
+                //体力が「0」になったらゲームオーバー演出
+                if (HPManager.Instance.CurrentHP.Value <= 0)
+                {
+                    GameoverDirection.Instance.OnGameoverDirection();
+                    yield break;
+                }
                 _nextInfo.SetActive(true);
 
                 yield return new WaitUntil(() => UIInput.Submit);
@@ -254,8 +265,11 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     {
         TransitionManager.FadeOut(FadeType.Normal);
         AudioManager.PlayBGM(BGMType.Stage2);
+        HPManager.Instance.RecoveryHP();
+
         _teacupManager.RandomHideMouse();
         _infoText.text = "";
+        _hpGroup.alpha = 0;
         _juggeInfo[0].SetActive(false);
         _juggeInfo[1].SetActive(false);
         _nextInfo.SetActive(false);

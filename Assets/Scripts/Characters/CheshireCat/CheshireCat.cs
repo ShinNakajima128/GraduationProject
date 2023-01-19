@@ -56,7 +56,7 @@ public class CheshireCat : MonoBehaviour
 
         yield return null;
 
-        ChangeState(_currentState);
+        ChangeState(_currentState, 0f);
     }
 
     /// <summary>
