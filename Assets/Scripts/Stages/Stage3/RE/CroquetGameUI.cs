@@ -39,6 +39,9 @@ public class CroquetGameUI : MonoBehaviour
 
     [SerializeField]
     GameObject _failureImage = default;
+
+    [SerializeField]
+    GameObject _nextImage = default;
     #endregion
 
     #region private
@@ -55,6 +58,7 @@ public class CroquetGameUI : MonoBehaviour
     {
         _successImage.SetActive(false);
         _failureImage.SetActive(false);
+        _nextImage.SetActive(false);
     }
 
     /// <summary>
@@ -123,9 +127,15 @@ public class CroquetGameUI : MonoBehaviour
         }
     }
 
+    public void OnNextUI()
+    {
+        _nextImage.SetActive(true);
+    }
+
     public void OffResultUI()
     {
         _successImage.SetActive(false);
         _failureImage.SetActive(false);
+        _nextImage.SetActive(false);
     }
 }

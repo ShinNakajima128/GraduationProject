@@ -272,6 +272,11 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         }
 
         _gameUI.OnResultUI(result);
+
+        yield return new WaitForSeconds(1.5f);
+
+        _gameUI.OnNextUI();
+
         yield return new WaitUntil(() => UIInput.Submit);
 
         _gameUI.OffResultUI();
