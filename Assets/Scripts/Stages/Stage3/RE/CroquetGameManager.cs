@@ -62,6 +62,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// <summary> 倒した数 </summary>
     int _currentStrikeNum = 0;
     int _successCount = 0;
+    Coroutine _gameCoroutine;
+    Coroutine _directionCoroutine;
     #endregion
 
     #region public
@@ -84,6 +86,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     {
         AudioManager.PlayBGM(BGMType.Stage3);
         LetterboxController.ActivateLetterbox(true);
+        HPManager.Instance.RecoveryHP();
+        HPManager.Instance.ChangeHPValue(2);
+        HPManager.Instance.LostHpAction += OnGameover;
         base.Start();
         Init();
         OnGameStart();
@@ -122,7 +127,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
         yield return new WaitForSeconds(2.5f);
 
-        StartCoroutine(InGameCoroutine());
+        _gameCoroutine = StartCoroutine(InGameCoroutine());
     }
 
     protected override IEnumerator GameEndCoroutine(Action action = null)
@@ -211,7 +216,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 _isGoaled = false;
 
                 //ゴールした時にシュートの結果に応じて結果を演出を変更
-                yield return GoalDirectionCoroutine(_currentStrikeNum >= _currentTargetStrikeNum);
+                yield return GoalDirectionCoroutine(_currentStrikeNum >= _currentTargetStrikeNum,
+                                                    result => i -= result);
 
                 if (i != _playCount - 1)
                 {
@@ -260,18 +266,29 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// </summary>
     /// <param name="result"> 打った結果 </param>
     /// <returns></returns>
-    IEnumerator GoalDirectionCoroutine(bool result)
+    IEnumerator GoalDirectionCoroutine(bool result, Action<int> resultValue)
     {
         yield return new WaitForSeconds(2.0f);
         _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
-     
+
         if (result)
         {
             _successCount++;
             OnGoalEffect();
         }
+        else
+        {
+            //お題を失敗した場合はHPを減らし、もう一度やり直す
+            HPManager.Instance.ChangeHPValue(1);
+            resultValue?.Invoke(1);
+        }
 
         _gameUI.OnResultUI(result);
+
+        if (HPManager.Instance.CurrentHP.Value <= 0)
+        {
+            yield break;
+        }
 
         yield return new WaitForSeconds(1.5f);
 
@@ -331,6 +348,21 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         {
             EffectManager.PlayEffect(EffectType.Stage3_Goal, _golaEffectTrans[i]);
         }
+    }
+
+    void OnGameover()
+    {
+        StartCoroutine(GameoverCoroutine());
+    }
+
+    IEnumerator GameoverCoroutine()
+    {
+        StopCoroutine(_gameCoroutine);
+        _gameCoroutine = null;
+
+        yield return new WaitForSeconds(3.0f);
+
+        GameoverDirection.Instance.OnGameoverDirection();
     }
 }
 /// <summary>

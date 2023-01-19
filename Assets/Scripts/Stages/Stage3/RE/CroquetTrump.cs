@@ -28,7 +28,6 @@ public class CroquetTrump : TrumpSolder
         if (_init)
         {
             _anim.Play("Walk");
-            Debug.Log("アニメ―ションリセット");
         }
     }
 
