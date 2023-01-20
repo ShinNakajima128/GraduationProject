@@ -42,9 +42,8 @@ public class CheshireCat : MonoBehaviour
         TryGetComponent(out _anim);
     }
 
-    private void Start()
+    IEnumerator Start()
     {
-        ChangeState(_currentState);
         EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
         {
             OnAction(CheshireCatState.Jump, 0.2f); 
@@ -54,6 +53,10 @@ public class CheshireCat : MonoBehaviour
 
         _cheshireRenderer.materials[0] = _cheshireBodyMat;
         _cheshireRenderer.materials[1] = _cheshireFaceMat;
+
+        yield return null;
+
+        ChangeState(_currentState, 0f);
     }
 
     /// <summary>
@@ -139,6 +142,7 @@ public class CheshireCat : MonoBehaviour
         switch (state)
         {
             case CheshireCatState.Idle:
+                _anim.CrossFadeInFixedTime(CheshireCatState.Idle.ToString(), 0.25f);
                 _currentCoroutine = StartCoroutine(IdleCoroutine());
                 break;
             case CheshireCatState.Idle_Lick:

@@ -39,6 +39,10 @@ public class FallGameManager : MonoBehaviour
 
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -57,6 +61,7 @@ public class FallGameManager : MonoBehaviour
 
     #region property
     public static FallGameManager Instance { get; private set; }
+    public static bool IsSecondTry { get; set; } = false;
     public int TargetCount => _targetCount;
     public int MaxHP => _maxHP;
     #endregion
@@ -64,6 +69,12 @@ public class FallGameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        if (_debugMode)
+        {
+            IsSecondTry = _debugMode;
+        }
+
     }
     private void Start()
     {
@@ -135,7 +146,16 @@ public class FallGameManager : MonoBehaviour
     /// </summary>
     void OnGameOver()
     {
-        TransitionManager.SceneTransition(SceneType.Stage1_Fall);
+        //ÉçÉrÅ[Ç©ÇÁíßêÌÇµÇƒÇ¢Ç»Ç¢èÍçá
+        if (!IsSecondTry)
+        {
+            TransitionManager.SceneTransition(SceneType.Stage1_Fall);
+        }
+        else
+        {
+            GameEnd?.Invoke();
+            GameoverDirection.Instance.OnGameoverDirection();
+        }
     }
 
 
@@ -198,6 +218,7 @@ public class FallGameManager : MonoBehaviour
         GameManager.UpdateFirstVisit(Stages.Stage1);
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
+        IsSecondTry = true;
     }
 }
 

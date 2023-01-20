@@ -82,6 +82,7 @@ public class QuizController : MonoBehaviour
         //選択状態のフラグをリセット
         _isChoiced = false;
         _choicePanel.alpha = 1;
+        EventSystem.current.firstSelectedGameObject = _choiceButtonList[0].Button.gameObject;
         _choiceButtonList[0].Button.Select();
 
         float timer = 0;
@@ -136,12 +137,15 @@ public class QuizController : MonoBehaviour
 
         _choicePanel.alpha = 0;
 
+        if (HPManager.Instance.CurrentHP.Value <= 0)
+        {
+            yield break;
+        }
+
         yield return new WaitForSeconds(_goToNextPhaseInterval);
 
         _questionText.text = "";
-        _AnswerTimeText.text = "";
-        EventSystem.current.firstSelectedGameObject.GetComponent<Button>().Select();
-        
+        _AnswerTimeText.text = "";        
     }
 
     /// <summary>

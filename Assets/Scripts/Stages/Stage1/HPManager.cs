@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using UniRx;
 
@@ -20,6 +21,12 @@ public class HPManager : MonoBehaviour
     [Tooltip("HPオブジェクトの親オブジェクト")]
     [SerializeField]
     Transform _hpGaugeUITrans = default;
+
+    [SerializeField]
+    Image _hpGaugeImage = default;
+
+    [SerializeField]
+    Sprite[] _gaugeSprites = default;
 
     [Header("Components")]
     [Tooltip("アリスのHP")]
@@ -66,6 +73,7 @@ public class HPManager : MonoBehaviour
                 }
             }
         });
+        _hpGaugeImage.sprite = _gaugeSprites[0];
         _init = true;
     }
 
@@ -80,7 +88,15 @@ public class HPManager : MonoBehaviour
         if (!isHeal)
         {
             _currentHP.Value -= value;
-            _hpGaugeUITrans.DOShakePosition(0.25f, 20, 30, fadeOut: false);
+            _hpGaugeImage.sprite = _gaugeSprites[1];
+            _hpGaugeUITrans.DOShakePosition(0.5f, 20, 30, fadeOut: false)
+                           .OnComplete(() => 
+                           {
+                               if (_currentHP.Value > 0)
+                               {
+                                   _hpGaugeImage.sprite = _gaugeSprites[0];
+                               }
+                           });
 
             if (_currentHP.Value > 0)
             {
