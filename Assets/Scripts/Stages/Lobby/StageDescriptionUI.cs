@@ -39,6 +39,7 @@ public class StageDescriptionUI : MonoBehaviour
     #endregion
 
     #region public
+    public event Action<bool> OpenTutorialAction;
     #endregion
 
     #region property
@@ -115,6 +116,7 @@ public class StageDescriptionUI : MonoBehaviour
                 _descriptionButtons[0].transform.DOLocalMoveY(_descriptionButtons[0].transform.localPosition.y - 15, 0.05f)
                                                 .SetLoops(2, LoopType.Yoyo);
                 _isButtonClicking = true;
+                OpenTutorialAction?.Invoke(false);
                 Debug.Log("チュートリアル表示");
 
                 switch (_currentSelectScene)
@@ -222,6 +224,7 @@ public class StageDescriptionUI : MonoBehaviour
                          {
                              _tutorial.ActivateTutorialUI(false);
                              TransitionManager.FadeOut(FadeType.Mask_CheshireCat, 0.5f);
+                             OpenTutorialAction?.Invoke(true);
                          });
 
         yield return new WaitForSeconds(1.5f);

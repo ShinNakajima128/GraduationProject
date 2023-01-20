@@ -19,6 +19,9 @@ public class StageTutorial : MonoBehaviour
     StageTutorialData[] _tutorialData = default;
 
     [Header("UIObjects")]
+    [SerializeField]
+    Image _tutorialBackground = default;
+
     [Header("Page")]
     [SerializeField]
     Image _currentPageIcon = default;
@@ -34,7 +37,10 @@ public class StageTutorial : MonoBehaviour
 
     [SerializeField]
     Image _gameStartImage = default;
-    //[Header("GameDescription")]
+
+    [Header("Description")]
+    [SerializeField]
+    GameObject[] _descriptionPanels = default;
     #endregion
 
     #region private
@@ -42,6 +48,7 @@ public class StageTutorial : MonoBehaviour
     bool _isPressed = false;
     int _currentPageIndex = 0;
     int _currentPageLength = 0;
+    Dictionary<DescriptionType, GameObject> _descriptionPanelDic = new Dictionary<DescriptionType, GameObject>();
     #endregion
 
     #region public
@@ -55,6 +62,13 @@ public class StageTutorial : MonoBehaviour
     private void Awake()
     {
         TryGetComponent(out _tutorialGroup);
+
+        //説明画面のDictionaryを作成
+        for (int i = 0; i < (int)DescriptionType.Num; i++)
+        {
+            _descriptionPanelDic.Add((DescriptionType)i, _descriptionPanels[i]);
+            _descriptionPanelDic[(DescriptionType)i].SetActive(false);
+        }
     }
 
     private void Start()
@@ -99,6 +113,7 @@ public class StageTutorial : MonoBehaviour
             })
             .AddTo(this);
 
+        //最後のページを表示している場合のゲームスタート処理を登録
         this.UpdateAsObservable()
             .Where(_ => IsActivateTutorial && 
                         _currentPageIndex == _currentPageLength - 1 && 
@@ -126,14 +141,14 @@ public class StageTutorial : MonoBehaviour
         _currentPageIndex = 0;
         _gameStartImage.DOFade(0.3f, 0f);
 
-        var data = _tutorialData.FirstOrDefault(d => d.Stage == stage);
-
-        _currentPageLength = data.DescriptionDatas.Length;
-        _currentPageIcon.sprite = data.CurrentPageIcon;
-
         foreach (var image in _tutorialImages)
         {
             image.enabled = false;
+        }
+
+        foreach (var panel in _descriptionPanelDic)
+        {
+            panel.Value.SetActive(false);
         }
 
         //現在のページを知らせるアイコンのセットアップ
@@ -142,6 +157,13 @@ public class StageTutorial : MonoBehaviour
             icon.gameObject.SetActive(false);
         }
 
+        var data = _tutorialData.FirstOrDefault(d => d.Stage == stage);
+
+        SetDescription(data); //ステージ詳細データをUIに反映
+        _tutorialBackground.sprite = data.TutorialBackground; //背景画像をセット
+        _currentPageLength = data.DescriptionDatas.Length; //ページの長さを取得
+        _currentPageIcon.sprite = data.CurrentPageIcon; //ステージごとのページアイコンをセット
+
         //サンプル画面のセットアップ
         for (int i = 0; i < _currentPageLength; i++)
         {
@@ -149,7 +171,7 @@ public class StageTutorial : MonoBehaviour
             _pageIconsTrans[i].gameObject.SetActive(true);
         }
         _tutorialImages[_currentPageIndex].enabled = true;
-        _currentPageIcon.transform.localPosition = _pageIconsTrans[_currentPageIndex].localPosition;
+        SetCurrentPageIcon();
     }
 
     /// <summary>
@@ -177,10 +199,15 @@ public class StageTutorial : MonoBehaviour
         Debug.Log($"{_currentPageIndex + 1}ページ目を表示");
         _isPressed = true;
         
+        //左側のゲーム画面Imageを切り替える
         _tutorialImages[_currentPageIndex].enabled = true;
         _tutorialImages[_currentPageIndex + 1].enabled = false;
 
-        _currentPageIcon.transform.localPosition = _pageIconsTrans[_currentPageIndex].localPosition;
+        //右側の説明画面を切り替える
+        _descriptionPanelDic[(DescriptionType)_currentPageIndex].SetActive(true);
+        _descriptionPanelDic[(DescriptionType)_currentPageIndex + 1].SetActive(false);
+
+        _currentPageIcon.transform.position = _pageIconsTrans[_currentPageIndex].position;
         _crossKeyImagesTrans[0].transform.DOScale(1.2f, 0.1f)
                                          .SetLoops(2, LoopType.Yoyo)
                                          .OnComplete(() =>
@@ -188,6 +215,7 @@ public class StageTutorial : MonoBehaviour
                                              _isPressed = false;
                                          });
 
+        //最後のページ以外の場合はゲームスタートボタンを非アクティブにする
         if (_currentPageIndex < _currentPageLength - 1)
         {
             _gameStartImage.DOFade(0.3f, 0.2f);
@@ -203,10 +231,15 @@ public class StageTutorial : MonoBehaviour
 
         _isPressed = true;
 
+        //左側のゲーム画面Imageを切り替える
         _tutorialImages[_currentPageIndex].enabled = true;
         _tutorialImages[_currentPageIndex - 1].enabled = false;
 
-        _currentPageIcon.transform.localPosition = _pageIconsTrans[_currentPageIndex].localPosition;
+        //右側の説明画面を切り替える
+        _descriptionPanelDic[(DescriptionType)_currentPageIndex].SetActive(true);
+        _descriptionPanelDic[(DescriptionType)_currentPageIndex - 1].SetActive(false);
+
+        _currentPageIcon.transform.position = _pageIconsTrans[_currentPageIndex].position;
         _crossKeyImagesTrans[1].transform.DOScale(1.2f, 0.1f)
                                          .SetLoops(2, LoopType.Yoyo)
                                          .OnComplete(() =>
@@ -214,10 +247,35 @@ public class StageTutorial : MonoBehaviour
                                              _isPressed = false;
                                          });
 
+        //最後のページの場合はゲームスタートボタンをアクティブにする
         if (_currentPageIndex >= _currentPageLength - 1)
         {
             _gameStartImage.DOFade(1f, 0.2f);
         }
+    }
+
+    void SetDescription(StageTutorialData data)
+    {
+        _descriptionPanelDic[DescriptionType.GameDescription].SetActive(true);
+        //for (int i = 0; i < data.DescriptionDatas.Length; i++)
+        //{
+
+        //}
+    }
+
+    /// <summary>
+    /// 現在のページを表すアイコンの位置をセットする
+    /// </summary>
+    void SetCurrentPageIcon()
+    {
+        StartCoroutine(SetCurrentPageIconCoroutine());
+    }
+
+    IEnumerator SetCurrentPageIconCoroutine()
+    {
+        yield return null;
+
+        _currentPageIcon.transform.position = _pageIconsTrans[_currentPageIndex].position;
     }
 }
 
@@ -231,6 +289,7 @@ public struct StageTutorialData
     public Stages Stage;
     public StageDescriptionData[] DescriptionDatas;
     public Sprite CurrentPageIcon;
+    public Sprite TutorialBackground;
 
 }
 
@@ -240,8 +299,11 @@ public struct StageTutorialData
 [Serializable]
 public struct StageDescriptionData
 {
+    public string DescriptionName;
     public DescriptionType DescriptionType;
     public Sprite PageSprite;
+    [TextArea(1, 5)]
+    public string DescriptionText;
 }
 
 /// <summary>
@@ -258,5 +320,6 @@ public enum DescriptionType
     /// <summary> ヒント2 </summary>
     Tips2,
     /// <summary> ヒント3 </summary>
-    Tips3
+    Tips3,
+    Num
 }
