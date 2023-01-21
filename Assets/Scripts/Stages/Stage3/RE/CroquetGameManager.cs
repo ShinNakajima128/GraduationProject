@@ -87,7 +87,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         AudioManager.PlayBGM(BGMType.Stage3);
         LetterboxController.ActivateLetterbox(true);
         HPManager.Instance.RecoveryHP();
-        HPManager.Instance.ChangeHPValue(2);
+        //HPManager.Instance.ChangeHPValue(2);
         HPManager.Instance.LostHpAction += OnGameover;
         base.Start();
         Init();

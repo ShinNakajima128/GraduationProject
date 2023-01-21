@@ -890,6 +890,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""1010b377-0f3b-476c-a456-bd7345254300"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftCrossKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""eecdc2b9-8c4b-4473-9527-6d7338bee6f8"",
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
