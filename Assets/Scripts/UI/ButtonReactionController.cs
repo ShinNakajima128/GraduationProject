@@ -19,6 +19,8 @@ public class ButtonReactionController : MonoBehaviour
 
     #region private
     EventTrigger _trigger;
+
+    Transform _cursorImageTrans = default;
     #endregion
     #region public
     #endregion
@@ -45,6 +47,7 @@ public class ButtonReactionController : MonoBehaviour
 
     void OnSelectEvent()
     {
+        ButtonCursor.MoveCursor(new Vector3(transform.position.x + 2.5f, transform.position.y + 2.5f, transform.position.z), transform);
         transform.DOScale(_animScale, _animTime);
     }
     void OnDeselectEvent()

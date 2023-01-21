@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UniRx;
 using UniRx.Triggers;
 
@@ -23,6 +24,7 @@ public class TitleManager : MonoBehaviour
     [Tooltip("É^ÉCÉgÉãâÊñ ÇÃåªç›ÇÃUIÇÃéÌóﬁ")]
     [SerializeField]
     TitleUIType _currentTitleType = default;
+
     #endregion
 
     #region private
@@ -48,8 +50,11 @@ public class TitleManager : MonoBehaviour
 
     IEnumerator Start()
     {
+        TransitionManager.FadeIn(FadeType.Black_default, 0f);
+        yield return new WaitForSeconds(1.5f);
+
         AudioManager.PlayBGM(BGMType.Title);
-        TransitionManager.FadeOut(FadeType.Normal);
+        TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
         ButtonSetup();
 
         yield return null;
