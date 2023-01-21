@@ -89,6 +89,9 @@ public class BallController : MonoBehaviour, IThrowable
             var normal = collision.contacts[0].normal;
             // ”½ŽËƒxƒNƒgƒ‹‚ðŽæ“¾
             Vector3 result = Vector3.Reflect(_direction, normal);
+
+            transform.forward = result;
+
             _rb.velocity = result;
             return;
         }
