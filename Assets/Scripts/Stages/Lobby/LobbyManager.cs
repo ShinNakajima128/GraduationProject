@@ -216,10 +216,10 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
-                TransitionManager.FadeOut(FadeType.Normal);
+                TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
 
                 //画面フェード終了を待機
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(2.0f);
 
                 //未クリア且つステージをクリアしている場合は時計の演出を行う
                 if (!GameManager.CheckStageStatus() && GameManager.IsClearStaged)
@@ -228,9 +228,8 @@ public class LobbyManager : MonoBehaviour
                 }
                 else
                 {
-                    TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
                     StartCoroutine(OnPlayerMovable(1.5f));
-                    Debug.Log("クリア済みステージ");
+                    Debug.Log("クリア済みステージ、またはステージ失敗");
                 }
             }
         }

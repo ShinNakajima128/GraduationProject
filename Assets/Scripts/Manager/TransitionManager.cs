@@ -109,7 +109,7 @@ public class TransitionManager : MonoBehaviour
                     Instance._fadeImage.enabled = true;
                     Instance._fadeMaskImage.UpdateMaskTexture(cheshireMaskData.MaskTexture);
                     Instance._fadeMaskImage.material.color = cheshireMaskData.MaskColor;
-                    Instance._fade.FadeOut(Instance._fadeTime, action);
+                    Instance._fade.FadeOut(fadeTime, action);
                 });
                 break;
             case FadeType.Mask_Heart:
@@ -120,7 +120,7 @@ public class TransitionManager : MonoBehaviour
                     Instance._fadeImage.enabled = true;
                     Instance._fadeMaskImage.UpdateMaskTexture(heartMaskData.MaskTexture);
                     Instance._fadeMaskImage.material.color = heartMaskData.MaskColor;
-                    Instance._fade.FadeOut(Instance._fadeTime, action);
+                    Instance._fade.FadeOut(fadeTime, action);
                 });
                 break;
             case FadeType.Mask_KeyHole:
@@ -131,7 +131,7 @@ public class TransitionManager : MonoBehaviour
                     Instance._fadeImage.enabled = true;
                     Instance._fadeMaskImage.UpdateMaskTexture(keyholeMaskData.MaskTexture);
                     Instance._fadeMaskImage.material.color = keyholeMaskData.MaskColor;
-                    Instance._fade.FadeOut(Instance._fadeTime, action);
+                    Instance._fade.FadeOut(fadeTime, action);
                 });
                 break;
             default:
@@ -191,7 +191,7 @@ public class TransitionManager : MonoBehaviour
                 Instance._fadeImage.DOFade(0f, 0.05f)
                                    .OnComplete(() =>
                                    { 
-                                       Instance._fade.FadeIn(Instance._fadeTime, action);
+                                       Instance._fade.FadeIn(fadeTime, action);
                                    });
                 break;
             case FadeType.Mask_Heart:
@@ -202,7 +202,7 @@ public class TransitionManager : MonoBehaviour
                 Instance._fadeImage.DOFade(0f, 0.05f)
                                    .OnComplete(() =>
                                    {
-                                       Instance._fade.FadeIn(Instance._fadeTime, action);
+                                       Instance._fade.FadeIn(fadeTime, action);
                                    });
                 break;
             case FadeType.Mask_KeyHole:
@@ -213,7 +213,7 @@ public class TransitionManager : MonoBehaviour
                 Instance._fadeImage.DOFade(0f, 0.05f)
                                    .OnComplete(() =>
                                    {
-                                       Instance._fade.FadeIn(Instance._fadeTime, action);
+                                       Instance._fade.FadeIn(fadeTime, action);
                                    });
                 break;
             default:
