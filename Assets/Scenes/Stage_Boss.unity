@@ -3079,6 +3079,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentGaugeState: 3
   _hpGaugeUITrans: {fileID: 1344773603}
+  _hpGaugeImage: {fileID: 0}
+  _gaugeSprites: []
   _aliceHp:
   - {fileID: 1863590995}
   - {fileID: 739062264}
@@ -5816,7 +5818,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959721370}
-  m_LocalRotation: {x: 0.036581103, y: -0.0000000042987156, z: 1.573571e-10, w: 0.9993307}
+  m_LocalRotation: {x: 0.036581103, y: 0.0000000042987156, z: -1.573571e-10, w: 0.9993307}
   m_LocalPosition: {x: 0, y: 1.55, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7574,62 +7576,62 @@ MonoBehaviour:
       MoveSpeed: 2
       ChaseTime: 2
       FallTime: 1.5
-      CoolTime: 2
-      BounceCount: 1
+      CoolTime: 1.75
+      BounceCount: 0
     - Phase: 1
-      MoveSpeed: 3
-      ChaseTime: 1.5
+      MoveSpeed: 2.5
+      ChaseTime: 1.75
       FallTime: 1
-      CoolTime: 1.5
+      CoolTime: 1.45
       BounceCount: 1
     - Phase: 2
-      MoveSpeed: 4
-      ChaseTime: 1
+      MoveSpeed: 2.75
+      ChaseTime: 1.5
       FallTime: 0.7
       CoolTime: 1
-      BounceCount: 2
+      BounceCount: 0
   - PramName: "\u3075\u3064\u3046"
     DifficultyType: 1
     PhaseParameters:
     - Phase: 0
-      MoveSpeed: 2
-      ChaseTime: 2
-      FallTime: 1.5
-      CoolTime: 2
-      BounceCount: 1
-    - Phase: 1
-      MoveSpeed: 3
-      ChaseTime: 1.5
-      FallTime: 1
+      MoveSpeed: 2.35
+      ChaseTime: 1.82
+      FallTime: 1.35
       CoolTime: 1.5
-      BounceCount: 2
+      BounceCount: 0
+    - Phase: 1
+      MoveSpeed: 2.85
+      ChaseTime: 1.65
+      FallTime: 0.97
+      CoolTime: 1.35
+      BounceCount: 1
     - Phase: 2
-      MoveSpeed: 4
-      ChaseTime: 1
-      FallTime: 0.7
-      CoolTime: 1
-      BounceCount: 3
+      MoveSpeed: 3
+      ChaseTime: 1.35
+      FallTime: 0.715
+      CoolTime: 1.15
+      BounceCount: 2
   - PramName: "\u3080\u305A\u304B\u3057\u3044"
     DifficultyType: 2
     PhaseParameters:
     - Phase: 0
-      MoveSpeed: 2
-      ChaseTime: 2
-      FallTime: 1.5
-      CoolTime: 2
-      BounceCount: 1
+      MoveSpeed: 3.12
+      ChaseTime: 1.125
+      FallTime: 1.25
+      CoolTime: 1.15
+      BounceCount: 0
     - Phase: 1
       MoveSpeed: 3
-      ChaseTime: 1.5
-      FallTime: 1
-      CoolTime: 1.5
-      BounceCount: 2
+      ChaseTime: 0.95
+      FallTime: 0.845
+      CoolTime: 0.95
+      BounceCount: 1
     - Phase: 2
       MoveSpeed: 4
-      ChaseTime: 1
-      FallTime: 0.7
-      CoolTime: 1
-      BounceCount: 3
+      ChaseTime: 0.82
+      FallTime: 0.45
+      CoolTime: 0.82
+      BounceCount: 2
   _cameraBlendTime: 2
   _closeupTime: 0.25
   _cameraBrain: {fileID: 959721375}
@@ -7783,6 +7785,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5643527729325988398, guid: 6b0cd31c75b2f5d4fb81f1165c127e1b,
         type: 3}
+      propertyPath: _itemGeneratePercent
+      value: 0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5643527729325988398, guid: 6b0cd31c75b2f5d4fb81f1165c127e1b,
+        type: 3}
       propertyPath: _sometimeGenerateInterval
       value: 0.5
       objectReference: {fileID: 0}
@@ -7852,6 +7859,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _currentClockState
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
+        type: 3}
+      propertyPath: _currentGameDifficultyType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1610790708330346727, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
@@ -11652,7 +11664,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2086079217}
-  m_LocalRotation: {x: 0.0365811, y: -0.000000002149358, z: 7.867853e-11, w: 0.9993307}
+  m_LocalRotation: {x: 0.0365811, y: 0.000000002149358, z: -7.867853e-11, w: 0.9993307}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
