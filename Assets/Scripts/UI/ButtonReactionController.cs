@@ -13,14 +13,20 @@ public class ButtonReactionController : MonoBehaviour
     [SerializeField]
     float _animScale = 1.3f;
 
+    [Tooltip("カーソルのX座標の補正値")]
+    [SerializeField]
+    float _correctionValue_x = 2.5f;
+
+    [Tooltip("カーソルのY座標の補正値")]
+    [SerializeField]
+    float _correctionValue_y = 2.5f;
+
     [SerializeField]
     float _animTime = 0.25f;
     #endregion
 
     #region private
     EventTrigger _trigger;
-
-    Transform _cursorImageTrans = default;
     #endregion
     #region public
     #endregion
@@ -47,7 +53,10 @@ public class ButtonReactionController : MonoBehaviour
 
     void OnSelectEvent()
     {
-        ButtonCursor.MoveCursor(new Vector3(transform.position.x + 2.5f, transform.position.y + 2.5f, transform.position.z), transform);
+        ButtonCursor.MoveCursor(new Vector3(transform.position.x + _correctionValue_x, 
+                                            transform.position.y + _correctionValue_y, 
+                                            transform.position.z), 
+                                            transform);
         transform.DOScale(_animScale, _animTime);
     }
     void OnDeselectEvent()
