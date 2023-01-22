@@ -17,4 +17,9 @@ public class Stage3AnimationEvent : MonoBehaviour
     {
         _player.LookForForward();
     }
+
+    public void OnStandby()
+    {
+        _player.EndStandby();
+    }
 }

@@ -31,9 +31,20 @@ public class Stage3PlayerController : MonoBehaviour
     public Action OnCircleButtonStarted { get; private set; }
 
     /// <summary>
+    /// 構え終わっているか
+    /// </summary>
+    private bool IsStandbyed = false;
+
+    /// <summary>
+    /// 構え途中か
+    /// </summary>
+    private bool IsStanding = false;
+
+    /// <summary>
     /// 投げ終わったか
     /// </summary>
     public bool IsThrowed { get; private set; } = false;
+
     /// <summary>
     /// 投げられるか
     /// </summary>
@@ -122,7 +133,25 @@ public class Stage3PlayerController : MonoBehaviour
         _pInput.actions["TurnRight"].started += OnToRight;
         _pInput.actions["TurnRight"].canceled += OnToRight;
 
-        _pInput.actions["Throw"].started += OnThrow;
+        // 押したとき
+        _pInput.actions["Throw"].started += OnStandby;
+        // 離したとき
+        _pInput.actions["Throw"].canceled += OnThrow;
+    }
+
+    /// <summary>
+    /// 構える
+    /// </summary>
+    private void OnStandby(InputAction.CallbackContext obj)
+    {
+        if (!CanControl) return;
+
+        // 構えている最中or構え終わっている時は呼ばれない
+        if (IsStandbyed == false && IsStanding == false)
+        {
+            _animator.CrossFadeInFixedTime("Swing_Standby", 0.2f);
+            IsStanding = true;
+        }
     }
 
     /// <summary>
@@ -186,6 +215,7 @@ public class Stage3PlayerController : MonoBehaviour
 
     /// <summary>
     /// AnimationEventに呼ばれる
+    /// ※正確にはStage3AnimationEventから呼ばれる
     /// </summary>
     public void Throw()
     {
@@ -199,6 +229,16 @@ public class Stage3PlayerController : MonoBehaviour
 
         ball.Throw(ballPosition);
         IsThrowed = true;
+    }
+
+    /// <summary>
+    /// AnimationEventに呼ばれる
+    /// ※正確にはStage3AnimationEventから呼ばれる
+    /// </summary>
+    public void EndStandby()
+    {
+        IsStanding = false;
+        IsStandbyed = true;
     }
 
     /// <summary>
@@ -221,6 +261,12 @@ public class Stage3PlayerController : MonoBehaviour
     #region InputSystem CallBacks
     public void OnMove(InputAction.CallbackContext context)
     {
+        // 構え途中or構え終わっていたら操作できなくする
+        if (IsStanding || IsStandbyed)
+        {
+            return;
+        }
+
         if (!CanControl)
         {
             InputedMoveValue = Vector2.zero;
@@ -241,6 +287,12 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnTurnLeft(InputAction.CallbackContext context)
     {
+        // 構え途中or構え終わっていたら操作できなくする
+        if (IsStanding || IsStandbyed)
+        {
+            return;
+        }
+
         if (!CanControl) return;
 
         if (context.started)
@@ -255,6 +307,12 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnToRight(InputAction.CallbackContext context)
     {
+        // 構え途中or構え終わっていたら操作できなくする
+        if (IsStanding || IsStandbyed)
+        {
+            return;
+        }
+
         if (!CanControl) return;
 
         if (context.started)
@@ -267,20 +325,14 @@ public class Stage3PlayerController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 〇ボタンが押された時
-    /// </summary>
     private void OnThrow(InputAction.CallbackContext context)
     {
-        //OnCircleButtonStarted?.Invoke();
+        if (!CanControl || !IsStandbyed) return;
 
-        if (!CanControl) return;
-
-        if (context.started)
+        if (context.canceled)
         {
-            Debug.Log("Push");
             CanControl = false;
-            _animator.Play("Swing");
+            _animator.CrossFadeInFixedTime("Swing_", 0.2f);
         }
     }
 
@@ -300,6 +352,6 @@ public class Stage3PlayerController : MonoBehaviour
         IsThrowed = false;
         transform.localPosition = _startPos;
     }
-    
+
     #endregion
 }

@@ -30,6 +30,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     private void Start()
     {
         LobbyManager.Instance.PlayerMove += PlayerMovable;
+        StageDescriptionUI.Instance.OpenTutorialAction += PlayerMovable;
         EventManager.ListenEvents(Events.Alice_Yes, () => { OnAnimation(AliceDirectionAnimType.Yes); });
         EventManager.ListenEvents(Events.Alice_No, () => { OnAnimation(AliceDirectionAnimType.No); });
         EventManager.ListenEvents(Events.Alice_Surprised, () => { OnAnimation(AliceDirectionAnimType.Surprised); });
