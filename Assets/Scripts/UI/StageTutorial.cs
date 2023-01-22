@@ -40,7 +40,7 @@ public class StageTutorial : MonoBehaviour
 
     [Header("Description")]
     [SerializeField]
-    GameObject[] _descriptionPanels = default;
+    Image[] _descriptionImages = default;
     #endregion
 
     #region private
@@ -48,7 +48,6 @@ public class StageTutorial : MonoBehaviour
     bool _isPressed = false;
     int _currentPageIndex = 0;
     int _currentPageLength = 0;
-    Dictionary<DescriptionType, GameObject> _descriptionPanelDic = new Dictionary<DescriptionType, GameObject>();
     #endregion
 
     #region public
@@ -62,13 +61,6 @@ public class StageTutorial : MonoBehaviour
     private void Awake()
     {
         TryGetComponent(out _tutorialGroup);
-
-        //説明画面のDictionaryを作成
-        for (int i = 0; i < (int)DescriptionType.Num; i++)
-        {
-            _descriptionPanelDic.Add((DescriptionType)i, _descriptionPanels[i]);
-            _descriptionPanelDic[(DescriptionType)i].SetActive(false);
-        }
     }
 
     private void Start()
@@ -146,9 +138,9 @@ public class StageTutorial : MonoBehaviour
             image.enabled = false;
         }
 
-        foreach (var panel in _descriptionPanelDic)
+        foreach (var image in _descriptionImages)
         {
-            panel.Value.SetActive(false);
+            image.enabled = false;
         }
 
         //現在のページを知らせるアイコンのセットアップ
@@ -171,6 +163,7 @@ public class StageTutorial : MonoBehaviour
             _pageIconsTrans[i].gameObject.SetActive(true);
         }
         _tutorialImages[_currentPageIndex].enabled = true;
+        _descriptionImages[_currentPageIndex].enabled = true;
         SetCurrentPageIcon();
     }
 
@@ -204,8 +197,8 @@ public class StageTutorial : MonoBehaviour
         _tutorialImages[_currentPageIndex + 1].enabled = false;
 
         //右側の説明画面を切り替える
-        _descriptionPanelDic[(DescriptionType)_currentPageIndex].SetActive(true);
-        _descriptionPanelDic[(DescriptionType)_currentPageIndex + 1].SetActive(false);
+        _descriptionImages[_currentPageIndex].enabled = true;
+        _descriptionImages[_currentPageIndex + 1].enabled = false;
 
         _currentPageIcon.transform.position = _pageIconsTrans[_currentPageIndex].position;
         _crossKeyImagesTrans[0].transform.DOScale(1.2f, 0.1f)
@@ -236,8 +229,8 @@ public class StageTutorial : MonoBehaviour
         _tutorialImages[_currentPageIndex - 1].enabled = false;
 
         //右側の説明画面を切り替える
-        _descriptionPanelDic[(DescriptionType)_currentPageIndex].SetActive(true);
-        _descriptionPanelDic[(DescriptionType)_currentPageIndex - 1].SetActive(false);
+        _descriptionImages[_currentPageIndex].enabled = true;
+        _descriptionImages[_currentPageIndex - 1].enabled = false;
 
         _currentPageIcon.transform.position = _pageIconsTrans[_currentPageIndex].position;
         _crossKeyImagesTrans[1].transform.DOScale(1.2f, 0.1f)
@@ -256,11 +249,10 @@ public class StageTutorial : MonoBehaviour
 
     void SetDescription(StageTutorialData data)
     {
-        _descriptionPanelDic[DescriptionType.GameDescription].SetActive(true);
-        //for (int i = 0; i < data.DescriptionDatas.Length; i++)
-        //{
-
-        //}
+        for (int i = 0; i < data.DescriptionDatas.Length; i++)
+        {
+            _descriptionImages[i].sprite = data.DescriptionDatas[i].DescriptionSprite;
+        }
     }
 
     /// <summary>
@@ -302,8 +294,7 @@ public struct StageDescriptionData
     public string DescriptionName;
     public DescriptionType DescriptionType;
     public Sprite PageSprite;
-    [TextArea(1, 5)]
-    public string DescriptionText;
+    public Sprite DescriptionSprite;
 }
 
 /// <summary>
