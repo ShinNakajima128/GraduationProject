@@ -665,6 +665,24 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Option"",
+                    ""type"": ""Button"",
+                    ""id"": ""8818cf27-7458-4243-a475-43f9ff16f3b5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""15d08270-e3e4-4907-b193-f91df92f0ce4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -964,6 +982,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""X"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec032fb1-c701-4b95-8327-106112b24207"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Option"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d96d665f-abd6-4e19-8653-8f045ade8544"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1115,6 +1155,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_Y = m_UIInput.FindAction("Y", throwIfNotFound: true);
         m_UIInput_LeftCrossKey = m_UIInput.FindAction("LeftCrossKey", throwIfNotFound: true);
         m_UIInput_RightCrossKey = m_UIInput.FindAction("RightCrossKey", throwIfNotFound: true);
+        m_UIInput_Option = m_UIInput.FindAction("Option", throwIfNotFound: true);
+        m_UIInput_Exit = m_UIInput.FindAction("Exit", throwIfNotFound: true);
         // Stage_Boss
         m_Stage_Boss = asset.FindActionMap("Stage_Boss", throwIfNotFound: true);
         m_Stage_Boss_Move = m_Stage_Boss.FindAction("Move", throwIfNotFound: true);
@@ -1376,6 +1418,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_Y;
     private readonly InputAction m_UIInput_LeftCrossKey;
     private readonly InputAction m_UIInput_RightCrossKey;
+    private readonly InputAction m_UIInput_Option;
+    private readonly InputAction m_UIInput_Exit;
     public struct UIInputActions
     {
         private @PlayerControls m_Wrapper;
@@ -1390,6 +1434,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Y => m_Wrapper.m_UIInput_Y;
         public InputAction @LeftCrossKey => m_Wrapper.m_UIInput_LeftCrossKey;
         public InputAction @RightCrossKey => m_Wrapper.m_UIInput_RightCrossKey;
+        public InputAction @Option => m_Wrapper.m_UIInput_Option;
+        public InputAction @Exit => m_Wrapper.m_UIInput_Exit;
         public InputActionMap Get() { return m_Wrapper.m_UIInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1429,6 +1475,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @RightCrossKey.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRightCrossKey;
                 @RightCrossKey.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRightCrossKey;
                 @RightCrossKey.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRightCrossKey;
+                @Option.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnOption;
+                @Option.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnOption;
+                @Option.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnOption;
+                @Exit.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnExit;
+                @Exit.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnExit;
+                @Exit.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnExit;
             }
             m_Wrapper.m_UIInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -1463,6 +1515,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @RightCrossKey.started += instance.OnRightCrossKey;
                 @RightCrossKey.performed += instance.OnRightCrossKey;
                 @RightCrossKey.canceled += instance.OnRightCrossKey;
+                @Option.started += instance.OnOption;
+                @Option.performed += instance.OnOption;
+                @Option.canceled += instance.OnOption;
+                @Exit.started += instance.OnExit;
+                @Exit.performed += instance.OnExit;
+                @Exit.canceled += instance.OnExit;
             }
         }
     }
@@ -1543,6 +1601,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnY(InputAction.CallbackContext context);
         void OnLeftCrossKey(InputAction.CallbackContext context);
         void OnRightCrossKey(InputAction.CallbackContext context);
+        void OnOption(InputAction.CallbackContext context);
+        void OnExit(InputAction.CallbackContext context);
     }
     public interface IStage_BossActions
     {

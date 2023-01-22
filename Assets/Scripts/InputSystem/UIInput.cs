@@ -18,6 +18,8 @@ public class UIInput : MonoBehaviour
     public static bool Y => Instance._input.actions["Y"].WasPressedThisFrame();
     public static bool LeftCrossKey => Instance._input.actions["LeftCrossKey"].WasPressedThisFrame();
     public static bool RightCrossKey => Instance._input.actions["RightCrossKey"].WasPressedThisFrame();
+    public static bool Option => Instance._input.actions["Option"].WasPressedThisFrame();
+    public static bool Exit => Instance._input.actions["Exit"].WasPressedThisFrame();
     #endregion
 
     private void Awake()
