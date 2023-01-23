@@ -229,6 +229,7 @@ public class Stage3PlayerController : MonoBehaviour
 
         ball.Throw(ballPosition);
         IsThrowed = true;
+        IsStandbyed = false;
     }
 
     /// <summary>

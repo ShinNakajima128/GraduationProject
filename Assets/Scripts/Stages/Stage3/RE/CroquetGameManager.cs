@@ -204,6 +204,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                     }
                 }
 
+                yield return new WaitForSeconds(0.2f);
+
                 _player.BeginControl(); //“ü—ÍŽó•tŠJŽn
 
                 yield return new WaitUntil(() => _player.IsThrowed);
