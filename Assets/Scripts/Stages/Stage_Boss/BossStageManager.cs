@@ -285,8 +285,6 @@ public class BossStageManager : StageGame<BossStageManager>
 
             Debug.Log("ボスが被弾。バトルフェイズを終了し、演出を開始");
 
-            _hpPanel.alpha = 0;
-            HPManager.Instance.RecoveryHP();
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
             _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
 
@@ -298,6 +296,8 @@ public class BossStageManager : StageGame<BossStageManager>
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
         }
+
+        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage_Boss, MessageType.GetStill_Stage_Boss);
 
         //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
@@ -321,8 +321,10 @@ public class BossStageManager : StageGame<BossStageManager>
             yield break;
         }
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.5f);
 
+        _hpPanel.alpha = 0;
+        HPManager.Instance.RecoveryHP();
         _bossCtrl.PlayBossAnimation(BossAnimationType.Jump);
         _bossCtrl.transform.DOLookAt(new Vector3(_bossDirectionTrans.position.x, 0f, _bossDirectionTrans.position.z), 0.5f);
 
