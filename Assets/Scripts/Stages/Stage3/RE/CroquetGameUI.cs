@@ -94,6 +94,11 @@ public class CroquetGameUI : MonoBehaviour
                 _hpGroup.alpha = 1;
                 break;
             default:
+                _orderGroup.alpha = 0;
+                _inGameGroup.alpha = 0;
+                _goalDirectionGroup.alpha = 0;
+
+                _hpGroup.alpha = 0;
                 break;
         }
     }

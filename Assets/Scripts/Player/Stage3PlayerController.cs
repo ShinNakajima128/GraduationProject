@@ -151,6 +151,7 @@ public class Stage3PlayerController : MonoBehaviour
         {
             _animator.CrossFadeInFixedTime("Swing_Standby", 0.2f);
             IsStanding = true;
+            InputedMoveValue = Vector2.zero;
         }
     }
 

@@ -25,8 +25,13 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     CroquetGameParameter[] _gameParameters = default;
 
+    [Header("Objects")]
     [SerializeField]
-    Transform[] _golaEffectTrans = default;
+    Transform[] _goalEffectTrans = default;
+
+    [Tooltip("お題達成時の花火エフェクトをまとめたオブジェクト")]
+    [SerializeField]
+    GameObject _fireWorkObject = default;
 
     [Header("Components")]
     [SerializeField]
@@ -97,6 +102,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
+        _fireWorkObject.SetActive(false);
         _currentStrikeNum = 0;
         _currentRedStrileNum = 0;
         _currentBlackStrikeNum = 0;
@@ -243,6 +249,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         GameManager.SaveStageResult(true);
                         yield return new WaitForSeconds(2.0f);
                         _gameUI.SetResultText("");
+                        _gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
                     }
                     else
@@ -277,6 +284,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         {
             _successCount++;
             OnGoalEffect();
+            _fireWorkObject.SetActive(true);
         }
         else
         {
@@ -346,9 +354,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// </summary>
     void OnGoalEffect()
     {
-        for (int i = 0; i < _golaEffectTrans.Length; i++)
+        for (int i = 0; i < _goalEffectTrans.Length; i++)
         {
-            EffectManager.PlayEffect(EffectType.Stage3_Goal, _golaEffectTrans[i]);
+            EffectManager.PlayEffect(EffectType.Stage3_Goal, _goalEffectTrans[i]);
         }
     }
 
