@@ -165,7 +165,7 @@ public class Pause : MonoBehaviour
         }
     }
 
-    void PauseActivate(bool isActivate)
+    public void PauseActivate(bool isActivate)
     {
         if (isActivate)
         {
