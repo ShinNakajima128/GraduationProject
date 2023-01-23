@@ -239,6 +239,8 @@ public class LobbyManager : MonoBehaviour
             AudioManager.PlayBGM(BGMType.Lobby);
             _provider.enabled = true;
             PlayerMove?.Invoke(true);
+
+            GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
         }
 
         GameManager.SaveStageResult(false);
