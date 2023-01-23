@@ -78,7 +78,6 @@ public class QuizController : MonoBehaviour
             b.Button.onClick.AddListener(() =>
             {
                 _isChoiced = true;
-                HighlightButton();
                 EventSystem.current.firstSelectedGameObject = null;
             });
         }
@@ -155,6 +154,7 @@ public class QuizController : MonoBehaviour
         }
 
         _questionText.text = "";
+        HighlightButton();
 
         if (Judge())
         {

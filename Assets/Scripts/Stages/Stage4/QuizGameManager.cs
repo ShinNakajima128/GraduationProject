@@ -84,6 +84,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     GameObject _gameStartIcon = default;
 
+    [SerializeField]
+    Image[] _infoImages = default;
+
     [Header("Camera")]
     [SerializeField]
     CinemachineVirtualCamera _quizCamera = default;
@@ -140,9 +143,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
     public override void OnGameStart()
     {
         _informationText.text = "";
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
         LetterboxController.ActivateLetterbox(true);
         HPManager.Instance.RecoveryHP();
-        HPManager.Instance.ChangeHPValue(2);
 
         OnGameSetUp();
 
@@ -188,12 +192,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
-        _informationText.text = "スタート!";
+        //_informationText.text = "スタート!";
+        _infoImages[0].enabled = true;
 
         yield return new WaitForSeconds(1.5f);
 
         action?.Invoke();
-        _informationText.text = "";
+        _infoImages[0].enabled = false;
+        //_informationText.text = "";
     }
 
     protected override IEnumerator GameEndCoroutine(Action action = null)
@@ -359,10 +365,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
         if (_corectNum >= _requiredCorrectNum)
         {
-            _informationText.text = "ステージクリア！";
+            //_informationText.text = "ステージクリア！";
+            _infoImages[1].enabled = true;
             GameManager.SaveStageResult(true);
 
             yield return new WaitForSeconds(2.0f);
+            _infoImages[1].enabled = false;
             _informationText.text = "";
 
             yield return GameManager.GetStillDirectionCoroutine(Stages.Stage4, AliceProject.MessageType.GetStill_Stage4);
