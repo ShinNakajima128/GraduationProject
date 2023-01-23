@@ -22,6 +22,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     Text _infoText = default;
 
     [SerializeField]
+    Image[] _infoImages = default;
+
+    [SerializeField]
     CanvasGroup _hpGroup = default;
 
     [SerializeField]
@@ -88,6 +91,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     /// <param name="action"> コルーチン終了時のAction </param>
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
+        LetterboxController.ActivateLetterbox(true, 0f);
         yield return _stage2Cameras.StartDirectionCoroutine();
 
         yield return new WaitForSeconds(0.5f);
@@ -104,15 +108,19 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
         yield return new WaitForSeconds(1.4f);
 
+        LetterboxController.ActivateLetterbox(false, 1.5f);
         _stage2Cameras.ChangeCamera(Stage2CameraType.Ingame);
 
         yield return new WaitForSeconds(2.5f);
 
-        _infoText.text = "スタート！";
+        //_infoText.text = "スタート！";
+        _infoImages[0].enabled = true;
 
         yield return new WaitForSeconds(2.0f);
 
-        _infoText.text = "";
+        //_infoText.text = "";
+        _infoImages[0].enabled = false;
+
         StartCoroutine(InGameCoroutine());
     }
 
@@ -242,11 +250,15 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 _juggeInfo[0].SetActive(false);
                 _juggeInfo[1].SetActive(false);
                 _nextInfo.SetActive(false);
-                _infoText.text = "ステージクリア！";
+                //_infoText.text = "ステージクリア！";
+                _infoImages[1].enabled = true;
 
                 yield return new WaitForSeconds(2.0f);
 
-                _infoText.text = "";
+                //_infoText.text = "";
+                _infoImages[1].enabled = false;
+                _hpGroup.alpha = 0;
+
                 yield return GameManager.GetStillDirectionCoroutine(Stages.Stage2, MessageType.GetStill_Stage2);
 
                 GameManager.SaveStageResult(true);
@@ -268,6 +280,8 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         HPManager.Instance.RecoveryHP();
 
         _teacupManager.RandomHideMouse();
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
         _infoText.text = "";
         _hpGroup.alpha = 0;
         _juggeInfo[0].SetActive(false);
