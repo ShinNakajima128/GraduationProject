@@ -44,6 +44,7 @@ public class StageDescriptionUI : MonoBehaviour
 
     #region property
     public static StageDescriptionUI Instance { get; private set; }
+    public bool IsActived => _isActiveUI;
     #endregion
 
     private void Awake()
@@ -83,6 +84,10 @@ public class StageDescriptionUI : MonoBehaviour
         _isActiveUI = false;
     }
 
+    public void ActiveButton()
+    {
+        _descriptionButtons[0].Select();
+    }
     void ButtonSetup()
     {
         _descriptionButtons[0].gameObject.TryGetComponent<EventTrigger>(out var trigger);
@@ -109,7 +114,7 @@ public class StageDescriptionUI : MonoBehaviour
             if (_isActiveUI)
             {
                 //チュートリアル画面を開いている場合は処理を行わない
-                if (_tutorial.IsActivateTutorial || _isButtonClicking)
+                if (_tutorial.IsActivateTutorial || _isButtonClicking || UIManager.Instance.IsAnyPanelOpened)
                 {
                     return;
                 }

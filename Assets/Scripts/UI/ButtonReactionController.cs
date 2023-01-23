@@ -47,10 +47,12 @@ public class ButtonReactionController : MonoBehaviour
         _buttonText = GetComponentInChildren<Text>();
         _textOutline = GetComponentInChildren<Outline>();
 
-        _buttonBackground.sprite = _buttonData.DeselectSprite;
-        _buttonText.color = _buttonData.DeselectTextColor;
-        _textOutline.effectColor = _buttonData.TextOutlineColor;
-
+        if (_buttonData != null)
+        {
+            _buttonBackground.sprite = _buttonData.DeselectSprite;
+            _buttonText.color = _buttonData.DeselectTextColor;
+            _textOutline.effectColor = _buttonData.TextOutlineColor;
+        }
     }
     private void Start()
     {
@@ -73,13 +75,21 @@ public class ButtonReactionController : MonoBehaviour
                                             transform.position.z), 
                                             transform);
         transform.DOScale(_animScale, _animTime);
-        _buttonBackground.sprite = _buttonData.SelectSprite;
-        _buttonText.color = _buttonData.SelectTextColor;
+
+        if (_buttonData != null)
+        {
+            _buttonBackground.sprite = _buttonData.SelectSprite;
+            _buttonText.color = _buttonData.SelectTextColor;
+        }
     }
     void OnDeselectEvent()
     {
         transform.DOScale(1.0f, _animTime);
-        _buttonBackground.sprite = _buttonData.DeselectSprite;
-        _buttonText.color = _buttonData.DeselectTextColor;
+
+        if (_buttonData != null)
+        {
+            _buttonBackground.sprite = _buttonData.DeselectSprite;
+            _buttonText.color = _buttonData.DeselectTextColor;
+        }
     }
 }

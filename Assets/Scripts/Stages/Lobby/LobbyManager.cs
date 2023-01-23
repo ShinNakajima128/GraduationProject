@@ -106,6 +106,7 @@ public class LobbyManager : MonoBehaviour
     /// <summary> ドアから離れた時のAction </summary>
     public Action StepAwayDoor { get; set; }
     public Action<bool> PlayerMove { get; set; }
+    public Action<bool> IsUIOperate { get; set; }
     public bool IsApproached => _isApproached;
     public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
     #endregion
@@ -114,6 +115,7 @@ public class LobbyManager : MonoBehaviour
     {
         Instance = this;
         _stageNameText.text = "";
+        PlayerMove += CameraMovable;
     }
 
     IEnumerator Start()
@@ -142,8 +144,8 @@ public class LobbyManager : MonoBehaviour
             TransitionManager.FadeIn(FadeType.Normal, 0f);
             yield return null;
 
-            _provider.enabled = false;
             PlayerMove?.Invoke(false);
+            IsUIOperate?.Invoke(false);
 
             yield return new WaitForSeconds(1.5f);
 
@@ -237,8 +239,8 @@ public class LobbyManager : MonoBehaviour
         {
             TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
             AudioManager.PlayBGM(BGMType.Lobby);
-            _provider.enabled = true;
             PlayerMove?.Invoke(true);
+            IsUIOperate?.Invoke(true);
 
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
         }
@@ -351,6 +353,11 @@ public class LobbyManager : MonoBehaviour
         AudioManager.PlayBGM(BGMType.Lobby_MeetingCheshire);
     }
 
+    void CameraMovable(bool isMovable)
+    {
+        _provider.enabled = isMovable;
+    }
+
     /// <summary>
     /// ロビーの初回到達フラグをリセット
     /// </summary>
@@ -399,7 +406,8 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         PlayerMove?.Invoke(true);
-        _provider.enabled = true;
+        IsUIOperate?.Invoke(true);
+        
     }
 
     /// <summary>

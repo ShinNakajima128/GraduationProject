@@ -175,10 +175,12 @@ public class StageTutorial : MonoBehaviour
     {
         if (isActivate)
         {
+            UIManager.ActivatePanel(UIPanelType.Tutorial);
             _tutorialGroup.alpha = 1;
         }
         else
         {
+            UIManager.InactivatePanel(UIPanelType.Tutorial);
             _tutorialGroup.alpha = 0;
             PlayButtonPressAction = null;
         }

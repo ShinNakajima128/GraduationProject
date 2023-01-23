@@ -28,10 +28,3 @@ public class UIInput : MonoBehaviour
         TryGetComponent(out _input);
     }
 }
-public enum GamepadButtonType
-{
-    A,
-    B,
-    X,
-    Y
-}

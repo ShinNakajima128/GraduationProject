@@ -78,6 +78,11 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     void PlayerMovable(bool isMove)
     {
         _isMoving = isMove;
+
+        if (!isMove)
+        {
+            _anim.SetFloat("Move", 0);
+        }
     }
 
     /// <summary>

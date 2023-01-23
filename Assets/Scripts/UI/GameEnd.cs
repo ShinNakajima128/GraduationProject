@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UniRx;
+using UniRx.Triggers;
+
 
 public class GameEnd : MonoBehaviour
 {
@@ -20,6 +23,7 @@ public class GameEnd : MonoBehaviour
 
     #region private
     CanvasGroup _gameEndGroup = default;
+    bool _isPressed = false;
     #endregion
 
     #region public
@@ -31,13 +35,33 @@ public class GameEnd : MonoBehaviour
 
     private void Awake()
     {
+        TryGetComponent(out _gameEndGroup);
         Setup();
+        ButtonSetup();
     }
 
     private void Start()
     {
         EventSystem.current.firstSelectedGameObject = _gameEndButtons[0].gameObject;
         _gameEndButtons[0].Select();
+
+        this.UpdateAsObservable()
+            .Where(_ => !IsActived &&
+                        UIInput.Exit &&
+                        !UIManager.Instance.IsAnyPanelOpened)
+            .Subscribe(_ =>
+            {
+                StartCoroutine(ActivateCoroutine(true));
+            })
+            .AddTo(this);
+
+        //this.UpdateAsObservable()
+        //    .Where(_ => IsActived)
+        //    .Where(_ => UIInput.Exit || UIInput.A)
+        //    .Subscribe(_ =>
+        //    {
+        //        StartCoroutine(ActivateCoroutine(false));
+        //    });
     }
 
     void Setup()
@@ -68,6 +92,19 @@ public class GameEnd : MonoBehaviour
         trigger2.triggers.Add(deselectEntry2);
     }
 
+    void ButtonSetup()
+    {
+        _gameEndButtons[0].onClick.AddListener(() =>
+        {
+            StartCoroutine(ActivateCoroutine(false));
+        });
+
+        _gameEndButtons[1].onClick.AddListener(() =>
+        {
+            TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
+        });
+    }
+
     void OnSelectEvent(int index)
     {
         _cursorImageTrans.SetParent(_gameEndButtons[index].transform);
@@ -77,5 +114,36 @@ public class GameEnd : MonoBehaviour
     void OnDeselectEvent()
     {
 
+    }
+
+    IEnumerator ActivateCoroutine(bool isActivate)
+    {
+        _isPressed = true;
+
+        yield return new WaitForSeconds(0.1f);
+
+        _isPressed = false;
+
+        if (isActivate)
+        {
+            UIManager.ActivatePanel(UIPanelType.GameEnd);
+            LobbyManager.Instance.PlayerMove?.Invoke(false);
+            _gameEndGroup.alpha = 1;
+            EventSystem.current.firstSelectedGameObject = _gameEndButtons[0].gameObject;
+            _gameEndButtons[0].Select();
+            print("ゲーム終了画面ON");
+        }
+        else
+        {
+            UIManager.InactivatePanel(UIPanelType.GameEnd);
+            LobbyManager.Instance.PlayerMove?.Invoke(true);
+
+            if (StageDescriptionUI.Instance.IsActived)
+            {
+                StageDescriptionUI.Instance.ActiveButton();
+            }
+            _gameEndGroup.alpha = 0;
+            print("ゲーム終了画面OFF");
+        }
     }
 }

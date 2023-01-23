@@ -58,9 +58,11 @@ public class AlbumManager : MonoBehaviour
                                              !_isOpened &&
                                              !_isPressed &&
                                              LobbyManager.Instance.CurrentUIState == LobbyUIState.Default &&
+                                             !UIManager.Instance.IsAnyPanelOpened &&
                                              UIInput.X)
                                  .Subscribe(_ =>
                                  {
+                                     UIManager.ActivatePanel(UIPanelType.Album);
                                      ActivateAlbum(true);
                                      Debug.Log("アルバム表示");
                                  })
@@ -72,6 +74,7 @@ public class AlbumManager : MonoBehaviour
                                              UIInput.A)
                                  .Subscribe(_ =>
                                  {
+                                     UIManager.InactivatePanel(UIPanelType.Album);
                                      ActivateAlbum(false);
                                      Debug.Log("アルバム非表示");
                                  })
@@ -189,6 +192,7 @@ public class AlbumManager : MonoBehaviour
     {
         _isPressed = true;
         _isOpened = isOpened;
+        LobbyManager.Instance.PlayerMove?.Invoke(false);
 
         if (_isOpened)
         {
@@ -213,6 +217,12 @@ public class AlbumManager : MonoBehaviour
             _albumGroup.alpha = 0;
             _currentPageIndex = 0;
             LobbyManager.Instance.CurrentUIState = LobbyUIState.Default;
+            LobbyManager.Instance.PlayerMove?.Invoke(true);
+
+            if (StageDescriptionUI.Instance.IsActived)
+            {
+                StageDescriptionUI.Instance.ActiveButton();
+            }
         }
         _isPressed = false;
         yield return null;

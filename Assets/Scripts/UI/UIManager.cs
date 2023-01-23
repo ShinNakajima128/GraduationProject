@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,23 +23,52 @@ public class UIManager : MonoBehaviour
     #region property
     public static UIManager Instance { get; private set; }
     public bool IsCanOpenUI { get; private set; } = false;
+
+    public bool IsAnyPanelOpened => _Panels.Any(p => p.IsOpened);
     #endregion
 
     private void Awake()
     {
         Instance = this;
+
+        for (int i = 0; i < _Panels.Length; i++)
+        {
+            _Panels[i].PanelGroup.alpha = 0;
+            _Panels[i].IsOpened = false;
+        }
     }
 
     private void Start()
     {
         if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
         {
-            LobbyManager.Instance.PlayerMove += ChangeOperateUI;
+            LobbyManager.Instance.IsUIOperate += ChangeOperateUI;
         }
         else
         {
 
         }        
+    }
+
+    public static void ActivatePanel(UIPanelType type)
+    {
+        if (Instance.IsCanOpenUI)
+        {
+            if (Instance.IsAnyPanelOpened)
+            {
+                return;
+            }
+
+            Instance._Panels[(int)type].IsOpened = true;
+        }
+    }
+
+    public static void InactivatePanel(UIPanelType type)
+    {
+        if (Instance.IsCanOpenUI)
+        {
+            Instance._Panels[(int)type].IsOpened = false;
+        }
     }
 
     /// <summary>
@@ -58,6 +88,7 @@ public struct UIPanel
     public string PanelName;
     public CanvasGroup PanelGroup;
     public UIPanelType PanelType;
+    public bool IsOpened;
 }
 
 /// <summary>
@@ -66,6 +97,8 @@ public struct UIPanel
 public enum UIPanelType
 {
     Pause,
+    Album,
+    Tutorial,
     Option,
     GameEnd
 }
