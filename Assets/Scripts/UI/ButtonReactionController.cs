@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
@@ -23,10 +24,16 @@ public class ButtonReactionController : MonoBehaviour
 
     [SerializeField]
     float _animTime = 0.25f;
+
+    [SerializeField]
+    ButtonData _buttonData = default;
     #endregion
 
     #region private
     EventTrigger _trigger;
+    Image _buttonBackground;
+    Text _buttonText;
+    Outline _textOutline;
     #endregion
     #region public
     #endregion
@@ -36,6 +43,14 @@ public class ButtonReactionController : MonoBehaviour
     private void Awake()
     {
         TryGetComponent(out _trigger);
+        TryGetComponent(out _buttonBackground);
+        _buttonText = GetComponentInChildren<Text>();
+        _textOutline = GetComponentInChildren<Outline>();
+
+        _buttonBackground.sprite = _buttonData.DeselectSprite;
+        _buttonText.color = _buttonData.DeselectTextColor;
+        _textOutline.effectColor = _buttonData.TextOutlineColor;
+
     }
     private void Start()
     {
@@ -58,9 +73,13 @@ public class ButtonReactionController : MonoBehaviour
                                             transform.position.z), 
                                             transform);
         transform.DOScale(_animScale, _animTime);
+        _buttonBackground.sprite = _buttonData.SelectSprite;
+        _buttonText.color = _buttonData.SelectTextColor;
     }
     void OnDeselectEvent()
     {
         transform.DOScale(1.0f, _animTime);
+        _buttonBackground.sprite = _buttonData.DeselectSprite;
+        _buttonText.color = _buttonData.DeselectTextColor;
     }
 }
