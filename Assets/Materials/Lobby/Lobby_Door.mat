@@ -10,6 +10,8 @@ Material:
   m_Name: Lobby_Door
   m_Shader: {fileID: 4800000, guid: 9294844b15dca184d914a632279b24e1, type: 3}
   m_ValidKeywords:
+  - EFFECT_HUE_VARIATION
+  - _METALLICGLOSSMAP
   - _REQUIRE_UV2
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -372,7 +374,7 @@ Material:
     - _GlossyReflections: 1
     - _IgnoreEncryption: 0
     - _Invisible: 0
-    - _LightMaxLimit: 1
+    - _LightMaxLimit: 1.3
     - _LightMinLimit: 0.05
     - _Main2ndDissolveNoiseStrength: 0.1
     - _Main2ndEnableLighting: 1
@@ -487,12 +489,12 @@ Material:
     - _ReflectionNormalStrength: 1
     - _RimApplyTransparency: 1
     - _RimBackfaceMask: 1
-    - _RimBlur: 0.65
-    - _RimBorder: 0.5
+    - _RimBlur: 0.14
+    - _RimBorder: 0.3
     - _RimDirRange: 0
     - _RimDirStrength: 0
     - _RimEnableLighting: 1
-    - _RimFresnelPower: 3.5
+    - _RimFresnelPower: 1.1
     - _RimIndirBlur: 0.1
     - _RimIndirBorder: 0.5
     - _RimIndirRange: 0
@@ -501,16 +503,16 @@ Material:
     - _RimShadowMask: 0.5
     - _RimVRParallaxStrength: 1
     - _Shadow2ndBlur: 0.1
-    - _Shadow2ndBorder: 0.15
+    - _Shadow2ndBorder: 0.29
     - _Shadow2ndNormalStrength: 1
-    - _Shadow2ndReceive: 1
+    - _Shadow2ndReceive: 0.19
     - _Shadow3rdBlur: 0.1
     - _Shadow3rdBorder: 0.25
     - _Shadow3rdNormalStrength: 1
     - _Shadow3rdReceive: 0
     - _ShadowBlur: 0.1
     - _ShadowBlurMaskLOD: 0
-    - _ShadowBorder: 0.5
+    - _ShadowBorder: 0.62
     - _ShadowBorderMaskLOD: 0
     - _ShadowBorderRange: 0.08
     - _ShadowColorType: 0
@@ -521,7 +523,7 @@ Material:
     - _ShadowMaskType: 0
     - _ShadowNormalStrength: 1
     - _ShadowPostAO: 0
-    - _ShadowReceive: 1
+    - _ShadowReceive: 0.11
     - _ShadowStrength: 1
     - _ShadowStrengthMaskLOD: 0
     - _ShiftBackfaceUV: 0
@@ -568,7 +570,7 @@ Material:
     - _UsePOM: 0
     - _UseParallax: 0
     - _UseReflection: 0
-    - _UseRim: 0
+    - _UseRim: 1
     - _UseShadow: 1
     - _VertexLightStrength: 0
     - _WorkflowMode: 1
@@ -630,7 +632,7 @@ Material:
     - _Main3rdDistanceFade: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _Main3rdTexDecalAnimation: {r: 1, g: 1, b: 1, a: 30}
     - _Main3rdTexDecalSubParam: {r: 1, g: 1, b: 0, a: 1}
-    - _MainTexHSVG: {r: 0, g: 1, b: 1, a: 1}
+    - _MainTexHSVG: {r: 0, g: 1.07, b: 1.05, a: 0.86}
     - _MainTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndColor: {r: 1, g: 1, b: 1, a: 1}
@@ -642,14 +644,14 @@ Material:
     - _OutlineTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _ReflectionColor: {r: 1, g: 1, b: 1, a: 1}
     - _ReflectionCubeColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RimColor: {r: 0.65999997, g: 0.5, b: 0.47999996, a: 1}
+    - _RimColor: {r: 0.65882355, g: 0.5019608, b: 0.47843137, a: 0.27}
     - _RimIndirColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Shadow2ndColor: {r: 0.68, g: 0.65999997, b: 0.78999996, a: 1}
+    - _Shadow2ndColor: {r: 0.727537, g: 0.7007832, b: 0.8773585, a: 1}
     - _Shadow3rdColor: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAOShift: {r: 1, g: 0, b: 1, a: 0}
     - _ShadowAOShift2: {r: 1, g: 0, b: 1, a: 0}
     - _ShadowBorderColor: {r: 1, g: 0.09999997, b: 0, a: 1}
-    - _ShadowColor: {r: 0.82, g: 0.76, b: 0.85, a: 1}
+    - _ShadowColor: {r: 0.84525156, g: 0.7496736, b: 0.8962264, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _e2ga0: {r: 1, g: 0, b: 0, a: 0}
     - _e2ga1: {r: 1, g: 0, b: 0, a: 1}
