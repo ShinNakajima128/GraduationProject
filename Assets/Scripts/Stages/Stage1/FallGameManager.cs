@@ -133,6 +133,8 @@ public class FallGameManager : MonoBehaviour
     {
         GameEnd?.Invoke();
         Debug.Log("ゲーム終了");
+        AudioManager.StopBGM();
+        AudioManager.PlaySE(SEType.Stage1_Fall);
         StartCoroutine(GameEndCoroutine());
     }
 
@@ -174,7 +176,6 @@ public class FallGameManager : MonoBehaviour
 
     IEnumerator GameStartCoroutine(Action action = null)
     {
-
         LetterboxController.ActivateLetterbox(false, 1.5f);
         yield return new WaitForSeconds(1.5f);
 
@@ -203,12 +204,16 @@ public class FallGameManager : MonoBehaviour
              TransitionManager.FadeOut(FadeType.Normal);
          });
         _informationText.gameObject.transform.DOLocalMoveY(300, 0f);
+
         yield return new WaitForSeconds(4.5f);
+
         _finishCamera.Priority = 12;
+
         yield return new WaitForSeconds(2f);
 
         ClearDirection?.Invoke();
         _infoImages[1].enabled = true;
+        AudioManager.PlayBGM(BGMType.ClearJingle, false);
         //_informationText.text = "ステージクリア!";
 
         yield return new WaitForSeconds(4.0f);
