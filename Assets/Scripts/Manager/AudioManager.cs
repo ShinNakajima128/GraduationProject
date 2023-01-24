@@ -22,7 +22,8 @@ public enum BGMType
     /// <summary> ゲームオーバー </summary>
     Gameover,
     ClearJingle,
-    GetStill
+    GetStill,
+    BossStage_Clear
 }
 public enum SEType
 {
@@ -93,8 +94,12 @@ public enum SEType
     Stage3_heeloverOrder,
     Stage3_QueenStump,
     Stage4_Question1,
-    Stage4_Question2
+    Stage4_Question2,
+    BossStage_DebrisLanding,
+    BossStage_QueenLanding,
+    BoosStage_Down
 }
+
 public enum VOICEType
 {
     /// <summary> ダメージ </summary>

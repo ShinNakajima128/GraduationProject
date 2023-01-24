@@ -8,6 +8,10 @@ using DG.Tweening;
 public class UnderLobbyManager : MonoBehaviour
 {
     #region serialize
+    [Header("Variables")]
+    [SerializeField]
+    LobbyUIState _currentUIState = default;
+
     [SerializeField]
     Stage _bossStageData = default;
 
@@ -34,10 +38,13 @@ public class UnderLobbyManager : MonoBehaviour
     public Action ApproachDoor { get; set; }
     /// <summary> ドアから離れた時のAction </summary>
     public Action StepAwayDoor { get; set; }
+    public Action<bool> PlayerMove { get; set; }
+    public Action<bool> IsUIOperate { get; set; }
     #endregion
 
     #region property
     public static UnderLobbyManager Instance { get; private set; }
+    public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
     #endregion
 
     private void Awake()
@@ -45,11 +52,19 @@ public class UnderLobbyManager : MonoBehaviour
         Instance = this;
     }
 
+    IEnumerator Start()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        PlayerMove?.Invoke(true);
+        IsUIOperate?.Invoke(true);
+    }
+
     /// <summary>
     /// ステージの詳細を表示する
     /// </summary>
     /// <param name="type"> 遷移先のステージのScene </param>
-    public static void OnStageDescription()
+    public static void OnStageDescription(SceneType type)
     {
         Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
@@ -57,8 +72,10 @@ public class UnderLobbyManager : MonoBehaviour
         Instance._stageNameText.text = Instance._bossStageData.SceneName;
         Instance._StageImage.sprite = Instance._bossStageData.StageSprite;
         Instance.ApproachDoor?.Invoke();
-    }
 
+        AudioManager.PlaySE(SEType.Lobby_NearDoor);
+        StageDescriptionUI.Instance.ActiveDescription(type);
+    }
     /// <summary>
     /// ステージの詳細を非表示する
     /// </summary>

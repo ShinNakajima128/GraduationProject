@@ -24,6 +24,9 @@ public class AlbumManager : MonoBehaviour
     Image[] _stillImages = default;
 
     [SerializeField]
+    GameObject[] _stickerPanels = default;
+ 
+    [SerializeField]
     Transform _originPosTrans = default;
 
     [SerializeField]
@@ -53,32 +56,68 @@ public class AlbumManager : MonoBehaviour
 
     public void Start()
     {
-        //アルバムの開閉処理を登録
-        this.UpdateAsObservable().Where(_ => UIManager.Instance.IsCanOpenUI &&
-                                             !_isOpened &&
-                                             !_isPressed &&
-                                             LobbyManager.Instance.CurrentUIState == LobbyUIState.Default &&
-                                             !UIManager.Instance.IsAnyPanelOpened &&
-                                             UIInput.X)
-                                 .Subscribe(_ =>
-                                 {
-                                     UIManager.ActivatePanel(UIPanelType.Album);
-                                     ActivateAlbum(true);
-                                     Debug.Log("アルバム表示");
-                                 })
-                                 .AddTo(this);
+        if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+        {
+            #region Lobby 
+            //アルバムの開閉処理を登録
+            this.UpdateAsObservable().Where(_ => UIManager.Instance.IsCanOpenUI &&
+                                                 !_isOpened &&
+                                                 !_isPressed &&
+                                                 GameManager.Instance.CurrentLobbyState == LobbyState.Default &&
+                                                 !UIManager.Instance.IsAnyPanelOpened &&
+                                                 UIInput.X)
+                                     .Subscribe(_ =>
+                                     {
+                                         UIManager.ActivatePanel(UIPanelType.Album);
+                                         ActivateAlbum(true);
+                                         Debug.Log("アルバム表示");
+                                     })
+                                     .AddTo(this);
 
-        this.UpdateAsObservable().Where(_ => _isOpened &&
-                                             !_isPressed &&
-                                             LobbyManager.Instance.CurrentUIState == LobbyUIState.Album &&
-                                             UIInput.A)
-                                 .Subscribe(_ =>
-                                 {
-                                     UIManager.InactivatePanel(UIPanelType.Album);
-                                     ActivateAlbum(false);
-                                     Debug.Log("アルバム非表示");
-                                 })
-                                 .AddTo(this);
+            this.UpdateAsObservable().Where(_ => _isOpened &&
+                                                 !_isPressed &&
+                                                 GameManager.Instance.CurrentLobbyState == LobbyState.Default &&
+                                                 UIInput.A)
+                                     .Subscribe(_ =>
+                                     {
+                                         UIManager.InactivatePanel(UIPanelType.Album);
+                                         ActivateAlbum(false);
+                                         Debug.Log("アルバム非表示");
+                                     })
+                                     .AddTo(this);
+            #endregion
+        }
+        else
+        {
+            #region UnderLobby
+            //アルバムの開閉処理を登録
+            this.UpdateAsObservable().Where(_ => UIManager.Instance.IsCanOpenUI &&
+                                                 !_isOpened &&
+                                                 !_isPressed &&
+                                                 GameManager.Instance.CurrentLobbyState == LobbyState.Under &&
+                                                 !UIManager.Instance.IsAnyPanelOpened &&
+                                                 UIInput.X)
+                                     .Subscribe(_ =>
+                                     {
+                                         UIManager.ActivatePanel(UIPanelType.Album);
+                                         ActivateAlbum(true);
+                                         Debug.Log("アルバム表示");
+                                     })
+                                     .AddTo(this);
+
+            this.UpdateAsObservable().Where(_ => _isOpened &&
+                                                 !_isPressed &&
+                                                 GameManager.Instance.CurrentLobbyState == LobbyState.Under &&
+                                                 UIInput.A)
+                                     .Subscribe(_ =>
+                                     {
+                                         UIManager.InactivatePanel(UIPanelType.Album);
+                                         ActivateAlbum(false);
+                                         Debug.Log("アルバム非表示");
+                                     })
+                                     .AddTo(this);
+            #endregion
+        }
     }
 
     /// <summary>
@@ -147,6 +186,7 @@ public class AlbumManager : MonoBehaviour
         for (int i = 0; i < stages.Count - 1; i++)
         {
             _stillImages[i].enabled = stages[(Stages)i]; //ステージのクリア状況に応じてスチルの表示を切り替える
+            _stickerPanels[i].SetActive(stages[(Stages)i]);
         }
     }
 
@@ -192,7 +232,15 @@ public class AlbumManager : MonoBehaviour
     {
         _isPressed = true;
         _isOpened = isOpened;
-        LobbyManager.Instance.PlayerMove?.Invoke(false);
+
+        if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+        {
+            LobbyManager.Instance.PlayerMove?.Invoke(false);
+        }
+        else
+        {
+            UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
+        }
 
         if (_isOpened)
         {
@@ -200,8 +248,16 @@ public class AlbumManager : MonoBehaviour
             StillSetup();
             _albumGroup.alpha = 1;
             ActivePage(_currentPageIndex);
-            LobbyManager.Instance.CurrentUIState = LobbyUIState.Album;
-            
+
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.CurrentUIState = LobbyUIState.Album;
+            }
+            else
+            {
+                UnderLobbyManager.Instance.CurrentUIState = LobbyUIState.Album;
+            }
+
             yield return transform.DOLocalMoveY(0, _animTime)
                                   .SetEase(_animEase)
                                   .WaitForCompletion();
@@ -218,8 +274,17 @@ public class AlbumManager : MonoBehaviour
 
             _albumGroup.alpha = 0;
             _currentPageIndex = 0;
-            LobbyManager.Instance.CurrentUIState = LobbyUIState.Default;
-            LobbyManager.Instance.PlayerMove?.Invoke(true);
+
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.CurrentUIState = LobbyUIState.Default;
+                LobbyManager.Instance.PlayerMove?.Invoke(true);
+            }
+            else
+            {
+                UnderLobbyManager.Instance.CurrentUIState = LobbyUIState.Default;
+                UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
+            }
 
             if (StageDescriptionUI.Instance.IsActived)
             {

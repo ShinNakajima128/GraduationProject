@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-
+            UnderLobbyManager.Instance.IsUIOperate += ChangeOperateUI;
         }        
     }
 

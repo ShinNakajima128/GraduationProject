@@ -150,12 +150,27 @@ public class Pause : MonoBehaviour
  
         if (isActivate)
         {
-            LobbyManager.Instance.PlayerMove?.Invoke(false);
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.PlayerMove?.Invoke(false);
+            }
+            else
+            {
+                UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
+            }
             PauseActivate(true);
         }
         else
         {
-            LobbyManager.Instance.PlayerMove?.Invoke(true);
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.PlayerMove?.Invoke(true);
+            }
+            else
+            {
+                UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
+            }
+            
             PauseActivate(false);
 
             if (StageDescriptionUI.Instance.IsActived)

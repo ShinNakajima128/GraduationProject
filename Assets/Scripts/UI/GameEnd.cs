@@ -127,7 +127,16 @@ public class GameEnd : MonoBehaviour
         if (isActivate)
         {
             UIManager.ActivatePanel(UIPanelType.GameEnd);
-            LobbyManager.Instance.PlayerMove?.Invoke(false);
+            
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.PlayerMove?.Invoke(false);
+            }
+            else
+            {
+                UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
+            }
+
             _gameEndGroup.alpha = 1;
             EventSystem.current.firstSelectedGameObject = _gameEndButtons[0].gameObject;
             _gameEndButtons[0].Select();
@@ -136,7 +145,15 @@ public class GameEnd : MonoBehaviour
         else
         {
             UIManager.InactivatePanel(UIPanelType.GameEnd);
-            LobbyManager.Instance.PlayerMove?.Invoke(true);
+
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.PlayerMove?.Invoke(true);
+            }
+            else
+            {
+                UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
+            }
 
             if (StageDescriptionUI.Instance.IsActived)
             {
