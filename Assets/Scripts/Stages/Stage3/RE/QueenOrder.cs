@@ -147,7 +147,7 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.gameObject.transform.DOScale(1, _animTime);
         yield return _queenStampImage.DOFade(1, _animTime)
                                      .WaitForCompletion();
-        AudioManager.PlaySE(SEType.stage3_QueenStump);
+        AudioManager.PlaySE(SEType.Stage3_QueenStump);
         //女王の切手のアニメーション終了
 
         //手紙の傾きを変更
