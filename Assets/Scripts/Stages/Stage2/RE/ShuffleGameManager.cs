@@ -165,6 +165,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             if (_result)
             {
                 _teacupManager.SelectCupOpen(_selectIndex);
+                AudioManager.PlaySE(SEType.UI_CursolMove);
                 _stage2Cameras.ChangeCamera(Stage2CameraType.CloseupMouse);
 
                 yield return new WaitForSeconds(0.1f);
@@ -176,6 +177,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 //ここで正解のUIを表示
                 //_infoText.text = "正解！";
                 _juggeInfo[0].SetActive(true);
+                AudioManager.PlaySE(SEType.Stage2_Correct); //正解音再生
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -186,6 +188,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             else
             {
                 _teacupManager.SelectCupOpen(_selectIndex);
+                AudioManager.PlaySE(SEType.UI_CursolMove);
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -203,6 +206,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
                 _juggeInfo[1].SetActive(true);
                 HPManager.Instance.ChangeHPValue(1);
+                AudioManager.PlaySE(SEType.Stage2_Wrong); //不正解音再生
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -252,6 +256,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 _nextInfo.SetActive(false);
                 //_infoText.text = "ステージクリア！";
                 _infoImages[1].enabled = true;
+                AudioManager.PlayBGM(BGMType.ClearJingle, false);
 
                 yield return new WaitForSeconds(2.0f);
 

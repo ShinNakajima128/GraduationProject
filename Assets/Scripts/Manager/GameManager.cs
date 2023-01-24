@@ -216,7 +216,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
         TransitionManager.FadeIn(FadeType.Normal, action: () =>
-        { 
+        {
+            AudioManager.PlayBGM(BGMType.GetStill, false);
             TransitionManager.FadeOut(FadeType.Normal);
         });
 

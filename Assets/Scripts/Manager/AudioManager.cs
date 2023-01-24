@@ -21,7 +21,8 @@ public enum BGMType
     Ending,
     /// <summary> ゲームオーバー </summary>
     Gameover,
-    ClearJingle
+    ClearJingle,
+    GetStill
 }
 public enum SEType
 {
@@ -74,7 +75,13 @@ public enum SEType
     Lobby_StopClock,
     Lobby_OnTutorial,
     UI_CannotSelect,
-    Player_Landing
+    Player_Landing,
+    Stage2_Correct,
+    Stage2_Wrong,
+    Stage2_OpenCup,
+    Stage2_CloseCup,
+    Stage2_Shuffle,
+    Stage2_Warp
 }
 public enum VOICEType
 {
@@ -198,7 +205,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             }
             else
             {
-                Instance.StartCoroutine(Instance.SwitchingBgm(bgm));
+                Instance.StartCoroutine(Instance.SwitchingBgm(bgm, loopType));
                 Debug.Log($"{bgm.BGMName}を再生");
             }
 
@@ -366,7 +373,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// BGMを徐々に変更する
     /// </summary>
     /// <param name="afterBgm"> 変更後のBGM </param>
-    IEnumerator SwitchingBgm(BGM afterBgm)
+    IEnumerator SwitchingBgm(BGM afterBgm, bool loopType = true)
     {
         _isStoping = false;
         float currentVol = _bgmSource.volume;
@@ -378,6 +385,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         }
 
         _bgmSource.clip = afterBgm.Clip;　//BGMの入れ替え
+        _bgmSource.loop = loopType;
         _bgmSource.Play();
 
         while (_bgmSource.volume < currentVol)　//音量を元に戻す
