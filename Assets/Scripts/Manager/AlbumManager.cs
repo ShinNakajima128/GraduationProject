@@ -196,6 +196,7 @@ public class AlbumManager : MonoBehaviour
 
         if (_isOpened)
         {
+            AudioManager.PlaySE(SEType.Lobby_OpenAlbum);
             StillSetup();
             _albumGroup.alpha = 1;
             ActivePage(_currentPageIndex);
@@ -208,6 +209,7 @@ public class AlbumManager : MonoBehaviour
         }
         else
         {
+            AudioManager.PlaySE(SEType.Lobby_CloseAlbum);
             _operatePanel.SetActive(false);
 
             yield return transform.DOLocalMoveY(_originPosTrans.localPosition.y, _animTime)

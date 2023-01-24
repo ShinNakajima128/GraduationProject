@@ -131,30 +131,40 @@ public class StageDescriptionUI : MonoBehaviour
                         _tutorial.TutorialSetup(Stages.Stage1, () => 
                         {
                             TransitionManager.SceneTransition(SceneType.Stage1_Fall, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.RE_Stage2:
                         _tutorial.TutorialSetup(Stages.Stage2, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.RE_Stage2, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.RE_Stage3:
                         _tutorial.TutorialSetup(Stages.Stage3, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.RE_Stage3, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.Stage4:
                         _tutorial.TutorialSetup(Stages.Stage4, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.Stage4, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.Stage_Boss:
                         _tutorial.TutorialSetup(Stages.Stage_Boss, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     default:
@@ -162,6 +172,7 @@ public class StageDescriptionUI : MonoBehaviour
                         break;
                 }
 
+                AudioManager.PlaySE(SEType.Lobby_OnTutorial);
                 TransitionManager.FadeIn(FadeType.Mask_CheshireCat,
                               @  0.5f,
                             @    () =>
@@ -208,7 +219,9 @@ public class StageDescriptionUI : MonoBehaviour
                 }
 
                 _isButtonClicking = true;
-                TransitionManager.SceneTransition(_currentSelectScene);
+                AudioManager.StopBGM(0.3f);
+                AudioManager.PlaySE(SEType.GoToStage);
+                TransitionManager.SceneTransition(_currentSelectScene, FadeType.Mask_KeyHole);
                 _descriptionButtons[1].transform.DOLocalMoveY(_descriptionButtons[1].transform.localPosition.y - 15, 0.05f)
                                                    .SetLoops(2, LoopType.Yoyo);
             }
@@ -223,6 +236,7 @@ public class StageDescriptionUI : MonoBehaviour
     IEnumerator OffTutorialCoroutine()
     {
         _isButtonClicking = true;
+        AudioManager.PlaySE(SEType.Lobby_OnTutorial);
         TransitionManager.FadeIn(FadeType.Mask_CheshireCat,
                          0.5f,
                          () => 

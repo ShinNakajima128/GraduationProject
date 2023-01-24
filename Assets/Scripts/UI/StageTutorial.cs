@@ -78,10 +78,12 @@ public class StageTutorial : MonoBehaviour
                                          {
                                              _isPressed = false;
                                          });
+                    AudioManager.PlaySE(SEType.UI_CannotSelect);
                     return;
                 }
                 _currentPageIndex--;
                 OnLeftPage();
+                AudioManager.PlaySE(SEType.UI_CursolMove);
             })
             .AddTo(this);
 
@@ -98,10 +100,12 @@ public class StageTutorial : MonoBehaviour
                                          {
                                              _isPressed = false;
                                          });
+                    AudioManager.PlaySE(SEType.UI_CannotSelect);
                     return;
                 }
                 _currentPageIndex++;
                 OnRightPage();
+                AudioManager.PlaySE(SEType.UI_CursolMove);
             })
             .AddTo(this);
 

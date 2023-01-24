@@ -5432,11 +5432,6 @@ MonoBehaviour:
       CameraEaseType: 0
       MovementType: 1
       NextCameraBlendTime: 0
-    - Camera: {fileID: 1219134312}
-      ViewDuration: 6
-      CameraEaseType: 0
-      MovementType: 1
-      NextCameraBlendTime: 0
   - DirectionName: "\u30A2\u30EA\u30B9\u6B63\u9762"
     DirectionType: 2
     DollyCameras:
@@ -6039,7 +6034,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593754178}
-  m_LocalRotation: {x: 0.045900907, y: 0.0000000021485305, z: -9.8723564e-11, w: 0.998946}
+  m_LocalRotation: {x: 0.045900907, y: -0.0000000021485305, z: 9.8723564e-11, w: 0.998946}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11955,7 +11950,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959721370}
-  m_LocalRotation: {x: 0.036581103, y: -0.0000000042987156, z: 1.573571e-10, w: 0.9993307}
+  m_LocalRotation: {x: 0.036581103, y: 0.0000000042987156, z: -1.573571e-10, w: 0.9993307}
   m_LocalPosition: {x: 0, y: 1.55, z: -10.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -16917,14 +16912,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
         type: 3}
-      propertyPath: _bgmVolume
-      value: 0.1
+      propertyPath: _seList.Array.size
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
         type: 3}
-      propertyPath: _bgmList.Array.data[10].Clip
+      propertyPath: _seList.Array.data[21].Clip
       value: 
-      objectReference: {fileID: 8300000, guid: 69facb96b55ead244a5610f3f6bc8d5f, type: 3}
+      objectReference: {fileID: 8300000, guid: 1dee5350c10e61c429c48f024cf3d141, type: 3}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[22].Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6e6676b6e4da4e84795ed0a2bab07989, type: 3}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[21].SEName
+      value: "\u9078\u629E\u4E0D\u53EF"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[21].SEType
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[21].Volume
+      value: 0.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[22].SEName
+      value: "\u30D7\u30EC\u30A4\u30E4\u30FC:\u7740\u5730"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[22].SEType
+      value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 8802821899016126276, guid: 7e16acd4949121c4484e06874c6af273,
+        type: 3}
+      propertyPath: _seList.Array.data[22].Volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8802821899016126277, guid: 7e16acd4949121c4484e06874c6af273,
         type: 3}
       propertyPath: m_RootOrder
@@ -20929,7 +20959,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2086079217}
-  m_LocalRotation: {x: 0.0365811, y: -0.000000002149358, z: 7.867853e-11, w: 0.9993307}
+  m_LocalRotation: {x: 0.0365811, y: 0.000000002149358, z: -7.867853e-11, w: 0.9993307}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -25442,7 +25472,7 @@ PrefabInstance:
     - target: {fileID: 5069545434272452781, guid: bf582e8a8efab4c42870bf1a4fbf50a8,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf582e8a8efab4c42870bf1a4fbf50a8, type: 3}

@@ -133,7 +133,10 @@ public class LobbyManager : MonoBehaviour
             {
                 AudioManager.StopBGM(1.0f);
                 EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
-                EventManager.ListenEvents(Events.Lobby_Introduction, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction)));
+                EventManager.ListenEvents(Events.Lobby_Introduction, () => 
+                {
+                    StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction)); 
+                });
                 EventManager.ListenEvents(Events.Alice_Surprised, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_AliceAndCheshireTalking)));
                 EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
                 {
@@ -161,6 +164,7 @@ public class LobbyManager : MonoBehaviour
 
                 yield return new WaitForSeconds(1.5f);
 
+                AudioManager.PlaySE(SEType.Lobby_FirstVisit);
                 yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_FirstVisit);
 
                 TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
@@ -184,6 +188,7 @@ public class LobbyManager : MonoBehaviour
                         LetterboxController.ActivateLetterbox(true, 0f);
                         LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Appearance);
                         TransitionManager.FadeOut(FadeType.Normal);
+                        //AudioManager.PlaySE(SEType.Lobby_MeetingCheshire);
                     });
                 });
 
@@ -264,6 +269,7 @@ public class LobbyManager : MonoBehaviour
         Instance._StageImage.sprite = data.StageSprite;
         Instance.ApproachDoor?.Invoke();
 
+        AudioManager.PlaySE(SEType.Lobby_NearDoor);
         StageDescriptionUI.Instance.ActiveDescription(type);
     }
 
@@ -337,12 +343,10 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
-                _cheshireCatCamera.Priority = 10;
-                _clockCamera.Priority = 10;
-                Camera.main.LayerCullingToggle("Ornament", true);
-                StartCoroutine(OnPlayerMovable(3.0f));
+                StartCoroutine(ReturnPlayerCamera());
             }
-        });
+        },
+        isPlaySE: true);
     }
 
     /// <summary>
@@ -455,6 +459,16 @@ public class LobbyManager : MonoBehaviour
         //Camera.main.LayerCullingToggle("Ornament", true);
         //_clockCamera.Priority = 10;
         //StartCoroutine(OnPlayerMovable(3.0f));
+    }
+
+    IEnumerator ReturnPlayerCamera()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        _cheshireCatCamera.Priority = 10;
+                _clockCamera.Priority = 10;
+                Camera.main.LayerCullingToggle("Ornament", true);
+                StartCoroutine(OnPlayerMovable(3.0f));
     }
 }
 [Serializable]

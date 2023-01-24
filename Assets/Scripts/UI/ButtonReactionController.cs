@@ -70,6 +70,8 @@ public class ButtonReactionController : MonoBehaviour
 
     void OnSelectEvent()
     {
+        AudioManager.PlaySE(SEType.UI_CursolMove);
+
         ButtonCursor.MoveCursor(new Vector3(transform.position.x + _correctionValue_x, 
                                             transform.position.y + _correctionValue_y, 
                                             transform.position.z), 

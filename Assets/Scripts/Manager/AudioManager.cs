@@ -20,7 +20,8 @@ public enum BGMType
     Boss_InGame,
     Ending,
     /// <summary> ゲームオーバー </summary>
-    Gameover
+    Gameover,
+    ClearJingle
 }
 public enum SEType
 {
@@ -54,8 +55,26 @@ public enum SEType
     Item_Countup,
     /// <summary> アイテム:紙が飛び散る </summary>
     Object_Scatter,
+    /// <summary> ネズミ発見 </summary>
     Finding,
-    Gameover_Jingle
+    /// <summary> ゲームオーバージングル </summary>
+    Gameover_Jingle,
+    /// <summary> ステージに進む </summary>
+    GoToStage,
+    /// <summary> タイトル：ゲームスタート </summary>
+    UI_GameStart,
+    /// <summary> ステージ1の落下音 </summary>
+    Stage1_Fall,
+    Lobby_FirstVisit,
+    Lobby_MeetingCheshire,
+    Lobby_OpenAlbum,
+    Lobby_CloseAlbum,
+    Lobby_NearDoor,
+    Lobby_ClockMove,
+    Lobby_StopClock,
+    Lobby_OnTutorial,
+    UI_CannotSelect,
+    Player_Landing
 }
 public enum VOICEType
 {
