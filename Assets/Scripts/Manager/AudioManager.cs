@@ -81,7 +81,17 @@ public enum SEType
     Stage2_OpenCup,
     Stage2_CloseCup,
     Stage2_Shuffle,
-    Stage2_Warp
+    Stage2_Warp,
+    Stage3_Swing,
+    Stage3_Shot,
+    Stage3_OpenOrder,
+    Stage3_CloseOrder,
+    Stage3_Goal,
+    Stage3_Success,
+    Stage3_Failure,
+    Stage3_BlowTrump,
+    Stage3_heeloverOrder,
+    stage3_QueenStump
 }
 public enum VOICEType
 {

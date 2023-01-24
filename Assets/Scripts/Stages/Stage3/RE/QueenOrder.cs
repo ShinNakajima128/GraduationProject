@@ -117,6 +117,7 @@ public class QueenOrder : MonoBehaviour
         //手紙の上蓋のオブジェクトの優先度を下げて子オブジェクト内の奥に配置
         _letterCover_Inside.SetAsFirstSibling();
 
+        AudioManager.PlaySE(SEType.Stage3_OpenOrder);
         //お題が表示されているオブジェクトのアニメーション
         yield return _orderTrans.DOLocalMoveY(700, _animTime)
                                 .WaitForCompletion();
@@ -146,9 +147,11 @@ public class QueenOrder : MonoBehaviour
         _queenStampImage.gameObject.transform.DOScale(1, _animTime);
         yield return _queenStampImage.DOFade(1, _animTime)
                                      .WaitForCompletion();
+        AudioManager.PlaySE(SEType.stage3_QueenStump);
         //女王の切手のアニメーション終了
 
         //手紙の傾きを変更
+        AudioManager.PlaySE(SEType.Stage3_heeloverOrder);
         yield return _letterTrans.DOLocalRotate(new Vector3(0, 0, -10.5f), _animTime)
                                  .SetEase(Ease.OutBounce)
                                  .WaitForCompletion();
@@ -169,6 +172,7 @@ public class QueenOrder : MonoBehaviour
         
         yield return new WaitForSeconds(0.02f);
 
+        AudioManager.PlaySE(SEType.Stage3_CloseOrder);
         yield return _letterParentTrans.DOLocalMoveY(800, 0.5f)
                                        .SetEase(Ease.OutQuart)
                                        .WaitForCompletion();

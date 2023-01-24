@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using AliceProject;
 
@@ -32,6 +33,10 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [Tooltip("お題達成時の花火エフェクトをまとめたオブジェクト")]
     [SerializeField]
     GameObject _fireWorkObject = default;
+
+    [Header("UIObjects")]
+    [SerializeField]
+    Image[] _infoImages = default;
 
     [Header("Components")]
     [SerializeField]
@@ -186,7 +191,18 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 _cameraMng.ChangeCamera(CroquetCameraType.InGame);
                 LetterboxController.ActivateLetterbox(false, 1.5f);
 
-                yield return new WaitForSeconds(1.5f);
+                if (i == 0)
+                {
+                    yield return new WaitForSeconds(2.0f);
+
+                    _infoImages[0].enabled = true;
+                    yield return new WaitForSeconds(1.5f);
+                    _infoImages[0].enabled = false;
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1.5f);
+                }
 
                 _gameUI.ChangeUIGroup(CroquetGameState.InGame);
 
@@ -245,10 +261,15 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                     if (_successCount >= _requiredSuccessCount)
                     {
                         //_gameUI.ChangeUIGroup(CroquetGameState.Finish);
-                        _gameUI.SetResultText("ステージクリア！");
+                        //_gameUI.SetResultText("ステージクリア！");
+                        _infoImages[1].enabled = true;
                         GameManager.SaveStageResult(true);
+                        AudioManager.PlayBGM(BGMType.ClearJingle);
+
                         yield return new WaitForSeconds(2.0f);
-                        _gameUI.SetResultText("");
+
+                        //_gameUI.SetResultText("");
+                        _infoImages[1].enabled = false;
                         _gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
                     }
@@ -277,6 +298,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// <returns></returns>
     IEnumerator GoalDirectionCoroutine(bool result, Action<int> resultValue)
     {
+        AudioManager.PlaySE(SEType.Stage3_Goal);
+
         yield return new WaitForSeconds(2.0f);
         _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
 
@@ -285,12 +308,14 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
             _successCount++;
             OnGoalEffect();
             _fireWorkObject.SetActive(true);
+            AudioManager.PlaySE(SEType.Stage3_Success);
         }
         else
         {
             //お題を失敗した場合はHPを減らし、もう一度やり直す
             HPManager.Instance.ChangeHPValue(1);
             resultValue?.Invoke(1);
+            AudioManager.PlaySE(SEType.Stage3_Failure);
         }
 
         _gameUI.OnResultUI(result);
@@ -311,6 +336,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
     protected override void Init()
     {
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
+
         _player.GoalAction(() =>
         {
             _isGoaled = true;
