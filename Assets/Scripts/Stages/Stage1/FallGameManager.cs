@@ -35,7 +35,7 @@ public class FallGameManager : MonoBehaviour
     Text _informationText = default;
 
     [SerializeField]
-    MessagePlayer _player = default;
+    Image[] _infoImages = default;
 
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
@@ -88,14 +88,9 @@ public class FallGameManager : MonoBehaviour
         HPManager.Instance.LostHpAction += OnGameOver; //ゲームオーバー時の処理をHPManagerに登録
 
         OnGameStart();
-        
-        TransitionManager.FadeOut(FadeType.Normal, action: () =>
-        {
-            TransitionManager.FadeIn(FadeType.Black_TransParent, 0f, action:() =>
-            {
-                TransitionManager.FadeOut(FadeType.Normal, 0f);
-            });
-        });
+
+        LetterboxController.ActivateLetterbox(true, 0f);
+        TransitionManager.FadeOut(FadeType.Normal);
     }
 
     public void OnGameStart()
@@ -165,6 +160,8 @@ public class FallGameManager : MonoBehaviour
     void Init()
     {
         _playerTrans.position = _originPos;
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
         _informationText.text = "";
 
         var diffIndex = (int)GameManager.Instance.CurrentGameDifficultyType;
@@ -177,19 +174,24 @@ public class FallGameManager : MonoBehaviour
 
     IEnumerator GameStartCoroutine(Action action = null)
     {
+
+        LetterboxController.ActivateLetterbox(false, 1.5f);
+        yield return new WaitForSeconds(1.5f);
+
         //初めてプレイする時はメッセージを表示
         if (GameManager.Instance.IsFirstVisitCurrentStage)
         {
             yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage1);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.5f);
         }
-
-        _informationText.text = "スタート!";
+        _infoImages[0].enabled = true;
+        //_informationText.text = "スタート!";
 
         yield return new WaitForSeconds(1.5f);
 
         action?.Invoke();
-        _informationText.text = "";
+        _infoImages[0].enabled = false;
+        //_informationText.text = "";
         _inGamePanel.alpha = 1;
     }
 
@@ -206,12 +208,15 @@ public class FallGameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         ClearDirection?.Invoke();
-        _informationText.text = "ステージクリア!";
+        _infoImages[1].enabled = true;
+        //_informationText.text = "ステージクリア!";
 
         yield return new WaitForSeconds(4.0f);
 
         GameManager.SaveStageResult(true);
-        _informationText.text = "";
+
+        _infoImages[1].enabled = false;
+        //_informationText.text = "";
 
         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, MessageType.GetStill_Stage1);
 
