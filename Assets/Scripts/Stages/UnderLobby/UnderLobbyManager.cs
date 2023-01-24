@@ -21,12 +21,6 @@ public class UnderLobbyManager : MonoBehaviour
 
     [SerializeField]
     CanvasGroup _stageDescriptionCanvas = default;
-
-    [SerializeField]
-    Text _stageNameText = default;
-
-    [SerializeField]
-    Image _StageImage = default;
     #endregion
 
     #region private
@@ -54,6 +48,8 @@ public class UnderLobbyManager : MonoBehaviour
 
     IEnumerator Start()
     {
+        TransitionManager.FadeOut(FadeType.Normal);
+
         yield return new WaitForSeconds(1.5f);
 
         PlayerMove?.Invoke(true);
@@ -69,8 +65,6 @@ public class UnderLobbyManager : MonoBehaviour
         Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
 
-        Instance._stageNameText.text = Instance._bossStageData.SceneName;
-        Instance._StageImage.sprite = Instance._bossStageData.StageSprite;
         Instance.ApproachDoor?.Invoke();
 
         AudioManager.PlaySE(SEType.Lobby_NearDoor);
