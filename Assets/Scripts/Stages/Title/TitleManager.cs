@@ -107,6 +107,7 @@ public class TitleManager : MonoBehaviour
                         }
                         GameManager.ChangeGameDifficult(DifficultyType.Easy);
                         TransitionManager.SceneTransition(SceneType.Intro);
+                        AudioManager.PlaySE(SEType.UI_GameStart);
                     });
                     break;
                 case ButtonType.Difficulty_Normal:
@@ -118,6 +119,7 @@ public class TitleManager : MonoBehaviour
                         }
                         GameManager.ChangeGameDifficult(DifficultyType.Normal);
                         TransitionManager.SceneTransition(SceneType.Intro);
+                        AudioManager.PlaySE(SEType.UI_GameStart);
                     });
                     break;
                 case ButtonType.Difficulty_Hard:
@@ -129,6 +131,7 @@ public class TitleManager : MonoBehaviour
                         }
                         GameManager.ChangeGameDifficult(DifficultyType.Hard);
                         TransitionManager.SceneTransition(SceneType.Intro);
+                        AudioManager.PlaySE(SEType.UI_GameStart);
                     });
                     break;
                 default:
