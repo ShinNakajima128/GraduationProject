@@ -185,6 +185,7 @@ public class BossController : MonoBehaviour, IDamagable
         BossStageManager.CameraShake();
         LetterboxController.ActivateLetterbox(false);
         EventManager.OnEvent(Events.Boss_GroundShake);
+        AudioManager.PlaySE(SEType.BossStage_QueenLanding);
         firstAction?.Invoke();
 
         yield return new WaitForSeconds(2.5f);

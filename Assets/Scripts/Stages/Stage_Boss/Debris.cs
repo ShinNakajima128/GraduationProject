@@ -68,6 +68,7 @@ public class Debris : MonoBehaviour
                          ItemGenerator.Instance.Generate(transform.position);
                      }
                      gameObject.SetActive(false);
+                     //AudioManager.PlaySE(SEType.BossStage_DebrisLanding);
                      _shadowActivateAction?.Invoke();
                  })
                  .SetLink(gameObject, LinkBehaviour.KillOnDisable);

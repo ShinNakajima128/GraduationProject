@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 using AliceProject;
 using UniRx;
@@ -81,6 +82,9 @@ public class BossStageManager : StageGame<BossStageManager>
     [Tooltip("戦闘終了時の画面")]
     [SerializeField]
     CanvasGroup _finishBattleCanvas = default;
+
+    [SerializeField]
+    Image[] _infoImages = default;
 
     [Header("Component")]
     [SerializeField]
@@ -249,6 +253,8 @@ public class BossStageManager : StageGame<BossStageManager>
         //_messagePlayer.Reset += OnReset;
         _isInBattle.Value = false;
         _hpPanel.alpha = 0;
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
     }
 
     void Gameover()
@@ -265,6 +271,13 @@ public class BossStageManager : StageGame<BossStageManager>
         for (int i = 0; i < _battleNum; i++)
         {
             OnGameSetUp();
+
+            if (i == 0)
+            {
+                _infoImages[0].enabled = true;
+                yield return new WaitForSeconds(2.0f);
+                _infoImages[0].enabled = false;
+            }
 
             //バトルフェイズを終了するまで待機
             yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i,
@@ -318,6 +331,8 @@ public class BossStageManager : StageGame<BossStageManager>
         if (phase == BossBattlePhase.Third)
         {
             yield return FinishBattleCoroutine();
+
+            GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss);
             yield break;
         }
 
@@ -397,9 +412,13 @@ public class BossStageManager : StageGame<BossStageManager>
 
         yield return new WaitForSeconds(3.0f);
 
-        _finishBattleCanvas.alpha = 1;
+        _infoImages[1].enabled = true;
+        AudioManager.PlayBGM(BGMType.BossStage_Clear, false);
+        //_finishBattleCanvas.alpha = 1;
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(12.0f);
+
+        _infoImages[1].enabled = false;
     }
 
     /// <summary>
