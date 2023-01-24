@@ -160,13 +160,14 @@ public class QuizController : MonoBehaviour
         {
             //_questionText.text = "ê≥âÅI";
             _correctImage.enabled = true;
-
+            AudioManager.PlaySE(SEType.Stage2_Correct);
             callback?.Invoke(1);
         }
         else
         {
             //_questionText.text = $"ïsê≥âÅc ê≥âÇÕ{_currentAnswerValue}";
             _wrongImage.enabled = true;
+            AudioManager.PlaySE(SEType.Stage2_Wrong);
             callback?.Invoke(0);
         }
 

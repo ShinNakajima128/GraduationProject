@@ -91,7 +91,9 @@ public enum SEType
     Stage3_Failure,
     Stage3_BlowTrump,
     Stage3_heeloverOrder,
-    stage3_QueenStump
+    Stage3_QueenStump,
+    Stage4_Question1,
+    Stage4_Question2
 }
 public enum VOICEType
 {
