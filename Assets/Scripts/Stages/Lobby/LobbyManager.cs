@@ -127,7 +127,7 @@ public class LobbyManager : MonoBehaviour
         {
             if (!IsFirstArrival)
             {
-                AudioManager.PlayBGM(BGMType.Lobby);
+                //AudioManager.PlayBGM(BGMType.Lobby);
             }
             else
             {
@@ -235,6 +235,7 @@ public class LobbyManager : MonoBehaviour
                 }
                 else
                 {
+                    AudioManager.PlayBGM(BGMType.Lobby);
                     StartCoroutine(OnPlayerMovable(1.5f));
                     Debug.Log("クリア済みステージ、またはステージ失敗");
                 }
@@ -395,13 +396,12 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     /// <param name="Interval"> 可能になるまでの時間 </param>
     /// <returns></returns>
-    IEnumerator OnPlayerMovable(float Interval)
+    IEnumerator OnPlayerMovable(float Interval, Action action = null)
     {
         yield return new WaitForSeconds(Interval - 1);
 
         if (IsFirstArrival)
         {
-            AudioManager.PlayBGM(BGMType.Lobby);
             IsFirstArrival = false;
         }
 
@@ -411,6 +411,7 @@ public class LobbyManager : MonoBehaviour
 
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
+        action?.Invoke();
         
     }
 
@@ -468,7 +469,7 @@ public class LobbyManager : MonoBehaviour
         _cheshireCatCamera.Priority = 10;
                 _clockCamera.Priority = 10;
                 Camera.main.LayerCullingToggle("Ornament", true);
-                StartCoroutine(OnPlayerMovable(3.0f));
+                StartCoroutine(OnPlayerMovable(3.0f, () => AudioManager.PlayBGM(BGMType.Lobby)));
     }
 }
 [Serializable]

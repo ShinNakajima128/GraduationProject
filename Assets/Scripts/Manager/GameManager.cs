@@ -195,6 +195,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public static void GameReset()
     {
         Instance._currentClockState = ClockState.Zero;
+        Instance._currentGameDifficultyType = DifficultyType.Easy;
+        Instance._currentLobbyState = LobbyState.Default;
+        FallGameManager.IsSecondTry = false;
         LobbyManager.Reset();
 
         for (int i = 0; i < Instance._stageStatusDic.Count; i++)

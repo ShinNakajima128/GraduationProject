@@ -1280,6 +1280,7 @@ MonoBehaviour:
   _correctionValue_x: 5
   _correctionValue_y: 5
   _animTime: 0.25
+  _isFirstSelected: 0
   _buttonData: {fileID: 11400000, guid: af5656be071fbf54d9392c4b39231e27, type: 2}
 --- !u!114 &70445254
 MonoBehaviour:
@@ -5033,6 +5034,11 @@ PrefabInstance:
     - target: {fileID: 553642203249054209, guid: 340dd50391712c64b99c5da91825cb19,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604489291082936658, guid: 340dd50391712c64b99c5da91825cb19,
+        type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4905380879854302595, guid: 340dd50391712c64b99c5da91825cb19,
@@ -10721,7 +10727,7 @@ MonoBehaviour:
     GateFit: 2
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
-    m_BlendHint: 0
+    m_BlendHint: 2
     m_InheritPosition: 0
     m_OnCameraLive:
       m_PersistentCalls:
@@ -11092,8 +11098,6 @@ GameObject:
   m_Component:
   - component: {fileID: 848425504}
   - component: {fileID: 848425508}
-  - component: {fileID: 848425507}
-  - component: {fileID: 848425506}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -11116,55 +11120,6 @@ Transform:
   m_Father: {fileID: 819953136}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &848425506
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 848425503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4044717213e31446939f7bd49c896ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TrackedObjectOffset: {x: 0, y: 0, z: 0}
-  m_LookaheadTime: 0
-  m_LookaheadSmoothing: 0
-  m_LookaheadIgnoreY: 0
-  m_HorizontalDamping: 0.5
-  m_VerticalDamping: 0.5
-  m_ScreenX: 0.5
-  m_ScreenY: 0.5
-  m_DeadZoneWidth: 0
-  m_DeadZoneHeight: 0
-  m_SoftZoneWidth: 0.8
-  m_SoftZoneHeight: 0.8
-  m_BiasX: 0
-  m_BiasY: 0
-  m_CenterOnActivate: 1
---- !u!114 &848425507
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 848425503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 21.73, z: -9.2}
-  m_XDamping: 0
-  m_YDamping: 0
-  m_ZDamping: 0
-  m_AngularDampingMode: 0
-  m_PitchDamping: 0
-  m_YawDamping: 0
-  m_RollDamping: 0
-  m_AngularDamping: 0
 --- !u!114 &848425508
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -12589,7 +12544,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh302166
+  m_Name: pb_Mesh46694
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -15152,7 +15107,7 @@ PrefabInstance:
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
       propertyPath: _currentStage
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
@@ -17318,6 +17273,7 @@ MonoBehaviour:
   _correctionValue_x: 5
   _correctionValue_y: 5
   _animTime: 0.25
+  _isFirstSelected: 0
   _buttonData: {fileID: 11400000, guid: af5656be071fbf54d9392c4b39231e27, type: 2}
 --- !u!114 &1572405379
 MonoBehaviour:
@@ -18572,6 +18528,7 @@ MonoBehaviour:
   _correctionValue_x: 5
   _correctionValue_y: 5
   _animTime: 0.25
+  _isFirstSelected: 0
   _buttonData: {fileID: 11400000, guid: af5656be071fbf54d9392c4b39231e27, type: 2}
 --- !u!114 &1744950786
 MonoBehaviour:
@@ -18829,7 +18786,7 @@ MonoBehaviour:
     GateFit: 2
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
-    m_BlendHint: 0
+    m_BlendHint: 2
     m_InheritPosition: 0
     m_OnCameraLive:
       m_PersistentCalls:
@@ -19491,6 +19448,7 @@ MonoBehaviour:
   _correctionValue_x: 5
   _correctionValue_y: 5
   _animTime: 0.25
+  _isFirstSelected: 0
   _buttonData: {fileID: 11400000, guid: af5656be071fbf54d9392c4b39231e27, type: 2}
 --- !u!114 &1850284538
 MonoBehaviour:
@@ -21055,7 +21013,7 @@ RectTransform:
   m_GameObject: {fileID: 2025659607}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1991492440}
@@ -21066,7 +21024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 150}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2028396728
@@ -21996,6 +21954,7 @@ MonoBehaviour:
   _correctionValue_x: 5
   _correctionValue_y: 5
   _animTime: 0.25
+  _isFirstSelected: 0
   _buttonData: {fileID: 11400000, guid: af5656be071fbf54d9392c4b39231e27, type: 2}
 --- !u!114 &2096420566
 MonoBehaviour:

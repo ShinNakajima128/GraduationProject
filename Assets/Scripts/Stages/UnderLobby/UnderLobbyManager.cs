@@ -49,6 +49,7 @@ public class UnderLobbyManager : MonoBehaviour
     IEnumerator Start()
     {
         TransitionManager.FadeOut(FadeType.Normal);
+        AudioManager.StopBGM();
 
         yield return new WaitForSeconds(1.5f);
 

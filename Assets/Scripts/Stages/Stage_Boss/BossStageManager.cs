@@ -332,6 +332,7 @@ public class BossStageManager : StageGame<BossStageManager>
         {
             yield return FinishBattleCoroutine();
 
+            _hpPanel.alpha = 0;
             GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss);
             yield break;
         }

@@ -26,6 +26,9 @@ public class ButtonReactionController : MonoBehaviour
     float _animTime = 0.25f;
 
     [SerializeField]
+    bool _isFirstSelected = false;
+
+    [SerializeField]
     ButtonData _buttonData = default;
     #endregion
 
@@ -70,7 +73,16 @@ public class ButtonReactionController : MonoBehaviour
 
     void OnSelectEvent()
     {
-        AudioManager.PlaySE(SEType.UI_CursolMove);
+        //Å‰‚É‘I‘ğ‚³‚ê‚éƒ{ƒ^ƒ“‚Ìê‡‚ÍSE‚ğÅ‰‚¾‚¯Ä¶‚µ‚È‚¢
+        if (_isFirstSelected)
+        {
+            _isFirstSelected = false;
+        }
+        else
+        {
+            AudioManager.PlaySE(SEType.UI_CursolMove);
+        }
+        
 
         ButtonCursor.MoveCursor(new Vector3(transform.position.x + _correctionValue_x, 
                                             transform.position.y + _correctionValue_y, 
