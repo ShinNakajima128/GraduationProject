@@ -45,7 +45,8 @@ public class TitleManager : MonoBehaviour
         }
 
         this.UpdateAsObservable().Where(_ => _currentTitleType != TitleUIType.Start)
-                                 .Subscribe(_ => { });
+                                 .Subscribe(_ => { })
+                                 .AddTo(this);
     }
 
     IEnumerator Start()
