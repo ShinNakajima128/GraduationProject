@@ -28,7 +28,8 @@ public class UnderLobbyPlayerMove : MonoBehaviour, IMovable
 
     private void Start()
     {
-        PlayerMovable(true);
+        UnderLobbyManager.Instance.PlayerMove += PlayerMovable;
+        StageDescriptionUI.Instance.OpenTutorialAction += PlayerMovable;
         EventManager.ListenEvents(Events.Alice_Yes, () => { OnAnimation(AliceDirectionAnimType.Yes); });
         EventManager.ListenEvents(Events.Alice_No, () => { OnAnimation(AliceDirectionAnimType.No); });
         EventManager.ListenEvents(Events.Alice_Surprised, () => { OnAnimation(AliceDirectionAnimType.Surprised); });

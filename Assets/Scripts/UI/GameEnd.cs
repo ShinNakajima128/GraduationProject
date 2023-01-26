@@ -42,26 +42,31 @@ public class GameEnd : MonoBehaviour
 
     private void Start()
     {
-        EventSystem.current.firstSelectedGameObject = _gameEndButtons[0].gameObject;
-        _gameEndButtons[0].Select();
-
         this.UpdateAsObservable()
             .Where(_ => !IsActived &&
                         UIInput.Exit &&
                         !UIManager.Instance.IsAnyPanelOpened)
             .Subscribe(_ =>
             {
+                #region IsLobbyDuringJudge
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    if (LobbyManager.Instance.IsDuring)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if (UnderLobbyManager.Instance.IsDuring)
+                    {
+                        return;
+                    }
+                }
+                #endregion
                 StartCoroutine(ActivateCoroutine(true));
             })
             .AddTo(this);
-
-        //this.UpdateAsObservable()
-        //    .Where(_ => IsActived)
-        //    .Where(_ => UIInput.Exit || UIInput.A)
-        //    .Subscribe(_ =>
-        //    {
-        //        StartCoroutine(ActivateCoroutine(false));
-        //    });
     }
 
     void Setup()

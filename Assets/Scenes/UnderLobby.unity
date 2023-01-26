@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
+  m_IndirectSpecularColor: {r: 0.079334185, g: 0.13543162, b: 0.16916148, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1837,7 +1837,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159292485}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1845,6 +1845,7 @@ Transform:
   - {fileID: 7272638916583869008}
   - {fileID: 6130662070015298412}
   - {fileID: 8962287695509904810}
+  - {fileID: 7923864895521290310}
   - {fileID: 4910951693716108574}
   - {fileID: 6302250192120711561}
   - {fileID: 1708565963}
@@ -11324,7 +11325,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh126208
+  m_Name: pb_Mesh115098
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14549,12 +14550,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentUIState: 0
+  _startStageAnimTime: 8
   _bossStageData:
     SceneName: "\u5973\u738B\u306E\u5BE9\u5224"
     Type: 10
     StageSprite: {fileID: 21300000, guid: 7978af64ff6b7a9428290edc6d4c98f6, type: 3}
+  _underLobbyObjectTrans: {fileID: 159292486}
   _stageDescriptionPanel: {fileID: 161075315}
   _stageDescriptionCanvas: {fileID: 161075318}
+  _debugMode: 0
 --- !u!1 &1373926932
 GameObject:
   m_ObjectHideFlags: 0
@@ -15155,7 +15159,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437122406}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -17316,7 +17320,7 @@ Transform:
   m_Children:
   - {fileID: 7272638917761170171}
   m_Father: {fileID: 159292486}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1708565964
 BoxCollider:
@@ -22470,7 +22474,6 @@ Transform:
   - {fileID: 1860108234538363011}
   - {fileID: 2220478962920830650}
   - {fileID: 1888032473660934496}
-  - {fileID: 7923864895521290310}
   - {fileID: 2560256607080970240}
   m_Father: {fileID: 543450652823620372}
   m_RootOrder: 1
@@ -24117,7 +24120,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1364943466338791107}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2570283479650154710
 MeshRenderer:
@@ -24465,7 +24468,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 102385a81b6efeb40bf899a0cdc1c3a7, type: 2}
+  - {fileID: 2100000, guid: bad94eb07c50846428149ef17c631692, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -27152,7 +27155,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 159292486}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4917762505866207934
 GameObject:
@@ -29000,7 +29003,7 @@ Transform:
   - {fileID: 8416649560318432446}
   - {fileID: 8707104521549940835}
   m_Father: {fileID: 159292486}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &6315279283377137208
 MeshRenderer:
@@ -31898,13 +31901,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2188536107783073707}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.16936876, z: 9.503527}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.79248625, z: 9.503527}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1364943466338791107}
-  m_RootOrder: 7
+  m_Father: {fileID: 159292486}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &7931996499950185453
 MeshRenderer:

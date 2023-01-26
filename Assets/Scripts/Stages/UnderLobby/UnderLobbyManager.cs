@@ -12,8 +12,16 @@ public class UnderLobbyManager : MonoBehaviour
     [SerializeField]
     LobbyUIState _currentUIState = default;
 
+    [Tooltip("ロビー地下に初めて来た時の演出時間")]
+    [SerializeField]
+    float _startStageAnimTime = 8.0f;
+
     [SerializeField]
     Stage _bossStageData = default;
+
+    [Header("Objects")]
+    [SerializeField]
+    Transform _underLobbyObjectTrans = default;
 
     [Header("UI")]
     [SerializeField]
@@ -21,6 +29,10 @@ public class UnderLobbyManager : MonoBehaviour
 
     [SerializeField]
     CanvasGroup _stageDescriptionCanvas = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -38,18 +50,41 @@ public class UnderLobbyManager : MonoBehaviour
 
     #region property
     public static UnderLobbyManager Instance { get; private set; }
+    public static bool IsFirstVisit { get; set; } = true;
     public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
+    /// <summary> 演出中かどうか </summary>
+    public bool IsDuring { get; private set; } = false;
     #endregion
 
     private void Awake()
     {
         Instance = this;
+
+        if (_debugMode)
+        {
+            IsFirstVisit = false;
+        }
     }
 
     IEnumerator Start()
     {
+        yield return null;
+
         TransitionManager.FadeOut(FadeType.Normal);
         AudioManager.StopBGM();
+        PlayerMove?.Invoke(false);
+        IsUIOperate?.Invoke(false);
+
+        if (IsFirstVisit)
+        {
+            yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
+                                               .SetEase(Ease.Linear)
+                                               .WaitForCompletion();
+        }
+        else
+        {
+            _underLobbyObjectTrans.DOLocalMoveY(0, 0f);
+        }
 
         yield return new WaitForSeconds(1.5f);
 

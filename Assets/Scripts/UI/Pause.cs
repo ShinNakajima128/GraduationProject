@@ -61,6 +61,20 @@ public class Pause : MonoBehaviour
                         !UIManager.Instance.IsAnyPanelOpened)
             .Subscribe(_ =>
             {
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    if (LobbyManager.Instance.IsDuring)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if (UnderLobbyManager.Instance.IsDuring)
+                    {
+                        return;
+                    }
+                }
                 StartCoroutine(ActivateCoroutine(true));
             })
             .AddTo(this);
@@ -70,6 +84,22 @@ public class Pause : MonoBehaviour
             .Where(_ => UIInput.Option || UIInput.A)
             .Subscribe(_ =>
             {
+                #region IsLobbyDuringJudge
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    if (LobbyManager.Instance.IsDuring)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if (UnderLobbyManager.Instance.IsDuring)
+                    {
+                        return;
+                    }
+                }
+                #endregion
                 StartCoroutine(ActivateCoroutine(false));
             })
             .AddTo(this);
