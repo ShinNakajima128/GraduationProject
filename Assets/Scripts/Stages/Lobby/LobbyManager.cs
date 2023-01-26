@@ -89,6 +89,13 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     Stage[] _stageDatas = default;
 
+    [Header("Renderer")]
+    [SerializeField]
+    Renderer _clockRenderer = default;
+
+    [SerializeField]
+    Material _goToUnderStageMat;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -107,7 +114,10 @@ public class LobbyManager : MonoBehaviour
     public Action StepAwayDoor { get; set; }
     public Action<bool> PlayerMove { get; set; }
     public Action<bool> IsUIOperate { get; set; }
+    public Action BossStageAppear { get; set; }
     public bool IsApproached => _isApproached;
+    /// <summary> 演出中かどうか </summary>
+    public bool IsDuring { get; private set; } = false;
     public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
     #endregion
 
@@ -122,6 +132,7 @@ public class LobbyManager : MonoBehaviour
     {
         SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
+        IsDuring = true;
 
         if (!_debugMode)
         {
@@ -340,7 +351,7 @@ public class LobbyManager : MonoBehaviour
             if (GameManager.Instance.CurrentClockState == ClockState.Twelve)
             {
                 //ボスステージが出現する処理
-                StartCoroutine(OnBossStageaAppearCoroutine());
+                StartCoroutine(OnBossStageAppearCoroutine());
             }
             else
             {
@@ -409,6 +420,7 @@ public class LobbyManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
+        IsDuring = false;
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
         action?.Invoke();
@@ -418,10 +430,11 @@ public class LobbyManager : MonoBehaviour
     /// <summary>
     /// ボス戦へ進むコルーチン
     /// </summary>
-    IEnumerator OnBossStageaAppearCoroutine()
+    IEnumerator OnBossStageAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
         EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
+        _clockRenderer.material = _goToUnderStageMat;
 
         yield return new WaitForSeconds(2.0f);
 
@@ -430,6 +443,7 @@ public class LobbyManager : MonoBehaviour
              _playerTrans.localPosition = _goingUnderTrans.position;
              _brain.m_DefaultBlend.m_Time = 0;
              _clock_ShakeCamera.Priority = 20;
+             _clockCtrl.OnCrazyClock();
 
              TransitionManager.FadeOut(FadeType.Normal, 0.5f);
          });
@@ -437,6 +451,7 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(3.5f);
 
         _goingUnderCamera.Priority = 25;
+        BossStageAppear?.Invoke();
 
         float timer = 0;
         bool isFading = false;

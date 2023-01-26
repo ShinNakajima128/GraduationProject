@@ -3754,11 +3754,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentClockState: 0
-  _hourHandCrazyRotateTime: 10
-  _isHourHandClockWise: 1
-  _minuteHandCrazyRotateTime: 3
+  _hourHandCrazyRotateTime: 5
+  _isHourHandClockWise: 0
+  _minuteHandCrazyRotateTime: 1.5
   _isMinuteHandClockWise: 1
-  _CrazyClockTime: 3
+  _CrazyClockTime: 20
   _hourHand: {fileID: 815439639}
   _minuteHand: {fileID: 1419843184}
   _secondHand: {fileID: 1910683228}
@@ -7530,6 +7530,12 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2022551661}
+--- !u!23 &702678702 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5597329578425899558, guid: 5ea88d4641cb14145b08446067b08855,
+    type: 3}
+  m_PrefabInstance: {fileID: 23562043}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &707983443
 GameObject:
   m_ObjectHideFlags: 0
@@ -12370,7 +12376,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959721370}
-  m_LocalRotation: {x: 0.036581103, y: -0.0000000042987156, z: 1.573571e-10, w: 0.9993307}
+  m_LocalRotation: {x: 0.036581103, y: 0.0000000042987156, z: -1.573571e-10, w: 0.9993307}
   m_LocalPosition: {x: 0, y: 1.55, z: -10.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12544,7 +12550,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh46694
+  m_Name: pb_Mesh35748
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -15107,7 +15113,7 @@ PrefabInstance:
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
       propertyPath: _currentStage
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1610790708330346726, guid: 2578dc2fb1db2784b851a631c155f955,
         type: 3}
@@ -17885,6 +17891,8 @@ MonoBehaviour:
   - SceneName: "\u30AB\u30A6\u30F3\u30C8\u30B2\u30FC\u30E0in\u30D0\u30E9\u5712"
     Type: 7
     StageSprite: {fileID: 21300000, guid: e0e78f06853597848b5df6cf30772b67, type: 3}
+  _clockRenderer: {fileID: 702678702}
+  _goToUnderStageMat: {fileID: 2100000, guid: bad94eb07c50846428149ef17c631692, type: 2}
   _debugMode: 0
 --- !u!4 &1637587111
 Transform:
@@ -21722,7 +21730,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2086079217}
-  m_LocalRotation: {x: 0.0365811, y: -0.000000002149358, z: 7.867853e-11, w: 0.9993307}
+  m_LocalRotation: {x: 0.0365811, y: 0.000000002149358, z: -7.867853e-11, w: 0.9993307}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
