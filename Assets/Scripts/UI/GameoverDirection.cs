@@ -64,10 +64,10 @@ public class GameoverDirection : MonoBehaviour
 
     private IEnumerator Start()
     {
-        ButtonSetup();
-        SetCurrentSceneType(GameManager.Instance.CurrentStage);
-        
         yield return null;
+
+        ButtonSetup();
+        SetCurrentSceneType(GameManager.Instance.CurrentStage);        
 
         if (_debugMode)
         {
