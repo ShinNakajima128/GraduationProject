@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cinemachine;
 
 public class UnderLobbyManager : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class UnderLobbyManager : MonoBehaviour
 
     #region private
     bool _isApproached = false;
+    CinemachineImpulseSource _impulseSource;
     #endregion
 
     #region public
@@ -59,6 +61,7 @@ public class UnderLobbyManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        TryGetComponent(out _impulseSource);
 
         if (_debugMode)
         {
@@ -71,6 +74,7 @@ public class UnderLobbyManager : MonoBehaviour
         yield return null;
 
         TransitionManager.FadeOut(FadeType.Normal);
+        LetterboxController.ActivateLetterbox(true, 0);
         AudioManager.StopBGM();
         PlayerMove?.Invoke(false);
         IsUIOperate?.Invoke(false);
@@ -80,12 +84,16 @@ public class UnderLobbyManager : MonoBehaviour
             yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
                                                .SetEase(Ease.Linear)
                                                .WaitForCompletion();
+            CameraShake();
+
+            yield return new WaitForSeconds(1.0f);
         }
         else
         {
             _underLobbyObjectTrans.DOLocalMoveY(0, 0f);
         }
 
+        LetterboxController.ActivateLetterbox(false, 1.5f);
         yield return new WaitForSeconds(1.5f);
 
         PlayerMove?.Invoke(true);
@@ -114,6 +122,14 @@ public class UnderLobbyManager : MonoBehaviour
         Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
         Instance.StepAwayDoor?.Invoke();
+    }
+
+    /// <summary>
+    /// ÉJÉÅÉâÇóhÇÁÇ∑
+    /// </summary>
+    void CameraShake()
+    {
+        _impulseSource.GenerateImpulse();
     }
 
     void OnFadeDescription(float value, float fadeTime)
