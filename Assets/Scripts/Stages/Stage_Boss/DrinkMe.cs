@@ -20,7 +20,10 @@ public class DrinkMe : MonoBehaviour
 
     #region private
     IHealable _target;
-    bool _init = false;
+    #endregion
+
+    #region protected
+    protected bool _init = false;
     #endregion
 
     #region public
@@ -29,7 +32,7 @@ public class DrinkMe : MonoBehaviour
     #region property
     #endregion
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (_init)
         {
@@ -37,12 +40,12 @@ public class DrinkMe : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         transform.DOLocalRotate(new Vector3(15, 0, 0), 0f);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         if (!_init)
         {
@@ -50,7 +53,7 @@ public class DrinkMe : MonoBehaviour
             _init = true;
         }
     }
-    void OnRotate()
+    protected void OnRotate()
     {
         transform.DOLocalRotate(new Vector3(15, -360, 0), _rotateTime, RotateMode.FastBeyond360)
                  .SetEase(Ease.Linear)
@@ -58,7 +61,7 @@ public class DrinkMe : MonoBehaviour
                  .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
