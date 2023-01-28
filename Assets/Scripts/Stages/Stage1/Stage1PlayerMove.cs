@@ -85,7 +85,10 @@ public class Stage1PlayerMove : MonoBehaviour, IMovable
     {
         yield return new WaitForSeconds(2.0f);
         _anim.Play("Landing");
-        yield return new WaitForSeconds(3.0f);
+
+        yield return new WaitForSeconds(0.3f);
+        AudioManager.PlaySE(SEType.Alice_Landing);
+        yield return new WaitForSeconds(2.7f);
         _anim.Play("Clear");
     }
 
