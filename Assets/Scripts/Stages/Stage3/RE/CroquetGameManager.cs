@@ -57,6 +57,16 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     Transform _testModel = default;
 
+    [Header("ÉgÉâÉìÉvï∫ÇîÚÇŒÇµÇΩéûÇÃSEÇçƒê∂Ç∑ÇÈSource")]
+    [SerializeField]
+    AudioSource _trumpBlowSESource = default;
+
+    [SerializeField]
+    AudioClip _challengingClip = default;
+
+    [SerializeField]
+    AudioClip _achievingClip = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = default;
@@ -115,6 +125,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         var param = _gameParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
 
         _order.SetOrderData(param.OrderDatas);
+        ResetSource();
     }
 
     public override void OnGameStart()
@@ -375,6 +386,31 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         }
 
         _gameUI.SetTrumpCount(_currentRedStrileNum, _currentBlackStrikeNum);
+    }
+
+    public void PlayBlowSE()
+    {
+        _trumpBlowSESource.Play();
+        _trumpBlowSESource.pitch += 0.1f;
+
+        //switch (_currentTargetTrumpColor)
+        //{
+        //    case TrumpColorType.Red:
+        //        if (_currentRedStrileNum < _currentTargetStrikeNum)
+        //        {
+
+        //        }
+        //        break;
+        //    case TrumpColorType.Black:
+        //        break;
+        //    default:
+        //        break;
+        //}
+    }
+
+    void ResetSource()
+    {
+        _trumpBlowSESource.pitch = 1;
     }
 
     /// <summary>
