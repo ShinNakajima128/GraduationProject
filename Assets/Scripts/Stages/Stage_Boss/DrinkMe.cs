@@ -77,6 +77,8 @@ public class DrinkMe : MonoBehaviour
             }
 
             //プレイヤーを回復し、自身を非アクティブにする
+            AudioManager.PlaySE(SEType.Player_Heal);
+            EffectManager.PlayEffect(EffectType.Player_Heal, other.gameObject.transform);
             _target.Heal(_healValue);
             gameObject.SetActive(false);
         }

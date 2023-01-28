@@ -62,6 +62,7 @@ public class DrinkMeGenerator : MonoBehaviour
 
             yield return new WaitForSeconds(_generateInterval);
         }
+        Debug.Log("回復アイテム生成終了");
     }
 
     /// <summary>
@@ -69,8 +70,8 @@ public class DrinkMeGenerator : MonoBehaviour
     /// </summary>
     void StopGenerate()
     {
-        _drinkCtrl.Return();
         _isInGamed = false;
+        _drinkCtrl.Return();
     }
 
     /// <summary>

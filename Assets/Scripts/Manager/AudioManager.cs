@@ -97,7 +97,8 @@ public enum SEType
     Stage4_Question2,
     BossStage_DebrisLanding,
     BossStage_QueenLanding,
-    BoosStage_Down
+    BossStage_Down,
+    Alice_Landing
 }
 
 public enum VOICEType
