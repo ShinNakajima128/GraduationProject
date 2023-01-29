@@ -63,6 +63,16 @@ public class TitleManager : MonoBehaviour
         ChangeUIPanel(TitleUIType.Start);
         GameManager.GameReset(); //クリアしてタイトルに戻ってきた場合用の初期化処理
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (UIInput.Exit)
+        {
+            TransitionManager.SceneTransition(SceneType.Stage_Boss);
+        }
+    }
+#endif
     void ButtonSetup()
     {
         foreach (var b in _buttonDic)
