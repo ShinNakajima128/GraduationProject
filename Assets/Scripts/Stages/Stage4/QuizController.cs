@@ -311,8 +311,8 @@ public enum QuizType
 {
     RedRose,
     WhiteRose,
-    RedAndWhiteRose,
     TrumpSolder,
+    RedAndWhiteRose,
     All
 }
 [Serializable]
