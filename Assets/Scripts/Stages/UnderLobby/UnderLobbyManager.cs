@@ -81,6 +81,8 @@ public class UnderLobbyManager : MonoBehaviour
 
         if (IsFirstVisit)
         {
+            EventManager.OnEvent(Events.Alice_Overlook);
+
             yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
                                                .SetEase(Ease.Linear)
                                                .WaitForCompletion();

@@ -18,5 +18,6 @@ public class UnderLobbyPlayerController : PlayerBase
         EventManager.ListenEvents(Events.Alice_Surprised, () => _fc.ChangeFaceType(FaceType.Fancy));
         EventManager.ListenEvents(Events.Alice_Yes, () => _fc.ChangeFaceType(FaceType.Smile));
         EventManager.ListenEvents(Events.Alice_No, () => _fc.ChangeFaceType(FaceType.Angry));
+        EventManager.ListenEvents(Events.Alice_Overlook, () => _fc.ChangeFaceType(FaceType.Fancy));
     }
 }
