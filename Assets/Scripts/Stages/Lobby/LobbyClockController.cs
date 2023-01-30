@@ -30,7 +30,7 @@ public class LobbyClockController : MonoBehaviour
 
     [Tooltip("éûåvÇ™ã∂Ç¡ÇƒÇ¢ÇÈéûä‘")]
     [SerializeField]
-    float _CrazyClockTime = 3.0f;
+    float _crazyClockTime = 3.0f;
 
     [Tooltip("éûêj")]
     [SerializeField]
@@ -50,7 +50,7 @@ public class LobbyClockController : MonoBehaviour
     Tween _currentHourTween;
     Tween _currentMinuteTween;
     #endregion
-    
+
     #region property
     #endregion
 
@@ -79,7 +79,7 @@ public class LobbyClockController : MonoBehaviour
 
         Vector3 hourRotate = default;
         Vector3 secondRotate = default;
-        
+
         Debug.Log(state);
 
         switch (state)
@@ -143,9 +143,18 @@ public class LobbyClockController : MonoBehaviour
 
         if (_isCrazing)
         {
-            _hourHand.DOLocalRotate(hourRotate, _hourHandCrazyRotateTime);
+            if (animTime <= 0)
+            {
+                _hourHand.DOLocalRotate(hourRotate, _hourHandCrazyRotateTime, _isHourHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
 
-            _minuteHand.DOLocalRotate(secondRotate, _minuteHandCrazyRotateTime);
+                _minuteHand.DOLocalRotate(secondRotate, _minuteHandCrazyRotateTime, _isMinuteHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
+            }
+            else
+            {
+                _hourHand.DOLocalRotate(hourRotate, animTime, _isHourHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
+
+                _minuteHand.DOLocalRotate(secondRotate, animTime, _isMinuteHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
+            }
         }
         else
         {
@@ -164,7 +173,7 @@ public class LobbyClockController : MonoBehaviour
                     action?.Invoke();
                 })
                 .SetDelay(derayTime)
-                .OnStart(() => 
+                .OnStart(() =>
                 {
                     if (isPlaySE)
                     {
@@ -172,7 +181,6 @@ public class LobbyClockController : MonoBehaviour
                     }
                 });
         }
-        
 
         _isCrazing = false;
     }
@@ -211,13 +219,20 @@ public class LobbyClockController : MonoBehaviour
                                      .SetLoops(-1);
     }
 
-    public IEnumerator CrazyClockCoroutine()
+    public IEnumerator CrazyClockCoroutine(float crazyTime = 0f, float returnTime = 0f)
     {
         OnCrazyClock();
 
-        yield return new WaitForSeconds(_CrazyClockTime);
+        if (crazyTime <= 0)
+        {
+            yield return new WaitForSeconds(_crazyClockTime);
+        }
+        else
+        {
+            yield return new WaitForSeconds(crazyTime);
+        }
 
-        ChangeClockState(ClockState.Twelve, isPlaySE: true);
+        ChangeClockState(ClockState.Twelve, animTime: returnTime, isPlaySE: true);
     }
 }
 public enum ClockState

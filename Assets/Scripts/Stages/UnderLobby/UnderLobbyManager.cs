@@ -31,6 +31,10 @@ public class UnderLobbyManager : MonoBehaviour
     [SerializeField]
     CanvasGroup _stageDescriptionCanvas = default;
 
+    [Header("Components")]
+    [SerializeField]
+    LobbyClockController _clockCtrl = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -75,13 +79,14 @@ public class UnderLobbyManager : MonoBehaviour
 
         TransitionManager.FadeOut(FadeType.Normal);
         LetterboxController.ActivateLetterbox(true, 0);
-        AudioManager.StopBGM();
+        AudioManager.PlayBGM(BGMType.UnderLobby);
         PlayerMove?.Invoke(false);
         IsUIOperate?.Invoke(false);
 
         if (IsFirstVisit)
         {
             EventManager.OnEvent(Events.Alice_Overlook);
+            StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
 
             yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
                                                .SetEase(Ease.Linear)
