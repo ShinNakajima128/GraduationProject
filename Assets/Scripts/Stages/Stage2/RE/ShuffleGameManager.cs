@@ -42,6 +42,13 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
     [SerializeField]
     TeacupController _teacupCtrl = default;
+
+    [SerializeField]
+    PhaseInfo _phaseInfo = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -78,7 +85,14 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
     public override void OnGameStart()
     {
-        StartCoroutine(GameStartCoroutine());
+        if (!_debugMode)
+        {
+            StartCoroutine(GameStartCoroutine());
+        }
+        else
+        {
+            StartCoroutine(InGameCoroutine());
+        }
     }
 
     public override void OnGameEnd()
@@ -126,11 +140,22 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
     IEnumerator InGameCoroutine()
     {
+#if UNITY_EDITOR
+        if (_debugMode)
+        {
+            yield return new WaitForSeconds(1.5f);
+        }
+#endif
+
         for (int i = 0; i < _phaseCount; i++)
         {
             _result = false;
             _selectIndex = -1;
             _hpGroup.alpha = 1;
+
+            yield return _phaseInfo.OnAnimation(i);
+
+            yield return new WaitForSeconds(1.0f);
 
             //シャッフル開始。終了するまで待機
             yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
