@@ -44,6 +44,7 @@ public class PhaseInfo : MonoBehaviour
     #endregion
 
     #region private
+    float _originImagePos_x;
     #endregion
 
     #region public
@@ -56,7 +57,7 @@ public class PhaseInfo : MonoBehaviour
         _background.DOFade(0f, 0f);
         _phaseInfoGroup.alpha = 0f;
         _underbarImage.gameObject.transform.DOScaleX(0f, 0f);
-
+        _originImagePos_x = _phaseImages[0].transform.localPosition.x;
         foreach (var image in _phaseImages)
         {
             image.enabled = false;
@@ -97,5 +98,6 @@ public class PhaseInfo : MonoBehaviour
                      .WaitForCompletion();
 
         _phaseImages[phase].enabled = false;
+        _phaseImages[phase].transform.DOLocalMoveX(_originImagePos_x, 0f);
     }
 }
