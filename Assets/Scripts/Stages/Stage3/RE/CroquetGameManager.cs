@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using AliceProject;
 
@@ -25,8 +26,17 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     CroquetGameParameter[] _gameParameters = default;
 
+    [Header("Objects")]
     [SerializeField]
-    Transform[] _golaEffectTrans = default;
+    Transform[] _goalEffectTrans = default;
+
+    [Tooltip("お題達成時の花火エフェクトをまとめたオブジェクト")]
+    [SerializeField]
+    GameObject _fireWorkObject = default;
+
+    [Header("UIObjects")]
+    [SerializeField]
+    Image[] _infoImages = default;
 
     [Header("Components")]
     [SerializeField]
@@ -46,6 +56,16 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
     [SerializeField]
     Transform _testModel = default;
+
+    [Header("トランプ兵を飛ばした時のSEを再生するSource")]
+    [SerializeField]
+    AudioSource _trumpBlowSESource = default;
+
+    [SerializeField]
+    AudioClip _challengingClip = default;
+
+    [SerializeField]
+    AudioClip _achievingClip = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -97,6 +117,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
+        _fireWorkObject.SetActive(false);
         _currentStrikeNum = 0;
         _currentRedStrileNum = 0;
         _currentBlackStrikeNum = 0;
@@ -104,6 +125,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         var param = _gameParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
 
         _order.SetOrderData(param.OrderDatas);
+        ResetSource();
     }
 
     public override void OnGameStart()
@@ -180,7 +202,18 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 _cameraMng.ChangeCamera(CroquetCameraType.InGame);
                 LetterboxController.ActivateLetterbox(false, 1.5f);
 
-                yield return new WaitForSeconds(1.5f);
+                if (i == 0)
+                {
+                    yield return new WaitForSeconds(2.0f);
+
+                    _infoImages[0].enabled = true;
+                    yield return new WaitForSeconds(1.5f);
+                    _infoImages[0].enabled = false;
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1.5f);
+                }
 
                 _gameUI.ChangeUIGroup(CroquetGameState.InGame);
 
@@ -203,6 +236,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                             break;
                     }
                 }
+
+                yield return new WaitForSeconds(0.2f);
 
                 _player.BeginControl(); //入力受付開始
 
@@ -237,10 +272,16 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                     if (_successCount >= _requiredSuccessCount)
                     {
                         //_gameUI.ChangeUIGroup(CroquetGameState.Finish);
-                        _gameUI.SetResultText("ステージクリア！");
+                        //_gameUI.SetResultText("ステージクリア！");
+                        _infoImages[1].enabled = true;
                         GameManager.SaveStageResult(true);
+                        AudioManager.PlayBGM(BGMType.ClearJingle);
+
                         yield return new WaitForSeconds(2.0f);
-                        _gameUI.SetResultText("");
+
+                        //_gameUI.SetResultText("");
+                        _infoImages[1].enabled = false;
+                        _gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
                     }
                     else
@@ -268,6 +309,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     /// <returns></returns>
     IEnumerator GoalDirectionCoroutine(bool result, Action<int> resultValue)
     {
+        AudioManager.PlaySE(SEType.Stage3_Goal);
+
         yield return new WaitForSeconds(2.0f);
         _gameUI.ChangeUIGroup(CroquetGameState.GoalDirection);
 
@@ -275,12 +318,15 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         {
             _successCount++;
             OnGoalEffect();
+            _fireWorkObject.SetActive(true);
+            AudioManager.PlaySE(SEType.Stage3_Success);
         }
         else
         {
             //お題を失敗した場合はHPを減らし、もう一度やり直す
             HPManager.Instance.ChangeHPValue(1);
             resultValue?.Invoke(1);
+            AudioManager.PlaySE(SEType.Stage3_Failure);
         }
 
         _gameUI.OnResultUI(result);
@@ -301,6 +347,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
     protected override void Init()
     {
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
+
         _player.GoalAction(() =>
         {
             _isGoaled = true;
@@ -339,14 +388,39 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         _gameUI.SetTrumpCount(_currentRedStrileNum, _currentBlackStrikeNum);
     }
 
+    public void PlayBlowSE()
+    {
+        _trumpBlowSESource.Play();
+        _trumpBlowSESource.pitch += 0.1f;
+
+        //switch (_currentTargetTrumpColor)
+        //{
+        //    case TrumpColorType.Red:
+        //        if (_currentRedStrileNum < _currentTargetStrikeNum)
+        //        {
+
+        //        }
+        //        break;
+        //    case TrumpColorType.Black:
+        //        break;
+        //    default:
+        //        break;
+        //}
+    }
+
+    void ResetSource()
+    {
+        _trumpBlowSESource.pitch = 1;
+    }
+
     /// <summary>
     /// ゴールエフェクトを再生
     /// </summary>
     void OnGoalEffect()
     {
-        for (int i = 0; i < _golaEffectTrans.Length; i++)
+        for (int i = 0; i < _goalEffectTrans.Length; i++)
         {
-            EffectManager.PlayEffect(EffectType.Stage3_Goal, _golaEffectTrans[i]);
+            EffectManager.PlayEffect(EffectType.Stage3_Goal, _goalEffectTrans[i]);
         }
     }
 

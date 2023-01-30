@@ -116,6 +116,8 @@ public class CroquetTrump : TrumpSolder
         {
             ChangeMoveState(MoveDir.Blowoff);
             CroquetGameManager.Instance.AddScore(CurrentColorType);
+            //AudioManager.PlaySE(SEType.Stage3_BlowTrump);
+            CroquetGameManager.Instance.PlayBlowSE();
             StartCoroutine(BlowoffCoroutine());
         }
 

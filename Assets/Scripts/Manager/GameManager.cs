@@ -195,6 +195,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public static void GameReset()
     {
         Instance._currentClockState = ClockState.Zero;
+        Instance._currentGameDifficultyType = DifficultyType.Easy;
+        Instance._currentLobbyState = LobbyState.Default;
+        Instance._isClearStaged = false;
+        FallGameManager.IsSecondTry = false;
+        UnderLobbyManager.IsFirstVisit = true;
         LobbyManager.Reset();
 
         for (int i = 0; i < Instance._stageStatusDic.Count; i++)
@@ -216,7 +221,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
         TransitionManager.FadeIn(FadeType.Normal, action: () =>
-        { 
+        {
+            AudioManager.PlayBGM(BGMType.GetStill, false);
             TransitionManager.FadeOut(FadeType.Normal);
         });
 

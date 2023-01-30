@@ -130,7 +130,8 @@ namespace AliceProject
         FirstVisit_Stage3_Phase4,
         FirstVisit_Stage4_Phase1,
         FirstVisit_Stage4_Phase2,
-        FirstVisit_Stage4_Phase3
+        FirstVisit_Stage4_Phase3,
+        Ending2
     }
 }
 

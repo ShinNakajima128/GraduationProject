@@ -22,6 +22,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     Text _infoText = default;
 
     [SerializeField]
+    Image[] _infoImages = default;
+
+    [SerializeField]
     CanvasGroup _hpGroup = default;
 
     [SerializeField]
@@ -39,6 +42,13 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
     [SerializeField]
     TeacupController _teacupCtrl = default;
+
+    [SerializeField]
+    PhaseInfo _phaseInfo = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -75,7 +85,14 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
     public override void OnGameStart()
     {
-        StartCoroutine(GameStartCoroutine());
+        if (!_debugMode)
+        {
+            StartCoroutine(GameStartCoroutine());
+        }
+        else
+        {
+            StartCoroutine(InGameCoroutine());
+        }
     }
 
     public override void OnGameEnd()
@@ -88,6 +105,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
     /// <param name="action"> コルーチン終了時のAction </param>
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
+        LetterboxController.ActivateLetterbox(true, 0f);
         yield return _stage2Cameras.StartDirectionCoroutine();
 
         yield return new WaitForSeconds(0.5f);
@@ -104,25 +122,40 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
         yield return new WaitForSeconds(1.4f);
 
+        LetterboxController.ActivateLetterbox(false, 1.5f);
         _stage2Cameras.ChangeCamera(Stage2CameraType.Ingame);
 
         yield return new WaitForSeconds(2.5f);
 
-        _infoText.text = "スタート！";
+        //_infoText.text = "スタート！";
+        _infoImages[0].enabled = true;
 
         yield return new WaitForSeconds(2.0f);
 
-        _infoText.text = "";
+        //_infoText.text = "";
+        _infoImages[0].enabled = false;
+
         StartCoroutine(InGameCoroutine());
     }
 
     IEnumerator InGameCoroutine()
     {
+#if UNITY_EDITOR
+        if (_debugMode)
+        {
+            yield return new WaitForSeconds(1.5f);
+        }
+#endif
+
         for (int i = 0; i < _phaseCount; i++)
         {
             _result = false;
             _selectIndex = -1;
             _hpGroup.alpha = 1;
+
+            yield return _phaseInfo.OnAnimation(i);
+
+            yield return new WaitForSeconds(1.0f);
 
             //シャッフル開始。終了するまで待機
             yield return _teacupCtrl.ShuffleCoroutine((ShufflePhase)i, _teacupManager.Teacups);
@@ -157,6 +190,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             if (_result)
             {
                 _teacupManager.SelectCupOpen(_selectIndex);
+                AudioManager.PlaySE(SEType.UI_CursolMove);
                 _stage2Cameras.ChangeCamera(Stage2CameraType.CloseupMouse);
 
                 yield return new WaitForSeconds(0.1f);
@@ -168,6 +202,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 //ここで正解のUIを表示
                 //_infoText.text = "正解！";
                 _juggeInfo[0].SetActive(true);
+                AudioManager.PlaySE(SEType.Stage2_Correct); //正解音再生
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -178,6 +213,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             else
             {
                 _teacupManager.SelectCupOpen(_selectIndex);
+                AudioManager.PlaySE(SEType.UI_CursolMove);
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -195,6 +231,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
 
                 _juggeInfo[1].SetActive(true);
                 HPManager.Instance.ChangeHPValue(1);
+                AudioManager.PlaySE(SEType.Stage2_Wrong); //不正解音再生
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -242,11 +279,16 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 _juggeInfo[0].SetActive(false);
                 _juggeInfo[1].SetActive(false);
                 _nextInfo.SetActive(false);
-                _infoText.text = "ステージクリア！";
+                //_infoText.text = "ステージクリア！";
+                _infoImages[1].enabled = true;
+                AudioManager.PlayBGM(BGMType.ClearJingle, false);
 
                 yield return new WaitForSeconds(2.0f);
 
-                _infoText.text = "";
+                //_infoText.text = "";
+                _infoImages[1].enabled = false;
+                _hpGroup.alpha = 0;
+
                 yield return GameManager.GetStillDirectionCoroutine(Stages.Stage2, MessageType.GetStill_Stage2);
 
                 GameManager.SaveStageResult(true);
@@ -268,6 +310,8 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         HPManager.Instance.RecoveryHP();
 
         _teacupManager.RandomHideMouse();
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
         _infoText.text = "";
         _hpGroup.alpha = 0;
         _juggeInfo[0].SetActive(false);

@@ -151,6 +151,7 @@ public class Stage3PlayerController : MonoBehaviour
         {
             _animator.CrossFadeInFixedTime("Swing_Standby", 0.2f);
             IsStanding = true;
+            InputedMoveValue = Vector2.zero;
         }
     }
 
@@ -229,6 +230,9 @@ public class Stage3PlayerController : MonoBehaviour
 
         ball.Throw(ballPosition);
         IsThrowed = true;
+        IsStandbyed = false;
+
+        AudioManager.PlaySE(SEType.Stage3_Shot);
     }
 
     /// <summary>
@@ -333,6 +337,7 @@ public class Stage3PlayerController : MonoBehaviour
         {
             CanControl = false;
             _animator.CrossFadeInFixedTime("Swing_", 0.2f);
+            AudioManager.PlaySE(SEType.Stage3_Swing);
         }
     }
 

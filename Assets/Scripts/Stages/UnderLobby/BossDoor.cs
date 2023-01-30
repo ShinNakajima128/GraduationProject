@@ -24,7 +24,7 @@ public class BossDoor : MonoBehaviour
         {
             if (_isVicinity.Value)
             {
-                UnderLobbyManager.OnStageDescription();
+                UnderLobbyManager.OnStageDescription(SceneType.Stage_Boss);
             }
             else
             {
@@ -32,12 +32,12 @@ public class BossDoor : MonoBehaviour
             }
         });
 
-        this.UpdateAsObservable()
-            .Where(_ => _isVicinity.Value && UIInput.Submit)
-            .Subscribe(_ =>
-            {
-                TransitionManager.SceneTransition(_sceneType, FadeType.Mask_KeyHole);
-            });
+        //this.UpdateAsObservable()
+        //    .Where(_ => _isVicinity.Value && UIInput.Submit)
+        //    .Subscribe(_ =>
+        //    {
+        //        TransitionManager.SceneTransition(_sceneType, FadeType.Mask_KeyHole);
+        //    });
     }
 
     private void OnTriggerEnter(Collider other)

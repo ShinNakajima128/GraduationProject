@@ -31,10 +31,11 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     {
         LobbyManager.Instance.PlayerMove += PlayerMovable;
         StageDescriptionUI.Instance.OpenTutorialAction += PlayerMovable;
-        EventManager.ListenEvents(Events.Alice_Yes, () => { OnAnimation(AliceDirectionAnimType.Yes); });
-        EventManager.ListenEvents(Events.Alice_No, () => { OnAnimation(AliceDirectionAnimType.No); });
-        EventManager.ListenEvents(Events.Alice_Surprised, () => { OnAnimation(AliceDirectionAnimType.Surprised); });
-        EventManager.ListenEvents(Events.Alice_Overlook, () => { OnAnimation(AliceDirectionAnimType.Overlook); });
+        EventManager.ListenEvents(Events.Alice_Yes, () => OnAnimation(AliceDirectionAnimType.Yes));
+        EventManager.ListenEvents(Events.Alice_No, () => OnAnimation(AliceDirectionAnimType.No));
+        EventManager.ListenEvents(Events.Alice_Surprised, () => OnAnimation(AliceDirectionAnimType.Surprised));
+        EventManager.ListenEvents(Events.Alice_Overlook, () => OnAnimation(AliceDirectionAnimType.Overlook));
+        LobbyManager.Instance.BossStageAppear += () => OnAnimation(AliceDirectionAnimType.Overlook);
     }
 
     private void FixedUpdate()
@@ -78,6 +79,18 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
     void PlayerMovable(bool isMove)
     {
         _isMoving = isMove;
+        print($"ÉvÉåÉCÉÑÅ[ëÄçÏ{isMove}");
+
+        if (!isMove)
+        {
+            _anim.SetFloat("Move", 0);
+        }
+    }
+
+    void OnOverLookAnimation()
+    {
+        
+        OnAnimation(AliceDirectionAnimType.Overlook);
     }
 
     /// <summary>

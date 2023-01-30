@@ -30,7 +30,7 @@ public class LobbyClockController : MonoBehaviour
 
     [Tooltip("éûåvÇ™ã∂Ç¡ÇƒÇ¢ÇÈéûä‘")]
     [SerializeField]
-    float _CrazyClockTime = 3.0f;
+    float _crazyClockTime = 3.0f;
 
     [Tooltip("éûêj")]
     [SerializeField]
@@ -50,7 +50,7 @@ public class LobbyClockController : MonoBehaviour
     Tween _currentHourTween;
     Tween _currentMinuteTween;
     #endregion
-    
+
     #region property
     #endregion
 
@@ -66,7 +66,7 @@ public class LobbyClockController : MonoBehaviour
         //StartCoroutine(CrazyClockCoroutine());
     }
 
-    public void ChangeClockState(ClockState state, float animTime = 3f, float derayTime = 4.0f, Action action = null)
+    public void ChangeClockState(ClockState state, float animTime = 3f, float derayTime = 4.0f, Action action = null, bool isPlaySE = false)
     {
         if (_isCrazing)
         {
@@ -79,7 +79,7 @@ public class LobbyClockController : MonoBehaviour
 
         Vector3 hourRotate = default;
         Vector3 secondRotate = default;
-        
+
         Debug.Log(state);
 
         switch (state)
@@ -143,9 +143,18 @@ public class LobbyClockController : MonoBehaviour
 
         if (_isCrazing)
         {
-            _hourHand.DOLocalRotate(hourRotate, _hourHandCrazyRotateTime);
+            if (animTime <= 0)
+            {
+                _hourHand.DOLocalRotate(hourRotate, _hourHandCrazyRotateTime, _isHourHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
 
-            _minuteHand.DOLocalRotate(secondRotate, _minuteHandCrazyRotateTime);
+                _minuteHand.DOLocalRotate(secondRotate, _minuteHandCrazyRotateTime, _isMinuteHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
+            }
+            else
+            {
+                _hourHand.DOLocalRotate(hourRotate, animTime, _isHourHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
+
+                _minuteHand.DOLocalRotate(secondRotate, animTime, _isMinuteHandClockWise ? RotateMode.FastBeyond360 : RotateMode.Fast);
+            }
         }
         else
         {
@@ -155,12 +164,23 @@ public class LobbyClockController : MonoBehaviour
             _minuteHand.DOLocalRotate(secondRotate, animTime)
                 .OnComplete(() =>
                 {
+                    if (isPlaySE)
+                    {
+                        AudioManager.StopSE();
+                        AudioManager.PlaySE(SEType.Lobby_StopClock);
+                    }
                     GameManager.UpdateCurrentClock(state);
                     action?.Invoke();
                 })
-                .SetDelay(derayTime);
+                .SetDelay(derayTime)
+                .OnStart(() =>
+                {
+                    if (isPlaySE)
+                    {
+                        AudioManager.PlaySE(SEType.Lobby_ClockMove);
+                    }
+                });
         }
-        
 
         _isCrazing = false;
     }
@@ -199,13 +219,20 @@ public class LobbyClockController : MonoBehaviour
                                      .SetLoops(-1);
     }
 
-    public IEnumerator CrazyClockCoroutine()
+    public IEnumerator CrazyClockCoroutine(float crazyTime = 0f, float returnTime = 0f)
     {
         OnCrazyClock();
 
-        yield return new WaitForSeconds(_CrazyClockTime);
+        if (crazyTime <= 0)
+        {
+            yield return new WaitForSeconds(_crazyClockTime);
+        }
+        else
+        {
+            yield return new WaitForSeconds(crazyTime);
+        }
 
-        ChangeClockState(ClockState.Twelve);
+        ChangeClockState(ClockState.Twelve, animTime: returnTime, isPlaySE: true);
     }
 }
 public enum ClockState

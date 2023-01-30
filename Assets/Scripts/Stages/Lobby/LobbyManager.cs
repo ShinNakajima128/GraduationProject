@@ -89,6 +89,13 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     Stage[] _stageDatas = default;
 
+    [Header("Renderer")]
+    [SerializeField]
+    Renderer _clockRenderer = default;
+
+    [SerializeField]
+    Material _goToUnderStageMat;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -106,7 +113,11 @@ public class LobbyManager : MonoBehaviour
     /// <summary> ドアから離れた時のAction </summary>
     public Action StepAwayDoor { get; set; }
     public Action<bool> PlayerMove { get; set; }
+    public Action<bool> IsUIOperate { get; set; }
+    public Action BossStageAppear { get; set; }
     public bool IsApproached => _isApproached;
+    /// <summary> 演出中かどうか </summary>
+    public bool IsDuring { get; private set; } = false;
     public LobbyUIState CurrentUIState { get => _currentUIState; set => _currentUIState = value; }
     #endregion
 
@@ -114,24 +125,29 @@ public class LobbyManager : MonoBehaviour
     {
         Instance = this;
         _stageNameText.text = "";
+        PlayerMove += CameraMovable;
     }
 
     IEnumerator Start()
     {
         SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
+        IsDuring = true;
 
         if (!_debugMode)
         {
             if (!IsFirstArrival)
             {
-                AudioManager.PlayBGM(BGMType.Lobby);
+                //AudioManager.PlayBGM(BGMType.Lobby);
             }
             else
             {
                 AudioManager.StopBGM(1.0f);
                 EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
-                EventManager.ListenEvents(Events.Lobby_Introduction, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction)));
+                EventManager.ListenEvents(Events.Lobby_Introduction, () => 
+                {
+                    StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction)); 
+                });
                 EventManager.ListenEvents(Events.Alice_Surprised, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_AliceAndCheshireTalking)));
                 EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
                 {
@@ -142,8 +158,8 @@ public class LobbyManager : MonoBehaviour
             TransitionManager.FadeIn(FadeType.Normal, 0f);
             yield return null;
 
-            _provider.enabled = false;
             PlayerMove?.Invoke(false);
+            IsUIOperate?.Invoke(false);
 
             yield return new WaitForSeconds(1.5f);
 
@@ -159,6 +175,7 @@ public class LobbyManager : MonoBehaviour
 
                 yield return new WaitForSeconds(1.5f);
 
+                AudioManager.PlaySE(SEType.Lobby_FirstVisit);
                 yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_FirstVisit);
 
                 TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
@@ -182,6 +199,7 @@ public class LobbyManager : MonoBehaviour
                         LetterboxController.ActivateLetterbox(true, 0f);
                         LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Appearance);
                         TransitionManager.FadeOut(FadeType.Normal);
+                        //AudioManager.PlaySE(SEType.Lobby_MeetingCheshire);
                     });
                 });
 
@@ -228,6 +246,7 @@ public class LobbyManager : MonoBehaviour
                 }
                 else
                 {
+                    AudioManager.PlayBGM(BGMType.Lobby);
                     StartCoroutine(OnPlayerMovable(1.5f));
                     Debug.Log("クリア済みステージ、またはステージ失敗");
                 }
@@ -237,8 +256,10 @@ public class LobbyManager : MonoBehaviour
         {
             TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
             AudioManager.PlayBGM(BGMType.Lobby);
-            _provider.enabled = true;
             PlayerMove?.Invoke(true);
+            IsUIOperate?.Invoke(true);
+
+            GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
         }
 
         GameManager.SaveStageResult(false);
@@ -260,6 +281,7 @@ public class LobbyManager : MonoBehaviour
         Instance._StageImage.sprite = data.StageSprite;
         Instance.ApproachDoor?.Invoke();
 
+        AudioManager.PlaySE(SEType.Lobby_NearDoor);
         StageDescriptionUI.Instance.ActiveDescription(type);
     }
 
@@ -329,16 +351,14 @@ public class LobbyManager : MonoBehaviour
             if (GameManager.Instance.CurrentClockState == ClockState.Twelve)
             {
                 //ボスステージが出現する処理
-                StartCoroutine(OnBossStageaAppearCoroutine());
+                StartCoroutine(OnBossStageAppearCoroutine());
             }
             else
             {
-                _cheshireCatCamera.Priority = 10;
-                _clockCamera.Priority = 10;
-                Camera.main.LayerCullingToggle("Ornament", true);
-                StartCoroutine(OnPlayerMovable(3.0f));
+                StartCoroutine(ReturnPlayerCamera());
             }
-        });
+        },
+        isPlaySE: true);
     }
 
     /// <summary>
@@ -347,6 +367,11 @@ public class LobbyManager : MonoBehaviour
     void PlayMeetingBGM()
     {
         AudioManager.PlayBGM(BGMType.Lobby_MeetingCheshire);
+    }
+
+    void CameraMovable(bool isMovable)
+    {
+        _provider.enabled = isMovable;
     }
 
     /// <summary>
@@ -382,13 +407,12 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     /// <param name="Interval"> 可能になるまでの時間 </param>
     /// <returns></returns>
-    IEnumerator OnPlayerMovable(float Interval)
+    IEnumerator OnPlayerMovable(float Interval, Action action = null)
     {
         yield return new WaitForSeconds(Interval - 1);
 
         if (IsFirstArrival)
         {
-            AudioManager.PlayBGM(BGMType.Lobby);
             IsFirstArrival = false;
         }
 
@@ -396,17 +420,21 @@ public class LobbyManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
+        IsDuring = false;
         PlayerMove?.Invoke(true);
-        _provider.enabled = true;
+        IsUIOperate?.Invoke(true);
+        action?.Invoke();
+        
     }
 
     /// <summary>
     /// ボス戦へ進むコルーチン
     /// </summary>
-    IEnumerator OnBossStageaAppearCoroutine()
+    IEnumerator OnBossStageAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
         EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
+        _clockRenderer.material = _goToUnderStageMat;
 
         yield return new WaitForSeconds(2.0f);
 
@@ -415,6 +443,7 @@ public class LobbyManager : MonoBehaviour
              _playerTrans.localPosition = _goingUnderTrans.position;
              _brain.m_DefaultBlend.m_Time = 0;
              _clock_ShakeCamera.Priority = 20;
+             _clockCtrl.OnCrazyClock();
 
              TransitionManager.FadeOut(FadeType.Normal, 0.5f);
          });
@@ -422,6 +451,7 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(3.5f);
 
         _goingUnderCamera.Priority = 25;
+        BossStageAppear?.Invoke();
 
         float timer = 0;
         bool isFading = false;
@@ -445,6 +475,16 @@ public class LobbyManager : MonoBehaviour
         //Camera.main.LayerCullingToggle("Ornament", true);
         //_clockCamera.Priority = 10;
         //StartCoroutine(OnPlayerMovable(3.0f));
+    }
+
+    IEnumerator ReturnPlayerCamera()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        _cheshireCatCamera.Priority = 10;
+                _clockCamera.Priority = 10;
+                Camera.main.LayerCullingToggle("Ornament", true);
+                StartCoroutine(OnPlayerMovable(3.0f, () => AudioManager.PlayBGM(BGMType.Lobby)));
     }
 }
 [Serializable]

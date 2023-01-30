@@ -84,6 +84,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
     [SerializeField]
     GameObject _gameStartIcon = default;
 
+    [SerializeField]
+    Image[] _infoImages = default;
+
     [Header("Camera")]
     [SerializeField]
     CinemachineVirtualCamera _quizCamera = default;
@@ -97,6 +100,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
     [SerializeField]
     TrumpSolderGenerator _trumpGenerator = default;
+
+    [Tooltip("環境音のAudioSource")]
+    [SerializeField]
+    AudioSource _ambientSource = default;
 
     [Header("Debug")]
     [SerializeField]
@@ -140,9 +147,10 @@ public class QuizGameManager : StageGame<QuizGameManager>
     public override void OnGameStart()
     {
         _informationText.text = "";
+        _infoImages[0].enabled = false;
+        _infoImages[1].enabled = false;
         LetterboxController.ActivateLetterbox(true);
         HPManager.Instance.RecoveryHP();
-        HPManager.Instance.ChangeHPValue(2);
 
         OnGameSetUp();
 
@@ -188,12 +196,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
-        _informationText.text = "スタート!";
+        //_informationText.text = "スタート!";
+        _infoImages[0].enabled = true;
 
         yield return new WaitForSeconds(1.5f);
 
         action?.Invoke();
-        _informationText.text = "";
+        _infoImages[0].enabled = false;
+        //_informationText.text = "";
     }
 
     protected override IEnumerator GameEndCoroutine(Action action = null)
@@ -359,11 +369,15 @@ public class QuizGameManager : StageGame<QuizGameManager>
 
         if (_corectNum >= _requiredCorrectNum)
         {
-            _informationText.text = "ステージクリア！";
+            //_informationText.text = "ステージクリア！";
+            _ambientSource.Stop();
+            _infoImages[1].enabled = true;
             GameManager.SaveStageResult(true);
-
-            yield return new WaitForSeconds(2.0f);
+            AudioManager.PlayBGM(BGMType.ClearJingle, false);
+            yield return new WaitForSeconds(2.5f);
+            _infoImages[1].enabled = false;
             _informationText.text = "";
+            _hpGroup.alpha = 0;
 
             yield return GameManager.GetStillDirectionCoroutine(Stages.Stage4, AliceProject.MessageType.GetStill_Stage4);
         }
@@ -383,8 +397,11 @@ public class QuizGameManager : StageGame<QuizGameManager>
     {
         _questionText.text = $"{(int)type + 1}";
         _questionPanelGroup.alpha = 1;
+        AudioManager.PlaySE(SEType.Stage4_Question1);
 
         yield return new WaitForSeconds(1.5f);
+
+        AudioManager.PlaySE(SEType.Stage4_Question2);
 
         switch (type)
         {
@@ -412,7 +429,6 @@ public class QuizGameManager : StageGame<QuizGameManager>
         yield return new WaitForSeconds(1.5f);
 
         _gameStartIcon.SetActive(true);
-
         yield return new WaitUntil(() => UIInput.Submit);
 
         _gameStartIcon.SetActive(false);
@@ -435,7 +451,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     .OnComplete(() =>
                     {
                         action?.Invoke();
-                        //_playerTrans.DOLocalRotate(new Vector3(0f, 180f, 0f), 0.25f);
+                        _playerAnim.CrossFadeInFixedTime("Idle", 0.2f);
                         _cheshireCats[0].ChangeState(CheshireCatState.Idle_Standing);
                         Debug.Log("クイズ表示");
                     });
