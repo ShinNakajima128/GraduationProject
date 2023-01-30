@@ -200,6 +200,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Instance._isClearStaged = false;
         FallGameManager.IsSecondTry = false;
         UnderLobbyManager.IsFirstVisit = true;
+        BossStageManager.IsFirstVisit = true;
         LobbyManager.Reset();
 
         for (int i = 0; i < Instance._stageStatusDic.Count; i++)

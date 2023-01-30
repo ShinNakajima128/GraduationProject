@@ -133,6 +133,7 @@ public class BossStageManager : StageGame<BossStageManager>
     #endregion
     #region property
     public static new BossStageManager Instance { get; private set; }
+    public static bool IsFirstVisit { get; set; } = true;
     #endregion
 
     protected override void Awake()
@@ -208,7 +209,7 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return null;
         AudioManager.PlayBGM(BGMType.Boss_Before);
 
-        if (!_debugMode)
+        if (!_debugMode && IsFirstVisit)
         {
             yield return new WaitForSeconds(1.5f);
 
@@ -526,6 +527,7 @@ public class BossStageManager : StageGame<BossStageManager>
         {
             GameoverDirection.Instance.ActivateGameoverUI(true);
             TransitionManager.FadeOut(FadeType.Black_default, fadeTime: 2.0f);
+            IsFirstVisit = false;
         });
     }
 }
