@@ -23,7 +23,8 @@ public enum BGMType
     Gameover,
     ClearJingle,
     GetStill,
-    BossStage_Clear
+    BossStage_Clear,
+    UnderLobby
 }
 public enum SEType
 {
