@@ -139,6 +139,11 @@ public class QuizController : MonoBehaviour
 
         ChoiceButtonSetUp(type);
 
+        yield return null;
+
+        _playerChoiceValue = _choiceButtonList[0].ChoiceAnswerValue;
+        _currentButtonIndex = _choiceButtonList[0].ButtonIndex;
+
         if (!_debugMode)
         {
             while (timer < _answerTime && !_isChoiced)
