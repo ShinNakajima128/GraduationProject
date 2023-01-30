@@ -319,6 +319,8 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
     {
+        yield return new WaitForSeconds(1.0f);
+
         CharacterMovable?.Invoke(false);
         OnDirectionSetUp();
 
@@ -333,7 +335,7 @@ public class BossStageManager : StageGame<BossStageManager>
             yield return FinishBattleCoroutine();
 
             _hpPanel.alpha = 0;
-            GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss);
+            StartCoroutine(GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss));
             yield break;
         }
 
