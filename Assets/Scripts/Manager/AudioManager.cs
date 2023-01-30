@@ -99,7 +99,8 @@ public enum SEType
     BossStage_DebrisLanding,
     BossStage_QueenLanding,
     BossStage_Down,
-    Alice_Landing
+    Alice_Landing,
+    Trump_Slust, //トランプ兵：突き攻撃
 }
 
 public enum VOICEType
