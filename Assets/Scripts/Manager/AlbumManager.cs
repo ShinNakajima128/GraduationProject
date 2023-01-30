@@ -105,7 +105,8 @@ public class AlbumManager : MonoBehaviour
                                      })
                                      .AddTo(this);
 
-            this.UpdateAsObservable().Where(_ => _isOpened &&
+            this.UpdateAsObservable().Where(_ => UIManager.Instance.IsCanOpenUI && 
+                                                 _isOpened &&
                                                  !_isPressed &&
                                                  GameManager.Instance.CurrentLobbyState == LobbyState.Under &&
                                                  UIInput.A)
