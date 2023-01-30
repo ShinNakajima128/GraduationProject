@@ -20,7 +20,11 @@ public enum BGMType
     Boss_InGame,
     Ending,
     /// <summary> ゲームオーバー </summary>
-    Gameover
+    Gameover,
+    ClearJingle,
+    GetStill,
+    BossStage_Clear,
+    UnderLobby
 }
 public enum SEType
 {
@@ -54,9 +58,50 @@ public enum SEType
     Item_Countup,
     /// <summary> アイテム:紙が飛び散る </summary>
     Object_Scatter,
+    /// <summary> ネズミ発見 </summary>
     Finding,
-    Gameover_Jingle
+    /// <summary> ゲームオーバージングル </summary>
+    Gameover_Jingle,
+    /// <summary> ステージに進む </summary>
+    GoToStage,
+    /// <summary> タイトル：ゲームスタート </summary>
+    UI_GameStart,
+    /// <summary> ステージ1の落下音 </summary>
+    Stage1_Fall,
+    Lobby_FirstVisit,
+    Lobby_MeetingCheshire,
+    Lobby_OpenAlbum,
+    Lobby_CloseAlbum,
+    Lobby_NearDoor,
+    Lobby_ClockMove,
+    Lobby_StopClock,
+    Lobby_OnTutorial,
+    UI_CannotSelect,
+    Player_Landing,
+    Stage2_Correct,
+    Stage2_Wrong,
+    Stage2_OpenCup,
+    Stage2_CloseCup,
+    Stage2_Shuffle,
+    Stage2_Warp,
+    Stage3_Swing,
+    Stage3_Shot,
+    Stage3_OpenOrder,
+    Stage3_CloseOrder,
+    Stage3_Goal,
+    Stage3_Success,
+    Stage3_Failure,
+    Stage3_BlowTrump,
+    Stage3_heeloverOrder,
+    Stage3_QueenStump,
+    Stage4_Question1,
+    Stage4_Question2,
+    BossStage_DebrisLanding,
+    BossStage_QueenLanding,
+    BossStage_Down,
+    Alice_Landing
 }
+
 public enum VOICEType
 {
     /// <summary> ダメージ </summary>
@@ -179,7 +224,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             }
             else
             {
-                Instance.StartCoroutine(Instance.SwitchingBgm(bgm));
+                Instance.StartCoroutine(Instance.SwitchingBgm(bgm, loopType));
                 Debug.Log($"{bgm.BGMName}を再生");
             }
 
@@ -347,7 +392,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// BGMを徐々に変更する
     /// </summary>
     /// <param name="afterBgm"> 変更後のBGM </param>
-    IEnumerator SwitchingBgm(BGM afterBgm)
+    IEnumerator SwitchingBgm(BGM afterBgm, bool loopType = true)
     {
         _isStoping = false;
         float currentVol = _bgmSource.volume;
@@ -359,6 +404,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         }
 
         _bgmSource.clip = afterBgm.Clip;　//BGMの入れ替え
+        _bgmSource.loop = loopType;
         _bgmSource.Play();
 
         while (_bgmSource.volume < currentVol)　//音量を元に戻す

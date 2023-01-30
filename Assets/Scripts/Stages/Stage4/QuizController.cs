@@ -34,10 +34,24 @@ public class QuizController : MonoBehaviour
 
     [SerializeField]
     Text _AnswerTimeText = default;
+
+    [Tooltip("正解のImage")]
+    [SerializeField]
+    Image _correctImage = default;
+
+    [Tooltip("不正解のImage")]
+    [SerializeField]
+    Image _wrongImage = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
+
     #region private
     int _currentAnswerValue = 0;
     int _playerChoiceValue = 0;
+    int _currentButtonIndex = 0;
     bool _isChoiced = false;
     #endregion
     #region property
@@ -56,6 +70,7 @@ public class QuizController : MonoBehaviour
             selectEntry.callback.AddListener(eventData => 
             {
                 _playerChoiceValue = b.ChoiceAnswerValue;
+                _currentButtonIndex = b.ButtonIndex;
             });
             trigger.triggers.Add(selectEntry);
 
@@ -63,9 +78,9 @@ public class QuizController : MonoBehaviour
             b.Button.onClick.AddListener(() =>
             {
                 _isChoiced = true;
+                EventSystem.current.firstSelectedGameObject = null;
             });
         }
-        EventSystem.current.firstSelectedGameObject.GetComponent<Button>().Select();
         _choicePanel.alpha = 0;
         _questionText.text = "";
         _AnswerTimeText.text = "";
@@ -81,6 +96,13 @@ public class QuizController : MonoBehaviour
     {
         //選択状態のフラグをリセット
         _isChoiced = false;
+        _correctImage.enabled = false;
+        _wrongImage.enabled = false;
+
+        foreach (var b in _choiceButtonList)
+        {
+            b.Button.gameObject.SetActive(true);
+        }
         _choicePanel.alpha = 1;
         EventSystem.current.firstSelectedGameObject = _choiceButtonList[0].Button.gameObject;
         _choiceButtonList[0].Button.Select();
@@ -117,25 +139,37 @@ public class QuizController : MonoBehaviour
 
         ChoiceButtonSetUp(type);
 
-        while (timer < _answerTime && !_isChoiced)
+        if (!_debugMode)
         {
-            _AnswerTimeText.text = (_answerTime - timer).ToString("F0");
-            timer += Time.deltaTime;
-            yield return null;
+            while (timer < _answerTime && !_isChoiced)
+            {
+                _AnswerTimeText.text = (_answerTime - timer).ToString("F0");
+                timer += Time.deltaTime;
+                yield return null;
+            }
         }
+        else
+        {
+            yield return new WaitUntil(() => _isChoiced);
+        }
+
+        _questionText.text = "";
+        HighlightButton();
 
         if (Judge())
         {
-            _questionText.text = "正解！";
+            //_questionText.text = "正解！";
+            _correctImage.enabled = true;
+            AudioManager.PlaySE(SEType.Stage2_Correct);
             callback?.Invoke(1);
         }
         else
         {
-            _questionText.text = $"不正解… 正解は{_currentAnswerValue}";
+            //_questionText.text = $"不正解… 正解は{_currentAnswerValue}";
+            _wrongImage.enabled = true;
+            AudioManager.PlaySE(SEType.Stage2_Wrong);
             callback?.Invoke(0);
         }
-
-        _choicePanel.alpha = 0;
 
         if (HPManager.Instance.CurrentHP.Value <= 0)
         {
@@ -144,7 +178,8 @@ public class QuizController : MonoBehaviour
 
         yield return new WaitForSeconds(_goToNextPhaseInterval);
 
-        _questionText.text = "";
+        _choicePanel.alpha = 0;
+
         _AnswerTimeText.text = "";        
     }
 
@@ -190,19 +225,46 @@ public class QuizController : MonoBehaviour
 
         for (int i = 0; i < _choiceButtonList.Count; i++)
         {
+            _choiceButtonList[i].Button.gameObject.SetActive(true);
             _choiceButtonList[i].ChoiceAnswerValue = sort[i];
-            _choiceButtonList[i].ChoiceText.text = type switch
+            _choiceButtonList[i].ChoiceText.text = sort[i].ToString();
+
+            switch (type)
             {
-                QuizType.RedRose => $"{sort[i]} <size=80>本</size>",
-                QuizType.WhiteRose => $"{sort[i]} <size=80>本</size>",
-                QuizType.RedAndWhiteRose => $"{sort[i]} <size=80>本</size>",
-                QuizType.TrumpSolder => $"{sort[i]} <size=80>人</size>",
-                QuizType.All => $"{sort[i]}",
-                _ => $"{sort[i]} ",
-            };
+                case QuizType.TrumpSolder:
+                    _choiceButtonList[i].TrumpUnitImage.enabled = true;
+                    _choiceButtonList[i].RoseUnitImage.enabled = false;
+                    break;
+                case QuizType.All:
+                    break;
+                default:
+                    _choiceButtonList[i].TrumpUnitImage.enabled = false;
+                    _choiceButtonList[i].RoseUnitImage.enabled = true;
+                    break;
+            }
+            //_choiceButtonList[i].ChoiceText.text = type switch
+            //{
+            //    QuizType.RedRose => $"{sort[i]}",
+            //    QuizType.WhiteRose => $"{sort[i]}",
+            //    QuizType.RedAndWhiteRose => $"{sort[i]}",
+            //    QuizType.TrumpSolder => $"{sort[i]}",
+            //    QuizType.All => $"{sort[i]}",
+            //    _ => $"{sort[i]} ",
+            //};
         }
 
     }
+
+    void HighlightButton()
+    {
+        foreach (var b in _choiceButtonList)
+        {
+            b.Button.gameObject.SetActive(false);
+        }
+
+        _choiceButtonList[_currentButtonIndex].Button.gameObject.SetActive(true);
+    }
+
     bool CheckValue(int[] values)
     {
         //正解が含まれているか確認
@@ -254,4 +316,7 @@ public class ChoiceButton
     public Button Button;
     public Text ChoiceText;
     public int ChoiceAnswerValue;
+    public Image RoseUnitImage;
+    public Image TrumpUnitImage;
+    public int ButtonIndex;
 }

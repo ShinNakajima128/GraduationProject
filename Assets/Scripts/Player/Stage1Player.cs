@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 
-public class Stage1Player : PlayerBase, IEffectable, IDamagable
+public class Stage1Player : PlayerBase, IEffectable, IDamagable, IHealable
 {
     #region serialize
     [Tooltip("エフェクトを再生する位置")]
@@ -33,6 +33,7 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable
     public Transform EffectPos => _effectPos;
 
     public bool IsInvincibled => _isInvincibled;
+    public bool IsMaxHP { get; private set; } = true;
 
     void Start()
     {
@@ -44,10 +45,26 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable
         StartCoroutine(DamageCoroutine());
         FallGameManager.Instance.OnDamage(value);
     }
+
+    /// <summary>
+    /// 体力を回復する
+    /// </summary>
+    /// <param name="value"> 回復量 </param>
+    public void Heal(int value)
+    {
+        HPManager.Instance.ChangeHPValue(value, true);
+
+        if (HPManager.Instance.IsMaxHP)
+        {
+            IsMaxHP = true;
+        }
+    }
+
     IEnumerator DamageCoroutine()
     {
         _isInvincibled = true;
         _fc.ChangeFaceType(FaceType.Damage);
+        IsMaxHP = false;
 
         var wait = new WaitForSeconds(_blinksInterVal);
 

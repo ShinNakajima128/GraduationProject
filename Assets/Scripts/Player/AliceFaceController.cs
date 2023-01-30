@@ -76,6 +76,7 @@ public class AliceFaceController : MonoBehaviour
     bool _isTalking = false;
     bool _init = false;
     Coroutine _blinkCoroutine;
+    Coroutine _talkCoroutine;
     #endregion
     #region property
     #endregion
@@ -140,7 +141,14 @@ public class AliceFaceController : MonoBehaviour
         }
         else if (type == FaceType.Talking)
         {
+            _isTalking = true;
 
+            if (_talkCoroutine != null)
+            {
+                StopCoroutine(_talkCoroutine);
+                _talkCoroutine = null;
+            }
+            _talkCoroutine = StartCoroutine(TalkingCoroutine());
         }
         else
         {

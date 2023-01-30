@@ -185,6 +185,7 @@ public class BossController : MonoBehaviour, IDamagable
         BossStageManager.CameraShake();
         LetterboxController.ActivateLetterbox(false);
         EventManager.OnEvent(Events.Boss_GroundShake);
+        AudioManager.PlaySE(SEType.BossStage_QueenLanding);
         firstAction?.Invoke();
 
         yield return new WaitForSeconds(2.5f);
@@ -304,6 +305,11 @@ public class BossController : MonoBehaviour, IDamagable
     /// <returns></returns>
     IEnumerator DamageCoroutine(Action action)
     {
+        if (_isDamaged)
+        {
+            yield break;
+        }
+
         //攻撃中にダメージを受けた場合は攻撃処理を中断
         if (_jumpCoroutine != null)
         {
@@ -318,6 +324,9 @@ public class BossController : MonoBehaviour, IDamagable
             yield return null;
         }
 
+        _isDamaged = true;
+        BossHPManager.Instance.Damage();
+
         //3フェイズ目の時は倒されたモーションを再生
         if (_currentBattlePhase == BossBattlePhase.Third)
         {
@@ -330,7 +339,6 @@ public class BossController : MonoBehaviour, IDamagable
             yield return new WaitForSeconds(_downTime);
         }
 
-        _isDamaged = true;
         action?.Invoke();
     }
 

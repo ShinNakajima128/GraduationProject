@@ -45,7 +45,8 @@ public class TitleManager : MonoBehaviour
         }
 
         this.UpdateAsObservable().Where(_ => _currentTitleType != TitleUIType.Start)
-                                 .Subscribe(_ => { });
+                                 .Subscribe(_ => { })
+                                 .AddTo(this);
     }
 
     IEnumerator Start()
@@ -62,6 +63,16 @@ public class TitleManager : MonoBehaviour
         ChangeUIPanel(TitleUIType.Start);
         GameManager.GameReset(); //クリアしてタイトルに戻ってきた場合用の初期化処理
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (UIInput.Exit)
+        {
+            TransitionManager.SceneTransition(SceneType.Stage_Boss);
+        }
+    }
+#endif
     void ButtonSetup()
     {
         foreach (var b in _buttonDic)
@@ -107,6 +118,7 @@ public class TitleManager : MonoBehaviour
                         }
                         GameManager.ChangeGameDifficult(DifficultyType.Easy);
                         TransitionManager.SceneTransition(SceneType.Intro);
+                        AudioManager.PlaySE(SEType.UI_GameStart);
                     });
                     break;
                 case ButtonType.Difficulty_Normal:
@@ -118,6 +130,7 @@ public class TitleManager : MonoBehaviour
                         }
                         GameManager.ChangeGameDifficult(DifficultyType.Normal);
                         TransitionManager.SceneTransition(SceneType.Intro);
+                        AudioManager.PlaySE(SEType.UI_GameStart);
                     });
                     break;
                 case ButtonType.Difficulty_Hard:
@@ -129,6 +142,7 @@ public class TitleManager : MonoBehaviour
                         }
                         GameManager.ChangeGameDifficult(DifficultyType.Hard);
                         TransitionManager.SceneTransition(SceneType.Intro);
+                        AudioManager.PlaySE(SEType.UI_GameStart);
                     });
                     break;
                 default:

@@ -69,7 +69,7 @@ public class GetStillController : MonoBehaviour
 
         Instance._clearImage.enabled = true;
 
-        yield return Instance._clearImage.gameObject.transform.DOScale(1f, Instance._clearAnimTime)
+        yield return Instance._clearImage.gameObject.transform.DOScale(5f, Instance._clearAnimTime)
                                                               .WaitForCompletion();
     }
 

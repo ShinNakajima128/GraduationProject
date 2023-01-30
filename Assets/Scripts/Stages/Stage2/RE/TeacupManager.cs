@@ -61,6 +61,7 @@ public class TeacupManager : MonoBehaviour
 
     public void AllCupDown()
     {
+        AudioManager.PlaySE(SEType.Stage2_CloseCup);
         foreach (var c in _teacups)
         {
             c.DownCup();
@@ -69,6 +70,7 @@ public class TeacupManager : MonoBehaviour
 
     public void AllCupOpen()
     {
+        AudioManager.PlaySE(SEType.Stage2_OpenCup);
         foreach (var c in _teacups)
         {
             c.UpCup();

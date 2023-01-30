@@ -44,6 +44,7 @@ public class StageDescriptionUI : MonoBehaviour
 
     #region property
     public static StageDescriptionUI Instance { get; private set; }
+    public bool IsActived => _isActiveUI;
     #endregion
 
     private void Awake()
@@ -83,6 +84,10 @@ public class StageDescriptionUI : MonoBehaviour
         _isActiveUI = false;
     }
 
+    public void ActiveButton()
+    {
+        _descriptionButtons[0].Select();
+    }
     void ButtonSetup()
     {
         _descriptionButtons[0].gameObject.TryGetComponent<EventTrigger>(out var trigger);
@@ -109,7 +114,7 @@ public class StageDescriptionUI : MonoBehaviour
             if (_isActiveUI)
             {
                 //チュートリアル画面を開いている場合は処理を行わない
-                if (_tutorial.IsActivateTutorial || _isButtonClicking)
+                if (_tutorial.IsActivateTutorial || _isButtonClicking || UIManager.Instance.IsAnyPanelOpened)
                 {
                     return;
                 }
@@ -126,30 +131,40 @@ public class StageDescriptionUI : MonoBehaviour
                         _tutorial.TutorialSetup(Stages.Stage1, () => 
                         {
                             TransitionManager.SceneTransition(SceneType.Stage1_Fall, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.RE_Stage2:
                         _tutorial.TutorialSetup(Stages.Stage2, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.RE_Stage2, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.RE_Stage3:
                         _tutorial.TutorialSetup(Stages.Stage3, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.RE_Stage3, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.Stage4:
                         _tutorial.TutorialSetup(Stages.Stage4, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.Stage4, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     case SceneType.Stage_Boss:
                         _tutorial.TutorialSetup(Stages.Stage_Boss, () =>
                         {
                             TransitionManager.SceneTransition(SceneType.Stage_Boss, FadeType.Mask_KeyHole);
+                            AudioManager.StopBGM(0.3f);
+                            AudioManager.PlaySE(SEType.GoToStage);
                         });
                         break;
                     default:
@@ -157,6 +172,7 @@ public class StageDescriptionUI : MonoBehaviour
                         break;
                 }
 
+                AudioManager.PlaySE(SEType.Lobby_OnTutorial);
                 TransitionManager.FadeIn(FadeType.Mask_CheshireCat,
                               　  0.5f,
                             　    () =>
@@ -203,7 +219,9 @@ public class StageDescriptionUI : MonoBehaviour
                 }
 
                 _isButtonClicking = true;
-                TransitionManager.SceneTransition(_currentSelectScene);
+                AudioManager.StopBGM(0.3f);
+                AudioManager.PlaySE(SEType.GoToStage);
+                TransitionManager.SceneTransition(_currentSelectScene, FadeType.Mask_KeyHole);
                 _descriptionButtons[1].transform.DOLocalMoveY(_descriptionButtons[1].transform.localPosition.y - 15, 0.05f)
                                                    .SetLoops(2, LoopType.Yoyo);
             }
@@ -218,6 +236,7 @@ public class StageDescriptionUI : MonoBehaviour
     IEnumerator OffTutorialCoroutine()
     {
         _isButtonClicking = true;
+        AudioManager.PlaySE(SEType.Lobby_OnTutorial);
         TransitionManager.FadeIn(FadeType.Mask_CheshireCat,
                          0.5f,
                          () => 

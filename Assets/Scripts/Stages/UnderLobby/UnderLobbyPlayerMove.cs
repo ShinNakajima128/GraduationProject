@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,11 +29,19 @@ public class UnderLobbyPlayerMove : MonoBehaviour, IMovable
 
     private void Start()
     {
-        PlayerMovable(true);
+        UnderLobbyManager.Instance.PlayerMove += PlayerMovable;
+        StageDescriptionUI.Instance.OpenTutorialAction += PlayerMovable;
         EventManager.ListenEvents(Events.Alice_Yes, () => { OnAnimation(AliceDirectionAnimType.Yes); });
         EventManager.ListenEvents(Events.Alice_No, () => { OnAnimation(AliceDirectionAnimType.No); });
         EventManager.ListenEvents(Events.Alice_Surprised, () => { OnAnimation(AliceDirectionAnimType.Surprised); });
-        EventManager.ListenEvents(Events.Alice_Overlook, () => { OnAnimation(AliceDirectionAnimType.Overlook); });
+        EventManager.ListenEvents(Events.Alice_Overlook,
+                    () => 
+                    {
+                        OnAnimation(AliceDirectionAnimType.Overlook,
+                        action: () => EventManager.OnEvent(Events.FinishTalking),
+                        animTime: 7.5f);
+                    });
+                        
     }
 
     private void FixedUpdate()
@@ -83,8 +92,20 @@ public class UnderLobbyPlayerMove : MonoBehaviour, IMovable
     /// </summary>
     /// <param name="type"> アニメーションの種類 </param>
     /// <param name="fixedTime"> 切り替わるまでの時間 </param>
-    void OnAnimation(AliceDirectionAnimType type, float fixedTime = 0.2f)
+    void OnAnimation(AliceDirectionAnimType type, float fixedTime = 0.2f, Action action = null, float animTime = 4.0f)
     {
         _anim.CrossFadeInFixedTime(type.ToString(), fixedTime);
+
+        if (action != null)
+        {
+            StartCoroutine(FinishAnimationCoroutine(action, animTime));
+        }
+    }
+
+    IEnumerator FinishAnimationCoroutine(Action action, float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        action?.Invoke();
     }
 }
