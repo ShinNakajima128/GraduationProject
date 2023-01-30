@@ -179,6 +179,8 @@ public class BallController : MonoBehaviour, IThrowable
 
     void Setup()
     {
+        _directionValue = 0;
+
         IsThrowed = false;
         transform.SetParent(_parent);
         transform.SetAsLastSibling();
