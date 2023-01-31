@@ -54,7 +54,7 @@ public class BallController : MonoBehaviour, IThrowable
         CroquetGameManager.Instance.GameSetUp += Setup;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         _direction = _rb.velocity;
 
@@ -70,7 +70,7 @@ public class BallController : MonoBehaviour, IThrowable
     /// </summary>
     private void ForwardRotation()
     {
-        transform.Rotate(new Vector3(5, 0, 0));
+        transform.Rotate(new Vector3(15, 0, 0));
     }
 
     /// <summary>

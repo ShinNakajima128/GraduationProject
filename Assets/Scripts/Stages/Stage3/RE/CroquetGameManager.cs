@@ -63,12 +63,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     AudioSource _trumpBlowSESource = default;
 
-    [SerializeField]
-    AudioClip _challengingClip = default;
-
-    [SerializeField]
-    AudioClip _achievingClip = default;
-
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = default;
