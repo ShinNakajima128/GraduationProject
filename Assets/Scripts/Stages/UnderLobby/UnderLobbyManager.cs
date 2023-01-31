@@ -92,10 +92,14 @@ public class UnderLobbyManager : MonoBehaviour
         {
             EventManager.OnEvent(Events.Alice_Overlook);
             StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
+            AudioManager.PlaySE(SEType.UnderLobby_Lowering);
 
             yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
                                                .SetEase(Ease.Linear)
                                                .WaitForCompletion();
+
+            AudioManager.StopSE();
+            AudioManager.PlaySE(SEType.UnderLobby_Arrival);
             CameraShake();
 
             yield return new WaitForSeconds(1.0f);

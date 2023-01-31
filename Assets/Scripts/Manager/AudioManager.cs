@@ -101,6 +101,9 @@ public enum SEType
     BossStage_Down,
     Alice_Landing,
     Trump_Slust, //トランプ兵：突き攻撃
+    Trump_Waiting,
+    UnderLobby_Lowering, //地下：下降音
+    UnderLobby_Arrival //地下：到着
 }
 
 public enum VOICEType
