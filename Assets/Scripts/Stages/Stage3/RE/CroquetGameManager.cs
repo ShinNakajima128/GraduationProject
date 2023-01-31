@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using AliceProject;
+using UniRx;
+using UniRx.Triggers;
 
 /// <summary>
 /// クロッケーゲーム全体を管理するマネージャークラス
@@ -112,6 +114,15 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         base.Start();
         Init();
         OnGameStart();
+
+        //問題が起きた時用にミニゲームをスキップする機能を追加
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.Next)
+            .Subscribe(_ => 
+            {
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby); 
+            });
     }
 
     public override void OnGameSetUp()

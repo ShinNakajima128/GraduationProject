@@ -18,6 +18,7 @@ public class UIInput : MonoBehaviour
     public static bool Y => Instance._input.actions["Y"].WasPressedThisFrame();
     public static bool RB => Instance._input.actions["RB"].WasPressedThisFrame();
     public static bool LB => Instance._input.actions["LB"].WasPressedThisFrame();
+    public static bool Next => Instance._input.actions["N"].WasPressedThisFrame(); 
     public static bool LeftCrossKey => Instance._input.actions["LeftCrossKey"].WasPressedThisFrame();
     public static bool RightCrossKey => Instance._input.actions["RightCrossKey"].WasPressedThisFrame();
     public static bool Option => Instance._input.actions["Option"].WasPressedThisFrame();

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using AliceProject;
 using DG.Tweening;
+using UniRx;
+using UniRx.Triggers;
 
 public class ShuffleGameManager : StageGame<ShuffleGameManager>
 {
@@ -77,6 +79,15 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
         base.Start();
         OnGameStart();
         Init();
+
+        //問題が起きた時用にミニゲームをスキップする機能を追加
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.Next)
+            .Subscribe(_ =>
+            {
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby);
+            });
     }
 
     public override void OnGameSetUp()

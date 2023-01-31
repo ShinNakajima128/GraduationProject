@@ -8,6 +8,7 @@ using DG.Tweening;
 using Cinemachine;
 using Unity.Collections;
 using UniRx;
+using UniRx.Triggers;
 
 /// <summary>
 /// ステージ4のクイズゲームを管理するマネージャー
@@ -142,6 +143,15 @@ public class QuizGameManager : StageGame<QuizGameManager>
         _brain.m_DefaultBlend.m_Time = 0f;
         base.Start();
         OnGameStart();
+
+        //問題が起きた時用にミニゲームをスキップする機能を追加
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.Next)
+            .Subscribe(_ =>
+            {
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby);
+            });
     }
 
     public override void OnGameStart()

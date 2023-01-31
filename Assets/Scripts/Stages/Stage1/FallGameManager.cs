@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
 using AliceProject;
+using UniRx;
+using UniRx.Triggers;
+
 /// <summary>
 /// 落下ゲームの管理を行うマネージャークラス
 /// </summary>
@@ -91,6 +94,15 @@ public class FallGameManager : MonoBehaviour
 
         LetterboxController.ActivateLetterbox(true, 0f);
         TransitionManager.FadeOut(FadeType.Normal);
+
+        //問題が起きた時用にミニゲームをスキップする機能を追加
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.Next)
+            .Subscribe(_ =>
+            {
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby);
+            });
     }
 
     public void OnGameStart()
