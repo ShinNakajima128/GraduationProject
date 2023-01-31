@@ -137,13 +137,14 @@ public class QuizController : MonoBehaviour
                 break;
         }
 
+        Debug.Log($"åªç›ÇÃâÒìöêîÅF{_currentAnswerValue}");
         ChoiceButtonSetUp(type);
 
         yield return null;
 
         _playerChoiceValue = _choiceButtonList[0].ChoiceAnswerValue;
         _currentButtonIndex = _choiceButtonList[0].ButtonIndex;
-
+        manager.TrumpGenerator.Return();
         if (!_debugMode)
         {
             while (timer < _answerTime && !_isChoiced)
