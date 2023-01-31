@@ -434,7 +434,7 @@ public class LobbyManager : MonoBehaviour
     IEnumerator OnBossStageAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
-        EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
+        //EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         _clockRenderer.material = _goToUnderStageMat;
 
         yield return new WaitForSeconds(2.0f);
@@ -445,6 +445,7 @@ public class LobbyManager : MonoBehaviour
              _brain.m_DefaultBlend.m_Time = 0;
              _clock_ShakeCamera.Priority = 20;
              _clockCtrl.OnCrazyClock();
+             AudioManager.PlaySE(SEType.UnderLobby_Lowering);
 
              TransitionManager.FadeOut(FadeType.Normal, 0.5f);
          });
@@ -465,7 +466,10 @@ public class LobbyManager : MonoBehaviour
                                    if (timer >= 5.0f && !isFading)
                                    {
                                        GameManager.ChangeLobbyState(LobbyState.Under);
-                                       TransitionManager.SceneTransition(SceneType.UnderLobby);
+                                       TransitionManager.SceneTransition(SceneType.UnderLobby, action: () => 
+                                       {
+                                           AudioManager.StopSE();
+                                       });
                                        isFading = true;
                                    }
                                })
