@@ -71,6 +71,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public static void SwitchIsCanOpenFlag(bool isCanOpen)
+    {
+        Instance.IsCanOpenUI = isCanOpen;
+    }
+
     /// <summary>
     /// UI‘€ì‚Ìƒtƒ‰ƒO‚ğØ‚è‘Ö‚¦‚é
     /// </summary>

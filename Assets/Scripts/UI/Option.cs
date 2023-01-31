@@ -43,6 +43,7 @@ public class Option : MonoBehaviour
     #region private
     CanvasGroup _optionGroup;
     ReactiveProperty<TabType> _currentTab = new ReactiveProperty<TabType>();
+    bool _init = false;
     #endregion
 
     #region public
@@ -64,14 +65,20 @@ public class Option : MonoBehaviour
                 case TabType.Sound:
                     _soundTab.SetActive(true);
                     _difficultyTab.SetActive(false);
-                    EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
-                    _soundTabButtons[0].Button.Select();
+                    if (_init)
+                    {
+                        EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
+                        _soundTabButtons[0].Button.Select();
+                    }
                     break;
                 case TabType.Difficulty:
                     _soundTab.SetActive(false);
                     _difficultyTab.SetActive(true);
-                    EventSystem.current.firstSelectedGameObject = _difficultyTabButtons[0].Button.gameObject;
-                    _difficultyTabButtons[0].Button.Select();
+                    if (_init)
+                    {
+                        EventSystem.current.firstSelectedGameObject = _difficultyTabButtons[0].Button.gameObject;
+                        _difficultyTabButtons[0].Button.Select();
+                    }
                     break;
                 default:
                     break;
@@ -85,14 +92,12 @@ public class Option : MonoBehaviour
     private void Start()
     {
         RxSetup();
+        _init = true;
     }
 
     public void ActiveOption()
     {
-        _optionGroup.alpha = 1;
-        UIManager.ActivatePanel(UIPanelType.Option);
-        _currentTab.Value = TabType.Sound;
-        EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
+        StartCoroutine(OnOptionCotoutine());
     }
 
     void ButtonSetup()
@@ -134,9 +139,9 @@ public class Option : MonoBehaviour
         soundTrigger3.triggers.Add(soundSelectEntry3);
 
         var soundDeselectEntry3 = new EventTrigger.Entry();
-        soundDeselectEntry1.eventID = EventTriggerType.Deselect;
-        soundDeselectEntry1.callback.AddListener(eventData => OnDeselectEvent(_soundTabButtons[2]));
-        soundTrigger1.triggers.Add(soundDeselectEntry1);
+        soundDeselectEntry3.eventID = EventTriggerType.Deselect;
+        soundDeselectEntry3.callback.AddListener(eventData => OnDeselectEvent(_soundTabButtons[2]));
+        soundTrigger3.triggers.Add(soundDeselectEntry3);
 
         var soundTrigger4 = _soundTabButtons[3].Button.GetComponent<EventTrigger>();
 
@@ -242,9 +247,7 @@ public class Option : MonoBehaviour
 
     void OnCloseOptionPanel()
     {
-        _optionGroup.alpha = 0;
-        UIManager.InactivatePanel(UIPanelType.Option);
-        _pause.PauseActivate(true);
+        StartCoroutine(OffOptionCotoutine());
     }
 
     void OnChangeLeftBar(SelectBarType type)
@@ -356,6 +359,25 @@ public class Option : MonoBehaviour
                 OnChangeRightBar(SelectBarType.SE);
             });
         #endregion
+    }
+    IEnumerator OnOptionCotoutine()
+    {
+        yield return new WaitForSeconds(0.03f);
+
+        _optionGroup.alpha = 1;
+        UIManager.ActivatePanel(UIPanelType.Option);
+        _currentTab.Value = TabType.Sound;
+        EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
+        _soundTabButtons[0].Button.Select();
+    }
+
+    IEnumerator OffOptionCotoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        _optionGroup.alpha = 0;
+        UIManager.InactivatePanel(UIPanelType.Option);
+        _pause.PauseActivate(true);
     }
 }
 

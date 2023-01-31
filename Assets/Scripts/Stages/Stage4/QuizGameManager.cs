@@ -374,10 +374,12 @@ public class QuizGameManager : StageGame<QuizGameManager>
             _infoImages[1].enabled = true;
             GameManager.SaveStageResult(true);
             AudioManager.PlayBGM(BGMType.ClearJingle, false);
-            yield return new WaitForSeconds(2.5f);
+            _hpGroup.alpha = 0;
+
+            yield return new WaitForSeconds(3f);
+
             _infoImages[1].enabled = false;
             _informationText.text = "";
-            _hpGroup.alpha = 0;
 
             yield return GameManager.GetStillDirectionCoroutine(Stages.Stage4, AliceProject.MessageType.GetStill_Stage4);
         }

@@ -17,6 +17,9 @@ public class TeacupManager : MonoBehaviour
     [SerializeField]
     GameObject _selectButtonInfo = default;
 
+    [SerializeField]
+    GameObject _selectButtonsParent = default;
+
     [Header("Components")]
     [SerializeField]
     TeacupSelecter _selecter = default;
@@ -90,11 +93,13 @@ public class TeacupManager : MonoBehaviour
 
     public IEnumerator ChoicePhaseCoroutine(Action<bool, int> callback)
     {
+        _selectButtonsParent.SetActive(true);
         _selecter.SelectButtons[0].SelectButton.Select();
         _selectButtonInfo.SetActive(true);
 
         yield return new WaitUntil(() => _isChoiced);
 
+        _selectButtonsParent.SetActive(false);
         _selectButtonInfo.SetActive(false);
         callback?.Invoke(_isCorrect, _selectIndex);
         _isChoiced = false;
@@ -218,31 +223,5 @@ public class TeacupManager : MonoBehaviour
                 Debug.Log("不正解");
             }
         });
-
-        //for文でセットしようとすると正しい処理が行われなかった
-        //for (int i = 0; i < _selecter.SelectButtons.Length; i++)
-        //{
-        //    _selecter.SelectButtons[i].SelectButton.onClick.AddListener(() =>
-        //    {
-        //        int index = i;
-        //        _isChoiced = true;
-
-        //        Debug.Log(index);
-
-        //        //選択したカップにネズミがいたら正解判定とする
-        //        if (_teacups[index].IsInMouse)
-        //        {
-        //            _isCorrect = true;
-        //            _selectIndex = index;
-        //            Debug.Log("正解");
-        //        }
-        //        else
-        //        {
-        //            _isCorrect = false;
-        //            _selectIndex = index;
-        //            Debug.Log("不正解");
-        //        }
-        //    });
-        //}
     }
 }

@@ -82,5 +82,9 @@ public class HideTrumpController : MonoBehaviour
             
             _anim.CrossFadeInFixedTime("ReturnHideBucket", 0.1f);
         }
+
+        yield return new WaitForSeconds(4.0f);
+
+        _isAnimationed = false;
     }
 }
