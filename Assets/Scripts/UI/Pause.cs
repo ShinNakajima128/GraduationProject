@@ -58,6 +58,7 @@ public class Pause : MonoBehaviour
         this.UpdateAsObservable()
             .Where(_ => !IsActived &&
                         UIInput.Option &&
+                        UIManager.Instance.IsCanOpenUI &&
                         !UIManager.Instance.IsAnyPanelOpened)
             .Subscribe(_ =>
             {
@@ -80,7 +81,9 @@ public class Pause : MonoBehaviour
             .AddTo(this);
 
         this.UpdateAsObservable()
-            .Where(_ => IsActived)
+            .Where(_ => IsActived && 
+                        UIManager.Instance.IsCanOpenUI && 
+                        !_option.IsActived)
             .Where(_ => UIInput.Option || UIInput.A)
             .Subscribe(_ =>
             {
@@ -120,6 +123,7 @@ public class Pause : MonoBehaviour
                 _pauseButtons[4].gameObject.SetActive(true);
                 break;
             case SceneType.UnderLobby:
+                _pauseButtons[2].gameObject.SetActive(true);
                 _pauseButtons[4].gameObject.SetActive(true);
                 break;
             case SceneType.Stage_Boss:

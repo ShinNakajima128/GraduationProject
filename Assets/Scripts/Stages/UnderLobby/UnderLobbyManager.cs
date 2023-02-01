@@ -35,6 +35,9 @@ public class UnderLobbyManager : MonoBehaviour
     [SerializeField]
     LobbyClockController _clockCtrl = default;
 
+    [SerializeField]
+    CinemachineInputProvider _provider = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -71,6 +74,8 @@ public class UnderLobbyManager : MonoBehaviour
         {
             IsFirstVisit = false;
         }
+
+        PlayerMove += CameraMovable;
     }
 
     IEnumerator Start()
@@ -87,10 +92,14 @@ public class UnderLobbyManager : MonoBehaviour
         {
             EventManager.OnEvent(Events.Alice_Overlook);
             StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
+            AudioManager.PlaySE(SEType.UnderLobby_Lowering);
 
             yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
                                                .SetEase(Ease.Linear)
                                                .WaitForCompletion();
+
+            AudioManager.StopSE();
+            AudioManager.PlaySE(SEType.UnderLobby_Arrival);
             CameraShake();
 
             yield return new WaitForSeconds(1.0f);
@@ -115,7 +124,7 @@ public class UnderLobbyManager : MonoBehaviour
     {
         Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
-
+        UIManager.SwitchIsCanOpenFlag(false);
         Instance.ApproachDoor?.Invoke();
 
         AudioManager.PlaySE(SEType.Lobby_NearDoor);
@@ -128,7 +137,13 @@ public class UnderLobbyManager : MonoBehaviour
     {
         Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
+        UIManager.SwitchIsCanOpenFlag(true);
         Instance.StepAwayDoor?.Invoke();
+    }
+
+    void CameraMovable(bool isMovable)
+    {
+        _provider.enabled = isMovable;
     }
 
     /// <summary>

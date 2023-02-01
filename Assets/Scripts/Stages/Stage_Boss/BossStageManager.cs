@@ -133,6 +133,7 @@ public class BossStageManager : StageGame<BossStageManager>
     #endregion
     #region property
     public static new BossStageManager Instance { get; private set; }
+    public static bool IsFirstVisit { get; set; } = true;
     #endregion
 
     protected override void Awake()
@@ -208,7 +209,7 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return null;
         AudioManager.PlayBGM(BGMType.Boss_Before);
 
-        if (!_debugMode)
+        if (!_debugMode && IsFirstVisit)
         {
             yield return new WaitForSeconds(1.5f);
 
@@ -319,6 +320,8 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
     {
+        yield return new WaitForSeconds(1.0f);
+
         CharacterMovable?.Invoke(false);
         OnDirectionSetUp();
 
@@ -333,7 +336,7 @@ public class BossStageManager : StageGame<BossStageManager>
             yield return FinishBattleCoroutine();
 
             _hpPanel.alpha = 0;
-            GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss);
+            StartCoroutine(GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss));
             yield break;
         }
 
@@ -411,7 +414,7 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         CameraBlend(CameraType.FinishBattle, 2.0f);
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(4.0f);
 
         _infoImages[1].enabled = true;
         AudioManager.PlayBGM(BGMType.BossStage_Clear, false);
@@ -524,6 +527,7 @@ public class BossStageManager : StageGame<BossStageManager>
         {
             GameoverDirection.Instance.ActivateGameoverUI(true);
             TransitionManager.FadeOut(FadeType.Black_default, fadeTime: 2.0f);
+            IsFirstVisit = false;
         });
     }
 }

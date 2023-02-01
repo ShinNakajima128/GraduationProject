@@ -170,6 +170,7 @@ public class TrumpSolderManager : MonoBehaviour
         }
         yield return new WaitForSeconds(_waitTime); //トランプ兵の攻撃するまでのモーションを待機
 
+        yield return new WaitForSeconds(0.5f);
         //当たり判定をONにする処理
         start?.Invoke();
 

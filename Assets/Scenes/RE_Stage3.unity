@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 0.76
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 4c12da8dc5dced74e838120da11725a0, type: 2}
   m_HaloStrength: 0.47
   m_FlareStrength: 0
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18931773, g: 0.5368866, b: 0.84186155, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3017,6 +3017,7 @@ RectTransform:
   - {fileID: 1366194609}
   - {fileID: 1387400301}
   - {fileID: 1182732847}
+  - {fileID: 1885874659}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3665,7 +3666,7 @@ PrefabInstance:
     - target: {fileID: 5069545434272452781, guid: bf582e8a8efab4c42870bf1a4fbf50a8,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf582e8a8efab4c42870bf1a4fbf50a8, type: 3}
@@ -5556,7 +5557,7 @@ MonoBehaviour:
   m_ScrollWheelAction: {fileID: 0}
   m_TrackedDevicePositionAction: {fileID: 0}
   m_TrackedDeviceOrientationAction: {fileID: 0}
-  m_DeselectOnBackgroundClick: 1
+  m_DeselectOnBackgroundClick: 0
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
 --- !u!1 &1318631470
@@ -5848,7 +5849,6 @@ RectTransform:
   - {fileID: 348280635}
   - {fileID: 135032055}
   - {fileID: 962177956}
-  - {fileID: 1885874659}
   m_Father: {fileID: 750529407}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5977,8 +5977,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1431228171}
-  m_LocalRotation: {x: 0.114365205, y: -0.000000016638044, z: 0.0000000019153805,
-    w: 0.9934388}
+  m_LocalRotation: {x: 0.11436517, y: 0.000000028986332, z: -0.000000003336921, w: 0.9934388}
   m_LocalPosition: {x: 0, y: 1.7, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6836,7 +6835,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 813.2, y: 326.8}
+  m_SizeDelta: {x: 819.2, y: 208}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1639176896
 MonoBehaviour:
@@ -6858,7 +6857,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 47463e50a7903d94f953560faa08a9e7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 00094d8b2ad345a4ba54fd786309c1a8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7310,14 +7309,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1885874658}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1639176895}
   - {fileID: 1230179334}
-  m_Father: {fileID: 1387400301}
+  m_Father: {fileID: 750529407}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

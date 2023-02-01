@@ -71,6 +71,7 @@ public class ObjectManager : MonoBehaviour
     }
 
     public int CurrentTrumpCount => _trumpGenerator.CurrentActiveTrumpCount;
+    public TrumpSolderGenerator TrumpGenerator => _trumpGenerator;
     //public int CurrentRedTrumpCount => _trumpGenerator.CurrentRedTrumpCount;
     //public int CurrentBlackTrumpCount => _trumpGenerator.CurrentBlackTrumpCount;
     #endregion

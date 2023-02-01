@@ -274,14 +274,14 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         //_gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         //_gameUI.SetResultText("ステージクリア！");
                         _infoImages[1].enabled = true;
+                        _gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         GameManager.SaveStageResult(true);
                         AudioManager.PlayBGM(BGMType.ClearJingle);
 
-                        yield return new WaitForSeconds(2.0f);
+                        yield return new WaitForSeconds(3.0f);
 
                         //_gameUI.SetResultText("");
                         _infoImages[1].enabled = false;
-                        _gameUI.ChangeUIGroup(CroquetGameState.Finish);
                         yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
                     }
                     else

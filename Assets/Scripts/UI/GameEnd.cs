@@ -45,6 +45,7 @@ public class GameEnd : MonoBehaviour
         this.UpdateAsObservable()
             .Where(_ => !IsActived &&
                         UIInput.Exit &&
+                        UIManager.Instance.IsCanOpenUI && 
                         !UIManager.Instance.IsAnyPanelOpened)
             .Subscribe(_ =>
             {
