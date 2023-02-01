@@ -35,7 +35,12 @@ public enum Events
     BossStage_BehindAlice,
     BossStage_FrontBoss,
     BossStage_ZoomBossFace,
-    BossStage_BehindBoss_RE2
+    BossStage_BehindBoss_RE2,
+    BossStage_LookOther,
+    BossStage_QueenAnger,
+    BossStage_BehindAlice_RE2,
+    BossStage_FrontCheshire,
+    BossStage_DisolveCheshire
 }
 
 /// <summary>

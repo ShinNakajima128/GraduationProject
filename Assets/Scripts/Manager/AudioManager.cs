@@ -103,7 +103,10 @@ public enum SEType
     Trump_Slust, //トランプ兵：突き攻撃
     Trump_Waiting,
     UnderLobby_Lowering, //地下：下降音
-    UnderLobby_Arrival //地下：到着
+    UnderLobby_Arrival, //地下：到着
+    BossStage_QueenQuiet, //おだまりSE
+    BossStage_QueenAppearance, //女王登場
+    BossStage_QueenSwing //女王が杖を振る
 }
 
 public enum VOICEType

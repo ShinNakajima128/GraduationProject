@@ -222,7 +222,8 @@ public enum CameraDirectionType
     BossStage_BehindBoss,
     BossStage_BehindAlice,
     BossStage_FrontBoss,
-    BossStage_ZoomBossFace
+    BossStage_ZoomBossFace,
+    BossStage_FrontCheshireCat
 }
 
 public enum CameraMovementType
