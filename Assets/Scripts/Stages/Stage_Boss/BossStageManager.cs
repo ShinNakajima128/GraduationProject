@@ -233,6 +233,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
             yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start1);
 
+            EventManager.OnEvent(Events.BossStage_HeadingBossFeet);
             yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_HeadingBossFeet);
 
             _directionStartCamera.Priority = 0;
@@ -314,7 +315,7 @@ public class BossStageManager : StageGame<BossStageManager>
     void SubscribeEvents()
     {
         EventManager.ListenEvents(Events.BossStage_FrontAlice, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontAlice)));
-        EventManager.ListenEvents(Events.BossStage_HeadingBossFeet, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_HeadingBossFeet)));
+        //EventManager.ListenEvents(Events.BossStage_HeadingBossFeet, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_HeadingBossFeet)));
         EventManager.ListenEvents(Events.BossStage_SlowlyRise, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_SlowlyRise)));
         EventManager.ListenEvents(Events.BossStage_OnBossFace, () => 
         { 

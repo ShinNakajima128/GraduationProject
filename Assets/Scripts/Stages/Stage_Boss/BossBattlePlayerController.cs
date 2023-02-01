@@ -48,6 +48,8 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         _fc.ChangeFaceType(FaceType.Blink);
         HPManager.Instance.ChangeHPValue(_maxHP, true);
         BossStageManager.Instance.GameOver += StopAction;
+        EventManager.ListenEvents(Events.BossStage_FrontAlice, () => _fc.ChangeFaceType(FaceType.Fancy));
+        EventManager.ListenEvents(Events.BossStage_HeadingBossFeet, () => _fc.ChangeFaceType(FaceType.Blink));
     }
 
     /// <summary>
