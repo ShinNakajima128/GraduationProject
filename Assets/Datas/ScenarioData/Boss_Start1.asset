@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6b5ef7dabe237641954f7890a0b3348, type: 3}
+  m_Name: Boss_Start1
+  m_EditorClassIdentifier: 
+  _messageType: 4
+  _dialog:
+  - Id: 0
+    Actor: "\u30A2\u30EA\u30B9"
+    _messages:
+    - "\u3064\u3044\u306B...\u3000\u3064\u3044\u306B\u8FBF\u308A\u7740\u3044\u305F\u308F\uFF01"
+    _screenEffectType: 19
+    _displayTime: 0.05
+    _fontSize: 35
+    Message: "\u3064\u3044\u306B...\u3000\u3064\u3044\u306B\u8FBF\u308A\u7740\u3044\u305F\u308F\uFF01"
+    ScreenEffect: None
+  - Id: 1
+    Actor: "\u30C1\u30A7\u30B7\u30E3\u732B"
+    _messages:
+    - "\u3053\u3053\u304C\u3000\u25CF\u25CF\u306E\u306F\u305A\u3060\u304C\u3002"
+    - "\u30A2\u30A4\u30C4\u306F\u3069\u3053\u306B\u3044\u308B\uFF1F"
+    _screenEffectType: 19
+    _displayTime: 0.05
+    _fontSize: 35
+    Message: "\u3053\u3053\u304C\u3000\u25CF\u25CF\u306E\u306F\u305A\u3060\u304C\u3002\n\u30A2\u30A4\u30C4\u306F\u3069\u3053\u306B\u3044\u308B\uFF1F"
+    ScreenEffect: None
+  _background: {fileID: 0}
+  m_spreadSheetURL: https://script.google.com/macros/s/AKfycbw3FW2v1qfLOKevuKsylzysH_W3cQgp0U0Kllh_qxHrsuwDptqNPZzns3DFucKmsIpLIw/exec
+  m_scenarioSheetName: BossStage_Start

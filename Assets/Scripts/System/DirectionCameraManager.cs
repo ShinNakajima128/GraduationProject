@@ -62,12 +62,13 @@ public class DirectionCameraManager : MonoBehaviour
     /// </summary>
     /// <param name="type"> カメラ演出の種類 </param>
     /// <returns></returns>
-    public IEnumerator StartDirectionCoroutine(CameraDirectionType type)
+    public IEnumerator StartDirectionCoroutine(CameraDirectionType type, int priority = 30)
     {
         yield return null;
 
         var direction = _CameraDirections.FirstOrDefault(d => d.DirectionType == type);
 
+        print($"{direction.DirectionName}");
 
         for (int i = 0; i < direction.DollyCameras.Length; i++)
         {
@@ -77,7 +78,8 @@ public class DirectionCameraManager : MonoBehaviour
             {
                 direction.DollyCameras[i].Setup();
             }
-            direction.DollyCameras[i].Camera.Priority = 30;
+            direction.DollyCameras[i].Camera.Priority = priority;
+            print($"現在のカメラの優先度：{priority}");
 
             if (direction.DollyCameras[i].MovementType == CameraMovementType.Dolly)
             {
@@ -95,11 +97,12 @@ public class DirectionCameraManager : MonoBehaviour
                 yield return new WaitForSeconds(direction.DollyCameras[i].ViewDuration);
             }
 
-            if (i < direction.DollyCameras.Length - 1)
+            if (i != 0 && i < direction.DollyCameras.Length - 1)
             {
                 direction.DollyCameras[i].Camera.Priority = 0;
+                print("カメラ優先度をリセット");
             }
-        }    
+        }
     }
 
     /// <summary>
@@ -211,7 +214,15 @@ public enum CameraDirectionType
     Lobby_FirstVisit,
     Lobby_Introduction,
     Lobby_Alice_Front,
-    Lobby_AliceAndCheshireTalking
+    Lobby_AliceAndCheshireTalking,
+    BossStage_FrontAlice,
+    BossStage_HeadingBossFeet,
+    BossStage_SlowlyRise,
+    BossStage_OnBossFace,
+    BossStage_BehindBoss,
+    BossStage_BehindAlice,
+    BossStage_FrontBoss,
+    BossStage_ZoomBossFace
 }
 
 public enum CameraMovementType

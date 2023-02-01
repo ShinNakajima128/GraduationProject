@@ -26,7 +26,16 @@ public enum Events
     Alice_Retry,
     Alice_Rise,
     Alice_Death,
-    Lobby_Introduction
+    Lobby_Introduction,
+    BossStage_FrontAlice,
+    BossStage_HeadingBossFeet,
+    BossStage_SlowlyRise,
+    BossStage_OnBossFace,
+    BossStage_BehindBoss,
+    BossStage_BehindAlice,
+    BossStage_FrontBoss,
+    BossStage_ZoomBossFace,
+    BossStage_BehindBoss_RE2
 }
 
 /// <summary>

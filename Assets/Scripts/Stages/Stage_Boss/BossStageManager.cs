@@ -59,6 +59,10 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
 
+    [Tooltip("演出有りの時の最初のカメラ")]
+    [SerializeField]
+    CinemachineVirtualCamera _directionStartCamera = default;
+
     [SerializeField]
     DirectionCameraManager _directionCameraMng = default;
 
@@ -112,7 +116,7 @@ public class BossStageManager : StageGame<BossStageManager>
     #region public
     public event Action<bool> OnInGame;
     #endregion
-    
+
     #region private
     Transform _playerTrans;
     /// <summary> 演出中かどうか </summary>
@@ -150,13 +154,13 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         base.Start();
         Init();
+        SubscribeCameraEvents();
         OnGameStart();
     }
 
     public override void OnGameSetUp()
     {
         GameSetUp?.Invoke();
-        _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
 
         //現在の難易度のパラメーターを取得
         var param = _battleParameters.FirstOrDefault(p => p.DifficultyType == GameManager.Instance.CurrentGameDifficultyType);
@@ -207,28 +211,54 @@ public class BossStageManager : StageGame<BossStageManager>
     protected override IEnumerator GameStartCoroutine(Action action = null)
     {
         yield return null;
+        yield return null;
+
         AudioManager.PlayBGM(BGMType.Boss_Before);
 
         if (!_debugMode && IsFirstVisit)
         {
-            yield return new WaitForSeconds(1.5f);
+            _directionStartCamera.Priority = 30;
 
-            //カメラをボスに寄せる
-            CameraBlend(CameraType.Direction, _cameraBlendTime);
+            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start1);
 
-            yield return new WaitForSeconds(_cameraBlendTime);
+            yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_HeadingBossFeet);
 
-            //ボス戦開始時の演出を再生
-            StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start, () =>
+            _directionStartCamera.Priority = 0;
+
+            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start2);
+
+            yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_SlowlyRise);
+
+            yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_OnBossFace);
+
+            yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindBoss);
+            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start3);
+
+            yield return new WaitForSeconds(2.0f);
+
+            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start4, () =>
             {
                 _isDirecting = true;
-            }));
+            });
+            //yield return new WaitForSeconds(1.5f);
+
+            ////カメラをボスに寄せる
+            //CameraBlend(CameraType.Direction, _cameraBlendTime);
+
+            //yield return new WaitForSeconds(_cameraBlendTime);
+
+            ////ボス戦開始時の演出を再生
+            //StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start1, () =>
+            //{
+            //    _isDirecting = true;
+            //}));
 
             yield return new WaitUntil(() => _isDirecting);
 
             _isDirecting = false;
         }
 
+        _directionCameraMng.ResetCamera();
         //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
         LetterboxController.ActivateLetterbox(true);
@@ -258,6 +288,19 @@ public class BossStageManager : StageGame<BossStageManager>
         _infoImages[1].enabled = false;
     }
 
+    void SubscribeCameraEvents()
+    {
+        EventManager.ListenEvents(Events.BossStage_FrontAlice, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontAlice)));
+        EventManager.ListenEvents(Events.BossStage_HeadingBossFeet, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_HeadingBossFeet)));
+        EventManager.ListenEvents(Events.BossStage_SlowlyRise, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_SlowlyRise)));
+        EventManager.ListenEvents(Events.BossStage_OnBossFace, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_OnBossFace)));
+        EventManager.ListenEvents(Events.BossStage_BehindBoss, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindBoss, 31)));
+        EventManager.ListenEvents(Events.BossStage_BehindBoss_RE2, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindBoss, 33)));
+        EventManager.ListenEvents(Events.BossStage_BehindAlice, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindAlice, 32)));
+        EventManager.ListenEvents(Events.BossStage_FrontBoss, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontBoss, 34)));
+        EventManager.ListenEvents(Events.BossStage_ZoomBossFace, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_ZoomBossFace, 35)));
+    }
+
     void Gameover()
     {
         StopCoroutine(_currentGameCoroutine);
@@ -284,9 +327,10 @@ public class BossStageManager : StageGame<BossStageManager>
             yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i,
                                   firstAction: () =>
                                   {
-                                     CameraBlend(CameraType.Battle, _cameraBlendTime);
+                                      CameraBlend(CameraType.Battle, _cameraBlendTime);
+                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
                                   },
-                                  phaseStartAction: () => 
+                                  phaseStartAction: () =>
                                   {
                                       CharacterMovable?.Invoke(true);
                                       _hpPanel.alpha = 1;
@@ -336,7 +380,6 @@ public class BossStageManager : StageGame<BossStageManager>
             yield return FinishBattleCoroutine();
 
             _hpPanel.alpha = 0;
-            StartCoroutine(GetStillController.ActiveGettingStillPanel(Stages.Stage_Boss));
             yield break;
         }
 
@@ -389,16 +432,16 @@ public class BossStageManager : StageGame<BossStageManager>
     /// <returns></returns>
     IEnumerator PartitioningBattleCoroutine()
     {
-        TransitionManager.FadeIn(FadeType.Normal,0.2f, action: () =>
-         {
-            //プレイヤーの位置と向きを初期化
-            _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
-             _playerTrans.DOLocalRotate(Vector3.zero, 0f);
-             _trumpSolderMng.OnAllTrumpAnimation("Idle");
+        TransitionManager.FadeIn(FadeType.Normal, 0.2f, action: () =>
+          {
+             //プレイヤーの位置と向きを初期化
+             _playerTrans.DOLocalMove(_playerStartTrans.position, 0f);
+              _playerTrans.DOLocalRotate(Vector3.zero, 0f);
+              _trumpSolderMng.OnAllTrumpAnimation("Idle");
 
-             CameraBlend(CameraType.ExcuteTrump, 0.01f);
-             TransitionManager.FadeOut(FadeType.Normal, 0.2f);
-         });
+              CameraBlend(CameraType.ExcuteTrump, 0.01f);
+              TransitionManager.FadeOut(FadeType.Normal, 0.2f);
+          });
         ////プレイヤーの位置と向きを初期化
 
 
@@ -523,12 +566,12 @@ public class BossStageManager : StageGame<BossStageManager>
 
         Gameover();
 
-        TransitionManager.FadeIn(FadeType.Black_default,fadeTime: 2.0f, action: () =>
-        {
-            GameoverDirection.Instance.ActivateGameoverUI(true);
-            TransitionManager.FadeOut(FadeType.Black_default, fadeTime: 2.0f);
-            IsFirstVisit = false;
-        });
+        TransitionManager.FadeIn(FadeType.Black_default, fadeTime: 2.0f, action: () =>
+         {
+             GameoverDirection.Instance.ActivateGameoverUI(true);
+             TransitionManager.FadeOut(FadeType.Black_default, fadeTime: 2.0f);
+             IsFirstVisit = false;
+         });
     }
 }
 public enum CameraType
