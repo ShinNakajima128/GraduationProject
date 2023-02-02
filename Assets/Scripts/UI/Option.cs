@@ -35,6 +35,14 @@ public class Option : MonoBehaviour
     [SerializeField]
     OptionButton[] _difficultyTabButtons = default;
 
+    [Tooltip("難易度変更時の通知画面")]
+    [SerializeField]
+    CanvasGroup _changeDifficultyInfoGroup = default;
+
+    [Tooltip("難易度変更時のText")]
+    [SerializeField]
+    Text _changeInfoText = default;
+
     [Header("Components")]
     [SerializeField]
     Pause _pause = default;
@@ -44,6 +52,7 @@ public class Option : MonoBehaviour
     CanvasGroup _optionGroup;
     ReactiveProperty<TabType> _currentTab = new ReactiveProperty<TabType>();
     bool _init = false;
+    bool _isPressed = false;
     #endregion
 
     #region public
@@ -209,17 +218,29 @@ public class Option : MonoBehaviour
 
         _difficultyTabButtons[0].Button.onClick.AddListener(() =>
         {
-            OnCloseOptionPanel();
+            if (!_isPressed)
+            {
+                _isPressed = true;
+                StartCoroutine(ChangeDifficultyCoroutine(DifficultyType.Easy));
+            }
         });
 
         _difficultyTabButtons[1].Button.onClick.AddListener(() =>
         {
-            OnCloseOptionPanel();
+            if (!_isPressed)
+            {
+                _isPressed = true;
+                StartCoroutine(ChangeDifficultyCoroutine(DifficultyType.Normal));
+            }
         });
 
         _difficultyTabButtons[2].Button.onClick.AddListener(() =>
         {
-            OnCloseOptionPanel();
+            if (!_isPressed)
+            {
+                _isPressed = true;
+                StartCoroutine(ChangeDifficultyCoroutine(DifficultyType.Hard));
+            }
         });
         #endregion
     }
@@ -375,9 +396,35 @@ public class Option : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
 
+        _isPressed = false;
         _optionGroup.alpha = 0;
         UIManager.InactivatePanel(UIPanelType.Option);
         _pause.PauseActivate(true);
+    }
+
+    IEnumerator ChangeDifficultyCoroutine(DifficultyType type)
+    {
+        GameManager.ChangeGameDifficult(type);
+
+        switch (type)
+        {
+            case DifficultyType.Easy:
+                _changeInfoText.text = "難易度を「かんたん」に変更しました";
+                break;
+            case DifficultyType.Normal:
+                _changeInfoText.text = "難易度を「ふつう」に変更しました";
+                break;
+            case DifficultyType.Hard:
+                _changeInfoText.text = "難易度を「むずかしい」に変更しました";
+                break;
+            default:
+                break;
+        }
+
+        _changeDifficultyInfoGroup.alpha = 1;
+        yield return new WaitForSeconds(2.0f);
+
+        OnCloseOptionPanel();
     }
 }
 
