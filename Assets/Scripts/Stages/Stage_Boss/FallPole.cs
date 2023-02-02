@@ -39,11 +39,11 @@ public class FallPole : MonoBehaviour
     {
         if (BossStageManager.Instance.IsInBattle)
         {
-            _attackCollider.enabled = true;
+            _attackCollider.gameObject.SetActive(true);
         }
         else
         {
-            _attackCollider.enabled = false;
+            _attackCollider.gameObject.SetActive(false);
         }
     }
 
@@ -67,8 +67,9 @@ public class FallPole : MonoBehaviour
                  .OnComplete(() =>
                  {
                      EffectManager.PlayEffect(EffectType.FallPole, transform);
-                     _attackCollider.enabled = false;
+                     _attackCollider.gameObject.SetActive(false);
                      AudioManager.PlaySE(SEType.BossStage_DebrisLanding);
+                     BossStageManager.CameraShake();
                  })
                  .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }

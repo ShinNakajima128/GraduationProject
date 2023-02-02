@@ -76,6 +76,32 @@ public abstract class ObjectPool<T> : MonoBehaviour
     }
 
     /// <summary>
+    /// プーリングしたObjectをアクティブにする
+    /// </summary>
+    /// <returns></returns>
+    public virtual void Use(Transform target, Action<T> callback = null)
+    {
+        foreach (var go in _objectList)
+        {
+            if (!go.activeSelf)
+            {
+                go.SetActive(true);
+                go.transform.localPosition = target.position;
+                go.transform.localRotation = target.localRotation;
+
+                //ObjectのComponentを使用する側へ渡す
+                var component = go.GetComponentInChildren<T>();
+                if (component != null)
+                {
+                    callback?.Invoke(component);
+                }
+                return;
+            }
+        }
+        Debug.LogError("使用可能なObjectがありませんでした");
+    }
+
+    /// <summary>
     /// プーリングしたObjectを全て非アクティブにする
     /// </summary>
     /// <returns></returns>
