@@ -419,6 +419,7 @@ public class BossStageManager : StageGame<BossStageManager>
             //メモ：カメラをバトル終了演出に切り替える処理をここへ記述
             //
             //
+            AudioManager.PlayBGM(BGMType.EndBossBattle);
             TransitionManager.FadeOut(FadeType.Black_default);
         });
 
