@@ -147,6 +147,7 @@ public class BossStageManager : StageGame<BossStageManager>
     #region property
     public static new BossStageManager Instance { get; private set; }
     public static bool IsFirstVisit { get; set; } = true;
+    public bool IsInBattle => _isInBattle.Value; 
     #endregion
 
     protected override void Awake()
@@ -156,7 +157,8 @@ public class BossStageManager : StageGame<BossStageManager>
         _playerTrans = GameObject.FindGameObjectWithTag("Player").transform; //プレイヤーのTransformを取得
 
         //バトル中かどうかの値が変わった時に行う処理を登録
-        _isInBattle.Subscribe(_ => OnInGame?.Invoke(_isInBattle.Value)).AddTo(this);
+        _isInBattle.Subscribe(_ => OnInGame?.Invoke(_isInBattle.Value))
+                   .AddTo(this);
     }
 
     protected override void Start()
@@ -285,6 +287,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
         _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
+        _trumpSolderMng.OnAllTrumpActivate(true); //トランプ兵をアクティブ化
         LetterboxController.ActivateLetterbox(true);
         CameraBlend(CameraType.Default, 0);
         AudioManager.StopBGM(_cameraBlendTime / 2);

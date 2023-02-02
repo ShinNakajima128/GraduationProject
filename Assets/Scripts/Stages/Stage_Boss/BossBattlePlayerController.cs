@@ -58,7 +58,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     /// <param name="value"> É_ÉÅÅ[ÉWó  </param>
     public void Damage(int value)
     {
-        if (_isInvincibled)
+        if (_isInvincibled || !BossStageManager.Instance.IsInBattle)
         {
             return;
         }

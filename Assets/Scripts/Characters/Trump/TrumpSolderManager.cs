@@ -61,6 +61,69 @@ public class TrumpSolderManager : MonoBehaviour
 
     private void Start()
     {
+        SetupTrumpSolders();
+    }
+
+    /// <summary>
+    /// 全てのトランプ兵をアクティブ状況を切り替える
+    /// </summary>
+    /// <param name="isActive"> アクティブかどうか </param>
+    public void OnAllTrumpActivate(bool isActive)
+    {
+        foreach (var t in _frontTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+
+        foreach (var t in _backTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+
+        foreach (var t in _leftTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+
+        foreach (var t in _rightTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+    }
+
+    public void OnTrumpSoldersAttack(DirectionType dir, Action start = null, Action finish = null)
+    {
+        StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
+    }
+
+    /// <summary>
+    /// 全てのトランプ兵を焦らせる
+    /// </summary>
+    public void OnAllTrumpAnimation(string name)
+    {
+        foreach (var t in _frontTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _backTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _leftTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _rightTrumps)
+        {
+            t.OnAnimation(name);
+        }
+    }
+
+    void SetupTrumpSolders()
+    {
         int index = 0;
         for (int i = 0; i < _areaPositions.Length; i++)
         {
@@ -94,43 +157,9 @@ public class TrumpSolderManager : MonoBehaviour
                 }
                 trump.transform.DOLocalRotate(dir, 0f);
                 index++;
+                trump.gameObject.SetActive(false);
             }
         }
-    }
-    public void OnTrumpSoldersAttack(DirectionType dir, Action start = null, Action finish = null)
-    {
-        StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
-    }
-
-    /// <summary>
-    /// 全てのトランプ兵を焦らせる
-    /// </summary>
-    public void OnAllTrumpAnimation(string name)
-    {
-        foreach (var t in _frontTrumps)
-        {
-            t.OnAnimation(name);
-        }
-
-        foreach (var t in _backTrumps)
-        {
-            t.OnAnimation(name);
-        }
-
-        foreach (var t in _leftTrumps)
-        {
-            t.OnAnimation(name);
-        }
-
-        foreach (var t in _rightTrumps)
-        {
-            t.OnAnimation(name);
-        }
-    }
-
-    public void SetupTrumpSolders()
-    {
-
     }
 
     IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action start, Action finish)

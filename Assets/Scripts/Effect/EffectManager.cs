@@ -30,7 +30,8 @@ public enum EffectType
     Stage2_WarpEnd,
     Stage3_Goal,
     Debris_Landing,
-    Player_Heal
+    Player_Heal,
+    FallPole
 }
 
 public class EffectManager : SingletonMonoBehaviour<EffectManager>
