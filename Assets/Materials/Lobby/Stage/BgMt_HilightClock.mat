@@ -7,23 +7,20 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Grass
-  m_Shader: {fileID: 4800000, guid: 51b2dee0ab07bd84d8147601ff89e511, type: 3}
+  m_Name: BgMt_HilightClock
+  m_Shader: {fileID: 4800000, guid: 9294844b15dca184d914a632279b24e1, type: 3}
   m_ValidKeywords:
-  - UNITY_UI_CLIP_RECT
-  - _COLOROVERLAY_ON
-  - _DETAIL_MULX2
-  - _GLOSSYREFLECTIONS_OFF
+  - EFFECT_HUE_VARIATION
+  - _EMISSION
   - _METALLICGLOSSMAP
   - _REQUIRE_UV2
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2460
-  stringTagMap:
-    RenderType: TransparentCutout
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -57,11 +54,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 64e8b921096b89547b568da8f4f7159c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 64e8b921096b89547b568da8f4f7159c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Bump2ndMap:
@@ -117,23 +114,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FurLengthMask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FurMask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FurNoiseMask:
-        m_Texture: {fileID: 2800000, guid: 8a7dbcb2f4a32ec4297486403aee5f74, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FurVectorTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: fb9325cf727ca504f9b22bdfbd09ecf0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GlitterColorTex:
@@ -185,7 +166,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 64e8b921096b89547b568da8f4f7159c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatCap2ndBlendMask:
@@ -296,9 +277,9 @@ Material:
     m_Floats:
     - _AlphaBoostFA: 10
     - _AlphaClip: 0
-    - _AlphaMaskMode: 1
+    - _AlphaMaskMode: 0
     - _AlphaMaskScale: 1
-    - _AlphaMaskValue: -0.6
+    - _AlphaMaskValue: 0
     - _AlphaToMask: 0
     - _Anisotropy2MatCap: 0
     - _Anisotropy2MatCap2nd: 0
@@ -314,7 +295,7 @@ Material:
     - _AnisotropyShiftNoiseScale: 0
     - _AnisotropySpecularStrength: 1
     - _AnisotropyTangentWidth: 1
-    - _ApplyReflection: 1
+    - _ApplyReflection: 0
     - _ApplySpecular: 1
     - _ApplySpecularFA: 1
     - _AsOverlay: 0
@@ -350,12 +331,12 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _ColorMask: 15
-    - _Cull: 1
-    - _Cutoff: 0.25
+    - _Cull: 2
+    - _Cutoff: 0.001
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DissolveNoiseStrength: 0.1
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _DstBlendAlpha: 10
     - _DstBlendAlphaFA: 1
     - _DstBlendFA: 1
@@ -369,53 +350,13 @@ Material:
     - _EmissionBlend: 1
     - _EmissionFluorescence: 0
     - _EmissionGradSpeed: 1
-    - _EmissionMainStrength: 0
+    - _EmissionMainStrength: 0.871
     - _EmissionMap_UVMode: 0
     - _EmissionParallaxDepth: 0
     - _EmissionUseGrad: 0
     - _EnvironmentReflections: 1
     - _FlipNormal: 0
-    - _FurAO: 0
-    - _FurAlphaToMask: 0
-    - _FurBlendOp: 0
-    - _FurBlendOpAlpha: 0
-    - _FurBlendOpAlphaFA: 4
-    - _FurBlendOpFA: 4
-    - _FurColorMask: 15
-    - _FurCull: 0
-    - _FurCutoutLength: 0.8
-    - _FurDstBlend: 10
-    - _FurDstBlendAlpha: 10
-    - _FurDstBlendAlphaFA: 1
-    - _FurDstBlendFA: 1
-    - _FurGravity: 0.25
-    - _FurLayerNum: 2
-    - _FurMeshType: 1
-    - _FurOffsetFactor: 0
-    - _FurOffsetUnits: 0
-    - _FurRandomize: 0
-    - _FurRootOffset: 0
-    - _FurSrcBlend: 5
-    - _FurSrcBlendAlpha: 1
-    - _FurSrcBlendAlphaFA: 0
-    - _FurSrcBlendFA: 1
-    - _FurStencilComp: 8
-    - _FurStencilFail: 0
-    - _FurStencilPass: 0
-    - _FurStencilReadMask: 255
-    - _FurStencilRef: 0
-    - _FurStencilWriteMask: 255
-    - _FurStencilZFail: 0
-    - _FurTouchStrength: 0
-    - _FurVectorScale: 1
-    - _FurZClip: 1
-    - _FurZTest: 4
-    - _FurZWrite: 0
-    - _GSAAStrength: 1
-    - _GemChromaticAberration: 0.02
-    - _GemEnvContrast: 2
-    - _GemParticleLoop: 8
-    - _GemVRParallaxStrength: 1
+    - _GSAAStrength: 0
     - _GlitterAngleRandomize: 0
     - _GlitterApplyShape: 0
     - _GlitterApplyTransparency: 1
@@ -435,8 +376,8 @@ Material:
     - _GlossyReflections: 1
     - _IgnoreEncryption: 0
     - _Invisible: 0
-    - _LightMaxLimit: 0
-    - _LightMinLimit: 0
+    - _LightMaxLimit: 4.2
+    - _LightMinLimit: 0.05
     - _Main2ndDissolveNoiseStrength: 0.1
     - _Main2ndEnableLighting: 1
     - _Main2ndTexAngle: 0
@@ -507,11 +448,11 @@ Material:
     - _OutlineCull: 1
     - _OutlineDeleteMesh: 0
     - _OutlineDisableInVR: 0
-    - _OutlineDstBlend: 10
+    - _OutlineDstBlend: 0
     - _OutlineDstBlendAlpha: 10
     - _OutlineDstBlendAlphaFA: 1
     - _OutlineDstBlendFA: 1
-    - _OutlineEnableLighting: 0
+    - _OutlineEnableLighting: 1
     - _OutlineFixWidth: 0.5
     - _OutlineLitApplyTex: 0
     - _OutlineLitOffset: -8
@@ -519,7 +460,7 @@ Material:
     - _OutlineLitShadowReceive: 0
     - _OutlineOffsetFactor: 0
     - _OutlineOffsetUnits: 0
-    - _OutlineSrcBlend: 5
+    - _OutlineSrcBlend: 1
     - _OutlineSrcBlendAlpha: 1
     - _OutlineSrcBlendAlphaFA: 0
     - _OutlineSrcBlendFA: 1
@@ -533,69 +474,37 @@ Material:
     - _OutlineVectorScale: 1
     - _OutlineVectorUVMode: 0
     - _OutlineVertexR2Width: 0
-    - _OutlineWidth: 0.63
+    - _OutlineWidth: 0.08
     - _OutlineZBias: 0
     - _OutlineZClip: 1
     - _OutlineZTest: 2
     - _OutlineZWrite: 1
-    - _Parallax: 0.005
+    - _Parallax: 0.02
     - _ParallaxOffset: 0.5
-    - _PreAlphaToMask: 0
-    - _PreBlendOp: 0
-    - _PreBlendOpAlpha: 0
-    - _PreBlendOpAlphaFA: 4
-    - _PreBlendOpFA: 4
-    - _PreColorMask: 15
-    - _PreCull: 2
-    - _PreCutoff: 0.5
-    - _PreDstBlend: 10
-    - _PreDstBlendAlpha: 10
-    - _PreDstBlendAlphaFA: 1
-    - _PreDstBlendFA: 1
-    - _PreOffsetFactor: 0
-    - _PreOffsetUnits: 0
-    - _PreOutType: 0
-    - _PreSrcBlend: 1
-    - _PreSrcBlendAlpha: 1
-    - _PreSrcBlendAlphaFA: 0
-    - _PreSrcBlendFA: 1
-    - _PreStencilComp: 8
-    - _PreStencilFail: 0
-    - _PreStencilPass: 0
-    - _PreStencilReadMask: 255
-    - _PreStencilRef: 0
-    - _PreStencilWriteMask: 255
-    - _PreStencilZFail: 0
-    - _PreZClip: 1
-    - _PreZTest: 4
-    - _PreZWrite: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Reflectance: 0
+    - _Reflectance: 0.04
     - _ReflectionApplyTransparency: 1
     - _ReflectionBlendMode: 1
     - _ReflectionCubeEnableLighting: 1
     - _ReflectionCubeOverride: 0
     - _ReflectionNormalStrength: 1
-    - _RefractionColorFromMain: 0
-    - _RefractionFresnelPower: 1
-    - _RefractionStrength: 0.5
     - _RimApplyTransparency: 1
     - _RimBackfaceMask: 1
-    - _RimBlur: 0.4
-    - _RimBorder: 0.75
-    - _RimDirRange: -0.57
+    - _RimBlur: 0.65
+    - _RimBorder: 0.5
+    - _RimDirRange: 0
     - _RimDirStrength: 0
     - _RimEnableLighting: 1
-    - _RimFresnelPower: 3.1
+    - _RimFresnelPower: 3.5
     - _RimIndirBlur: 0.1
     - _RimIndirBorder: 0.5
     - _RimIndirRange: 0
-    - _RimMainStrength: 1
+    - _RimMainStrength: 0
     - _RimNormalStrength: 1
     - _RimShadowMask: 0.5
     - _RimVRParallaxStrength: 1
-    - _Shadow2ndBlur: 0.1
+    - _Shadow2ndBlur: 0.514
     - _Shadow2ndBorder: 0.29
     - _Shadow2ndNormalStrength: 1
     - _Shadow2ndReceive: 1
@@ -603,27 +512,27 @@ Material:
     - _Shadow3rdBorder: 0.25
     - _Shadow3rdNormalStrength: 1
     - _Shadow3rdReceive: 0
-    - _ShadowBlur: 0.1
+    - _ShadowBlur: 0.4
     - _ShadowBlurMaskLOD: 0
-    - _ShadowBorder: 0.56
+    - _ShadowBorder: 0.529
     - _ShadowBorderMaskLOD: 0
     - _ShadowBorderRange: 0.08
     - _ShadowColorType: 0
-    - _ShadowEnvStrength: 0
+    - _ShadowEnvStrength: 0.55
     - _ShadowFlatBlur: 1
     - _ShadowFlatBorder: 1
     - _ShadowMainStrength: 0
     - _ShadowMaskType: 0
     - _ShadowNormalStrength: 1
     - _ShadowPostAO: 0
-    - _ShadowReceive: 0.6
+    - _ShadowReceive: 1
     - _ShadowStrength: 1
     - _ShadowStrengthMaskLOD: 0
     - _ShiftBackfaceUV: 0
-    - _Smoothness: 0.51
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularBlur: 0
-    - _SpecularBorder: 0.05
+    - _SpecularBorder: 0.5
     - _SpecularHighlights: 1
     - _SpecularNormalStrength: 1
     - _SpecularToon: 1
@@ -644,7 +553,7 @@ Material:
     - _TessFactorMax: 3
     - _TessShrink: 0
     - _TessStrength: 0.5
-    - _TransparentMode: 2
+    - _TransparentMode: 0
     - _UVSec: 0
     - _UseAnisotropy: 0
     - _UseAudioLink: 0
@@ -652,7 +561,7 @@ Material:
     - _UseBump2ndMap: 0
     - _UseBumpMap: 0
     - _UseClippingCanceller: 0
-    - _UseEmission: 0
+    - _UseEmission: 1
     - _UseEmission2nd: 0
     - _UseGlitter: 0
     - _UseMain2ndTex: 0
@@ -662,10 +571,9 @@ Material:
     - _UseOutline: 0
     - _UsePOM: 0
     - _UseParallax: 0
-    - _UseReflection: 1
+    - _UseReflection: 0
     - _UseRim: 1
     - _UseShadow: 1
-    - _VertexColor2FurVector: 0
     - _VertexLightStrength: 0
     - _WorkflowMode: 1
     - _ZClip: 1
@@ -675,7 +583,7 @@ Material:
     - _e2gci: 2
     - _egai: 2
     - _egci: 2
-    - _lilDirectionalLightStrength: 0.11
+    - _lilDirectionalLightStrength: 1
     - _lilShadowCasterBias: 0
     - _lilToonVersion: 32
     m_Colors:
@@ -686,11 +594,11 @@ Material:
     - _AudioLinkVertexStart: {r: 0, g: 0, b: 0, a: 0}
     - _AudioLinkVertexStrength: {r: 0, g: 0, b: 0, a: 1}
     - _AudioLinkVertexUVParams: {r: 0.25, g: 0, b: 0, a: 0.125}
-    - _BackfaceColor: {r: 0.3113195, g: 0.3113195, b: 0.3113195, a: 0}
+    - _BackfaceColor: {r: 0, g: 0, b: 0, a: 0}
     - _BacklightColor: {r: 0.85, g: 0.8, b: 0.7, a: 1}
-    - _BaseColor: {r: 0.65882355, g: 0.72156864, b: 0.9411765, a: 0.28235295}
-    - _Color: {r: 0.65882355, g: 0.72156864, b: 0.9411765, a: 0.28235295}
-    - _Color2nd: {r: 0.37735847, g: 0.3681025, b: 0.3681025, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2nd: {r: 1, g: 1, b: 1, a: 1}
     - _Color3rd: {r: 1, g: 1, b: 1, a: 1}
     - _DissolveColor: {r: 1, g: 1, b: 1, a: 1}
     - _DissolveNoiseMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
@@ -703,12 +611,9 @@ Material:
     - _Emission2ndColor: {r: 1, g: 1, b: 1, a: 1}
     - _Emission2ndMap_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionBlendMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
-    - _EmissionBlink: {r: 0, g: 0, b: 3.141593, a: 0}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionBlink: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 2.270603, g: 1.6880922, b: 1.2363492, a: 0.9411765}
     - _EmissionMap_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
-    - _FurVector: {r: 0, g: 0, b: 1, a: 0.02}
-    - _GemEnvColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GemParticleColor: {r: 4, g: 4, b: 4, a: 1}
     - _GlitterAtras: {r: 1, g: 1, b: 0, a: 0}
     - _GlitterColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlitterParams1: {r: 256, g: 256, b: 0.16, a: 50}
@@ -729,28 +634,26 @@ Material:
     - _Main3rdDistanceFade: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _Main3rdTexDecalAnimation: {r: 1, g: 1, b: 1, a: 30}
     - _Main3rdTexDecalSubParam: {r: 1, g: 1, b: 0, a: 1}
-    - _MainTexHSVG: {r: 0, g: 1, b: 1, a: 1}
+    - _MainTexHSVG: {r: 0, g: 0.84, b: 0.98, a: 1.22}
     - _MainTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatCapBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}
-    - _OutlineColor: {r: 0.18867922, g: 0.067046374, b: 0.067046374, a: 1}
-    - _OutlineLitColor: {r: 1, g: 0.19999993, b: 0, a: 0}
-    - _OutlineTexHSVG: {r: 0, g: 1, b: 0.9, a: 1}
+    - _OutlineColor: {r: 0.6, g: 0.56, b: 0.73, a: 1}
+    - _OutlineLitColor: {r: 1, g: 0.19999996, b: 0, a: 0}
+    - _OutlineTexHSVG: {r: 0, g: 1, b: 1, a: 1}
     - _OutlineTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
-    - _PreColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ReflectionColor: {r: 16.428951, g: 12.0822115, b: 8.937761, a: 0.01}
-    - _ReflectionCubeColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RefractionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RimColor: {r: 31.626886, g: 24.175518, b: 23.01642, a: 0.67}
+    - _ReflectionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ReflectionCubeColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0.65999997, g: 0.5, b: 0.47999996, a: 1}
     - _RimIndirColor: {r: 1, g: 1, b: 1, a: 1}
     - _Shadow2ndColor: {r: 0.68, g: 0.65999997, b: 0.78999996, a: 1}
     - _Shadow3rdColor: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAOShift: {r: 1, g: 0, b: 1, a: 0}
     - _ShadowAOShift2: {r: 1, g: 0, b: 1, a: 0}
-    - _ShadowBorderColor: {r: 1, g: 0.09999994, b: 0, a: 1}
-    - _ShadowColor: {r: 0.82, g: 0.76, b: 0.85, a: 1}
+    - _ShadowBorderColor: {r: 1, g: 0.09999997, b: 0, a: 1}
+    - _ShadowColor: {r: 0.80388796, g: 0.8019936, b: 0.8301887, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _e2ga0: {r: 1, g: 0, b: 0, a: 0}
     - _e2ga1: {r: 1, g: 0, b: 0, a: 1}
@@ -777,7 +680,7 @@ Material:
     - _ega6: {r: 1, g: 0, b: 0, a: 0}
     - _ega7: {r: 1, g: 0, b: 0, a: 0}
     - _egc0: {r: 1, g: 1, b: 1, a: 0}
-    - _egc1: {r: 1, g: 1, b: 1, a: 1}
+    - _egc1: {r: 1, g: 0, b: 0, a: 1}
     - _egc2: {r: 1, g: 1, b: 1, a: 0}
     - _egc3: {r: 1, g: 1, b: 1, a: 0}
     - _egc4: {r: 1, g: 1, b: 1, a: 0}
@@ -785,7 +688,7 @@ Material:
     - _egc6: {r: 1, g: 1, b: 1, a: 0}
     - _egc7: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &331244148835069934
+--- !u!114 &6022639178572453203
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
