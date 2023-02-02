@@ -209,7 +209,6 @@ public class DebrisGenerator : MonoBehaviour
                         {
                             d.IsItemGenerate = true;
                         }
-                        print(percent / 10.0f);
                     });
                 });
                 shadow = s.gameObject;
