@@ -106,7 +106,12 @@ public enum SEType
     UnderLobby_Arrival, //地下：到着
     BossStage_QueenQuiet, //おだまりSE
     BossStage_QueenAppearance, //女王登場
-    BossStage_QueenSwing //女王が杖を振る
+    BossStage_QueenSwing, //女王が杖を振る
+    Trump_AttackEnd, //トランプ兵が槍を戻す音
+    Trump_Alignment, //トランプ兵の整列音
+    BossStage_QueenDamage, //女王がダメージを受ける
+    BossStage_QueenJump, //女王がジャンプした時
+    BossStage_QueenFallDown //女王が落ち始めた時
 }
 
 public enum VOICEType
