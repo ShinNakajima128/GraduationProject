@@ -391,7 +391,14 @@ public class QuizGameManager : StageGame<QuizGameManager>
             _infoImages[1].enabled = false;
             _informationText.text = "";
 
-            yield return GameManager.GetStillDirectionCoroutine(Stages.Stage4, AliceProject.MessageType.GetStill_Stage4);
+            if (!GameManager.CheckStageStatus())
+            {
+                yield return GameManager.GetStillDirectionCoroutine(Stages.Stage4, AliceProject.MessageType.GetStill_Stage4);
+            }
+            else
+            {
+                GameManager.ChangeLobbyState(LobbyState.Default);
+            }
         }
         else
         {

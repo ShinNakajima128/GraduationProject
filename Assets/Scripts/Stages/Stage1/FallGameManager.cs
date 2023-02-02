@@ -111,7 +111,7 @@ public class FallGameManager : MonoBehaviour
         _playerTrans.DOMove(_startTrans.position, 2.0f)
                     .OnComplete(() =>
                     {
-                        StartCoroutine(GameStartCoroutine(() => GameStart?.Invoke()));
+                        StartCoroutine(GameStartCoroutine());
                         Debug.Log("ÉQÅ[ÉÄäJén");
                     });
     }
@@ -202,7 +202,7 @@ public class FallGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        action?.Invoke();
+        GameStart?.Invoke();
         _infoImages[0].enabled = false;
         //_informationText.text = "";
         _inGamePanel.alpha = 1;
@@ -235,7 +235,14 @@ public class FallGameManager : MonoBehaviour
         _infoImages[1].enabled = false;
         //_informationText.text = "";
 
-        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, MessageType.GetStill_Stage1);
+        if (!GameManager.CheckStageStatus())
+        {
+            yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, MessageType.GetStill_Stage1);
+        }
+        else
+        {
+            GameManager.ChangeLobbyState(LobbyState.Default);
+        }
 
         GameManager.UpdateFirstVisit(Stages.Stage1);
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);

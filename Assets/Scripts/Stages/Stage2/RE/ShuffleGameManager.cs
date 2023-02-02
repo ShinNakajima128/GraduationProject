@@ -301,7 +301,14 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 //_infoText.text = "";
                 _infoImages[1].enabled = false;
 
-                yield return GameManager.GetStillDirectionCoroutine(Stages.Stage2, MessageType.GetStill_Stage2);
+                if (!GameManager.CheckStageStatus())
+                {
+                    yield return GameManager.GetStillDirectionCoroutine(Stages.Stage2, MessageType.GetStill_Stage2);
+                }
+                else
+                {
+                    GameManager.ChangeLobbyState(LobbyState.Default);
+                }
 
                 GameManager.SaveStageResult(true);
                 TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
