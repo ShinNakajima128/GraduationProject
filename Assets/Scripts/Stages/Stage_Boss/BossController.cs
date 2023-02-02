@@ -231,7 +231,9 @@ public class BossController : MonoBehaviour, IDamagable
 
         _bossShadow.ChangeShadowSize(_minShadowSize, _jumpUpTime + param.ChaseTime); //影を徐々に小さくする
 
+
         //プレイヤーの頭上へジャンプする
+        AudioManager.PlaySE(SEType.BossStage_QueenJump);
         yield return transform.DOLocalMove(playerTop, _jumpUpTime)
                               .SetEase(Ease.OutCubic)
                               .WaitForCompletion(); //ボスが飛び上がる
@@ -250,19 +252,22 @@ public class BossController : MonoBehaviour, IDamagable
         }
 
         yield return null;
-
+        
         //ボスの影を徐々に大きくする
         _bossShadow.ChangeShadowSize(2f, param.FallTime, Ease.InCubic);
+        AudioManager.PlaySE(SEType.BossStage_QueenFallDown);
 
         //プレイヤーの現在地に着地する
         yield return transform.DOMove(_playerTrans.position, param.FallTime)
                               .SetEase(Ease.InCubic)
                               .OnComplete(() =>
                               {
+                                  AudioManager.StopSE();
                                   StartCoroutine(ChangeState(BossState.Landing));
                                   BossStageManager.CameraShake();
                                   EventManager.OnEvent(Events.Boss_GroundShake);
                                   EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
+                                  AudioManager.PlaySE(SEType.BossStage_QueenLanding);
                                   Debug.Log("着地");
                               })
                               .WaitForCompletion();
@@ -283,6 +288,7 @@ public class BossController : MonoBehaviour, IDamagable
                                       .WaitForCompletion();
 
                 EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
+                AudioManager.PlaySE(SEType.BossStage_QueenLanding);
                 //EventManager.OnEvent(Events.Boss_GroundShake); //追加の着地でも地面を揺らす
             }
         }
@@ -326,6 +332,7 @@ public class BossController : MonoBehaviour, IDamagable
 
         _isDamaged = true;
         BossHPManager.Instance.Damage();
+        AudioManager.PlaySE(SEType.BossStage_QueenDamage);
 
         //3フェイズ目の時は倒されたモーションを再生
         if (_currentBattlePhase == BossBattlePhase.Third)
@@ -416,6 +423,11 @@ public class BossController : MonoBehaviour, IDamagable
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!BossStageManager.Instance.IsInBattle)
+        {
+            return;
+        }
+
         if (other.CompareTag("Player"))
         {
             if (other.TryGetComponent<IDamagable>(out var target))

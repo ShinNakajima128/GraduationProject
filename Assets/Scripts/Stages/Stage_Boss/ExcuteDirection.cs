@@ -60,6 +60,7 @@ public class ExcuteDirection : MonoBehaviour
         _excutePanel.alpha = 1; //トランプ兵を処刑するモーションがない場合は暗転の演出
 
         //処刑したと分かるSEの再生はここに記述
+        AudioManager.PlaySE(SEType.Trump_Slust);
         Debug.Log("トランプ兵の首飛ぶ");
 
         TransitionManager.FadeIn(FadeType.Normal, 1.5f, action: () =>

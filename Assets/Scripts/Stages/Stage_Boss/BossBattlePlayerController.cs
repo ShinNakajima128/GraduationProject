@@ -110,6 +110,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         _fc.ChangeFaceType(FaceType.Damage);
         IsMaxHP = false;
         HPManager.Instance.ChangeHPValue(damageValue);
+        AudioManager.PlaySE(SEType.Player_Damage);
 
         var wait = new WaitForSeconds(_blinksInterVal);
 

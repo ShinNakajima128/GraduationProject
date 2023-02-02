@@ -47,7 +47,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         };
         EventManager.ListenEvents(Events.BossStage_FrontAlice, () => { _anim.CrossFadeInFixedTime("Overlook", 0.2f); });
         EventManager.ListenEvents(Events.BossStage_BehindAlice, () => { _anim.CrossFadeInFixedTime("No", 0.2f); });
-        EventManager.ListenEvents(Events.BossStage_BehindAlice_RE2, () => { _anim.CrossFadeInFixedTime("OpenArms", 0.2f); });
+        //EventManager.ListenEvents(Events.BossStage_BehindAlice_RE2, () => { _anim.CrossFadeInFixedTime("OpenArms", 0.2f); });
         EventManager.ListenEvents(Events.Boss_GroundShake, Stopping);
         HPManager.Instance.DamageAction += () => { _anim.CrossFadeInFixedTime("Damage", 0.2f); };
     }
