@@ -43,6 +43,18 @@ public class Option : MonoBehaviour
     [SerializeField]
     Text _changeInfoText = default;
 
+    [SerializeField]
+    Image _bgmFillBarImage = default;
+
+    [SerializeField]
+    Transform _bgmCurrentPointImage = default;
+
+    [SerializeField]
+    Image _seFillBarImage = default;
+
+    [SerializeField]
+    Transform _seCurrentPointImage = default;
+
     [Header("Components")]
     [SerializeField]
     Pause _pause = default;
@@ -53,6 +65,10 @@ public class Option : MonoBehaviour
     ReactiveProperty<TabType> _currentTab = new ReactiveProperty<TabType>();
     bool _init = false;
     bool _isPressed = false;
+    bool _isBgmVolumeChanging = false;
+    bool _isSeVolumeChanging = false;
+    float _beforeBgmVolume;
+    float _beforeSeVolume;
     #endregion
 
     #region public
@@ -276,8 +292,26 @@ public class Option : MonoBehaviour
         switch (type)
         {
             case SelectBarType.BGM:
+                if (AudioManager.Instance.CurrentBGMVolume <= 0 || _isBgmVolumeChanging)
+                {
+                    print($"現在のBGM音量:{AudioManager.Instance.CurrentBGMVolume}");
+                    return;
+                }
+                _isBgmVolumeChanging = true;
+                var bgmVol = --AudioManager.Instance.CurrentBGMVolume; //AudioManagerのプロパティを変更しつつ変数に代入する記述
+                SetUIVolumeUI(type, bgmVol);
+                AudioManager.BgmVolChange(bgmVol);
                 break;
             case SelectBarType.SE:
+                if (AudioManager.Instance.CurrentSEVolume <= 0 || _isSeVolumeChanging)
+                {
+                    print($"現在のSE音量:{AudioManager.Instance.CurrentSEVolume}");
+                    return;
+                }
+                _isSeVolumeChanging = true;
+                var seVol = --AudioManager.Instance.CurrentSEVolume;
+                SetUIVolumeUI(type, seVol);
+                AudioManager.SeVolChange(seVol);
                 break;
             default:
                 break;
@@ -289,14 +323,58 @@ public class Option : MonoBehaviour
         switch (type)
         {
             case SelectBarType.BGM:
+                if (AudioManager.Instance.CurrentBGMVolume >= 10)
+                {
+                    print($"現在のBGM音量:{AudioManager.Instance.CurrentBGMVolume}");
+                    return;
+                }
+                _isBgmVolumeChanging = true;
+                var bgmVol = ++AudioManager.Instance.CurrentBGMVolume;
+                SetUIVolumeUI(type, bgmVol);
+                AudioManager.BgmVolChange(bgmVol);
                 break;
             case SelectBarType.SE:
+                if (AudioManager.Instance.CurrentSEVolume >= 10)
+                {
+                    print($"現在のSE音量:{AudioManager.Instance.CurrentSEVolume}");
+                    return;
+                }
+                _isSeVolumeChanging = true;
+                var seVol = ++AudioManager.Instance.CurrentSEVolume;
+                SetUIVolumeUI(type, seVol);
+                AudioManager.SeVolChange(seVol);
                 break;
             default:
                 break;
         }
     }
 
+    void SetUIVolumeUI(SelectBarType type, float volume, float animTime = 0.15f)
+    {
+        switch (type)
+        {
+            case SelectBarType.BGM:
+                _bgmFillBarImage.DOFillAmount(volume / 10.0f, animTime);
+                _bgmCurrentPointImage.DOLocalMoveX(560 * (volume / 10), animTime)
+                                     .OnComplete(() => 
+                                     {
+                                         _isBgmVolumeChanging = false;
+                                         print($"BGM音量:{volume}, FillImage.Fill:{_bgmFillBarImage.fillAmount}, Point.x:{_bgmCurrentPointImage.localPosition.x}");
+                                     });
+                break;
+            case SelectBarType.SE:
+                _seFillBarImage.DOFillAmount(volume / 10.0f, animTime);
+                _seCurrentPointImage.DOLocalMoveX(560 * (volume / 10), animTime)
+                                    .OnComplete(() =>
+                                    {
+                                        _isSeVolumeChanging = false;
+                                        print($"SE音量:{volume}, FillImage.Fill:{_bgmFillBarImage.fillAmount}, Point.x:{_bgmCurrentPointImage.localPosition.x}");
+                                    }); ;
+                break;
+            default:
+                break;
+        }
+    }
     void RxSetup()
     {
         //オプションを閉じる
@@ -343,6 +421,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.BGM &&
                    UIInput.LeftCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeLeftBar(SelectBarType.BGM);
@@ -353,6 +432,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.BGM &&
                    UIInput.RightCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeRightBar(SelectBarType.BGM);
@@ -365,6 +445,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.SE &&
                    UIInput.LeftCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeLeftBar(SelectBarType.SE);
@@ -375,6 +456,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.SE &&
                    UIInput.RightCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeRightBar(SelectBarType.SE);
@@ -390,6 +472,10 @@ public class Option : MonoBehaviour
         _currentTab.Value = TabType.Sound;
         EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
         _soundTabButtons[0].Button.Select();
+        SetUIVolumeUI(SelectBarType.BGM, AudioManager.Instance.CurrentBGMVolume, 0);
+        SetUIVolumeUI(SelectBarType.SE, AudioManager.Instance.CurrentSEVolume, 0);
+        _beforeBgmVolume = AudioManager.Instance.CurrentBGMVolume;
+        _beforeSeVolume = AudioManager.Instance.CurrentSEVolume;
     }
 
     IEnumerator OffOptionCotoutine()

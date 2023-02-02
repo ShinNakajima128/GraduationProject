@@ -172,11 +172,16 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 
     [Tooltip("AudioMixer")]
     [SerializeField]
-    AudioMixerGroup _mixer = default;
+    AudioMixer _mixer = default;
 
     List<AudioSource> _seAudioSourceList = new List<AudioSource>();
     List<AudioSource> _voiceAudioSourceList = new List<AudioSource>();
     bool _isStoping = false;
+
+    #region Volume Property
+    public int CurrentBGMVolume { get; set; } = 10;
+    public int CurrentSEVolume { get; set; } = 10;
+    #endregion
 
     void Awake()
     {
@@ -197,6 +202,10 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             //生成したオブジェクトにAudioSourceを追加
             var source = obj.AddComponent<AudioSource>();
             
+            if (_mixer != null)
+            {
+                source.outputAudioMixerGroup = _mixer.FindMatchingGroups("Master")[2];
+            }
             _seAudioSourceList.Add(source);
         }
 
@@ -358,8 +367,14 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// <param name="bgmValue"> 音量 </param>
     public static void BgmVolChange(float bgmValue)
     {
-        Instance._bgmVolume = bgmValue;
-        Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume;
+        //-80~0に変換
+        var volume = Mathf.Clamp(Mathf.Log10(bgmValue), -80f, 0f);
+        //audioMixerに代入
+        Instance._mixer.SetFloat("BGM", volume);
+        Instance._mixer.GetFloat("SE", out float bgm);
+        print(bgm);
+        //Instance._bgmVolume = bgmValue;
+        //Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume;
     }
 
     /// <summary>
@@ -368,11 +383,17 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// <param name="seValue"> 音量 </param>
     public static void SeVolChange(float seValue)
     {
-        Instance._seVolume = seValue;
-        foreach (var s in Instance._seAudioSourceList)
-        {
-            s.volume = Instance._seVolume;
-        }
+        //-80~0に変換
+        var volume = Mathf.Clamp(Mathf.Log10(seValue), -80f, 0f);
+        //audioMixerに代入
+        Instance._mixer.SetFloat("SE", volume);
+        Instance._mixer.GetFloat("SE",out float se);
+        print(se);
+        //Instance._seVolume = seValue;
+        //foreach (var s in Instance._seAudioSourceList)
+        //{
+        //    s.volume = Instance._seVolume;
+        //}
     }
 
     /// <summary>
