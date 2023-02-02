@@ -247,7 +247,7 @@ public class LobbyManager : MonoBehaviour
                 else
                 {
                     AudioManager.PlayBGM(BGMType.Lobby);
-                    StartCoroutine(OnPlayerMovable(1.5f));
+                    StartCoroutine(OnPlayerMovable(0.2f));
                     Debug.Log("クリア済みステージ、またはステージ失敗");
                 }
             }
@@ -275,6 +275,7 @@ public class LobbyManager : MonoBehaviour
     {
         Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
+        UIManager.SwitchIsCanOpenFlag(false);
 
         var data = Instance._stageDatas.FirstOrDefault(d => d.Type == type);
 
@@ -293,6 +294,7 @@ public class LobbyManager : MonoBehaviour
     {
         Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
+        UIManager.SwitchIsCanOpenFlag(true);
         Instance.StepAwayDoor?.Invoke();
 
         StageDescriptionUI.Instance.InActiceDescription();
