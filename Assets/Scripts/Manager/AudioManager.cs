@@ -24,7 +24,8 @@ public enum BGMType
     ClearJingle,
     GetStill,
     BossStage_Clear,
-    UnderLobby
+    UnderLobby,
+    EndBossBattle
 }
 public enum SEType
 {
@@ -364,15 +365,15 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// <summary>
     /// BGM音量を変更する
     /// </summary>
-    /// <param name="bgmValue"> 音量 </param>
-    public static void BgmVolChange(float bgmValue)
+    /// <param name="bgmVolume"> 音量 </param>
+    public static void BgmVolChange(float bgmVolume)
     {
         //-80~0に変換
-        var volume = Mathf.Clamp(Mathf.Log10(bgmValue), -80f, 0f);
+        var volume = Mathf.Clamp(Mathf.Log10(Mathf.Clamp(bgmVolume, 0f, 1f)) * 20f, -80f, 0f);
+        Debug.Log($"音量をdBに変換:{Mathf.Log10(bgmVolume) * 20f}");
         //audioMixerに代入
         Instance._mixer.SetFloat("BGM", volume);
-        Instance._mixer.GetFloat("SE", out float bgm);
-        print(bgm);
+       
         //Instance._bgmVolume = bgmValue;
         //Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume;
     }
@@ -380,15 +381,15 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// <summary>
     /// SE音量を変更する
     /// </summary>
-    /// <param name="seValue"> 音量 </param>
-    public static void SeVolChange(float seValue)
+    /// <param name="seVolume"> 音量 </param>
+    public static void SeVolChange(float seVolume)
     {
         //-80~0に変換
-        var volume = Mathf.Clamp(Mathf.Log10(seValue), -80f, 0f);
+        var volume = Mathf.Clamp(Mathf.Log10(Mathf.Clamp(seVolume, 0f, 1f)) * 20f, -80f, 0f);
+        Debug.Log($"音量をdBに変換:{Mathf.Log10(seVolume) * 20f}");
         //audioMixerに代入
         Instance._mixer.SetFloat("SE", volume);
-        Instance._mixer.GetFloat("SE",out float se);
-        print(se);
+        
         //Instance._seVolume = seValue;
         //foreach (var s in Instance._seAudioSourceList)
         //{

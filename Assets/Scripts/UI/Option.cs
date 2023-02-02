@@ -300,7 +300,7 @@ public class Option : MonoBehaviour
                 _isBgmVolumeChanging = true;
                 var bgmVol = --AudioManager.Instance.CurrentBGMVolume; //AudioManagerのプロパティを変更しつつ変数に代入する記述
                 SetUIVolumeUI(type, bgmVol);
-                AudioManager.BgmVolChange(bgmVol);
+                AudioManager.BgmVolChange(bgmVol / 10.0f);
                 break;
             case SelectBarType.SE:
                 if (AudioManager.Instance.CurrentSEVolume <= 0 || _isSeVolumeChanging)
@@ -311,7 +311,7 @@ public class Option : MonoBehaviour
                 _isSeVolumeChanging = true;
                 var seVol = --AudioManager.Instance.CurrentSEVolume;
                 SetUIVolumeUI(type, seVol);
-                AudioManager.SeVolChange(seVol);
+                AudioManager.SeVolChange(seVol / 10.0f);
                 break;
             default:
                 break;
@@ -331,7 +331,7 @@ public class Option : MonoBehaviour
                 _isBgmVolumeChanging = true;
                 var bgmVol = ++AudioManager.Instance.CurrentBGMVolume;
                 SetUIVolumeUI(type, bgmVol);
-                AudioManager.BgmVolChange(bgmVol);
+                AudioManager.BgmVolChange(bgmVol / 10f);
                 break;
             case SelectBarType.SE:
                 if (AudioManager.Instance.CurrentSEVolume >= 10)
@@ -342,7 +342,7 @@ public class Option : MonoBehaviour
                 _isSeVolumeChanging = true;
                 var seVol = ++AudioManager.Instance.CurrentSEVolume;
                 SetUIVolumeUI(type, seVol);
-                AudioManager.SeVolChange(seVol);
+                AudioManager.SeVolChange(seVol / 10.0f);
                 break;
             default:
                 break;
@@ -355,7 +355,7 @@ public class Option : MonoBehaviour
         {
             case SelectBarType.BGM:
                 _bgmFillBarImage.DOFillAmount(volume / 10.0f, animTime);
-                _bgmCurrentPointImage.DOLocalMoveX(560 * (volume / 10), animTime)
+                _bgmCurrentPointImage.DOLocalMoveX(560 * (volume / 10.0f), animTime)
                                      .OnComplete(() => 
                                      {
                                          _isBgmVolumeChanging = false;
@@ -363,6 +363,7 @@ public class Option : MonoBehaviour
                                      });
                 break;
             case SelectBarType.SE:
+                AudioManager.PlaySE(SEType.UI_Select);
                 _seFillBarImage.DOFillAmount(volume / 10.0f, animTime);
                 _seCurrentPointImage.DOLocalMoveX(560 * (volume / 10), animTime)
                                     .OnComplete(() =>
@@ -379,7 +380,8 @@ public class Option : MonoBehaviour
     {
         //オプションを閉じる
         this.UpdateAsObservable()
-            .Where(_ => IsActived && UIInput.A)
+            .Where(_ => IsActived && UIInput.A && !_isPressed)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnCloseOptionPanel();
@@ -390,6 +392,7 @@ public class Option : MonoBehaviour
             .Where(_ => IsActived &&
                         _currentTab.Value == TabType.Sound &&
                         UIInput.RB)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 _currentTab.Value = TabType.Difficulty;
@@ -404,6 +407,7 @@ public class Option : MonoBehaviour
             .Where(_ => IsActived &&
                         _currentTab.Value == TabType.Difficulty &&
                         UIInput.LB)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 _currentTab.Value = TabType.Sound;
@@ -484,6 +488,7 @@ public class Option : MonoBehaviour
 
         _isPressed = false;
         _optionGroup.alpha = 0;
+        _changeDifficultyInfoGroup.alpha = 0;
         UIManager.InactivatePanel(UIPanelType.Option);
         _pause.PauseActivate(true);
     }
