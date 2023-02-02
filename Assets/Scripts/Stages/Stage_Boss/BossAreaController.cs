@@ -27,6 +27,11 @@ public class BossAreaController : MonoBehaviour
         foreach (var a in _attackAreas)
         {
             a.AttackAreaCollider.enabled = isActive;
+
+            if (isActive)
+            {
+                a.IsAttacked = false;
+            }
         }
     }
 }
