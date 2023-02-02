@@ -42,6 +42,10 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     GameObject[] _cheshireCats = default;
 
+    [Tooltip("未クリアステージの強調アイコンの親オブジェクト")]
+    [SerializeField]
+    GameObject _unclearedIconsParent = default;
+
     [Header("Components")]
     [SerializeField]
     MessagePlayer _messagePlayer = default;
@@ -126,6 +130,7 @@ public class LobbyManager : MonoBehaviour
         Instance = this;
         _stageNameText.text = "";
         PlayerMove += CameraMovable;
+        _unclearedIconsParent.SetActive(false);
     }
 
     IEnumerator Start()
@@ -258,6 +263,7 @@ public class LobbyManager : MonoBehaviour
             AudioManager.PlayBGM(BGMType.Lobby);
             PlayerMove?.Invoke(true);
             IsUIOperate?.Invoke(true);
+            _unclearedIconsParent.SetActive(true);
             IsDuring = false;
 
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
@@ -426,6 +432,7 @@ public class LobbyManager : MonoBehaviour
         IsDuring = false;
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
+        _unclearedIconsParent.SetActive(true);
         action?.Invoke();
         
     }
