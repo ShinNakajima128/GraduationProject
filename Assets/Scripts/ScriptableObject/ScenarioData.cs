@@ -107,7 +107,7 @@ namespace AliceProject
         Tutorial,
         Stage1_End,
         Lobby_ClockEnd,
-        Stage_Boss_Start,
+        Stage_Boss_Start1,
         Stage_Boss_Down1,
         Stage_Boss_Down2,
         Stage_Boss_Down3,
@@ -131,7 +131,12 @@ namespace AliceProject
         FirstVisit_Stage4_Phase1,
         FirstVisit_Stage4_Phase2,
         FirstVisit_Stage4_Phase3,
-        Ending2
+        Ending2,
+        Stage_Boss_Start2,
+        Stage_Boss_Start3,
+        Stage_Boss_Start4,
+        Stage_Boss_End1,
+        Stage_Boss_JustBeforeBattle
     }
 }
 

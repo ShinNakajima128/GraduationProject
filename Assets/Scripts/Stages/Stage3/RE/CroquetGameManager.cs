@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using AliceProject;
+using UniRx;
+using UniRx.Triggers;
 
 /// <summary>
 /// クロッケーゲーム全体を管理するマネージャークラス
@@ -61,12 +63,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     AudioSource _trumpBlowSESource = default;
 
-    [SerializeField]
-    AudioClip _challengingClip = default;
-
-    [SerializeField]
-    AudioClip _achievingClip = default;
-
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = default;
@@ -112,6 +108,15 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         base.Start();
         Init();
         OnGameStart();
+
+        //問題が起きた時用にミニゲームをスキップする機能を追加
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.Next)
+            .Subscribe(_ => 
+            {
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby); 
+            });
     }
 
     public override void OnGameSetUp()
@@ -280,9 +285,16 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
                         yield return new WaitForSeconds(3.0f);
 
-                        //_gameUI.SetResultText("");
                         _infoImages[1].enabled = false;
-                        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
+
+                        if (!GameManager.CheckStageStatus())
+                        {
+                            yield return GameManager.GetStillDirectionCoroutine(Stages.Stage3, MessageType.GetStill_Stage3);
+                        }
+                        else
+                        {
+                            GameManager.ChangeLobbyState(LobbyState.Default);
+                        }
                     }
                     else
                     {
@@ -392,20 +404,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     {
         _trumpBlowSESource.Play();
         _trumpBlowSESource.pitch += 0.1f;
-
-        //switch (_currentTargetTrumpColor)
-        //{
-        //    case TrumpColorType.Red:
-        //        if (_currentRedStrileNum < _currentTargetStrikeNum)
-        //        {
-
-        //        }
-        //        break;
-        //    case TrumpColorType.Black:
-        //        break;
-        //    default:
-        //        break;
-        //}
     }
 
     void ResetSource()

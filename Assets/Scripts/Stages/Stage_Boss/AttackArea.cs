@@ -22,6 +22,11 @@ public class AttackArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!BossStageManager.Instance.IsInBattle)
+        {
+            return;
+        }
+
         //プレイヤーかボス
         if (other.CompareTag("Player") || other.CompareTag("Boss"))
         {

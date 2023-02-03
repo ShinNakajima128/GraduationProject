@@ -151,6 +151,7 @@ public class MessagePlayer : MonoBehaviour
             if (d[i].EventType != Events.None)
             {
                 EventManager.OnEvent(d[i].EventType);
+                print($"{d[i].EventType}");
             }
             //OnScreenEffect(d[i].EventType);
 

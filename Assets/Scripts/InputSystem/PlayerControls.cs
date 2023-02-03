@@ -671,6 +671,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""N"",
+                    ""type"": ""Button"",
+                    ""id"": ""349086a0-ce97-4762-ba16-79263b011beb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""RB"",
                     ""type"": ""Button"",
                     ""id"": ""0068ecf0-8275-4dc1-b056-6902fa73cb17"",
@@ -1091,6 +1100,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""30fec98b-668b-4b7b-a3fa-473d215c78b7"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""3e1c7ea4-3246-4432-a7d1-6114566d6e93"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
@@ -1103,7 +1123,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""54f66076-de31-469b-af25-41b77c1a055e"",
-                    ""path"": ""<Keyboard>/rightShift"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -1125,11 +1145,22 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""06cfbe63-f736-4eb2-854c-4c92b23fd418"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e380c48-4ff8-4b8f-884b-7381f0f2ea1e"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""N"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1281,6 +1312,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_B = m_UIInput.FindAction("B", throwIfNotFound: true);
         m_UIInput_X = m_UIInput.FindAction("X", throwIfNotFound: true);
         m_UIInput_Y = m_UIInput.FindAction("Y", throwIfNotFound: true);
+        m_UIInput_N = m_UIInput.FindAction("N", throwIfNotFound: true);
         m_UIInput_RB = m_UIInput.FindAction("RB", throwIfNotFound: true);
         m_UIInput_LB = m_UIInput.FindAction("LB", throwIfNotFound: true);
         m_UIInput_LeftCrossKey = m_UIInput.FindAction("LeftCrossKey", throwIfNotFound: true);
@@ -1546,6 +1578,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_B;
     private readonly InputAction m_UIInput_X;
     private readonly InputAction m_UIInput_Y;
+    private readonly InputAction m_UIInput_N;
     private readonly InputAction m_UIInput_RB;
     private readonly InputAction m_UIInput_LB;
     private readonly InputAction m_UIInput_LeftCrossKey;
@@ -1564,6 +1597,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @B => m_Wrapper.m_UIInput_B;
         public InputAction @X => m_Wrapper.m_UIInput_X;
         public InputAction @Y => m_Wrapper.m_UIInput_Y;
+        public InputAction @N => m_Wrapper.m_UIInput_N;
         public InputAction @RB => m_Wrapper.m_UIInput_RB;
         public InputAction @LB => m_Wrapper.m_UIInput_LB;
         public InputAction @LeftCrossKey => m_Wrapper.m_UIInput_LeftCrossKey;
@@ -1603,6 +1637,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Y.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnY;
                 @Y.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnY;
                 @Y.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnY;
+                @N.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnN;
+                @N.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnN;
+                @N.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnN;
                 @RB.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRB;
                 @RB.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRB;
                 @RB.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnRB;
@@ -1649,6 +1686,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Y.started += instance.OnY;
                 @Y.performed += instance.OnY;
                 @Y.canceled += instance.OnY;
+                @N.started += instance.OnN;
+                @N.performed += instance.OnN;
+                @N.canceled += instance.OnN;
                 @RB.started += instance.OnRB;
                 @RB.performed += instance.OnRB;
                 @RB.canceled += instance.OnRB;
@@ -1745,6 +1785,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnB(InputAction.CallbackContext context);
         void OnX(InputAction.CallbackContext context);
         void OnY(InputAction.CallbackContext context);
+        void OnN(InputAction.CallbackContext context);
         void OnRB(InputAction.CallbackContext context);
         void OnLB(InputAction.CallbackContext context);
         void OnLeftCrossKey(InputAction.CallbackContext context);

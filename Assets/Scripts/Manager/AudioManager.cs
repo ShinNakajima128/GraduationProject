@@ -24,7 +24,8 @@ public enum BGMType
     ClearJingle,
     GetStill,
     BossStage_Clear,
-    UnderLobby
+    UnderLobby,
+    EndBossBattle
 }
 public enum SEType
 {
@@ -103,7 +104,15 @@ public enum SEType
     Trump_Slust, //トランプ兵：突き攻撃
     Trump_Waiting,
     UnderLobby_Lowering, //地下：下降音
-    UnderLobby_Arrival //地下：到着
+    UnderLobby_Arrival, //地下：到着
+    BossStage_QueenQuiet, //おだまりSE
+    BossStage_QueenAppearance, //女王登場
+    BossStage_QueenSwing, //女王が杖を振る
+    Trump_AttackEnd, //トランプ兵が槍を戻す音
+    Trump_Alignment, //トランプ兵の整列音
+    BossStage_QueenDamage, //女王がダメージを受ける
+    BossStage_QueenJump, //女王がジャンプした時
+    BossStage_QueenFallDown //女王が落ち始めた時
 }
 
 public enum VOICEType
@@ -164,11 +173,16 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 
     [Tooltip("AudioMixer")]
     [SerializeField]
-    AudioMixerGroup _mixer = default;
+    AudioMixer _mixer = default;
 
     List<AudioSource> _seAudioSourceList = new List<AudioSource>();
     List<AudioSource> _voiceAudioSourceList = new List<AudioSource>();
     bool _isStoping = false;
+
+    #region Volume Property
+    public int CurrentBGMVolume { get; set; } = 10;
+    public int CurrentSEVolume { get; set; } = 10;
+    #endregion
 
     void Awake()
     {
@@ -189,6 +203,10 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             //生成したオブジェクトにAudioSourceを追加
             var source = obj.AddComponent<AudioSource>();
             
+            if (_mixer != null)
+            {
+                source.outputAudioMixerGroup = _mixer.FindMatchingGroups("Master")[2];
+            }
             _seAudioSourceList.Add(source);
         }
 
@@ -347,24 +365,36 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     /// <summary>
     /// BGM音量を変更する
     /// </summary>
-    /// <param name="bgmValue"> 音量 </param>
-    public static void BgmVolChange(float bgmValue)
+    /// <param name="bgmVolume"> 音量 </param>
+    public static void BgmVolChange(float bgmVolume)
     {
-        Instance._bgmVolume = bgmValue;
-        Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume;
+        //-80~0に変換
+        var volume = Mathf.Clamp(Mathf.Log10(Mathf.Clamp(bgmVolume, 0f, 1f)) * 20f, -80f, 0f);
+        Debug.Log($"音量をdBに変換:{Mathf.Log10(bgmVolume) * 20f}");
+        //audioMixerに代入
+        Instance._mixer.SetFloat("BGM", volume);
+       
+        //Instance._bgmVolume = bgmValue;
+        //Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume;
     }
 
     /// <summary>
     /// SE音量を変更する
     /// </summary>
-    /// <param name="seValue"> 音量 </param>
-    public static void SeVolChange(float seValue)
+    /// <param name="seVolume"> 音量 </param>
+    public static void SeVolChange(float seVolume)
     {
-        Instance._seVolume = seValue;
-        foreach (var s in Instance._seAudioSourceList)
-        {
-            s.volume = Instance._seVolume;
-        }
+        //-80~0に変換
+        var volume = Mathf.Clamp(Mathf.Log10(Mathf.Clamp(seVolume, 0f, 1f)) * 20f, -80f, 0f);
+        Debug.Log($"音量をdBに変換:{Mathf.Log10(seVolume) * 20f}");
+        //audioMixerに代入
+        Instance._mixer.SetFloat("SE", volume);
+        
+        //Instance._seVolume = seValue;
+        //foreach (var s in Instance._seAudioSourceList)
+        //{
+        //    s.volume = Instance._seVolume;
+        //}
     }
 
     /// <summary>

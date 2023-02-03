@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
 using AliceProject;
+using UniRx;
+using UniRx.Triggers;
+
 /// <summary>
 /// 落下ゲームの管理を行うマネージャークラス
 /// </summary>
@@ -91,6 +94,15 @@ public class FallGameManager : MonoBehaviour
 
         LetterboxController.ActivateLetterbox(true, 0f);
         TransitionManager.FadeOut(FadeType.Normal);
+
+        //問題が起きた時用にミニゲームをスキップする機能を追加
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.Next)
+            .Subscribe(_ =>
+            {
+                GameManager.SaveStageResult(true);
+                TransitionManager.SceneTransition(SceneType.Lobby);
+            });
     }
 
     public void OnGameStart()
@@ -99,7 +111,7 @@ public class FallGameManager : MonoBehaviour
         _playerTrans.DOMove(_startTrans.position, 2.0f)
                     .OnComplete(() =>
                     {
-                        StartCoroutine(GameStartCoroutine(() => GameStart?.Invoke()));
+                        StartCoroutine(GameStartCoroutine());
                         Debug.Log("ゲーム開始");
                     });
     }
@@ -190,7 +202,7 @@ public class FallGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        action?.Invoke();
+        GameStart?.Invoke();
         _infoImages[0].enabled = false;
         //_informationText.text = "";
         _inGamePanel.alpha = 1;
@@ -223,7 +235,14 @@ public class FallGameManager : MonoBehaviour
         _infoImages[1].enabled = false;
         //_informationText.text = "";
 
-        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, MessageType.GetStill_Stage1);
+        if (!GameManager.CheckStageStatus())
+        {
+            yield return GameManager.GetStillDirectionCoroutine(Stages.Stage1, MessageType.GetStill_Stage1);
+        }
+        else
+        {
+            GameManager.ChangeLobbyState(LobbyState.Default);
+        }
 
         GameManager.UpdateFirstVisit(Stages.Stage1);
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);

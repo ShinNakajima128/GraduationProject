@@ -48,6 +48,8 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         _fc.ChangeFaceType(FaceType.Blink);
         HPManager.Instance.ChangeHPValue(_maxHP, true);
         BossStageManager.Instance.GameOver += StopAction;
+        EventManager.ListenEvents(Events.BossStage_FrontAlice, () => _fc.ChangeFaceType(FaceType.Fancy));
+        EventManager.ListenEvents(Events.BossStage_HeadingBossFeet, () => _fc.ChangeFaceType(FaceType.Blink));
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     /// <param name="value"> É_ÉÅÅ[ÉWó  </param>
     public void Damage(int value)
     {
-        if (_isInvincibled)
+        if (_isInvincibled || !BossStageManager.Instance.IsInBattle)
         {
             return;
         }
@@ -108,6 +110,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         _fc.ChangeFaceType(FaceType.Damage);
         IsMaxHP = false;
         HPManager.Instance.ChangeHPValue(damageValue);
+        AudioManager.PlaySE(SEType.Player_Damage);
 
         var wait = new WaitForSeconds(_blinksInterVal);
 

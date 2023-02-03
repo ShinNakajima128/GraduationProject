@@ -42,6 +42,10 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     GameObject[] _cheshireCats = default;
 
+    [Tooltip("未クリアステージの強調アイコンの親オブジェクト")]
+    [SerializeField]
+    GameObject _unclearedIconsParent = default;
+
     [Header("Components")]
     [SerializeField]
     MessagePlayer _messagePlayer = default;
@@ -126,6 +130,7 @@ public class LobbyManager : MonoBehaviour
         Instance = this;
         _stageNameText.text = "";
         PlayerMove += CameraMovable;
+        _unclearedIconsParent.SetActive(false);
     }
 
     IEnumerator Start()
@@ -247,7 +252,7 @@ public class LobbyManager : MonoBehaviour
                 else
                 {
                     AudioManager.PlayBGM(BGMType.Lobby);
-                    StartCoroutine(OnPlayerMovable(1.5f));
+                    StartCoroutine(OnPlayerMovable(0.2f));
                     Debug.Log("クリア済みステージ、またはステージ失敗");
                 }
             }
@@ -258,6 +263,7 @@ public class LobbyManager : MonoBehaviour
             AudioManager.PlayBGM(BGMType.Lobby);
             PlayerMove?.Invoke(true);
             IsUIOperate?.Invoke(true);
+            _unclearedIconsParent.SetActive(true);
             IsDuring = false;
 
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
@@ -275,6 +281,7 @@ public class LobbyManager : MonoBehaviour
     {
         Instance.OnFadeDescription(1f, 0.3f);
         Instance._isApproached = true;
+        UIManager.SwitchIsCanOpenFlag(false);
 
         var data = Instance._stageDatas.FirstOrDefault(d => d.Type == type);
 
@@ -293,6 +300,7 @@ public class LobbyManager : MonoBehaviour
     {
         Instance.OnFadeDescription(0f, 0.3f);
         Instance._isApproached = false;
+        UIManager.SwitchIsCanOpenFlag(true);
         Instance.StepAwayDoor?.Invoke();
 
         StageDescriptionUI.Instance.InActiceDescription();
@@ -424,6 +432,7 @@ public class LobbyManager : MonoBehaviour
         IsDuring = false;
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
+        _unclearedIconsParent.SetActive(true);
         action?.Invoke();
         
     }
@@ -434,7 +443,7 @@ public class LobbyManager : MonoBehaviour
     IEnumerator OnBossStageAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
-        EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
+        //EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         _clockRenderer.material = _goToUnderStageMat;
 
         yield return new WaitForSeconds(2.0f);
@@ -445,6 +454,7 @@ public class LobbyManager : MonoBehaviour
              _brain.m_DefaultBlend.m_Time = 0;
              _clock_ShakeCamera.Priority = 20;
              _clockCtrl.OnCrazyClock();
+             AudioManager.PlaySE(SEType.UnderLobby_Lowering);
 
              TransitionManager.FadeOut(FadeType.Normal, 0.5f);
          });
@@ -465,7 +475,10 @@ public class LobbyManager : MonoBehaviour
                                    if (timer >= 5.0f && !isFading)
                                    {
                                        GameManager.ChangeLobbyState(LobbyState.Under);
-                                       TransitionManager.SceneTransition(SceneType.UnderLobby);
+                                       TransitionManager.SceneTransition(SceneType.UnderLobby, action: () => 
+                                       {
+                                           AudioManager.StopSE();
+                                       });
                                        isFading = true;
                                    }
                                })

@@ -35,6 +35,26 @@ public class Option : MonoBehaviour
     [SerializeField]
     OptionButton[] _difficultyTabButtons = default;
 
+    [Tooltip("難易度変更時の通知画面")]
+    [SerializeField]
+    CanvasGroup _changeDifficultyInfoGroup = default;
+
+    [Tooltip("難易度変更時のText")]
+    [SerializeField]
+    Text _changeInfoText = default;
+
+    [SerializeField]
+    Image _bgmFillBarImage = default;
+
+    [SerializeField]
+    Transform _bgmCurrentPointImage = default;
+
+    [SerializeField]
+    Image _seFillBarImage = default;
+
+    [SerializeField]
+    Transform _seCurrentPointImage = default;
+
     [Header("Components")]
     [SerializeField]
     Pause _pause = default;
@@ -44,6 +64,11 @@ public class Option : MonoBehaviour
     CanvasGroup _optionGroup;
     ReactiveProperty<TabType> _currentTab = new ReactiveProperty<TabType>();
     bool _init = false;
+    bool _isPressed = false;
+    bool _isBgmVolumeChanging = false;
+    bool _isSeVolumeChanging = false;
+    float _beforeBgmVolume;
+    float _beforeSeVolume;
     #endregion
 
     #region public
@@ -209,17 +234,29 @@ public class Option : MonoBehaviour
 
         _difficultyTabButtons[0].Button.onClick.AddListener(() =>
         {
-            OnCloseOptionPanel();
+            if (!_isPressed)
+            {
+                _isPressed = true;
+                StartCoroutine(ChangeDifficultyCoroutine(DifficultyType.Easy));
+            }
         });
 
         _difficultyTabButtons[1].Button.onClick.AddListener(() =>
         {
-            OnCloseOptionPanel();
+            if (!_isPressed)
+            {
+                _isPressed = true;
+                StartCoroutine(ChangeDifficultyCoroutine(DifficultyType.Normal));
+            }
         });
 
         _difficultyTabButtons[2].Button.onClick.AddListener(() =>
         {
-            OnCloseOptionPanel();
+            if (!_isPressed)
+            {
+                _isPressed = true;
+                StartCoroutine(ChangeDifficultyCoroutine(DifficultyType.Hard));
+            }
         });
         #endregion
     }
@@ -255,8 +292,26 @@ public class Option : MonoBehaviour
         switch (type)
         {
             case SelectBarType.BGM:
+                if (AudioManager.Instance.CurrentBGMVolume <= 0 || _isBgmVolumeChanging)
+                {
+                    print($"現在のBGM音量:{AudioManager.Instance.CurrentBGMVolume}");
+                    return;
+                }
+                _isBgmVolumeChanging = true;
+                var bgmVol = --AudioManager.Instance.CurrentBGMVolume; //AudioManagerのプロパティを変更しつつ変数に代入する記述
+                SetUIVolumeUI(type, bgmVol);
+                AudioManager.BgmVolChange(bgmVol / 10.0f);
                 break;
             case SelectBarType.SE:
+                if (AudioManager.Instance.CurrentSEVolume <= 0 || _isSeVolumeChanging)
+                {
+                    print($"現在のSE音量:{AudioManager.Instance.CurrentSEVolume}");
+                    return;
+                }
+                _isSeVolumeChanging = true;
+                var seVol = --AudioManager.Instance.CurrentSEVolume;
+                SetUIVolumeUI(type, seVol);
+                AudioManager.SeVolChange(seVol / 10.0f);
                 break;
             default:
                 break;
@@ -268,19 +323,65 @@ public class Option : MonoBehaviour
         switch (type)
         {
             case SelectBarType.BGM:
+                if (AudioManager.Instance.CurrentBGMVolume >= 10)
+                {
+                    print($"現在のBGM音量:{AudioManager.Instance.CurrentBGMVolume}");
+                    return;
+                }
+                _isBgmVolumeChanging = true;
+                var bgmVol = ++AudioManager.Instance.CurrentBGMVolume;
+                SetUIVolumeUI(type, bgmVol);
+                AudioManager.BgmVolChange(bgmVol / 10f);
                 break;
             case SelectBarType.SE:
+                if (AudioManager.Instance.CurrentSEVolume >= 10)
+                {
+                    print($"現在のSE音量:{AudioManager.Instance.CurrentSEVolume}");
+                    return;
+                }
+                _isSeVolumeChanging = true;
+                var seVol = ++AudioManager.Instance.CurrentSEVolume;
+                SetUIVolumeUI(type, seVol);
+                AudioManager.SeVolChange(seVol / 10.0f);
                 break;
             default:
                 break;
         }
     }
 
+    void SetUIVolumeUI(SelectBarType type, float volume, float animTime = 0.15f)
+    {
+        switch (type)
+        {
+            case SelectBarType.BGM:
+                _bgmFillBarImage.DOFillAmount(volume / 10.0f, animTime);
+                _bgmCurrentPointImage.DOLocalMoveX(560 * (volume / 10.0f), animTime)
+                                     .OnComplete(() => 
+                                     {
+                                         _isBgmVolumeChanging = false;
+                                         print($"BGM音量:{volume}, FillImage.Fill:{_bgmFillBarImage.fillAmount}, Point.x:{_bgmCurrentPointImage.localPosition.x}");
+                                     });
+                break;
+            case SelectBarType.SE:
+                AudioManager.PlaySE(SEType.UI_Select);
+                _seFillBarImage.DOFillAmount(volume / 10.0f, animTime);
+                _seCurrentPointImage.DOLocalMoveX(560 * (volume / 10), animTime)
+                                    .OnComplete(() =>
+                                    {
+                                        _isSeVolumeChanging = false;
+                                        print($"SE音量:{volume}, FillImage.Fill:{_bgmFillBarImage.fillAmount}, Point.x:{_bgmCurrentPointImage.localPosition.x}");
+                                    }); ;
+                break;
+            default:
+                break;
+        }
+    }
     void RxSetup()
     {
         //オプションを閉じる
         this.UpdateAsObservable()
-            .Where(_ => IsActived && UIInput.A)
+            .Where(_ => IsActived && UIInput.A && !_isPressed)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnCloseOptionPanel();
@@ -291,6 +392,7 @@ public class Option : MonoBehaviour
             .Where(_ => IsActived &&
                         _currentTab.Value == TabType.Sound &&
                         UIInput.RB)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 _currentTab.Value = TabType.Difficulty;
@@ -305,6 +407,7 @@ public class Option : MonoBehaviour
             .Where(_ => IsActived &&
                         _currentTab.Value == TabType.Difficulty &&
                         UIInput.LB)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 _currentTab.Value = TabType.Sound;
@@ -322,6 +425,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.BGM &&
                    UIInput.LeftCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeLeftBar(SelectBarType.BGM);
@@ -332,6 +436,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.BGM &&
                    UIInput.RightCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeRightBar(SelectBarType.BGM);
@@ -344,6 +449,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.SE &&
                    UIInput.LeftCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeLeftBar(SelectBarType.SE);
@@ -354,6 +460,7 @@ public class Option : MonoBehaviour
                    IsActived &&
                    _currentBarType == SelectBarType.SE &&
                    UIInput.RightCrossKey)
+            .ThrottleFirst(TimeSpan.FromSeconds(0.15f))
             .Subscribe(_ =>
             {
                 OnChangeRightBar(SelectBarType.SE);
@@ -369,15 +476,46 @@ public class Option : MonoBehaviour
         _currentTab.Value = TabType.Sound;
         EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
         _soundTabButtons[0].Button.Select();
+        SetUIVolumeUI(SelectBarType.BGM, AudioManager.Instance.CurrentBGMVolume, 0);
+        SetUIVolumeUI(SelectBarType.SE, AudioManager.Instance.CurrentSEVolume, 0);
+        _beforeBgmVolume = AudioManager.Instance.CurrentBGMVolume;
+        _beforeSeVolume = AudioManager.Instance.CurrentSEVolume;
     }
 
     IEnumerator OffOptionCotoutine()
     {
         yield return new WaitForSeconds(0.1f);
 
+        _isPressed = false;
         _optionGroup.alpha = 0;
+        _changeDifficultyInfoGroup.alpha = 0;
         UIManager.InactivatePanel(UIPanelType.Option);
         _pause.PauseActivate(true);
+    }
+
+    IEnumerator ChangeDifficultyCoroutine(DifficultyType type)
+    {
+        GameManager.ChangeGameDifficult(type);
+
+        switch (type)
+        {
+            case DifficultyType.Easy:
+                _changeInfoText.text = "難易度を「かんたん」に変更しました";
+                break;
+            case DifficultyType.Normal:
+                _changeInfoText.text = "難易度を「ふつう」に変更しました";
+                break;
+            case DifficultyType.Hard:
+                _changeInfoText.text = "難易度を「むずかしい」に変更しました";
+                break;
+            default:
+                break;
+        }
+
+        _changeDifficultyInfoGroup.alpha = 1;
+        yield return new WaitForSeconds(2.0f);
+
+        OnCloseOptionPanel();
     }
 }
 

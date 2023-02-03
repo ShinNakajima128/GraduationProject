@@ -11,6 +11,9 @@ public class LobbyDoor : MonoBehaviour
     [Tooltip("ëJà⁄êÊÇÃScene")]
     [SerializeField]
     SceneType _sceneType = default;
+
+    [SerializeField]
+    UnclearedIcon _icon = default;
     #endregion
 
     #region private
@@ -26,10 +29,18 @@ public class LobbyDoor : MonoBehaviour
             if (_isVicinity.Value)
             {
                 LobbyManager.OnStageDescription(_sceneType);
+                if (_icon != null && !_icon.IsCleared)
+                {
+                    _icon.gameObject.SetActive(false);
+                }
             }
             else
             {
                 LobbyManager.OffStageDescription();
+                if (_icon != null && !_icon.IsCleared)
+                {
+                    _icon.gameObject.SetActive(true);
+                }
             }
         });
     }

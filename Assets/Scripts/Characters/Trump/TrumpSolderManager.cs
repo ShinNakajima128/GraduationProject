@@ -37,6 +37,7 @@ public class TrumpSolderManager : MonoBehaviour
     readonly List<BattleAreaTrumpSolder> _backTrumps = new List<BattleAreaTrumpSolder>();
     readonly List<BattleAreaTrumpSolder> _leftTrumps = new List<BattleAreaTrumpSolder>();
     readonly List<BattleAreaTrumpSolder> _rightTrumps = new List<BattleAreaTrumpSolder>();
+    Coroutine[] _attackCoroutines = new Coroutine[4];
     #endregion
     #region public
     #endregion
@@ -60,6 +61,78 @@ public class TrumpSolderManager : MonoBehaviour
     }
 
     private void Start()
+    {
+        SetupTrumpSolders();
+    }
+
+    /// <summary>
+    /// 全てのトランプ兵をアクティブ状況を切り替える
+    /// </summary>
+    /// <param name="isActive"> アクティブかどうか </param>
+    public void OnAllTrumpActivate(bool isActive)
+    {
+        foreach (var t in _frontTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+
+        foreach (var t in _backTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+
+        foreach (var t in _leftTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+
+        foreach (var t in _rightTrumps)
+        {
+            t.gameObject.SetActive(isActive);
+        }
+    }
+
+    public void OnTrumpSoldersAttack(DirectionType dir, Action start = null, Action finish = null)
+    {
+        _attackCoroutines[(int)dir] = StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
+    }
+
+    /// <summary>
+    /// 全てのトランプ兵を焦らせる
+    /// </summary>
+    public void OnAllTrumpAnimation(string name)
+    {
+        for (int i = 0; i < _attackCoroutines.Length; i++)
+        {
+            if (_attackCoroutines[i] != null)
+            {
+                StopCoroutine(_attackCoroutines[i]);
+                _attackCoroutines[i] = null;
+            }
+        }
+
+        foreach (var t in _frontTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _backTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _leftTrumps)
+        {
+            t.OnAnimation(name);
+        }
+
+        foreach (var t in _rightTrumps)
+        {
+            t.OnAnimation(name);
+        }
+    }
+
+    void SetupTrumpSolders()
     {
         int index = 0;
         for (int i = 0; i < _areaPositions.Length; i++)
@@ -94,43 +167,9 @@ public class TrumpSolderManager : MonoBehaviour
                 }
                 trump.transform.DOLocalRotate(dir, 0f);
                 index++;
+                trump.gameObject.SetActive(false);
             }
         }
-    }
-    public void OnTrumpSoldersAttack(DirectionType dir, Action start = null, Action finish = null)
-    {
-        StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
-    }
-
-    /// <summary>
-    /// 全てのトランプ兵を焦らせる
-    /// </summary>
-    public void OnAllTrumpAnimation(string name)
-    {
-        foreach (var t in _frontTrumps)
-        {
-            t.OnAnimation(name);
-        }
-
-        foreach (var t in _backTrumps)
-        {
-            t.OnAnimation(name);
-        }
-
-        foreach (var t in _leftTrumps)
-        {
-            t.OnAnimation(name);
-        }
-
-        foreach (var t in _rightTrumps)
-        {
-            t.OnAnimation(name);
-        }
-    }
-
-    public void SetupTrumpSolders()
-    {
-
     }
 
     IEnumerator TrumpSoldersAttackCoroutine(DirectionType dir, Action start, Action finish)
@@ -168,12 +207,14 @@ public class TrumpSolderManager : MonoBehaviour
             default:
                 break;
         }
+
+        AudioManager.PlaySE(SEType.Trump_Waiting);
         yield return new WaitForSeconds(_waitTime); //トランプ兵の攻撃するまでのモーションを待機
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         //当たり判定をONにする処理
         start?.Invoke();
-
+        AudioManager.PlaySE(SEType.Trump_Slust);
         //攻撃範囲のエフェクトを全て非アクティブにする
         foreach (var effect in _attackRangeEffect)
         {
@@ -182,8 +223,9 @@ public class TrumpSolderManager : MonoBehaviour
 
         yield return new WaitForSeconds(_durationTime);
 
-        finish?.Invoke();
+        finish?.Invoke(); //当たり判定をOFFにする
 
+        AudioManager.PlaySE(SEType.Trump_AttackEnd);
         switch (dir)
         {
             case DirectionType.Front:
@@ -191,37 +233,24 @@ public class TrumpSolderManager : MonoBehaviour
                 {
                     t.OnReturnToStandby();
                 }
-
-                //Frontの当たり判定をOFFにする
-                //
-                //
                 break;
             case DirectionType.Back:
                 foreach (var t in _backTrumps)
                 {
                     t.OnReturnToStandby();
                 }
-                //Backの当たり判定をOFFにする
-                //
-                //
                 break;
             case DirectionType.Left:
                 foreach (var t in _leftTrumps)
                 {
                     t.OnReturnToStandby();
                 }
-                //Leftの当たり判定をOFFにする
-                //
-                //
                 break;
             case DirectionType.Right:
                 foreach (var t in _rightTrumps)
                 {
                     t.OnReturnToStandby();
                 }
-                //Rightの当たり判定をOFFにする
-                //
-                //
                 break;
         }
         yield return new WaitForSeconds(1.5f);

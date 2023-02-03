@@ -77,6 +77,7 @@ public class CheshireCatFaceController : MonoBehaviour
         EventManager.ListenEvents(Events.Cheshire_Talk, OnTaking);
         EventManager.ListenEvents(Events.Cheshire_StartGrinning, OnGrinning);
         EventManager.ListenEvents(Events.FinishTalking, OnReturnDefaultFace);
+        EventManager.ListenEvents(Events.BossStage_FrontCheshire, OnTaking);
     }
 
     /// <summary>

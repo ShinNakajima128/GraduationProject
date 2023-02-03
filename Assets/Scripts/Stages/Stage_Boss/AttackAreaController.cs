@@ -36,8 +36,8 @@ public class AttackAreaController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Šù‚ÉUŒ‚’†‚Ìê‡‚Íˆ—‚ğs‚í‚È‚¢
-        if (IsAttacked)
+        //Šù‚ÉUŒ‚’†A‚Ü‚½‚Íí“¬’†‚Å‚Í‚È‚¢ê‡‚Íˆ—‚ğs‚í‚È‚¢
+        if (IsAttacked || !BossStageManager.Instance.IsInBattle)
         {
             return;
         }
