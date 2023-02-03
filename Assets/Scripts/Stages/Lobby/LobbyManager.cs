@@ -111,6 +111,7 @@ public class LobbyManager : MonoBehaviour
     #region property
     public static LobbyManager Instance { get; private set; }
     public static bool IsFirstArrival { get; private set; } = true;
+    public static bool IsAllStageCleared { get; private set; } = false;
     public static Stages BeforeStage { get; set; }
     /// <summary> ƒhƒA‚É‹ß‚Ã‚¢‚½Žž‚ÌAction </summary>
     public Action ApproachDoor { get; set; }
@@ -259,7 +260,9 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
-            TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
+            TransitionManager.FadeOut(FadeType.Black_default, 1.5f);
+            yield return new WaitForSeconds(1.5f);
+
             AudioManager.PlayBGM(BGMType.Lobby);
             PlayerMove?.Invoke(true);
             IsUIOperate?.Invoke(true);
@@ -389,6 +392,7 @@ public class LobbyManager : MonoBehaviour
     public static void Reset()
     {
         IsFirstArrival = true;
+        IsAllStageCleared = false;
     }
 
     /// <summary>
@@ -445,6 +449,7 @@ public class LobbyManager : MonoBehaviour
         StartCoroutine(OnHandsEmission());
         //EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         _clockRenderer.material = _goToUnderStageMat;
+        IsAllStageCleared = true;
 
         yield return new WaitForSeconds(2.0f);
 

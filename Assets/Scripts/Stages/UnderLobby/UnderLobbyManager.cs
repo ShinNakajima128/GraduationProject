@@ -90,6 +90,7 @@ public class UnderLobbyManager : MonoBehaviour
 
         if (IsFirstVisit)
         {
+            IsFirstVisit = false;
             EventManager.OnEvent(Events.Alice_Overlook);
             StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
             AudioManager.PlaySE(SEType.UnderLobby_Lowering);
