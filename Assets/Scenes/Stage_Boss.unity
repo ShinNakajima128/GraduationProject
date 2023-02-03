@@ -1867,7 +1867,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 219108031}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
   m_Name: 
@@ -10914,7 +10914,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747192282}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
   m_Name: 
@@ -14207,12 +14207,12 @@ PrefabInstance:
     - target: {fileID: 132531447328683542, guid: 9e871db0e05b5ef40b52b2620fed19b7,
         type: 3}
       propertyPath: m_DefaultActionMap
-      value: Stage_Boss
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 132531447328683542, guid: 9e871db0e05b5ef40b52b2620fed19b7,
         type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 27
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 132531447328683542, guid: 9e871db0e05b5ef40b52b2620fed19b7,
         type: 3}
@@ -14276,6 +14276,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 132531447328683542, guid: 9e871db0e05b5ef40b52b2620fed19b7,
         type: 3}
+      propertyPath: m_ActionEvents.Array.data[27].m_ActionId
+      value: 349086a0-ce97-4762-ba16-79263b011beb
+      objectReference: {fileID: 0}
+    - target: {fileID: 132531447328683542, guid: 9e871db0e05b5ef40b52b2620fed19b7,
+        type: 3}
       propertyPath: m_ActionEvents.Array.data[15].m_ActionName
       value: Stage_Boss/Move[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
       objectReference: {fileID: 0}
@@ -14333,6 +14338,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ActionEvents.Array.data[26].m_ActionName
       value: UIInput/Exit[/XInputControllerWindows/select]
+      objectReference: {fileID: 0}
+    - target: {fileID: 132531447328683542, guid: 9e871db0e05b5ef40b52b2620fed19b7,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[27].m_ActionName
+      value: UIInput/N[/Keyboard/n]
       objectReference: {fileID: 0}
     - target: {fileID: 162372543951893452, guid: 9e871db0e05b5ef40b52b2620fed19b7,
         type: 3}
