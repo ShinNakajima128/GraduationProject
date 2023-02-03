@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UniRx;
 using UniRx.Triggers;
+using DG.Tweening;
 
 /// <summary>
 /// タイトル画面の機能を管理するマネージャー
@@ -44,8 +46,14 @@ public class TitleManager : MonoBehaviour
             _buttonDic.Add((ButtonType)i, _titleButtons[i]);
         }
 
-        this.UpdateAsObservable().Where(_ => _currentTitleType != TitleUIType.Start)
-                                 .Subscribe(_ => { })
+        //開始画面以外で「A」を押した場合は開始画面に戻る
+        this.UpdateAsObservable().Where(_ => _currentTitleType != TitleUIType.Start &&
+                                             UIInput.A)
+                                 .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                                 .Subscribe(_ =>
+                                 {
+                                     ChangeUIPanel(TitleUIType.Start);
+                                 })
                                  .AddTo(this);
     }
 
@@ -80,26 +88,40 @@ public class TitleManager : MonoBehaviour
             switch (b.Key)
             {
                 case ButtonType.GameStart:
-                    b.Value.onClick.AddListener(() =>
-                    {
-                        if (_currentTitleType != TitleUIType.Start)
-                        {
-                            return;
-                        }
-                        ChangeUIPanel(TitleUIType.DifficultySelect);
-                    });
+                    b.Value.OnClickAsObservable()
+                           .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                           .Subscribe(_ =>
+                           {
+                               if (_currentTitleType != TitleUIType.Start)
+                               {
+                                   return;
+                               }
+                               ChangeUIPanel(TitleUIType.DifficultySelect);
+                           });
                     break;
                 case ButtonType.Credit:
-                    b.Value.onClick.AddListener(() =>
-                    {
-                        if (_currentTitleType != TitleUIType.Start)
-                        {
-                            return;
-                        }
-                        Debug.Log("Credit");
-                    });
+                    b.Value.OnClickAsObservable()
+                           .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                           .Subscribe(_ =>
+                           {
+                               if (_currentTitleType != TitleUIType.Start)
+                               {
+                                   return;
+                               }
+                               Debug.Log("Credit");
+                           });
                     break;
                 case ButtonType.Option:
+                    b.Value.OnClickAsObservable()
+                           .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                           .Subscribe(_ =>
+                           {
+                               if (_currentTitleType != TitleUIType.Start)
+                               {
+                                   return;
+                               }
+                               Debug.Log("Credit");
+                           });
                     b.Value.onClick.AddListener(() =>
                     {
                         if (_currentTitleType != TitleUIType.Start)
@@ -110,40 +132,46 @@ public class TitleManager : MonoBehaviour
                     });
                     break;
                 case ButtonType.Difficulty_Easy:
-                    b.Value.onClick.AddListener(() =>
-                    {
-                        if (_currentTitleType != TitleUIType.DifficultySelect)
-                        {
-                            return;
-                        }
-                        GameManager.ChangeGameDifficult(DifficultyType.Easy);
-                        TransitionManager.SceneTransition(SceneType.Intro);
-                        AudioManager.PlaySE(SEType.UI_GameStart);
-                    });
+                    b.Value.OnClickAsObservable()
+                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect)
+                           .Take(1)
+                           .Subscribe(_ =>
+                           {
+                               GameManager.ChangeGameDifficult(DifficultyType.Easy);
+                               TransitionManager.SceneTransition(SceneType.Intro);
+                               AudioManager.PlaySE(SEType.UI_GameStart);
+                               b.Value.transform.DOLocalMoveY(b.Value.transform.localPosition.y - 15, 0.05f)
+                                                                        .SetLoops(2, LoopType.Yoyo);
+                               EventSystem.current.SetSelectedGameObject(null);
+                           });
                     break;
                 case ButtonType.Difficulty_Normal:
-                    b.Value.onClick.AddListener(() =>
-                    {
-                        if (_currentTitleType != TitleUIType.DifficultySelect)
-                        {
-                            return;
-                        }
-                        GameManager.ChangeGameDifficult(DifficultyType.Normal);
-                        TransitionManager.SceneTransition(SceneType.Intro);
-                        AudioManager.PlaySE(SEType.UI_GameStart);
-                    });
+                    b.Value.OnClickAsObservable()
+                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect)
+                           .Take(1)
+                           .Subscribe(_ =>
+                           {
+                               GameManager.ChangeGameDifficult(DifficultyType.Normal);
+                               TransitionManager.SceneTransition(SceneType.Intro);
+                               AudioManager.PlaySE(SEType.UI_GameStart);
+                               b.Value.transform.DOLocalMoveY(b.Value.transform.localPosition.y - 15, 0.05f)
+                                                                        .SetLoops(2, LoopType.Yoyo);
+                               EventSystem.current.SetSelectedGameObject(null);
+                           });
                     break;
                 case ButtonType.Difficulty_Hard:
-                    b.Value.onClick.AddListener(() =>
-                    {
-                        if (_currentTitleType != TitleUIType.DifficultySelect)
-                        {
-                            return;
-                        }
-                        GameManager.ChangeGameDifficult(DifficultyType.Hard);
-                        TransitionManager.SceneTransition(SceneType.Intro);
-                        AudioManager.PlaySE(SEType.UI_GameStart);
-                    });
+                    b.Value.OnClickAsObservable()
+                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect)
+                           .Take(1)
+                           .Subscribe(_ =>
+                           {
+                               GameManager.ChangeGameDifficult(DifficultyType.Hard);
+                               TransitionManager.SceneTransition(SceneType.Intro);
+                               AudioManager.PlaySE(SEType.UI_GameStart);
+                               b.Value.transform.DOLocalMoveY(b.Value.transform.localPosition.y - 15, 0.05f)
+                                                                        .SetLoops(2, LoopType.Yoyo);
+                               EventSystem.current.SetSelectedGameObject(null);
+                           });                    
                     break;
                 default:
                     break;

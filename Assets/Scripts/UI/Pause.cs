@@ -60,6 +60,7 @@ public class Pause : MonoBehaviour
                         UIInput.Option &&
                         UIManager.Instance.IsCanOpenUI &&
                         !UIManager.Instance.IsAnyPanelOpened)
+            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
             .Subscribe(_ =>
             {
                 if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
@@ -85,6 +86,7 @@ public class Pause : MonoBehaviour
                         UIManager.Instance.IsCanOpenUI && 
                         !_option.IsActived)
             .Where(_ => UIInput.Option || UIInput.A)
+            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
             .Subscribe(_ =>
             {
                 #region IsLobbyDuringJudge

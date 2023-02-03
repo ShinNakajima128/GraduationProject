@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UniRx;
+using UniRx.Triggers;
 
 /// <summary>
 /// ゲームオーバー演出の機能を持つコンポーネント
@@ -133,15 +135,17 @@ public class GameoverDirection : MonoBehaviour
         trigger.triggers.Add(selectEntry);
 
         //ボタン選択時の処理を登録
-        _gameoverSelectButtons[0].onClick.AddListener(() =>
-        {
-            if (_isActiveUI)
-            {
-                StartCoroutine(DirectionCoroutine(true));
-                _gameoverSelectButtons[0].transform.DOLocalMoveY(_gameoverSelectButtons[0].transform.localPosition.y - 15, 0.05f)
-                                                   .SetLoops(2, LoopType.Yoyo);
-            }
-        });
+        _gameoverSelectButtons[0].OnClickAsObservable()
+                                 .Where( _ => _isActiveUI)
+                                 .Take(1)
+                                 .Subscribe(_ =>
+                                 {
+                                     StartCoroutine(DirectionCoroutine(true));
+                                     _gameoverSelectButtons[0].transform.DOLocalMoveY(_gameoverSelectButtons[0].transform.localPosition.y - 15, 0.05f)
+                                                                        .SetLoops(2, LoopType.Yoyo);
+                                     EventSystem.current.SetSelectedGameObject(null);
+                                 })
+                                 .AddTo(this);
 
         _gameoverSelectButtons[1].gameObject.TryGetComponent<EventTrigger>(out var trigger2);
 
@@ -157,15 +161,18 @@ public class GameoverDirection : MonoBehaviour
         trigger2.triggers.Add(selectEntry2);
 
         //ボタン選択時の処理を登録
-        _gameoverSelectButtons[1].onClick.AddListener(() =>
-        {
-            if (_isActiveUI)
-            {
-                StartCoroutine(DirectionCoroutine(false));
-                _gameoverSelectButtons[1].transform.DOLocalMoveY(_gameoverSelectButtons[1].transform.localPosition.y - 15, 0.05f)
-                                                   .SetLoops(2, LoopType.Yoyo);
-            }
-        });
+        //ボタン選択時の処理を登録
+        _gameoverSelectButtons[1].OnClickAsObservable()
+                                 .Where(_ => _isActiveUI)
+                                 .Take(1)
+                                 .Subscribe(_ =>
+                                 {
+                                     StartCoroutine(DirectionCoroutine(false));
+                                     _gameoverSelectButtons[1].transform.DOLocalMoveY(_gameoverSelectButtons[1].transform.localPosition.y - 15, 0.05f)
+                                                                        .SetLoops(2, LoopType.Yoyo);
+                                     EventSystem.current.SetSelectedGameObject(null);
+                                 })
+                                 .AddTo(this);
     }
 
     void SetCurrentSceneType(Stages stage)
