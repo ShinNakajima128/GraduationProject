@@ -116,5 +116,9 @@ public enum AliceDirectionAnimType
     Rise,
     Overlook,
     Surprised,
-    SitIdle
+    SitIdle,
+    Doubts, //首をかしげる
+    Float, //アリスが浮き始める
+    Float_Idle, //浮いたままアイドル状態
+    OpenArms
 }

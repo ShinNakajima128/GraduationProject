@@ -15,7 +15,8 @@ public enum FaceType
     Fancy,
     Cry,
     Rotation,
-    Talking
+    Talking,
+    Tolerance //我慢
 }
 
 public enum EyeType
@@ -79,6 +80,7 @@ public class AliceFaceController : MonoBehaviour
     Coroutine _talkCoroutine;
     #endregion
     #region property
+    public bool IsTalking => _isTalking;
     #endregion
 
     private void OnValidate()
@@ -160,6 +162,11 @@ public class AliceFaceController : MonoBehaviour
         }
     }
 
+    public void FinishTalk()
+    {
+        _isTalking = false;
+    }
+
     void ChangeEyeType(EyeType type)
     {
         _eyeMat.SetTextureOffset("_MainTex", GetEyeOffset(type));
@@ -233,6 +240,8 @@ public class AliceFaceController : MonoBehaviour
 
             ChangeMouseType(randomType);
         }
+        //終了したらデフォルトに戻す
+        ChangeMouseType(MouseType.Default);
     }
 }
 

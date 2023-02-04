@@ -77,7 +77,7 @@ public class CheshireCatFaceController : MonoBehaviour
         EventManager.ListenEvents(Events.Cheshire_Talk, OnTaking);
         EventManager.ListenEvents(Events.Cheshire_StartGrinning, OnGrinning);
         EventManager.ListenEvents(Events.FinishTalking, OnReturnDefaultFace);
-        EventManager.ListenEvents(Events.BossStage_FrontCheshire, OnTaking);
+        
     }
 
     /// <summary>
@@ -256,14 +256,14 @@ public class CheshireCatFaceController : MonoBehaviour
     /// <summary>
     /// íùÇÈ
     /// </summary>
-    void OnTaking()
+    public void OnTaking()
     {
         ChangeFaceType(CheshireCatFaceType.Talking);
     }
     /// <summary>
     /// ÉjÉÑÇØÇÈ
     /// </summary>
-    void OnGrinning()
+    public void OnGrinning()
     {
         ChangeFaceType(CheshireCatFaceType.StartGrinning);
     }

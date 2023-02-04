@@ -40,7 +40,31 @@ public enum Events
     BossStage_QueenAnger,
     BossStage_BehindAlice_RE2,
     BossStage_FrontCheshire,
-    BossStage_DisolveCheshire
+    BossStage_DisolveCheshire,
+    BossStage_End_Start,
+    BossStage_End_OnsideQueen,
+    BossStage_End_GoAroundFrontQueen, 
+    BossStage_End_OnFace, //女王顔アップ
+    BossStage_End_AliceFront, //アリス正面
+    BossStage_End_ZoomAlice, //アリスにズーム
+    BossStage_End_FrontQueen, //女王正面
+    BossStage_End_ShakeHead, //女王が首を振る
+    BossStage_End_AliceOblique, //アリスを斜めから
+    Alice_Talking,
+    BossStage_End_LeftToRightTrump, //トランプ兵を左から右へ映しながら移動
+    BossStage_End_RightToLeftTrump, //トランプ兵を右から左へ映しながら移動
+    BossStage_End_AliceDiagonallyBack, //アリスの斜め後ろ
+    BossStage_End_QueenDepend, //女王に寄る
+    BossStage_End_CheshireFront, //チェシャ猫正面
+    BossStage_End_AliceFloat1, //アリスが浮き始める
+    BossStage_End_AliceFloat2, //アリスがきょろきょろする
+    BossStage_End_CheshireOverhead, //チェシャ猫の頭上
+    BossStage_End_CheshireSmile, //チェシャ猫笑顔
+    BossStage_End_AliceLookDown, //アリスが見下ろす
+    BossStage_End_CheshireLookUp, //チェシャ猫がアリスを見上げる
+    BossStage_End_AliceZoomUp, //アリス顔アップ
+    BossStage_End_AliceCloseEyes, //アリス目を閉じる
+    BossStage_End_AliceSmile //アリス笑顔
 }
 
 /// <summary>
