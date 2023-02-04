@@ -136,7 +136,8 @@ namespace AliceProject
         Stage_Boss_Start3,
         Stage_Boss_Start4,
         Stage_Boss_End1,
-        Stage_Boss_JustBeforeBattle
+        Stage_Boss_JustBeforeBattle,
+        Stage_Boss_Down2_Addition
     }
 }
 
