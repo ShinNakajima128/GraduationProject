@@ -31,6 +31,9 @@ public class UnderLobbyManager : MonoBehaviour
     [SerializeField]
     CanvasGroup _stageDescriptionCanvas = default;
 
+    [SerializeField]
+    CanvasGroup _underLobbyLogoGroup = default;
+
     [Header("Components")]
     [SerializeField]
     LobbyClockController _clockCtrl = default;
@@ -115,6 +118,7 @@ public class UnderLobbyManager : MonoBehaviour
 
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
+        StartCoroutine(UnderLobbyNameInfomationCoroutine());
     }
 
     /// <summary>
@@ -161,5 +165,21 @@ public class UnderLobbyManager : MonoBehaviour
                 x => _stageDescriptionCanvas.alpha = x,
                 value,
                 fadeTime);
+    }
+
+    IEnumerator UnderLobbyNameInfomationCoroutine()
+    {
+        DOTween.To(() => _underLobbyLogoGroup.alpha,
+                    x => _underLobbyLogoGroup.alpha = x,
+                    1f,
+                    1f)
+                .OnComplete(() => { print("ƒƒS•\Ž¦"); });
+
+        yield return new WaitForSeconds(3f);
+
+        DOTween.To(() => _underLobbyLogoGroup.alpha,
+                    x => _underLobbyLogoGroup.alpha = x,
+                    0f,
+                    1f);
     }
 }
