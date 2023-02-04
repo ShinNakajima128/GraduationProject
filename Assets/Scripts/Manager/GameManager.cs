@@ -218,19 +218,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <param name="stage"> クリアしたステージ </param>
     /// <param name="type"> 再生するメッセージ </param>
     /// <returns></returns>
-    public static IEnumerator GetStillDirectionCoroutine(Stages stage, MessageType type)
+    public static IEnumerator GetStillDirectionCoroutine(Stages stage, MessageType type, float waitTime = 1.5f)
     {
         TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
-        TransitionManager.FadeIn(FadeType.Normal, action: () =>
-        {
-            if (stage != Stages.Stage_Boss)
-            {
-                AudioManager.PlayBGM(BGMType.GetStill, false);
-            }
-            TransitionManager.FadeOut(FadeType.Normal);
-        });
+        TransitionManager.FadeIn(FadeType.Normal);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(waitTime);
+
+        if (stage != Stages.Stage_Boss)
+        {
+            AudioManager.PlayBGM(BGMType.GetStill, false);
+        }
+        TransitionManager.FadeOut(FadeType.Normal);
 
         yield return GetStillController.ActiveGettingStillPanel(stage);
 
