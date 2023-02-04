@@ -107,7 +107,7 @@ public class Stage3PlayerController : MonoBehaviour
         if (_pInput)
         {
             ChengeActionMap("Stage3");
-            CallBackRegist();
+            RegistCallBacks();
         }
     }
 
@@ -117,26 +117,6 @@ public class Stage3PlayerController : MonoBehaviour
     private void ChengeActionMap(string name)
     {
         _pInput.SwitchCurrentActionMap(name);
-    }
-
-    /// <summary>
-    /// メソッドの登録
-    /// </summary>
-    private void CallBackRegist()
-    {
-        _pInput.actions["Move"].performed += OnMove;
-        _pInput.actions["Move"].canceled += OnMove;
-
-        _pInput.actions["TurnLeft"].started += OnTurnLeft;
-        _pInput.actions["TurnLeft"].canceled += OnTurnLeft;
-
-        _pInput.actions["TurnRight"].started += OnToRight;
-        _pInput.actions["TurnRight"].canceled += OnToRight;
-
-        // 押したとき
-        _pInput.actions["Throw"].started += OnStandby;
-        // 離したとき
-        _pInput.actions["Throw"].canceled += OnThrow;
     }
 
     /// <summary>
@@ -156,14 +136,43 @@ public class Stage3PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// メソッドの登録
+    /// </summary>
+    private void RegistCallBacks()
+    {
+        _pInput.actions["Move"].performed += OnMove;
+        _pInput.actions["Move"].canceled += OnMove;
+
+        _pInput.actions["TurnLeft"].started += OnTurnLeft;
+        _pInput.actions["TurnLeft"].canceled += OnTurnLeft;
+
+        _pInput.actions["TurnRight"].started += OnToRight;
+        _pInput.actions["TurnRight"].canceled += OnToRight;
+
+        // 押したとき
+        _pInput.actions["Throw"].started += OnStandby;
+        // 離したとき
+        _pInput.actions["Throw"].canceled += OnThrow;
+    }
+
+    /// <summary>
     /// メソッドの登録解除
     /// </summary>
-    private void CallBackUnRegist()
+    private void UnRegistCallBacks()
     {
         _pInput.actions["Move"].performed -= OnMove;
+        _pInput.actions["Move"].canceled -= OnMove;
+
         _pInput.actions["TurnLeft"].started -= OnTurnLeft;
+        _pInput.actions["TurnLeft"].canceled -= OnTurnLeft;
+
         _pInput.actions["TurnRight"].started -= OnToRight;
-        _pInput.actions["Throw"].started -= OnThrow;
+        _pInput.actions["TurnRight"].canceled -= OnToRight;
+
+        // 押したとき
+        _pInput.actions["Throw"].started -= OnStandby;
+        // 離したとき
+        _pInput.actions["Throw"].canceled -= OnThrow;
     }
 
     /// <summary>
@@ -280,7 +289,7 @@ public class Stage3PlayerController : MonoBehaviour
         // 投げ終えていたら何もしない
         if (IsThrowed)
         {
-            CallBackUnRegist();
+            UnRegistCallBacks();
             return;
         }
 
@@ -339,6 +348,8 @@ public class Stage3PlayerController : MonoBehaviour
             _animator.CrossFadeInFixedTime("Swing_", 0.2f);
             AudioManager.PlaySE(SEType.Stage3_Swing);
         }
+
+        UnRegistCallBacks();
     }
 
     public void GoalAction(Action action)
@@ -353,6 +364,7 @@ public class Stage3PlayerController : MonoBehaviour
 
     void Setup()
     {
+        RegistCallBacks();
         _animator.Play("Idle");
         IsThrowed = false;
         transform.localPosition = _startPos;

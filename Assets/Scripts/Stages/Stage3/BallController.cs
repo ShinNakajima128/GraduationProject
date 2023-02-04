@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class BallController : MonoBehaviour, IThrowable
 {
@@ -20,9 +18,6 @@ public class BallController : MonoBehaviour, IThrowable
     private float _valueOfMaxTurn;
 
     [SerializeField]
-    private CameraController _camera;
-
-    [SerializeField]
     private GameObject _arrowImage;
 
     [SerializeField]
@@ -35,6 +30,7 @@ public class BallController : MonoBehaviour, IThrowable
     private Rigidbody _rb;
     private Vector3 _direction;
     private Vector3 _originPos;
+    private Quaternion _default;
 
     /// <summary>
     /// êUÇËå¸Ç´ÇÃíl(0Ç™ê≥ñ )
@@ -45,6 +41,7 @@ public class BallController : MonoBehaviour, IThrowable
     #region Unity Fucntion
     private void Awake()
     {
+        _default = this.transform.rotation;
         _rb = GetComponent<Rigidbody>();
         _originPos = transform.localPosition;
     }
@@ -61,7 +58,6 @@ public class BallController : MonoBehaviour, IThrowable
         if (IsThrowed)
         {
             ForwardRotation();
-            //MoveCameraRequest();
         }
     }
 
@@ -71,14 +67,6 @@ public class BallController : MonoBehaviour, IThrowable
     private void ForwardRotation()
     {
         transform.Rotate(new Vector3(15, 0, 0));
-    }
-
-    /// <summary>
-    /// ÉJÉÅÉâÇìÆÇ©Ç∑
-    /// </summary>
-    private void MoveCameraRequest()
-    {
-        _camera.SendBallPosition(this.transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -190,6 +178,8 @@ public class BallController : MonoBehaviour, IThrowable
         gameObject.SetActive(true);
         _arrowImage.gameObject.SetActive(true);
         _rb.velocity = Vector3.zero;
+
+        transform.rotation = _default;
     }
     #endregion
 
