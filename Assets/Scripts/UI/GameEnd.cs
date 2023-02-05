@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,11 +20,16 @@ public class GameEnd : MonoBehaviour
 
     [SerializeField]
     Transform[] _cursorPosTrans = default;
+
+    [SerializeField]
+    Text _endGameInfo = default;
     #endregion
 
     #region private
     CanvasGroup _gameEndGroup = default;
     bool _isPressed = false;
+    SceneType _currentScene;
+    SceneType _destinationScene;
     #endregion
 
     #region public
@@ -42,32 +48,104 @@ public class GameEnd : MonoBehaviour
 
     private void Start()
     {
+        #region UniRx Suvscribe
         this.UpdateAsObservable()
             .Where(_ => !IsActived &&
                         UIInput.Exit &&
-                        UIManager.Instance.IsCanOpenUI && 
+                        UIManager.Instance.IsCanOpenUI &&
                         !UIManager.Instance.IsAnyPanelOpened)
+            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
             .Subscribe(_ =>
             {
-                #region IsLobbyDuringJudge
-                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+                    GameManager.Instance.CurrentScene == SceneType.UnderLobby)
                 {
-                    if (LobbyManager.Instance.IsDuring)
+                    #region IsLobbyDuringJudge
+                    if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
                     {
-                        return;
+                        if (LobbyManager.Instance.IsDuring)
+                        {
+                            return;
+                        }
                     }
-                }
-                else
-                {
-                    if (UnderLobbyManager.Instance.IsDuring)
+                    else
                     {
-                        return;
+                        if (UnderLobbyManager.Instance.IsDuring)
+                        {
+                            return;
+                        }
                     }
+                    #endregion
                 }
-                #endregion
                 StartCoroutine(ActivateCoroutine(true));
             })
             .AddTo(this);
+
+        //画面を閉じる処理を登録
+        this.UpdateAsObservable()
+            .Where(_ => IsActived &&
+                        UIManager.Instance.IsCanOpenUI)
+            .Where(_ => UIInput.Exit || UIInput.A)
+            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+            .Subscribe(_ =>
+            {
+                StartCoroutine(ActivateCoroutine(false));
+            });
+        #endregion
+
+        switch (GameManager.Instance.CurrentScene)
+        {
+            case SceneType.Title:
+                _endGameInfo.text = "ゲームを終了しますか？";
+                _currentScene = SceneType.Title;
+                break;
+            case SceneType.Lobby:
+                _endGameInfo.text = "ゲームを終了しますか？";
+                _currentScene = SceneType.Lobby;
+                _destinationScene = SceneType.Title;
+                break;
+            case SceneType.UnderLobby:
+                _endGameInfo.text = "ゲームを終了しますか？";
+                _currentScene = SceneType.UnderLobby;
+                _destinationScene = SceneType.Title;
+                break;
+            case SceneType.Stage1_Fall:
+                if (!FallGameManager.IsSecondTry)
+                {
+                    _endGameInfo.text = "ゲームを終了しますか？";
+                    _currentScene = SceneType.Stage1_Fall;
+                    _destinationScene = SceneType.Title;
+                }
+                else
+                {
+                    _endGameInfo.text = "記憶の間にもどりますか？";
+                    _currentScene = SceneType.Stage1_Fall;
+                    _destinationScene = SceneType.Lobby;
+                }
+                break;
+            case SceneType.RE_Stage2:
+                _endGameInfo.text = "記憶の間にもどりますか？";
+                _currentScene = SceneType.RE_Stage2;
+                _destinationScene = SceneType.Lobby;
+                break;
+            case SceneType.RE_Stage3:
+                _endGameInfo.text = "記憶の間にもどりますか？";
+                _currentScene = SceneType.RE_Stage3;
+                _destinationScene = SceneType.Lobby;
+                break;
+            case SceneType.Stage4:
+                _endGameInfo.text = "記憶の間にもどりますか？";
+                _currentScene = SceneType.Stage4;
+                _destinationScene = SceneType.Lobby;
+                break;
+            case SceneType.Stage_Boss:
+                _endGameInfo.text = "忘却の間にもどりますか？";
+                _currentScene = SceneType.Stage_Boss;
+                _destinationScene = SceneType.Stage_Boss;
+                break;
+            default:
+                break;
+        }
     }
 
     void Setup()
@@ -100,21 +178,29 @@ public class GameEnd : MonoBehaviour
 
     void ButtonSetup()
     {
-        _gameEndButtons[0].onClick.AddListener(() =>
-        {
-            StartCoroutine(ActivateCoroutine(false));
-        });
+        _gameEndButtons[0].OnClickAsObservable()
+                          .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                          .Subscribe(_ =>
+                          {
+                              StartCoroutine(ActivateCoroutine(false));
+                          });
 
-        _gameEndButtons[1].onClick.AddListener(() =>
-        {
-            TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
-        });
+        _gameEndButtons[1].OnClickAsObservable()
+                          .Take(1)
+                          .Subscribe(_ =>
+                          {
+                              Time.timeScale = 1;
+                              TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
+                              AudioManager.StopBGM();
+                              AudioManager.PlaySE(SEType.GoToStage);
+                          });
     }
 
     void OnSelectEvent(int index)
     {
-        _cursorImageTrans.SetParent(_gameEndButtons[index].transform);
-        _cursorImageTrans.localPosition = _cursorPosTrans[index].localPosition;
+        //_cursorImageTrans.SetParent(_gameEndButtons[index].transform);
+        //_cursorImageTrans.localPosition = _cursorPosTrans[index].localPosition;
+        AudioManager.PlaySE(SEType.UI_CursolMove);
     }
 
     void OnDeselectEvent()
@@ -126,23 +212,27 @@ public class GameEnd : MonoBehaviour
     {
         _isPressed = true;
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         _isPressed = false;
 
         if (isActivate)
         {
-            UIManager.ActivatePanel(UIPanelType.GameEnd);
-            
-            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            Time.timeScale = 0;
+            if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+                GameManager.Instance.CurrentScene == SceneType.UnderLobby)
             {
-                LobbyManager.Instance.PlayerMove?.Invoke(false);
-            }
-            else
-            {
-                UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
-            }
+                UIManager.ActivatePanel(UIPanelType.GameEnd);
 
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    LobbyManager.Instance.PlayerMove?.Invoke(false);
+                }
+                else
+                {
+                    UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
+                }
+            }
             _gameEndGroup.alpha = 1;
             EventSystem.current.firstSelectedGameObject = _gameEndButtons[0].gameObject;
             _gameEndButtons[0].Select();
@@ -150,22 +240,32 @@ public class GameEnd : MonoBehaviour
         }
         else
         {
-            UIManager.InactivatePanel(UIPanelType.GameEnd);
-
-            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            Time.timeScale = 1;
+            if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+                GameManager.Instance.CurrentScene == SceneType.UnderLobby)
             {
-                LobbyManager.Instance.PlayerMove?.Invoke(true);
+                UIManager.InactivatePanel(UIPanelType.GameEnd);
+
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    LobbyManager.Instance.PlayerMove?.Invoke(true);
+                }
+                else
+                {
+                    UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
+                }
+
+                if (StageDescriptionUI.Instance.IsActived)
+                {
+                    StageDescriptionUI.Instance.ActiveButton();
+                }
             }
             else
             {
-                UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
-            }
 
-            if (StageDescriptionUI.Instance.IsActived)
-            {
-                StageDescriptionUI.Instance.ActiveButton();
             }
             _gameEndGroup.alpha = 0;
+            AudioManager.PlaySE(SEType.UI_CursolMove);
             print("ゲーム終了画面OFF");
         }
     }

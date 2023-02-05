@@ -238,10 +238,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         yield return new WaitForSeconds(waitTime);
 
-        if (stage != Stages.Stage_Boss)
-        {
-            AudioManager.PlayBGM(BGMType.GetStill, false);
-        }
+        //if (stage != Stages.Stage_Boss)
+        //{
+        //    AudioManager.PlayBGM(BGMType.GetStill, false);
+        //}
+        AudioManager.PlayBGM(BGMType.GetStill, false);
         TransitionManager.FadeOut(FadeType.Normal);
 
         yield return GetStillController.ActiveGettingStillPanel(stage);

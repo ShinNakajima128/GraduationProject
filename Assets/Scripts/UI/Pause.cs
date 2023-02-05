@@ -162,10 +162,10 @@ public class Pause : MonoBehaviour
                 _pauseButtons[2].gameObject.SetActive(true);
                 break;
         }
-        ButtonCursor.MoveCursor(new Vector3(_pauseButtons[0].gameObject.transform.position.x + 2.5f, 
-                                            _pauseButtons[0].gameObject.transform.position.y + 5f, 
-                                            _pauseButtons[0].gameObject.transform.position.z), 
-                                            _pauseButtons[0].gameObject.transform);
+        //ButtonCursor.MoveCursor(new Vector3(_pauseButtons[0].gameObject.transform.position.x + 2.5f, 
+        //                                    _pauseButtons[0].gameObject.transform.position.y + 5f, 
+        //                                    _pauseButtons[0].gameObject.transform.position.z), 
+        //                                    _pauseButtons[0].gameObject.transform);
     }
 
     void ButtonSetup()
@@ -282,6 +282,7 @@ public class Pause : MonoBehaviour
         {
             UIManager.InactivatePanel(UIPanelType.Pause);
             _pauseGroup.alpha = 0;
+            EventSystem.current.SetSelectedGameObject(null);
             print("ポーズメニューOFF");
         }
     }
