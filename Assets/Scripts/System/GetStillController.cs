@@ -73,6 +73,11 @@ public class GetStillController : MonoBehaviour
                                                               .WaitForCompletion();
     }
 
+    public static void InactiveGetStillPanel()
+    {
+        Instance._stillPanelGroup.alpha = 0;
+    }
+
     /// <summary>
     /// 指定されたステージのスチルをセットする
     /// </summary>
