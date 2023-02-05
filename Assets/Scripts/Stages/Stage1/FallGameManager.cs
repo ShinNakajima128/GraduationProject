@@ -87,7 +87,7 @@ public class FallGameManager : MonoBehaviour
         AudioManager.PlayBGM(BGMType.Stage1);
         GameManager.UpdateCurrentStage(Stages.Stage1);
 
-        HPManager.Instance.ChangeHPValue(_maxHP, true); //HPManager‚ÉÅ‘åHP‚Ì’l‚ğ“o˜^
+        HPManager.Instance.RecoveryHP(); //HP‚ğÅ‘å‚É‚·‚é
         HPManager.Instance.LostHpAction += OnGameOver; //ƒQ[ƒ€ƒI[ƒo[‚Ìˆ—‚ğHPManager‚É“o˜^
 
         OnGameStart();
