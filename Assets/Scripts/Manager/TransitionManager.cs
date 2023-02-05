@@ -59,6 +59,7 @@ public class TransitionManager : MonoBehaviour
         {
             action?.Invoke();
             Instance.StartCoroutine(Instance.LoadScene(scene, Instance._loadTime));
+            GameManager.UpDateCurrentScene(scene); //保持の現在のSceneを次のSceneに更新
         });
     }
 
