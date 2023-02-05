@@ -291,7 +291,7 @@ public class BossStageManager : StageGame<BossStageManager>
             
             OnFadeDescription(0, 0.25f);
 
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.0f);
 
             yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindBoss);
             yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start3);
@@ -473,23 +473,25 @@ public class BossStageManager : StageGame<BossStageManager>
             //現在のフェイズに合わせた演出の処理を開始
             yield return DirectionCoroutine((BossBattlePhase)i);
         }
+        //ボス戦のスチル獲得演出
+        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage_Boss, MessageType.GetStill_Stage_Boss, 2.0f);
 
         TransitionManager.FadeIn(FadeType.Black_default, action: () =>
         {
+            GetStillController.InactiveGetStillPanel();
             _trumpSolderMng.OnAllTrumpAnimation("Idle");
             SubscribeEndEvents();
             _inGameObjectsParent.SetActive(false);
             _endDirectionObjectsParent.SetActive(true);
         });
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(3.5f);
         TransitionManager.FadeOut(FadeType.Black_default);
         AudioManager.PlayBGM(BGMType.EndBossBattle);
 
 
         yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_End1);
 
-        yield return GameManager.GetStillDirectionCoroutine(Stages.Stage_Boss, MessageType.GetStill_Stage_Boss, 3.0f);
 
         //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
         TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
@@ -614,12 +616,16 @@ public class BossStageManager : StageGame<BossStageManager>
         
         yield return new WaitForSeconds(1.0f);
 
+        yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Down3);
+
+        yield return new WaitForSeconds(1.0f);
+
         _infoImages[1].enabled = true;
         _hpPanel.alpha = 0;
         AudioManager.PlayBGM(BGMType.BossStage_Clear, false);
         ItemGenerator.Instance.Return();
 
-        yield return new WaitForSeconds(12.0f);
+        yield return new WaitForSeconds(11.5f);
 
         _infoImages[1].enabled = false;
     }

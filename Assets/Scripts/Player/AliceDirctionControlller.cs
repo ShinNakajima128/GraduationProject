@@ -34,6 +34,10 @@ public class AliceDirctionControlller : MonoBehaviour
     [SerializeField]
     Ease _furtherRiseAnimEase = default;
 
+    [Tooltip("アリスのRenderer")]
+    [SerializeField]
+    Renderer _aliceRenderer = default;
+
     [Header("Effects")]
     [SerializeField]
     GameObject _floatingEffect = default;
@@ -42,6 +46,7 @@ public class AliceDirctionControlller : MonoBehaviour
     #region private
     AliceFaceController _fc;
     Animator _anim;
+    Tween _floatTween;
     #endregion
 
     #region public
@@ -78,8 +83,13 @@ public class AliceDirctionControlller : MonoBehaviour
             ChangeAnimation(AliceDirectionAnimType.Doubts);
             _fc.ChangeFaceType(FaceType.Talking);
         });
+        EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () =>
+        {
+            _aliceRenderer.enabled = false;
+        });
         EventManager.ListenEvents(Events.BossStage_End_AliceFloat1, () =>
         {
+            _aliceRenderer.enabled = true;
             ChangeAnimation(AliceDirectionAnimType.Float);
             _fc.ChangeFaceType(FaceType.Fancy);
             _fc.ChangeFaceType(FaceType.Talking);
@@ -95,6 +105,10 @@ public class AliceDirctionControlller : MonoBehaviour
         {
             OnFurtherRise();
         });
+        EventManager.ListenEvents(Events.BossStage_End_CheshireLookUp, () =>
+        {
+            FixationHeight();
+        });
         EventManager.ListenEvents(Events.BossStage_End_AliceZoomUp, () =>
         {
             _fc.transform.DOLocalRotate(Vector3.zero, 0f);
@@ -103,7 +117,7 @@ public class AliceDirctionControlller : MonoBehaviour
         });
         EventManager.ListenEvents(Events.BossStage_End_AliceCloseEyes, () =>
         {
-            ChangeAnimation(AliceDirectionAnimType.No);
+            //ChangeAnimation(AliceDirectionAnimType.No);
             _fc.ChangeFaceType(FaceType.Tolerance);
             _fc.ChangeFaceType(FaceType.Talking);
         });
@@ -130,8 +144,18 @@ public class AliceDirctionControlller : MonoBehaviour
     void OnFurtherRise()
     {
         _fc.transform.DOLocalRotate(new Vector3(30, 0, 0), 0f);
-        _fc.transform.DOMoveY(_fc.transform.position.y + _furtherRiseHeight, _furtherRiseAnimTime)
-                     .SetEase(_furtherRiseAnimEase);
+        _fc.transform.DOMoveY(4, 0f);
+        _floatTween = _fc.transform.DOMoveY(_fc.transform.position.y + _furtherRiseHeight, _furtherRiseAnimTime)
+                                   .SetEase(_furtherRiseAnimEase);
+    }
+
+    //アリスの高度を固定する
+    void FixationHeight()
+    {
+        _floatTween.Kill();
+        _floatTween = null;
+
+        _fc.transform.DOMoveY(4f, 0f);
     }
 
     void ChangeAnimation(AliceDirectionAnimType type, float crossTime = 0.2f)

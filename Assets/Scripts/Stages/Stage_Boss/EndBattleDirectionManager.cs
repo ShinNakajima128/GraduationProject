@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class EndBattleDirectionManager : MonoBehaviour
 {
@@ -34,8 +35,8 @@ public class EndBattleDirectionManager : MonoBehaviour
     {
         EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () => 
         {
+            _cat.transform.DOLocalRotate(new Vector3(0, -70, 0), 0f);
             _cheshireFc.ChangeFaceType(CheshireCatFaceType.Talking);
-            MoveCat(); 
         });
         EventManager.ListenEvents(Events.BossStage_FrontCheshire, _cheshireFc.OnTaking);
         EventManager.ListenEvents(Events.BossStage_End_CheshireSmile, _cheshireFc.OnGrinning);
@@ -43,6 +44,10 @@ public class EndBattleDirectionManager : MonoBehaviour
         {
             _cat.ChangeState(CheshireCatState.Standing_Up);
         });
+        //EventManager.ListenEvents(Events.BossStage_End_CheshireOverhead, () =>
+        //{
+        //    MoveCat();
+        //});
         EventManager.ListenEvents(Events.BossStage_End_CheshireLookUp, () =>
         {
             LookUpMoveCat();
