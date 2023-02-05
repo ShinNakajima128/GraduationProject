@@ -136,6 +136,20 @@ public class Stage3PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// アニメーションのキャンセル
+    /// </summary>
+    private void CancelStandby()
+    {
+        if (!CanControl) return;
+
+        if (IsStanding)
+        {
+            _animator.CrossFadeInFixedTime("Idle", 1.0f);
+            IsStanding = false;
+        }
+    }
+
+    /// <summary>
     /// メソッドの登録
     /// </summary>
     private void RegistCallBacks()
@@ -274,12 +288,6 @@ public class Stage3PlayerController : MonoBehaviour
     #region InputSystem CallBacks
     public void OnMove(InputAction.CallbackContext context)
     {
-        // 構え途中or構え終わっていたら操作できなくする
-        if (IsStanding || IsStandbyed)
-        {
-            return;
-        }
-
         if (!CanControl)
         {
             InputedMoveValue = Vector2.zero;
@@ -300,12 +308,6 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnTurnLeft(InputAction.CallbackContext context)
     {
-        // 構え途中or構え終わっていたら操作できなくする
-        if (IsStanding || IsStandbyed)
-        {
-            return;
-        }
-
         if (!CanControl) return;
 
         if (context.started)
@@ -320,12 +322,6 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnToRight(InputAction.CallbackContext context)
     {
-        // 構え途中or構え終わっていたら操作できなくする
-        if (IsStanding || IsStandbyed)
-        {
-            return;
-        }
-
         if (!CanControl) return;
 
         if (context.started)
@@ -344,6 +340,8 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.canceled)
         {
+            CancelStandby();
+
             CanControl = false;
             _animator.CrossFadeInFixedTime("Swing_", 0.2f);
             AudioManager.PlaySE(SEType.Stage3_Swing);
