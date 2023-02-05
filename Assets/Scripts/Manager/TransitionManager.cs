@@ -29,6 +29,9 @@ public class TransitionManager : MonoBehaviour
     [SerializeField]
     FadeImage _fadeMaskImage = default;
 
+    [SerializeField]
+    Canvas _fadeCanvas = default;
+
     [Header("MaskData")]
     [SerializeField]
     MaskData _maskData = default;
@@ -220,6 +223,15 @@ public class TransitionManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    /// <summary>
+    /// Canvasの表示優先度を変更する
+    /// </summary>
+    /// <param name="value"> 優先度の値 </param>
+    public static void SetCanvasPriority(int value)
+    {
+        Instance._fadeCanvas.sortingOrder = value;
     }
 
     IEnumerator LoadScene(SceneType scene,float loadTime)

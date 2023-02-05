@@ -49,16 +49,16 @@ public class GameEnd : MonoBehaviour
     private void Start()
     {
         #region UniRx Suvscribe
-        this.UpdateAsObservable()
-            .Where(_ => !IsActived &&
-                        UIInput.Exit &&
-                        UIManager.Instance.IsCanOpenUI &&
-                        !UIManager.Instance.IsAnyPanelOpened)
-            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
-            .Subscribe(_ =>
-            {
-                if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
-                    GameManager.Instance.CurrentScene == SceneType.UnderLobby)
+        if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+            GameManager.Instance.CurrentScene == SceneType.UnderLobby)
+        {
+            this.UpdateAsObservable()
+                .Where(_ => !IsActived &&
+                            UIInput.Exit &&
+                            UIManager.Instance.IsCanOpenUI &&
+                            !UIManager.Instance.IsAnyPanelOpened)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
                 {
                     #region IsLobbyDuringJudge
                     if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
@@ -76,21 +76,45 @@ public class GameEnd : MonoBehaviour
                         }
                     }
                     #endregion
-                }
-                StartCoroutine(ActivateCoroutine(true));
-            })
-            .AddTo(this);
 
-        //âÊñ Çï¬Ç∂ÇÈèàóùÇìoò^
-        this.UpdateAsObservable()
-            .Where(_ => IsActived &&
-                        UIManager.Instance.IsCanOpenUI)
-            .Where(_ => UIInput.Exit || UIInput.A)
-            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
-            .Subscribe(_ =>
-            {
-                StartCoroutine(ActivateCoroutine(false));
-            });
+                    StartCoroutine(ActivateCoroutine(true));
+                })
+                .AddTo(this);
+
+            //âÊñ Çï¬Ç∂ÇÈèàóùÇìoò^
+            this.UpdateAsObservable()
+                .Where(_ => IsActived &&
+                            UIManager.Instance.IsCanOpenUI)
+                .Where(_ => UIInput.Exit || UIInput.A)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(ActivateCoroutine(false));
+                });
+        }
+        else
+        {
+            this.UpdateAsObservable()
+                .Where(_ => !IsActived &&
+                            UIInput.Exit)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(ActivateCoroutine(true));
+                })
+                .AddTo(this);
+
+            //âÊñ Çï¬Ç∂ÇÈèàóùÇìoò^
+            this.UpdateAsObservable()
+                .Where(_ => IsActived)
+                .Where(_ => UIInput.Exit || UIInput.A)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(ActivateCoroutine(false));
+                });
+        }
+
         #endregion
 
         switch (GameManager.Instance.CurrentScene)
@@ -141,7 +165,7 @@ public class GameEnd : MonoBehaviour
             case SceneType.Stage_Boss:
                 _endGameInfo.text = "ñYãpÇÃä‘Ç…Ç‡Ç«ÇËÇ‹Ç∑Ç©ÅH";
                 _currentScene = SceneType.Stage_Boss;
-                _destinationScene = SceneType.Stage_Boss;
+                _destinationScene = SceneType.UnderLobby;
                 break;
             default:
                 break;
@@ -183,6 +207,11 @@ public class GameEnd : MonoBehaviour
                           .Subscribe(_ =>
                           {
                               StartCoroutine(ActivateCoroutine(false));
+
+                              if (_currentScene == SceneType.Title)
+                              {
+                                  TitleManager.Instance.SetSelectButton();
+                              }
                           });
 
         _gameEndButtons[1].OnClickAsObservable()
@@ -190,9 +219,21 @@ public class GameEnd : MonoBehaviour
                           .Subscribe(_ =>
                           {
                               Time.timeScale = 1;
-                              TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
-                              AudioManager.StopBGM();
-                              AudioManager.PlaySE(SEType.GoToStage);
+                              if (_currentScene != SceneType.Title)
+                              {
+                                  TransitionManager.SetCanvasPriority(1010);
+                                  TransitionManager.SceneTransition(_destinationScene, FadeType.Mask_KeyHole);
+                                  AudioManager.StopBGM();
+                                  AudioManager.PlaySE(SEType.GoToStage);
+                              }
+                              else
+                              {
+#if UNITY_EDITOR
+                                  UnityEditor.EditorApplication.isPlaying = false;
+#else
+                                  Application.Quit();
+#endif
+                              }
                           });
     }
 
@@ -211,7 +252,7 @@ public class GameEnd : MonoBehaviour
     IEnumerator ActivateCoroutine(bool isActivate)
     {
         _isPressed = true;
-
+        EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForSecondsRealtime(0.1f);
 
         _isPressed = false;
@@ -265,7 +306,6 @@ public class GameEnd : MonoBehaviour
 
             }
             _gameEndGroup.alpha = 0;
-            AudioManager.PlaySE(SEType.UI_CursolMove);
             print("ÉQÅ[ÉÄèIóπâÊñ OFF");
         }
     }

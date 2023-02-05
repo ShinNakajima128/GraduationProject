@@ -83,7 +83,7 @@ public class TitleManager : MonoBehaviour
 #if UNITY_EDITOR
     private void Update()
     {
-        if (UIInput.Exit)
+        if (UIInput.Option)
         {
             TransitionManager.SceneTransition(SceneType.Stage_Boss);
         }
@@ -221,6 +221,11 @@ public class TitleManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void SetSelectButton()
+    {
+        _titleButtons[0].Select();
     }
 }
 
