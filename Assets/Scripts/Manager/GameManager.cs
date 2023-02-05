@@ -28,6 +28,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField]
     DifficultyType _currentGameDifficultyType = default;
 
+    [SerializeField]
+    SceneType _currentScene = default;
+
     [Header("Debug:Lobby")]
     [SerializeField]
     bool _lobbyDebugMode = false;
@@ -46,6 +49,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public ClockState CurrentClockState => _currentClockState;
     public LobbyState CurrentLobbyState => _currentLobbyState;
     public DifficultyType CurrentGameDifficultyType => _currentGameDifficultyType;
+    public SceneType CurrentScene => _currentScene;
     public static bool IsClearStaged => Instance._isClearStaged;
     public Dictionary<Stages, bool> StageSttatusDic => _stageStatusDic;
     public bool IsFirstVisitCurrentStage => _isFirstVisitStages[(int)_currentStage];
@@ -91,6 +95,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         Instance._currentStage = stage;
         Instance._isClearStaged = false;
+    }
+
+    /// <summary>
+    /// 現在のScene情報を更新する
+    /// </summary>
+    /// <param name="stage"> 更新するScene </param>
+    public static void UpDateCurrentScene(SceneType type)
+    {
+        Instance._currentScene = type;
     }
 
     /// <summary>

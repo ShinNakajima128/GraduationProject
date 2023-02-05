@@ -27,6 +27,9 @@ public class TitleManager : MonoBehaviour
     [SerializeField]
     TitleUIType _currentTitleType = default;
 
+    [Header("Components")]
+    [SerializeField]
+    Option _option = default;
     #endregion
 
     #region private
@@ -55,6 +58,11 @@ public class TitleManager : MonoBehaviour
                                      ChangeUIPanel(TitleUIType.Start);
                                  })
                                  .AddTo(this);
+
+        _option.OnBackToMainMenu += () =>
+        {
+            ChangeUIPanel(TitleUIType.Start);
+        };
     }
 
     IEnumerator Start()
@@ -120,16 +128,10 @@ public class TitleManager : MonoBehaviour
                                {
                                    return;
                                }
-                               Debug.Log("Credit");
+                               _option.ActiveOption();
+                               _currentTitleType = TitleUIType.Option;
+                               Debug.Log("Option");
                            });
-                    b.Value.onClick.AddListener(() =>
-                    {
-                        if (_currentTitleType != TitleUIType.Start)
-                        {
-                            return;
-                        }
-                        Debug.Log("Option");
-                    });
                     break;
                 case ButtonType.Difficulty_Easy:
                     b.Value.OnClickAsObservable()
@@ -196,7 +198,7 @@ public class TitleManager : MonoBehaviour
             p.alpha = 0;
         }
 
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.02f);
 
         _currentTitleType = titleUIType;
 
