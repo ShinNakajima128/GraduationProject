@@ -99,5 +99,6 @@ public class PhaseInfo : MonoBehaviour
 
         _phaseImages[phase].enabled = false;
         _phaseImages[phase].transform.DOLocalMoveX(_originImagePos_x, 0f);
+        _underbarImage.gameObject.transform.DOScaleX(0f, 0f);
     }
 }
