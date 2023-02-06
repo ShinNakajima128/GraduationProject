@@ -78,7 +78,7 @@ public class UnderLobbyPlayerMove : MonoBehaviour, IMovable
         {
             Vector3 velo = _rb.velocity;
             velo.y = 0;
-            _anim.SetFloat("Move", velo.magnitude);
+            _anim.SetFloat("MoveSpeed", velo.magnitude);
         }
     }
 

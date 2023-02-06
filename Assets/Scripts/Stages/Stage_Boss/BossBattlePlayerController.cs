@@ -27,6 +27,8 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     #region private
     /// <summary> 無敵状態かどうか </summary>
     bool _isInvincibled = false;
+    /// <summary> 巨大化状態かどうか </summary>
+    bool _isGrowuped = false;
     Coroutine _damageCoroutine;
     BossBattlePlayerMove _playerMove;
     #endregion
@@ -50,6 +52,8 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         BossStageManager.Instance.GameOver += StopAction;
         EventManager.ListenEvents(Events.BossStage_FrontAlice, () => _fc.ChangeFaceType(FaceType.Fancy));
         EventManager.ListenEvents(Events.BossStage_HeadingBossFeet, () => _fc.ChangeFaceType(FaceType.Blink));
+        EventManager.ListenEvents(Events.BossStage_GrowAlice, OnGrow);
+        EventManager.ListenEvents(Events.BossStage_DiminishAlice, OffGrow);
     }
 
     /// <summary>
@@ -58,7 +62,7 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     /// <param name="value"> ダメージ量 </param>
     public void Damage(int value)
     {
-        if (_isInvincibled || !BossStageManager.Instance.IsInBattle)
+        if (_isInvincibled || !BossStageManager.Instance.IsInBattle || _isGrowuped)
         {
             return;
         }
@@ -80,8 +84,22 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
         }
     }
 
+    void OnGrow()
+    {
+        _isGrowuped = true;
+    }
+
+    void OffGrow()
+    {
+        _isGrowuped = false;
+    }
+
     void StopAction()
     {
+        if (_isGrowuped) 
+        {
+            return;
+        }
         if (_damageCoroutine != null)
         {
             StopCoroutine(_damageCoroutine);
@@ -100,8 +118,9 @@ public class BossBattlePlayerController : PlayerBase, IDamagable, IHealable
     /// <returns></returns>
     IEnumerator DamageCoroutine(int damageValue)
     {
+
         //既にHPが消失している場合は処理を行わない
-        if (HPManager.Instance.IsLosted)
+        if (HPManager.Instance.IsLosted || _isGrowuped)
         {
             yield break;
         }

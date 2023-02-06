@@ -64,7 +64,9 @@ public enum Events
     BossStage_End_CheshireLookUp, //チェシャ猫がアリスを見上げる
     BossStage_End_AliceZoomUp, //アリス顔アップ
     BossStage_End_AliceCloseEyes, //アリス目を閉じる
-    BossStage_End_AliceSmile //アリス笑顔
+    BossStage_End_AliceSmile, //アリス笑顔
+    BossStage_GrowAlice, //アリス巨大化
+    BossStage_DiminishAlice //アリス縮む
 }
 
 /// <summary>

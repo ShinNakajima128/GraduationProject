@@ -231,7 +231,6 @@ public class BossController : MonoBehaviour, IDamagable
 
         _bossShadow.ChangeShadowSize(_minShadowSize, _jumpUpTime + param.ChaseTime); //影を徐々に小さくする
 
-
         //プレイヤーの頭上へジャンプする
         AudioManager.PlaySE(SEType.BossStage_QueenJump);
         yield return transform.DOLocalMove(playerTop, _jumpUpTime)
