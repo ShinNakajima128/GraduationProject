@@ -203,7 +203,7 @@ public class Stage3Operation : MonoBehaviour
             _shotImageFillTween = _shotTextImage.DOFillAmount(1, 1.25f)
                                                 .OnComplete(() => 
                                                 {
-                                                    _shotTextImage.transform.DOScale(1.1f, 0.5f)
+                                                    _shotImageFillTween = _shotTextImage.transform.DOScale(1.1f, 0.25f)
                                                                             .SetLoops(-1, LoopType.Yoyo);
                                                 });
         }
