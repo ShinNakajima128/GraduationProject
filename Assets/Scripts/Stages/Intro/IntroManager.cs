@@ -21,6 +21,7 @@ public class IntroManager : MonoBehaviour
         }
         else
         {
+            TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
             AudioManager.PlayBGM(BGMType.Ending);
         }
 
