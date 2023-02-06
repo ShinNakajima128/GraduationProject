@@ -59,6 +59,9 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     [SerializeField]
     Transform _testModel = default;
 
+    [SerializeField]
+    Stage3Operation _operation = default;
+
     [Header("トランプ兵を飛ばした時のSEを再生するSource")]
     [SerializeField]
     AudioSource _trumpBlowSESource = default;
@@ -112,6 +115,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         //問題が起きた時用にミニゲームをスキップする機能を追加
         this.UpdateAsObservable()
             .Where(_ => UIInput.Next)
+            .Take(1)
             .Subscribe(_ => 
             {
                 GameManager.SaveStageResult(true);
@@ -220,8 +224,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                     yield return new WaitForSeconds(1.5f);
                 }
 
-                _gameUI.ChangeUIGroup(CroquetGameState.InGame);
-
                 //初めてステージ3をプレイしている場合
                 if (GameManager.Instance.IsFirstVisitCurrentStage)
                 {
@@ -244,10 +246,13 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
 
                 yield return new WaitForSeconds(0.2f);
 
+                _gameUI.ChangeUIGroup(CroquetGameState.InGame);
                 _player.BeginControl(); //入力受付開始
+                _operation.ActivateOperation(true);
 
                 yield return new WaitUntil(() => _player.IsThrowed);
 
+                _operation.ActivateOperation(false);
                 _cameraMng.ChangeCamera(CroquetCameraType.Strike, 1.0f);
 
                 //メモ：ここにハリネズミがゴールするまで処理を待機する処理を記述

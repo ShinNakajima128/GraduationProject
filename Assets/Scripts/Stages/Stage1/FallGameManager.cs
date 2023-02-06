@@ -98,6 +98,7 @@ public class FallGameManager : MonoBehaviour
         //問題が起きた時用にミニゲームをスキップする機能を追加
         this.UpdateAsObservable()
             .Where(_ => UIInput.Next)
+            .Take(1)
             .Subscribe(_ =>
             {
                 GameManager.SaveStageResult(true);
