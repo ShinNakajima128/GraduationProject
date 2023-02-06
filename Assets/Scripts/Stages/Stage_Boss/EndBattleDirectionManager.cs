@@ -36,9 +36,8 @@ public class EndBattleDirectionManager : MonoBehaviour
         EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () => 
         {
             _cat.transform.DOLocalRotate(new Vector3(0, -70, 0), 0f);
-            _cheshireFc.ChangeFaceType(CheshireCatFaceType.Talking);
+            _cheshireFc.OnTaking();
         });
-        EventManager.ListenEvents(Events.BossStage_FrontCheshire, _cheshireFc.OnTaking);
         EventManager.ListenEvents(Events.BossStage_End_CheshireSmile, _cheshireFc.OnGrinning);
         EventManager.ListenEvents(Events.BossStage_End_AliceFloat2, () => 
         {

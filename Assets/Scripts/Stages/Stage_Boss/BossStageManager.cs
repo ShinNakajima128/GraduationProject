@@ -494,7 +494,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
 
         //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
-        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+        TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
         TransitionManager.SceneTransition(SceneType.Ending);
     }
 

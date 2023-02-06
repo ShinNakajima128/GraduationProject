@@ -50,7 +50,7 @@ public class DirectionBossController : MonoBehaviour
             EventManager.ListenEvents(Events.BossStage_End_OnFace, () => ChangeAnimation(DirectionBossAnimationType.Point));
             EventManager.ListenEvents(Events.BossStage_End_FrontQueen, () => ChangeAnimation(DirectionBossAnimationType.Look));
             EventManager.ListenEvents(Events.BossStage_End_ShakeHead, () => ChangeAnimation(DirectionBossAnimationType.No));
-            EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () => ChangeAnimation(DirectionBossAnimationType.End_UP_Idle));
+            EventManager.ListenEvents(Events.BossStage_End_CheshireSmile, () => ChangeAnimation(DirectionBossAnimationType.End_UP_Idle));
         }
     }
 
