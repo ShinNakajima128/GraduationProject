@@ -35,6 +35,7 @@ public class IntroManager : MonoBehaviour
     {
         yield return StartCoroutine(_player.PlayAllMessageCoroutine());
 
+        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(_nextSceneType);
     }
 }
