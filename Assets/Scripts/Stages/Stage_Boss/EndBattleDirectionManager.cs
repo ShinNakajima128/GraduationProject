@@ -33,6 +33,11 @@ public class EndBattleDirectionManager : MonoBehaviour
 
     private void Start()
     {
+        EventManager.ListenEvents(Events.BossStage_Cheshire_Happy, () =>
+        {
+            _cat.ChangeState(CheshireCatState.Jump);
+            _cheshireFc.OnGrinning();
+        });
         EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () => 
         {
             _cat.transform.DOLocalRotate(new Vector3(0, -70, 0), 0f);

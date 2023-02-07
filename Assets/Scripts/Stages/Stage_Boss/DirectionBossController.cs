@@ -93,7 +93,12 @@ public class DirectionBossController : MonoBehaviour
                 ChangeAnimation(DirectionBossAnimationType.No);
                 _queenFc.ChangeFaceType(QueenFaceType.Talking);
             });
-            
+
+            EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () =>
+            {
+                _queenFc.ChangeFaceType(QueenFaceType.Default);
+            });
+
             EventManager.ListenEvents(Events.BossStage_End_CheshireSmile, () => ChangeAnimation(DirectionBossAnimationType.End_UP_Idle));
         }
         EventManager.ListenEvents(Events.FinishTalking, StopTalking);

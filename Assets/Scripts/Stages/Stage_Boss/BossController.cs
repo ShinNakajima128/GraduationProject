@@ -98,6 +98,7 @@ public class BossController : MonoBehaviour, IDamagable
     {
         TryGetComponent(out _anim);
         TryGetComponent(out _cc);
+        TryGetComponent(out _queenFc);
         TryGetComponent(out _bossShadow);
     }
     void Start()
@@ -207,6 +208,15 @@ public class BossController : MonoBehaviour, IDamagable
         {
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// 女王の表情を変更する
+    /// </summary>
+    /// <param name="type"> 表情のタイプ </param>
+    public void ChangeFace(QueenFaceType type)
+    {
+        _queenFc.ChangeFaceType(type);
     }
 
     /// <summary>

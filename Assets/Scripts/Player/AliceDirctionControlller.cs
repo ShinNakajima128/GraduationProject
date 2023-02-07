@@ -64,7 +64,11 @@ public class AliceDirctionControlller : MonoBehaviour
 
     private void Start()
     {
-        EventManager.ListenEvents(Events.BossStage_End_Start, () => _fc.ChangeFaceType(FaceType.Talking));
+        EventManager.ListenEvents(Events.BossStage_End_Start, () =>
+        { 
+            _fc.ChangeFaceType(FaceType.Talking);
+            ChangeAnimation(AliceDirectionAnimType.Yes);
+        });
         EventManager.ListenEvents(Events.BossStage_End_AliceFront, () => _fc.ChangeFaceType(FaceType.Talking));
         EventManager.ListenEvents(Events.Alice_Talking, () => _fc.ChangeFaceType(FaceType.Talking));
         EventManager.ListenEvents(Events.FinishTalking, StopTalking);

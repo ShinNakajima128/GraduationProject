@@ -423,6 +423,7 @@ public class BossStageManager : StageGame<BossStageManager>
         {
             OnGameSetUp();
             _isInBattle.Value = true;
+            _bossCtrl.ChangeFace(QueenFaceType.Default);
 
             if (i == 0)
             {
@@ -463,7 +464,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
             _isInBattle.Value = false;
             _areaEffect.transform.DOLocalMoveY(-3.5f, 1.0f);
-
+            _bossCtrl.ChangeFace(QueenFaceType.Damage);
             if (_debrisGenerator.IsGenerating)
             {
                 _debrisGenerator.StopGenerate();
@@ -523,6 +524,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
         _hpPanel.alpha = 0;
         HPManager.Instance.RecoveryHP();
+        _bossCtrl.ChangeFace(QueenFaceType.Angry);
         _bossCtrl.PlayBossAnimation(BossAnimationType.Jump);
         _bossCtrl.transform.DOLookAt(new Vector3(_bossDirectionTrans.position.x, 0f, _bossDirectionTrans.position.z), 0.5f);
 

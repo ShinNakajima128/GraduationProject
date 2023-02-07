@@ -69,7 +69,8 @@ public enum Events
     BossStage_DiminishAlice, //アリス縮む
     BossStage_BossTalking, //ボス会話
     BossStage_BossAngry, //ボス怒り
-    BossStage_ChangeBossFace_Default //ボスの表情を元に戻す
+    BossStage_ChangeBossFace_Default, //ボスの表情を元に戻す
+    BossStage_Cheshire_Happy, //チェシャ猫:喜ぶ
 }
 
 /// <summary>

@@ -201,7 +201,7 @@ public class QueenFaceController : MonoBehaviour
         //口パクの処理のループ
         while (_isTalking)
         {
-            var randomType = (QueenMouseType)UnityEngine.Random.Range(0, 4);
+            var randomType = (QueenMouseType)UnityEngine.Random.Range(0, 3);
 
             yield return new WaitForSeconds(_mouseSwitchTime);
 
