@@ -66,7 +66,10 @@ public enum Events
     BossStage_End_AliceCloseEyes, //アリス目を閉じる
     BossStage_End_AliceSmile, //アリス笑顔
     BossStage_GrowAlice, //アリス巨大化
-    BossStage_DiminishAlice //アリス縮む
+    BossStage_DiminishAlice, //アリス縮む
+    BossStage_BossTalking, //ボス会話
+    BossStage_BossAngry, //ボス怒り
+    BossStage_ChangeBossFace_Default //ボスの表情を元に戻す
 }
 
 /// <summary>

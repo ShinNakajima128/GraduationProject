@@ -2446,6 +2446,7 @@ GameObject:
   - component: {fileID: 5524985826708325147}
   - component: {fileID: 4077691537157111162}
   - component: {fileID: 6422767447974462955}
+  - component: {fileID: 7384558172445854025}
   m_Layer: 0
   m_Name: Boss_Queen_Direction
   m_TagString: Boss
@@ -2503,6 +2504,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abcf1f30aa2d1940bf621585b03f063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isEndDirection: 0
+--- !u!114 &7384558172445854025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5181217625580296609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ea78b6bf8a3f24c8b1346f00bf8b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _testFaceType: 0
+  _blinkMaxInterval: 5
+  _blinkSwitchTime: 0.03
+  _mouseSwitchTime: 0.1
+  _testInterval: 1.5
+  _faceTypes:
+  - FaceType: 0
+    EyeType: 0
+    MouseType: 0
+  - FaceType: 2
+    EyeType: 7
+    MouseType: 6
+  - FaceType: 3
+    EyeType: 6
+    MouseType: 4
+  - FaceType: 4
+    EyeType: 3
+    MouseType: 3
+  _faceRenderer: {fileID: 835857150386397495}
 --- !u!1 &5277325722417436347
 GameObject:
   m_ObjectHideFlags: 0

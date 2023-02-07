@@ -71,6 +71,7 @@ public class BossController : MonoBehaviour, IDamagable
     #region private
     Animator _anim;
     CharacterController _cc;
+    QueenFaceController _queenFc;
     BossShadow _bossShadow;
     Transform _playerTrans = default;
     BossState _currentBossState = default;
@@ -105,6 +106,11 @@ public class BossController : MonoBehaviour, IDamagable
         _currentMoveSpeed = _defaultMoveSpeed;
         BossStageManager.Instance.CharacterMovable += BossMovable;
         MessagePlayer.Instance.Closeup += () => PlayBossAnimation(BossAnimationType.Angry);
+
+        EventManager.ListenEvents(Events.BossStage_BossTalking, () =>
+        {
+            
+        });
     }
 
     void FixedUpdate()

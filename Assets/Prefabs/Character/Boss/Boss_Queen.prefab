@@ -974,6 +974,7 @@ GameObject:
   - component: {fileID: 2370825636060618223}
   - component: {fileID: 6422767447871481237}
   - component: {fileID: 7852610778293578401}
+  - component: {fileID: 2545919904512834000}
   m_Layer: 0
   m_Name: Boss_Queen
   m_TagString: Boss
@@ -1019,27 +1020,31 @@ MonoBehaviour:
   _fallDownTime: 0.5
   _attackInterval: 1.5
   _downTime: 3
+  _knockOutTime: 6.5
   _attackDistance: 10
   _bounceAttackInterval: 1
+  _minShadowSize: 0
   _phaseParams:
   - Phase: 0
     MoveSpeed: 5
     ChaseTime: 1
+    FallTime: 0
     CoolTime: 3
     BounceCount: 0
   - Phase: 1
     MoveSpeed: 5.5
     ChaseTime: 1
+    FallTime: 0
     CoolTime: 3
     BounceCount: 0
   - Phase: 2
     MoveSpeed: 6
     ChaseTime: 1
+    FallTime: 0
     CoolTime: 3
     BounceCount: 0
   _directionTrans: {fileID: 0}
   _startBattleTrans: {fileID: 0}
-  _bossShadow: {fileID: 0}
   _debugMode: 1
   _debugPhase: 0
 --- !u!143 &2370825636060618223
@@ -1092,6 +1097,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27592c95c6cfee44aaabe19e63777ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shadowTrans: {fileID: 0}
+--- !u!114 &2545919904512834000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761832288784941390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ea78b6bf8a3f24c8b1346f00bf8b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _testFaceType: 0
+  _blinkMaxInterval: 5
+  _blinkSwitchTime: 0.03
+  _mouseSwitchTime: 0.1
+  _testInterval: 1.5
+  _faceTypes:
+  - FaceType: 0
+    EyeType: 0
+    MouseType: 0
+  - FaceType: 2
+    EyeType: 7
+    MouseType: 6
+  - FaceType: 3
+    EyeType: 6
+    MouseType: 4
+  - FaceType: 4
+    EyeType: 3
+    MouseType: 3
+  _faceRenderer: {fileID: 2120063565137253058}
 --- !u!1 &2847263155113187626
 GameObject:
   m_ObjectHideFlags: 0
