@@ -138,15 +138,11 @@ public class Stage3PlayerController : MonoBehaviour
     /// <summary>
     /// アニメーションのキャンセル
     /// </summary>
-    private void CancelStandby()
+    private void CancelTheAnimation()
     {
-        if (!CanControl) return;
-
-        if (IsStanding)
-        {
-            _animator.CrossFadeInFixedTime("Idle", 1.0f);
-            IsStanding = false;
-        }
+        Debug.Log("Cancel");
+        _animator.CrossFadeInFixedTime("Idle", 1.0f);
+        IsStanding = false;
     }
 
     /// <summary>
@@ -340,13 +336,18 @@ public class Stage3PlayerController : MonoBehaviour
 
         if (context.canceled)
         {
-            CancelStandby();
+            if (IsStanding)
+            {
+                CancelTheAnimation();
+                return;
+            }
 
             CanControl = false;
             _animator.CrossFadeInFixedTime("Swing_", 0.2f);
             AudioManager.PlaySE(SEType.Stage3_Swing);
         }
 
+        InputedMoveValue = Vector2.zero;
         UnRegistCallBacks();
     }
 
