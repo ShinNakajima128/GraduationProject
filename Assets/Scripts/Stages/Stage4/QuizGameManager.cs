@@ -152,6 +152,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
             {
                 GameManager.SaveStageResult(true);
                 TransitionManager.SceneTransition(SceneType.Lobby);
+                AudioManager.StopBGM(1.5f);
             });
     }
 
