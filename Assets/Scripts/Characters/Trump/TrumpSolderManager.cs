@@ -63,6 +63,7 @@ public class TrumpSolderManager : MonoBehaviour
     private void Start()
     {
         SetupTrumpSolders();
+        //EventManager.ListenEvents(Events.BossStage_End_CheshireFront, () => OnAllTrumpAnimation("LookUp"));
     }
 
     /// <summary>

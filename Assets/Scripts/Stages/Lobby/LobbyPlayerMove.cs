@@ -72,7 +72,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
         {
             Vector3 velo = _rb.velocity;
             velo.y = 0;
-            _anim.SetFloat("Move", velo.magnitude);
+            _anim.SetFloat("MoveSpeed", velo.magnitude);
         }
     }
 
@@ -83,7 +83,7 @@ public class LobbyPlayerMove : MonoBehaviour, IMovable
 
         if (!isMove)
         {
-            _anim.SetFloat("Move", 0);
+            _anim.SetFloat("MoveSpeed", 0);
         }
     }
 
@@ -116,5 +116,9 @@ public enum AliceDirectionAnimType
     Rise,
     Overlook,
     Surprised,
-    SitIdle
+    SitIdle,
+    Doubts, //首をかしげる
+    Float, //アリスが浮き始める
+    Float_Idle, //浮いたままアイドル状態
+    OpenArms
 }

@@ -274,11 +274,19 @@ public class MessagePlayer : MonoBehaviour
             case "ウサギ":
                 icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Rabbit).Icon;
                 break;
-            case "女王":
+            case "ハートの女王":
                 icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen).Icon;
                 break;
             case "？？？":
-                icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat).Icon;
+                if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+                    GameManager.Instance.CurrentScene == SceneType.Stage1_Fall)
+                {
+                    icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat).Icon;
+                }
+                else
+                {
+                    icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen).Icon;
+                }
                 break;
             default:
                 Debug.LogError("名前の指定が間違っています");

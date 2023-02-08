@@ -77,7 +77,6 @@ public class CheshireCatFaceController : MonoBehaviour
         EventManager.ListenEvents(Events.Cheshire_Talk, OnTaking);
         EventManager.ListenEvents(Events.Cheshire_StartGrinning, OnGrinning);
         EventManager.ListenEvents(Events.FinishTalking, OnReturnDefaultFace);
-        EventManager.ListenEvents(Events.BossStage_FrontCheshire, OnTaking);
     }
 
     /// <summary>
@@ -256,28 +255,37 @@ public class CheshireCatFaceController : MonoBehaviour
     /// <summary>
     /// 喋る
     /// </summary>
-    void OnTaking()
+    public void OnTaking()
     {
-        ChangeFaceType(CheshireCatFaceType.Talking);
+        if (gameObject.activeSelf)
+        {
+            ChangeFaceType(CheshireCatFaceType.Talking);
+        }
     }
     /// <summary>
     /// ニヤける
     /// </summary>
-    void OnGrinning()
+    public void OnGrinning()
     {
-        ChangeFaceType(CheshireCatFaceType.StartGrinning);
+        if (gameObject.activeSelf)
+        {
+            ChangeFaceType(CheshireCatFaceType.StartGrinning);
+        }
     }
     /// <summary>
     /// 通常顔に戻る
     /// </summary>
     void OnReturnDefaultFace()
     {
-        //話していない時は処理を行わない
-        if (!_isTalking)
+        if (gameObject.activeSelf)
         {
-            return;
+            //話していない時は処理を行わない
+            if (!_isTalking)
+            {
+                return;
+            }
+            ChangeFaceType(CheshireCatFaceType.Blink);
         }
-        ChangeFaceType(CheshireCatFaceType.Blink);
     }
     #endregion
 }

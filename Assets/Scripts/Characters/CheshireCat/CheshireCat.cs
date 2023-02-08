@@ -164,6 +164,9 @@ public class CheshireCat : MonoBehaviour
             case CheshireCatState.Idle_Standing:
                 _anim.CrossFadeInFixedTime(CheshireCatState.Idle_Standing.ToString(), animBlend);
                 break;
+            case CheshireCatState.Standing_Up:
+                _anim.CrossFadeInFixedTime(CheshireCatState.Standing_Up.ToString(), animBlend);
+                break;
             default:
                 break;
         }
@@ -212,5 +215,7 @@ public enum CheshireCatState
     /// <summary> カメラワーク付きの登場演出 </summary>
     Appearance,
     /// <summary> アイドル(立つ) </summary>
-    Idle_Standing
+    Idle_Standing,
+    /// <summary> 見上げる </summary>
+    Standing_Up
 }

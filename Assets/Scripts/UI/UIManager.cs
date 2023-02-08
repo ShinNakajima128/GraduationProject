@@ -40,14 +40,23 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+        if (GameManager.Instance.CurrentScene != SceneType.Title)
         {
-            LobbyManager.Instance.IsUIOperate += ChangeOperateUI;
+            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            {
+                LobbyManager.Instance.IsUIOperate += ChangeOperateUI;
+                LobbyManager.Instance.IsUIOperate += LobbyTipsUI.Instance.ActivateTipsPanel;
+            }
+            else
+            {
+                UnderLobbyManager.Instance.IsUIOperate += ChangeOperateUI;
+                UnderLobbyManager.Instance.IsUIOperate += LobbyTipsUI.Instance.ActivateTipsPanel;
+            }
         }
         else
         {
-            UnderLobbyManager.Instance.IsUIOperate += ChangeOperateUI;
-        }        
+            ChangeOperateUI(true);
+        }
     }
 
     public static void ActivatePanel(UIPanelType type)

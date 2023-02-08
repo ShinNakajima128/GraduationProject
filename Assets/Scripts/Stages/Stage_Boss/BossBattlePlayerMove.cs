@@ -13,6 +13,12 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
 
     [SerializeField]
     float _rigidTime = 1.0f;
+
+    [SerializeField]
+    float _growMoveSpeed = 8.0f;
+
+    [SerializeField]
+    float _growAnimSpeed = 0.5f;
     #endregion
 
     #region private
@@ -20,13 +26,16 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
     Animator _anim;
     Vector3 _dir;
     bool _isMoving;
+    bool _isGrowuped = false;
     Coroutine _stoppingCoroutine;
+    float _currentSpeed;
     #endregion
 
     private void Awake()
     {
         TryGetComponent(out _rb);
         TryGetComponent(out _anim);
+        _currentSpeed = _moveSpeed;
     }
 
     private void Start()
@@ -49,6 +58,8 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         EventManager.ListenEvents(Events.BossStage_BehindAlice, () => { _anim.CrossFadeInFixedTime("No", 0.2f); });
         //EventManager.ListenEvents(Events.BossStage_BehindAlice_RE2, () => { _anim.CrossFadeInFixedTime("OpenArms", 0.2f); });
         EventManager.ListenEvents(Events.Boss_GroundShake, Stopping);
+        EventManager.ListenEvents(Events.BossStage_GrowAlice, ChangeGrowAliceMove);
+        EventManager.ListenEvents(Events.BossStage_DiminishAlice, ChangeDiminishAliceMove);
         HPManager.Instance.DamageAction += () => { _anim.CrossFadeInFixedTime("Damage", 0.2f); };
     }
 
@@ -64,7 +75,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
             {
                 Quaternion targetRotation = Quaternion.LookRotation(_dir);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * _turnSpeed);
-                Vector3 velocity = _dir.normalized * _moveSpeed;
+                Vector3 velocity = _dir.normalized * _currentSpeed;
                 velocity.y = _rb.velocity.y;
                 _rb.velocity = velocity;
             }
@@ -88,7 +99,7 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         {
             Vector3 velo = _rb.velocity;
             velo.y = 0;
-            _anim.SetFloat("Move", velo.magnitude);
+            _anim.SetFloat("MoveSpeed", velo.magnitude);
         }
     }
 
@@ -97,18 +108,33 @@ public class BossBattlePlayerMove : MonoBehaviour, IMovable
         _isMoving = isMove;
     }
 
+    void ChangeGrowAliceMove()
+    {
+        _currentSpeed = _growMoveSpeed;
+        _anim.speed = _growAnimSpeed;
+        _isGrowuped = true;
+        print(_anim.GetFloat("Move"));
+    }
+
+    void ChangeDiminishAliceMove()
+    {
+        _currentSpeed = _moveSpeed;
+        _anim.speed = 1f;
+        _isGrowuped = false;
+    }
+
     /// <summary>
     /// プレイヤーのアニメーションをリセットする
     /// </summary>
     void ResetAnimation()
     {
-        _anim.SetFloat("Move", 0f);
+        _anim.SetFloat("MoveSpeed", 0f);
     }
 
     void Stopping()
     {
         //既にHPが消失している場合は処理を行わない
-        if (HPManager.Instance.IsLosted)
+        if (HPManager.Instance.IsLosted || _isGrowuped)
         {
             return;
         }

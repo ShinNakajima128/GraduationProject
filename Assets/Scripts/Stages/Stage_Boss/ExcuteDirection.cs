@@ -41,21 +41,24 @@ public class ExcuteDirection : MonoBehaviour
         _directionModels.SetActive(false);
     }
 
-    public IEnumerator ExcuteDirectionCoroutine()
+    public IEnumerator ExcuteDirectionCoroutine(BossBattlePhase phase)
     {
-        _directionModels.SetActive(true);
-
-        //yield return new WaitForSeconds(3.0f); //画面のフェード演出終了まで待機
-
-        _bossAnim.CrossFadeInFixedTime("Angry", 0.2f);
-
-        yield return new WaitForSeconds(1.0f);
-
-        foreach (var t in _trumpAnims)
+        if (phase == BossBattlePhase.First)
         {
-            t.CrossFadeInFixedTime("Attack_Setup", 0.2f);
+            _directionModels.SetActive(true);
+
+            //yield return new WaitForSeconds(3.0f); //画面のフェード演出終了まで待機
+
+            _bossAnim.CrossFadeInFixedTime("Angry", 0.2f);
+
+            yield return new WaitForSeconds(1.0f);
+
+            foreach (var t in _trumpAnims)
+            {
+                t.CrossFadeInFixedTime("Attack_Setup", 0.2f);
+            }
+            yield return new WaitForSeconds(1.5f);
         }
-        yield return new WaitForSeconds(1.5f);
 
         _excutePanel.alpha = 1; //トランプ兵を処刑するモーションがない場合は暗転の演出
 

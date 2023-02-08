@@ -33,7 +33,7 @@ public abstract class StageGame<T> : MonoBehaviour
     {
         //現在のステージをGameManagerに更新
         GameManager.UpdateCurrentStage(_managedStage);
-        TransitionManager.FadeOut(FadeType.Normal);
+        TransitionManager.FadeOut(FadeType.Black_default);
     }
     public abstract void OnGameSetUp();
     public abstract void OnGameStart();

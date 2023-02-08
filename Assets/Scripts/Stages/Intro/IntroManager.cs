@@ -21,6 +21,7 @@ public class IntroManager : MonoBehaviour
         }
         else
         {
+            TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
             AudioManager.PlayBGM(BGMType.Ending);
         }
 
@@ -34,6 +35,7 @@ public class IntroManager : MonoBehaviour
     {
         yield return StartCoroutine(_player.PlayAllMessageCoroutine());
 
+        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
         TransitionManager.SceneTransition(_nextSceneType);
     }
 }

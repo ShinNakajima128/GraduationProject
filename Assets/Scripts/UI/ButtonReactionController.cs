@@ -84,10 +84,10 @@ public class ButtonReactionController : MonoBehaviour
         }
         
 
-        ButtonCursor.MoveCursor(new Vector3(transform.position.x + _correctionValue_x, 
-                                            transform.position.y + _correctionValue_y, 
-                                            transform.position.z), 
-                                            transform);
+        //ButtonCursor.MoveCursor(new Vector3(transform.position.x + _correctionValue_x, 
+        //                                    transform.position.y + _correctionValue_y, 
+        //                                    transform.position.z), 
+        //                                    transform);
         transform.DOScale(_animScale, _animTime);
 
         if (_buttonData != null)

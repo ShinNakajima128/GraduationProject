@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using DG.Tweening;
+using System;
 
 public class AlbumManager : MonoBehaviour
 {
@@ -97,6 +98,7 @@ public class AlbumManager : MonoBehaviour
                                                  GameManager.Instance.CurrentLobbyState == LobbyState.Under &&
                                                  !UIManager.Instance.IsAnyPanelOpened &&
                                                  UIInput.X)
+                                     .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
                                      .Subscribe(_ =>
                                      {
                                          UIManager.ActivatePanel(UIPanelType.Album);
@@ -110,9 +112,11 @@ public class AlbumManager : MonoBehaviour
                                                  !_isPressed &&
                                                  GameManager.Instance.CurrentLobbyState == LobbyState.Under &&
                                                  UIInput.A)
+                                     .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
                                      .Subscribe(_ =>
                                      {
                                          UIManager.InactivatePanel(UIPanelType.Album);
+                                         LobbyTipsUI.Instance.InactiveAlbumTips();
                                          ActivateAlbum(false);
                                          Debug.Log("ƒAƒ‹ƒoƒ€”ñ•\Ž¦");
                                      })

@@ -87,7 +87,7 @@ public class FallGameManager : MonoBehaviour
         AudioManager.PlayBGM(BGMType.Stage1);
         GameManager.UpdateCurrentStage(Stages.Stage1);
 
-        HPManager.Instance.ChangeHPValue(_maxHP, true); //HPManagerに最大HPの値を登録
+        HPManager.Instance.RecoveryHP(); //HPを最大にする
         HPManager.Instance.LostHpAction += OnGameOver; //ゲームオーバー時の処理をHPManagerに登録
 
         OnGameStart();
@@ -98,6 +98,7 @@ public class FallGameManager : MonoBehaviour
         //問題が起きた時用にミニゲームをスキップする機能を追加
         this.UpdateAsObservable()
             .Where(_ => UIInput.Next)
+            .Take(1)
             .Subscribe(_ =>
             {
                 GameManager.SaveStageResult(true);

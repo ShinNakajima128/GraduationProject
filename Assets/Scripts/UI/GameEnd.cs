@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,11 +20,16 @@ public class GameEnd : MonoBehaviour
 
     [SerializeField]
     Transform[] _cursorPosTrans = default;
+
+    [SerializeField]
+    Text _endGameInfo = default;
     #endregion
 
     #region private
     CanvasGroup _gameEndGroup = default;
     bool _isPressed = false;
+    SceneType _currentScene;
+    SceneType _destinationScene;
     #endregion
 
     #region public
@@ -42,32 +48,128 @@ public class GameEnd : MonoBehaviour
 
     private void Start()
     {
-        this.UpdateAsObservable()
-            .Where(_ => !IsActived &&
-                        UIInput.Exit &&
-                        UIManager.Instance.IsCanOpenUI && 
-                        !UIManager.Instance.IsAnyPanelOpened)
-            .Subscribe(_ =>
-            {
-                #region IsLobbyDuringJudge
-                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+        #region UniRx Suvscribe
+        if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+            GameManager.Instance.CurrentScene == SceneType.UnderLobby)
+        {
+            this.UpdateAsObservable()
+                .Where(_ => !IsActived &&
+                            UIInput.Exit &&
+                            UIManager.Instance.IsCanOpenUI &&
+                            !UIManager.Instance.IsAnyPanelOpened)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
                 {
-                    if (LobbyManager.Instance.IsDuring)
+                    #region IsLobbyDuringJudge
+                    if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
                     {
-                        return;
+                        if (LobbyManager.Instance.IsDuring)
+                        {
+                            return;
+                        }
                     }
+                    else
+                    {
+                        if (UnderLobbyManager.Instance.IsDuring)
+                        {
+                            return;
+                        }
+                    }
+                    #endregion
+
+                    StartCoroutine(ActivateCoroutine(true));
+                })
+                .AddTo(this);
+
+            //âÊñ Çï¬Ç∂ÇÈèàóùÇìoò^
+            this.UpdateAsObservable()
+                .Where(_ => IsActived &&
+                            UIManager.Instance.IsCanOpenUI)
+                .Where(_ => UIInput.Exit || UIInput.A)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(ActivateCoroutine(false));
+                });
+        }
+        else
+        {
+            this.UpdateAsObservable()
+                .Where(_ => !IsActived &&
+                            UIInput.Exit)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(ActivateCoroutine(true));
+                })
+                .AddTo(this);
+
+            //âÊñ Çï¬Ç∂ÇÈèàóùÇìoò^
+            this.UpdateAsObservable()
+                .Where(_ => IsActived)
+                .Where(_ => UIInput.Exit || UIInput.A)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                .Subscribe(_ =>
+                {
+                    StartCoroutine(ActivateCoroutine(false));
+                });
+        }
+
+        #endregion
+
+        switch (GameManager.Instance.CurrentScene)
+        {
+            case SceneType.Title:
+                _endGameInfo.text = "ÉQÅ[ÉÄÇèIóπÇµÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.Title;
+                break;
+            case SceneType.Lobby:
+                _endGameInfo.text = "ÉQÅ[ÉÄÇèIóπÇµÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.Lobby;
+                _destinationScene = SceneType.Title;
+                break;
+            case SceneType.UnderLobby:
+                _endGameInfo.text = "ÉQÅ[ÉÄÇèIóπÇµÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.UnderLobby;
+                _destinationScene = SceneType.Title;
+                break;
+            case SceneType.Stage1_Fall:
+                if (!FallGameManager.IsSecondTry)
+                {
+                    _endGameInfo.text = "ÉQÅ[ÉÄÇèIóπÇµÇ‹Ç∑Ç©ÅH";
+                    _currentScene = SceneType.Stage1_Fall;
+                    _destinationScene = SceneType.Title;
                 }
                 else
                 {
-                    if (UnderLobbyManager.Instance.IsDuring)
-                    {
-                        return;
-                    }
+                    _endGameInfo.text = "ãLâØÇÃä‘Ç…Ç‡Ç«ÇËÇ‹Ç∑Ç©ÅH";
+                    _currentScene = SceneType.Stage1_Fall;
+                    _destinationScene = SceneType.Lobby;
                 }
-                #endregion
-                StartCoroutine(ActivateCoroutine(true));
-            })
-            .AddTo(this);
+                break;
+            case SceneType.RE_Stage2:
+                _endGameInfo.text = "ãLâØÇÃä‘Ç…Ç‡Ç«ÇËÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.RE_Stage2;
+                _destinationScene = SceneType.Lobby;
+                break;
+            case SceneType.RE_Stage3:
+                _endGameInfo.text = "ãLâØÇÃä‘Ç…Ç‡Ç«ÇËÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.RE_Stage3;
+                _destinationScene = SceneType.Lobby;
+                break;
+            case SceneType.Stage4:
+                _endGameInfo.text = "ãLâØÇÃä‘Ç…Ç‡Ç«ÇËÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.Stage4;
+                _destinationScene = SceneType.Lobby;
+                break;
+            case SceneType.Stage_Boss:
+                _endGameInfo.text = "ñYãpÇÃä‘Ç…Ç‡Ç«ÇËÇ‹Ç∑Ç©ÅH";
+                _currentScene = SceneType.Stage_Boss;
+                _destinationScene = SceneType.UnderLobby;
+                break;
+            default:
+                break;
+        }
     }
 
     void Setup()
@@ -100,21 +202,46 @@ public class GameEnd : MonoBehaviour
 
     void ButtonSetup()
     {
-        _gameEndButtons[0].onClick.AddListener(() =>
-        {
-            StartCoroutine(ActivateCoroutine(false));
-        });
+        _gameEndButtons[0].OnClickAsObservable()
+                          .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                          .Subscribe(_ =>
+                          {
+                              StartCoroutine(ActivateCoroutine(false));
 
-        _gameEndButtons[1].onClick.AddListener(() =>
-        {
-            TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
-        });
+                              if (_currentScene == SceneType.Title)
+                              {
+                                  TitleManager.Instance.SetSelectButton();
+                              }
+                          });
+
+        _gameEndButtons[1].OnClickAsObservable()
+                          .Take(1)
+                          .Subscribe(_ =>
+                          {
+                              Time.timeScale = 1;
+                              if (_currentScene != SceneType.Title)
+                              {
+                                  TransitionManager.SetCanvasPriority(1010);
+                                  TransitionManager.SceneTransition(_destinationScene, FadeType.Mask_KeyHole);
+                                  AudioManager.StopBGM();
+                                  AudioManager.PlaySE(SEType.GoToStage);
+                              }
+                              else
+                              {
+#if UNITY_EDITOR
+                                  UnityEditor.EditorApplication.isPlaying = false;
+#else
+                                  Application.Quit();
+#endif
+                              }
+                          });
     }
 
     void OnSelectEvent(int index)
     {
-        _cursorImageTrans.SetParent(_gameEndButtons[index].transform);
-        _cursorImageTrans.localPosition = _cursorPosTrans[index].localPosition;
+        //_cursorImageTrans.SetParent(_gameEndButtons[index].transform);
+        //_cursorImageTrans.localPosition = _cursorPosTrans[index].localPosition;
+        AudioManager.PlaySE(SEType.UI_CursolMove);
     }
 
     void OnDeselectEvent()
@@ -125,24 +252,28 @@ public class GameEnd : MonoBehaviour
     IEnumerator ActivateCoroutine(bool isActivate)
     {
         _isPressed = true;
-
-        yield return new WaitForSeconds(0.1f);
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         _isPressed = false;
 
         if (isActivate)
         {
-            UIManager.ActivatePanel(UIPanelType.GameEnd);
-            
-            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            Time.timeScale = 0;
+            if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+                GameManager.Instance.CurrentScene == SceneType.UnderLobby)
             {
-                LobbyManager.Instance.PlayerMove?.Invoke(false);
-            }
-            else
-            {
-                UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
-            }
+                UIManager.ActivatePanel(UIPanelType.GameEnd);
 
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    LobbyManager.Instance.PlayerMove?.Invoke(false);
+                }
+                else
+                {
+                    UnderLobbyManager.Instance.PlayerMove?.Invoke(false);
+                }
+            }
             _gameEndGroup.alpha = 1;
             EventSystem.current.firstSelectedGameObject = _gameEndButtons[0].gameObject;
             _gameEndButtons[0].Select();
@@ -150,20 +281,29 @@ public class GameEnd : MonoBehaviour
         }
         else
         {
-            UIManager.InactivatePanel(UIPanelType.GameEnd);
-
-            if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+            Time.timeScale = 1;
+            if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
+                GameManager.Instance.CurrentScene == SceneType.UnderLobby)
             {
-                LobbyManager.Instance.PlayerMove?.Invoke(true);
+                UIManager.InactivatePanel(UIPanelType.GameEnd);
+
+                if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
+                {
+                    LobbyManager.Instance.PlayerMove?.Invoke(true);
+                }
+                else
+                {
+                    UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
+                }
+
+                if (StageDescriptionUI.Instance.IsActived)
+                {
+                    StageDescriptionUI.Instance.ActiveButton();
+                }
             }
             else
             {
-                UnderLobbyManager.Instance.PlayerMove?.Invoke(true);
-            }
 
-            if (StageDescriptionUI.Instance.IsActived)
-            {
-                StageDescriptionUI.Instance.ActiveButton();
             }
             _gameEndGroup.alpha = 0;
             print("ÉQÅ[ÉÄèIóπâÊñ OFF");

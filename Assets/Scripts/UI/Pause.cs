@@ -25,6 +25,10 @@ public class Pause : MonoBehaviour
     [Header("Components")]
     [SerializeField]
     Option _option = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -60,6 +64,7 @@ public class Pause : MonoBehaviour
                         UIInput.Option &&
                         UIManager.Instance.IsCanOpenUI &&
                         !UIManager.Instance.IsAnyPanelOpened)
+            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
             .Subscribe(_ =>
             {
                 if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
@@ -85,6 +90,7 @@ public class Pause : MonoBehaviour
                         UIManager.Instance.IsCanOpenUI && 
                         !_option.IsActived)
             .Where(_ => UIInput.Option || UIInput.A)
+            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
             .Subscribe(_ =>
             {
                 #region IsLobbyDuringJudge
@@ -120,6 +126,29 @@ public class Pause : MonoBehaviour
         switch (_sceneType)
         {
             case SceneType.Lobby:
+                if (LobbyManager.IsAllStageCleared || _debugMode)
+                {
+                    _pauseButtons[3].gameObject.SetActive(true);
+
+                    //アクティブとなる各ボタンのNavigationを修正
+                    Navigation button1Navi = _pauseButtons[1].navigation;
+                    button1Navi.mode = Navigation.Mode.Explicit;
+                    button1Navi.selectOnUp = _pauseButtons[0];
+                    button1Navi.selectOnDown = _pauseButtons[3];
+                    _pauseButtons[1].navigation = button1Navi;
+
+                    Navigation button3Navi = _pauseButtons[3].navigation;
+                    button3Navi.mode = Navigation.Mode.Explicit;
+                    button3Navi.selectOnUp = _pauseButtons[1];
+                    button3Navi.selectOnDown = _pauseButtons[4];
+                    _pauseButtons[3].navigation = button3Navi;
+
+                    Navigation button4Navi = _pauseButtons[4].navigation;
+                    button4Navi.mode = Navigation.Mode.Explicit;
+                    button4Navi.selectOnUp = _pauseButtons[3];
+                    button4Navi.selectOnDown = _pauseButtons[0];
+                    _pauseButtons[4].navigation = button4Navi;
+                }
                 _pauseButtons[4].gameObject.SetActive(true);
                 break;
             case SceneType.UnderLobby:
@@ -133,45 +162,70 @@ public class Pause : MonoBehaviour
                 _pauseButtons[2].gameObject.SetActive(true);
                 break;
         }
-        ButtonCursor.MoveCursor(new Vector3(_pauseButtons[0].gameObject.transform.position.x + 2.5f, 
-                                            _pauseButtons[0].gameObject.transform.position.y + 5f, 
-                                            _pauseButtons[0].gameObject.transform.position.z), 
-                                            _pauseButtons[0].gameObject.transform);
+        //ButtonCursor.MoveCursor(new Vector3(_pauseButtons[0].gameObject.transform.position.x + 2.5f, 
+        //                                    _pauseButtons[0].gameObject.transform.position.y + 5f, 
+        //                                    _pauseButtons[0].gameObject.transform.position.z), 
+        //                                    _pauseButtons[0].gameObject.transform);
     }
 
     void ButtonSetup()
     {
         //「ゲームにもどる」ボタンを選択時のアクション
-        _pauseButtons[0].onClick.AddListener(() =>
-        {
-            StartCoroutine(ActivateCoroutine(false));
-            Debug.Log("ゲームに戻る");
-        });
+        _pauseButtons[0].OnClickAsObservable()
+                        .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                        .Subscribe(_ =>
+                        {
+                            AudioManager.PlaySE(SEType.UI_CursolMove);
+                            StartCoroutine(ActivateCoroutine(false));
+                            Debug.Log("ゲームに戻る");
+                        })
+                        .AddTo(this);
 
         //「オプション」ボタンを選択時のアクション
-        _pauseButtons[1].onClick.AddListener(() =>
-        {
-            _option.ActiveOption();
-            PauseActivate(false);
-        });
-
+        _pauseButtons[1].OnClickAsObservable()
+                        .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                        .Subscribe(_ =>
+                        {
+                            AudioManager.PlaySE(SEType.UI_CursolMove);
+                            _option.ActiveOption();
+                            PauseActivate(false);
+                        })
+                        .AddTo(this);
+        
         //「記憶の間にもどる」ボタンを選択時のアクション
-        _pauseButtons[2].onClick.AddListener(() =>
-        {
-            TransitionManager.SceneTransition(SceneType.Lobby, FadeType.Mask_KeyHole);
-        });
+        _pauseButtons[2].OnClickAsObservable()
+                        .Take(1)
+                        .Subscribe(_ =>
+                        {
+                            AudioManager.StopBGM(0.15f);
+                            AudioManager.PlaySE(SEType.GoToStage);
+                            GameManager.ChangeLobbyState(LobbyState.Default);
+                            TransitionManager.SceneTransition(SceneType.Lobby, FadeType.Mask_KeyHole);
+                        })
+                        .AddTo(this);
 
         //「忘却の間にもどる」ボタンを選択時のアクション
-        _pauseButtons[3].onClick.AddListener(() =>
-        {
-            TransitionManager.SceneTransition(SceneType.UnderLobby, FadeType.Mask_KeyHole);
-        });
+        _pauseButtons[3].OnClickAsObservable()
+                        .Take(1)
+                        .Subscribe(_ =>
+                        {
+                            AudioManager.StopBGM(0.15f);
+                            AudioManager.PlaySE(SEType.GoToStage);
+                            GameManager.ChangeLobbyState(LobbyState.Under);
+                            TransitionManager.SceneTransition(SceneType.UnderLobby, FadeType.Mask_KeyHole);
+                        })
+                        .AddTo(this);
 
         //「タイトルにもどる」ボタンを選択時のアクション
-        _pauseButtons[4].onClick.AddListener(() =>
-        {
-            TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
-        });
+        _pauseButtons[4].OnClickAsObservable()
+                        .Take(1)
+                        .Subscribe(_ =>
+                        {
+                            AudioManager.StopBGM(0.15f);
+                            AudioManager.PlaySE(SEType.GoToStage);
+                            TransitionManager.SceneTransition(SceneType.Title, FadeType.Mask_KeyHole);
+                        })
+                        .AddTo(this);
     }
 
     IEnumerator ActivateCoroutine(bool isActivate)
@@ -228,6 +282,7 @@ public class Pause : MonoBehaviour
         {
             UIManager.InactivatePanel(UIPanelType.Pause);
             _pauseGroup.alpha = 0;
+            EventSystem.current.SetSelectedGameObject(null);
             print("ポーズメニューOFF");
         }
     }

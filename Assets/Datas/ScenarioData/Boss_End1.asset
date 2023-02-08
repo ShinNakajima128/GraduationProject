@@ -18,7 +18,7 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u3084\u3063\u305F\u308F\uFF01\u3000\u5973\u738B\u3092\u5012\u3057\u305F\u308F\uFF01"
-    _screenEffectType: 0
+    _screenEffectType: 33
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u3084\u3063\u305F\u308F\uFF01\u3000\u5973\u738B\u3092\u5012\u3057\u305F\u308F\uFF01"
@@ -27,28 +27,36 @@ MonoBehaviour:
     Actor: "\u30C1\u30A7\u30B7\u30E3\u732B"
     _messages:
     - "\u304A...\u304A\u304A\uFF01\u3000\u3084\u308A\u3084\u304C\u3063\u305F\uFF01"
-    _screenEffectType: 0
+    _screenEffectType: 62
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u304A...\u304A\u304A\uFF01\u3000\u3084\u308A\u3084\u304C\u3063\u305F\uFF01"
     ScreenEffect: None
   - Id: 2
-    Actor: "\u5973\u738B"
+    Actor: "\u30CF\u30FC\u30C8\u306E\u5973\u738B"
     _messages:
     - "\u3050\u306C\u306C..."
     - "\u3053\u3093\u306A\u5C0F\u5A18\u306B\u3084\u3089\u308C\u308B\u306A\u3093\u3066..."
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 34
+    _displayTime: 1
     _fontSize: 35
     Message: "\u3050\u306C\u306C...\n\u3053\u3093\u306A\u5C0F\u5A18\u306B\u3084\u3089\u308C\u308B\u306A\u3093\u3066..."
     ScreenEffect: None
   - Id: 3
-    Actor: "\u5973\u738B"
+    Actor: "\u30CF\u30FC\u30C8\u306E\u5973\u738B"
     _messages:
     - "\u4F55\u6545\u3060..."
+    _screenEffectType: 35
+    _displayTime: 2
+    _fontSize: 35
+    Message: "\u4F55\u6545\u3060...\n\u4F55\u6545\u3000\u304A\u524D\u306F\u79C1\u306E\u3082\u306E\u306B\u306A\u3089\u306A\u3044\u306E\u3060\uFF01"
+    ScreenEffect: None
+  - Id: 3
+    Actor: "\u30CF\u30FC\u30C8\u306E\u5973\u738B"
+    _messages:
     - "\u4F55\u6545\u3000\u304A\u524D\u306F\u79C1\u306E\u3082\u306E\u306B\u306A\u3089\u306A\u3044\u306E\u3060\uFF01"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 36
+    _displayTime: 1
     _fontSize: 35
     Message: "\u4F55\u6545\u3060...\n\u4F55\u6545\u3000\u304A\u524D\u306F\u79C1\u306E\u3082\u306E\u306B\u306A\u3089\u306A\u3044\u306E\u3060\uFF01"
     ScreenEffect: None
@@ -56,7 +64,7 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u305D\u308C\u306F\u3000\u7AAE\u5C48\u306A\u4E16\u754C\u304C\u5ACC\u3044\u3060\u304B\u3089\u3088"
-    _screenEffectType: 0
+    _screenEffectType: 37
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u305D\u308C\u306F\u3000\u7AAE\u5C48\u306A\u4E16\u754C\u304C\u5ACC\u3044\u3060\u304B\u3089\u3088"
@@ -66,8 +74,8 @@ MonoBehaviour:
     _messages:
     - "\u3053\u306E\u4E16\u754C\u306B\u306F\u3000\u697D\u3057\u3044\u3053\u3068\u3084\u9762\u767D\u3044\u3053\u3068\u304C\u6CA2\u5C71\u3042\u308B\u306E\uFF01"
     - "\u305D\u3093\u306A\u4E16\u754C\u3067\u3000\u79C1\u306F\u81EA\u7531\u306B\u751F\u304D\u305F\u3044\u306E\uFF01"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 38
+    _displayTime: 0.5
     _fontSize: 35
     Message: "\u3053\u306E\u4E16\u754C\u306B\u306F\u3000\u697D\u3057\u3044\u3053\u3068\u3084\u9762\u767D\u3044\u3053\u3068\u304C\u6CA2\u5C71\u3042\u308B\u306E\uFF01\n\u305D\u3093\u306A\u4E16\u754C\u3067\u3000\u79C1\u306F\u81EA\u7531\u306B\u751F\u304D\u305F\u3044\u306E\uFF01"
     ScreenEffect: None
@@ -76,25 +84,25 @@ MonoBehaviour:
     _messages:
     - "\u8A18\u61B6\u3092\u7121\u304F\u3057\u305F\u6642\u306F\u3000\u30B7\u30E7\u30C3\u30AF\u3060\u3063\u305F\u3002"
     - "\u3051\u3069\u306D\u3000\u3042\u306A\u305F\u305F\u3061\u3068\u306E\u6642\u9593\u306F\u3059\u3054\u304F\u697D\u3057\u304B\u3063\u305F\u308F\uFF01"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 42
+    _displayTime: 1.5
     _fontSize: 35
     Message: "\u8A18\u61B6\u3092\u7121\u304F\u3057\u305F\u6642\u306F\u3000\u30B7\u30E7\u30C3\u30AF\u3060\u3063\u305F\u3002\n\u3051\u3069\u306D\u3000\u3042\u306A\u305F\u305F\u3061\u3068\u306E\u6642\u9593\u306F\u3059\u3054\u304F\u697D\u3057\u304B\u3063\u305F\u308F\uFF01"
     ScreenEffect: None
   - Id: 7
-    Actor: "\u5973\u738B"
+    Actor: "\u30CF\u30FC\u30C8\u306E\u5973\u738B"
     _messages:
     - "\u3075\u3093\u3002\u3000\u751F\u610F\u6C17\u306A\u5C0F\u5A18\u3060\u3053\u3068\u3002"
-    _screenEffectType: 0
+    _screenEffectType: 39
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u3075\u3093\u3002\u3000\u751F\u610F\u6C17\u306A\u5C0F\u5A18\u3060\u3053\u3068\u3002"
     ScreenEffect: None
   - Id: 8
-    Actor: "\u5973\u738B"
+    Actor: "\u30CF\u30FC\u30C8\u306E\u5973\u738B"
     _messages:
     - "\u3069\u3046\u305B\u3000\u30A2\u30BF\u30B7\u306E\u4E8B\u306A\u3093\u3066\u8AB0\u3082\u5206\u304B\u3063\u3066\u304F\u308C\u306A\u3044\u306E\u3088"
-    _screenEffectType: 0
+    _screenEffectType: 40
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u3069\u3046\u305B\u3000\u30A2\u30BF\u30B7\u306E\u4E8B\u306A\u3093\u3066\u8AB0\u3082\u5206\u304B\u3063\u3066\u304F\u308C\u306A\u3044\u306E\u3088"
@@ -103,7 +111,7 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u3044\u3044\u3048\u3000\u5973\u738B\u3002"
-    _screenEffectType: 0
+    _screenEffectType: 41
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u3044\u3044\u3048\u3000\u5973\u738B\u3002"
@@ -112,9 +120,17 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u3042\u306A\u305F\u306E\u5468\u308A\u306B\u306F\u3000\u7D20\u6575\u306A\u304A\u53CB\u9054\u3084\u7406\u89E3\u8005\u304C"
+    _screenEffectType: 43
+    _displayTime: 3
+    _fontSize: 35
+    Message: "\u3042\u306A\u305F\u306E\u5468\u308A\u306B\u306F\u3000\u7D20\u6575\u306A\u304A\u53CB\u9054\u3084\u7406\u89E3\u8005\u304C\n\u3044\uFF5E\u3063\u3071\u3044\u3044\u308B\u3058\u3083\u306A\u3044\uFF01"
+    ScreenEffect: None
+  - Id: 10
+    Actor: "\u30A2\u30EA\u30B9"
+    _messages:
     - "\u3044\uFF5E\u3063\u3071\u3044\u3044\u308B\u3058\u3083\u306A\u3044\uFF01"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 44
+    _displayTime: 3
     _fontSize: 35
     Message: "\u3042\u306A\u305F\u306E\u5468\u308A\u306B\u306F\u3000\u7D20\u6575\u306A\u304A\u53CB\u9054\u3084\u7406\u89E3\u8005\u304C\n\u3044\uFF5E\u3063\u3071\u3044\u3044\u308B\u3058\u3083\u306A\u3044\uFF01"
     ScreenEffect: None
@@ -122,17 +138,17 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u305F\u3060\u3000\u81EA\u5206\u304B\u3089\u6B69\u307F\u5BC4\u308D\u3046\u3068\u3057\u3066\u3044\u306A\u3044\u3060\u3051\u3058\u3083\u306A\u3044\u304B\u3057\u3089\uFF1F"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 45
+    _displayTime: 1
     _fontSize: 35
     Message: "\u305F\u3060\u3000\u81EA\u5206\u304B\u3089\u6B69\u307F\u5BC4\u308D\u3046\u3068\u3057\u3066\u3044\u306A\u3044\u3060\u3051\u3058\u3083\u306A\u3044\u304B\u3057\u3089\uFF1F"
     ScreenEffect: None
   - Id: 12
-    Actor: "\u5973\u738B"
+    Actor: "\u30CF\u30FC\u30C8\u306E\u5973\u738B"
     _messages:
     - "\u30FB\u30FB\u30FB"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 46
+    _displayTime: 3
     _fontSize: 35
     Message: "\u30FB\u30FB\u30FB"
     ScreenEffect: None
@@ -140,7 +156,7 @@ MonoBehaviour:
     Actor: "\u30C1\u30A7\u30B7\u30E3\u732B"
     _messages:
     - "\u826F\u3044\u3068\u3053\u308D\u90AA\u9B54\u3059\u308B\u305C\u3000\u30A2\u30EA\u30B9"
-    _screenEffectType: 0
+    _screenEffectType: 47
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u826F\u3044\u3068\u3053\u308D\u90AA\u9B54\u3059\u308B\u305C\u3000\u30A2\u30EA\u30B9"
@@ -150,8 +166,8 @@ MonoBehaviour:
     _messages:
     - "\u30C1\u30A7\u30B7\u30E3\u732B\u3055\u3093\u3000\u3069\u3046\u3057\u305F\u306E\uFF1F"
     - "\u3063\u3066..."
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 48
+    _displayTime: 2
     _fontSize: 35
     Message: "\u30C1\u30A7\u30B7\u30E3\u732B\u3055\u3093\u3000\u3069\u3046\u3057\u305F\u306E\uFF1F\n\u3063\u3066..."
     ScreenEffect: None
@@ -159,7 +175,7 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u8EAB\u4F53\u304C\u6D6E\u304B\u3093\u3067\u308B\u308F\uFF01\uFF01\uFF01"
-    _screenEffectType: 0
+    _screenEffectType: 49
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u8EAB\u4F53\u304C\u6D6E\u304B\u3093\u3067\u308B\u308F\uFF01\uFF01\uFF01"
@@ -169,7 +185,7 @@ MonoBehaviour:
     _messages:
     - "\u30A2\u30EA\u30B9\u3000\u6B8B\u5FF5\u3060\u304C\u3053\u308C\u3067\u304A\u5225\u308C\u3060\u3002"
     - "\u5168\u3066\u306E\u8A18\u61B6\u3092\u53D6\u308A\u623B\u3057\u305F\u304B\u3089\u306A\u3002"
-    _screenEffectType: 0
+    _screenEffectType: 50
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u30A2\u30EA\u30B9\u3000\u6B8B\u5FF5\u3060\u304C\u3053\u308C\u3067\u304A\u5225\u308C\u3060\u3002\n\u5168\u3066\u306E\u8A18\u61B6\u3092\u53D6\u308A\u623B\u3057\u305F\u304B\u3089\u306A\u3002"
@@ -178,8 +194,8 @@ MonoBehaviour:
     Actor: "\u30C1\u30A7\u30B7\u30E3\u732B"
     _messages:
     - "\u4E00\u7DD2\u306B\u904A\u3079\u3066\u697D\u3057\u304B\u3063\u305F\u306A\u3041\u3002"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 51
+    _displayTime: 1
     _fontSize: 35
     Message: "\u4E00\u7DD2\u306B\u904A\u3079\u3066\u697D\u3057\u304B\u3063\u305F\u306A\u3041\u3002"
     ScreenEffect: None
@@ -188,7 +204,7 @@ MonoBehaviour:
     _messages:
     - "\u307E\u3060\u307F\u3093\u306A\u3068\u904A\u3093\u3067\u3044\u305F\u3044\u308F\uFF01"
     - "\u306D\u3047\u3000\u30C1\u30A7\u30B7\u30E3\u732B\u3055\u3093\uFF01"
-    _screenEffectType: 0
+    _screenEffectType: 52
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u307E\u3060\u307F\u3093\u306A\u3068\u904A\u3093\u3067\u3044\u305F\u3044\u308F\uFF01\n\u306D\u3047\u3000\u30C1\u30A7\u30B7\u30E3\u732B\u3055\u3093\uFF01"
@@ -197,7 +213,7 @@ MonoBehaviour:
     Actor: "\u30C1\u30A7\u30B7\u30E3\u732B"
     _messages:
     - "\u30A2\u30EA\u30B9\u3000\u5143\u6C17\u3067\u306A\uFF01"
-    _screenEffectType: 0
+    _screenEffectType: 53
     _displayTime: 0.05
     _fontSize: 35
     Message: "\u30A2\u30EA\u30B9\u3000\u5143\u6C17\u3067\u306A\uFF01"
@@ -206,8 +222,8 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u307E\u3063\u3066\uFF01\u3000\u306D\u3048\uFF01"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 54
+    _displayTime: 1.5
     _fontSize: 35
     Message: "\u307E\u3063\u3066\uFF01\u3000\u306D\u3048\uFF01"
     ScreenEffect: None
@@ -215,8 +231,8 @@ MonoBehaviour:
     Actor: "\u30A2\u30EA\u30B9"
     _messages:
     - "\u3044\u3084\u3002"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 55
+    _displayTime: 1.5
     _fontSize: 35
     Message: "\u3044\u3084\u3002"
     ScreenEffect: None
@@ -225,8 +241,8 @@ MonoBehaviour:
     _messages:
     - "\u3042\u308A\u304C\u3068\u3046...\u3000\u307F\u3093\u306A\u3042\u308A\u304C\u3068\u3046\uFF01"
     - "\u307E\u305F\u3000\u7D76\u5BFE\u4F1A\u304A\u3046\u306D\uFF01"
-    _screenEffectType: 0
-    _displayTime: 0.05
+    _screenEffectType: 56
+    _displayTime: 1
     _fontSize: 35
     Message: "\u3042\u308A\u304C\u3068\u3046...\u3000\u307F\u3093\u306A\u3042\u308A\u304C\u3068\u3046\uFF01\n\u307E\u305F\u3000\u7D76\u5BFE\u4F1A\u304A\u3046\u306D\uFF01"
     ScreenEffect: None

@@ -31,6 +31,9 @@ public class UnderLobbyManager : MonoBehaviour
     [SerializeField]
     CanvasGroup _stageDescriptionCanvas = default;
 
+    [SerializeField]
+    CanvasGroup _underLobbyLogoGroup = default;
+
     [Header("Components")]
     [SerializeField]
     LobbyClockController _clockCtrl = default;
@@ -90,6 +93,8 @@ public class UnderLobbyManager : MonoBehaviour
 
         if (IsFirstVisit)
         {
+            IsFirstVisit = false;
+            LobbyTipsUI.Instance.IsStageCleared = true;
             EventManager.OnEvent(Events.Alice_Overlook);
             StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
             AudioManager.PlaySE(SEType.UnderLobby_Lowering);
@@ -111,9 +116,11 @@ public class UnderLobbyManager : MonoBehaviour
 
         LetterboxController.ActivateLetterbox(false, 1.5f);
         yield return new WaitForSeconds(1.5f);
+        LobbyTipsUI.UpdateTips();
 
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
+        StartCoroutine(UnderLobbyNameInfomationCoroutine());
     }
 
     /// <summary>
@@ -160,5 +167,21 @@ public class UnderLobbyManager : MonoBehaviour
                 x => _stageDescriptionCanvas.alpha = x,
                 value,
                 fadeTime);
+    }
+
+    IEnumerator UnderLobbyNameInfomationCoroutine()
+    {
+        DOTween.To(() => _underLobbyLogoGroup.alpha,
+                    x => _underLobbyLogoGroup.alpha = x,
+                    1f,
+                    1f)
+                .OnComplete(() => { print("ƒƒS•\Ž¦"); });
+
+        yield return new WaitForSeconds(3f);
+
+        DOTween.To(() => _underLobbyLogoGroup.alpha,
+                    x => _underLobbyLogoGroup.alpha = x,
+                    0f,
+                    1f);
     }
 }

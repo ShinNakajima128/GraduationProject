@@ -28,6 +28,7 @@ public class CroquetTrump : TrumpSolder
         if (_init)
         {
             _anim.Play("Walk");
+            _anim.Rebind();
         }
     }
 
@@ -67,11 +68,11 @@ public class CroquetTrump : TrumpSolder
                 break;
             case MoveDir.Left:
                 // ç∂Ç…ìÆÇ≠
-                pos.x -= _moveSpeed * Time.deltaTime;
+                pos.x -= _moveSpeed * Time.fixedDeltaTime;
                 break;
             // âEÇ…ìÆÇ≠
             case MoveDir.Right:
-                pos.x += _moveSpeed * Time.deltaTime;
+                pos.x += _moveSpeed * Time.fixedDeltaTime;
                 break;
             default:
                 break;

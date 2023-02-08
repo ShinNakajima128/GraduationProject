@@ -85,6 +85,9 @@ public class LobbyManager : MonoBehaviour
     CanvasGroup _stageDescriptionCanvas = default;
 
     [SerializeField]
+    CanvasGroup _lobbyLogoGroup = default;
+
+    [SerializeField]
     Text _stageNameText = default;
 
     [SerializeField]
@@ -111,6 +114,7 @@ public class LobbyManager : MonoBehaviour
     #region property
     public static LobbyManager Instance { get; private set; }
     public static bool IsFirstArrival { get; private set; } = true;
+    public static bool IsAllStageCleared { get; private set; } = false;
     public static Stages BeforeStage { get; set; }
     /// <summary> ドアに近づいた時のAction </summary>
     public Action ApproachDoor { get; set; }
@@ -149,12 +153,12 @@ public class LobbyManager : MonoBehaviour
             {
                 AudioManager.StopBGM(1.0f);
                 EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
-                EventManager.ListenEvents(Events.Lobby_Introduction, () => 
+                EventManager.ListenEvents(Events.Lobby_Introduction, () =>
                 {
-                    StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction)); 
+                    StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_Introduction));
                 });
                 EventManager.ListenEvents(Events.Alice_Surprised, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_AliceAndCheshireTalking)));
-                EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
+                EventManager.ListenEvents(Events.Cheshire_StartGrinning, () =>
                 {
                     _directionCameraMng.ResetCamera();
                 });
@@ -259,13 +263,15 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
-            TransitionManager.FadeOut(FadeType.Black_default, 2.0f);
+            TransitionManager.FadeOut(FadeType.Black_default, 1.5f);
+            yield return new WaitForSeconds(1.5f);
+
             AudioManager.PlayBGM(BGMType.Lobby);
             PlayerMove?.Invoke(true);
             IsUIOperate?.Invoke(true);
             _unclearedIconsParent.SetActive(true);
             IsDuring = false;
-
+            StartCoroutine(LobbyNameInfomationCoroutine());
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
         }
 
@@ -356,6 +362,7 @@ public class LobbyManager : MonoBehaviour
         {
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
             ClockUI.Instance.SetClockUI(GameManager.Instance.CurrentClockState);
+            LobbyTipsUI.UpdateTips();
 
             if (GameManager.Instance.CurrentClockState == ClockState.Twelve)
             {
@@ -389,6 +396,7 @@ public class LobbyManager : MonoBehaviour
     public static void Reset()
     {
         IsFirstArrival = true;
+        IsAllStageCleared = false;
     }
 
     /// <summary>
@@ -418,7 +426,7 @@ public class LobbyManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator OnPlayerMovable(float Interval, Action action = null)
     {
-        yield return new WaitForSeconds(Interval - 1);
+        yield return new WaitForSeconds(Interval);
 
         if (IsFirstArrival)
         {
@@ -427,6 +435,7 @@ public class LobbyManager : MonoBehaviour
 
         LetterboxController.ActivateLetterbox(false);
 
+
         yield return new WaitForSeconds(1.0f);
 
         IsDuring = false;
@@ -434,7 +443,7 @@ public class LobbyManager : MonoBehaviour
         IsUIOperate?.Invoke(true);
         _unclearedIconsParent.SetActive(true);
         action?.Invoke();
-        
+        StartCoroutine(LobbyNameInfomationCoroutine());
     }
 
     /// <summary>
@@ -443,8 +452,8 @@ public class LobbyManager : MonoBehaviour
     IEnumerator OnBossStageAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
-        //EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         _clockRenderer.material = _goToUnderStageMat;
+        IsAllStageCleared = true;
 
         yield return new WaitForSeconds(2.0f);
 
@@ -475,7 +484,7 @@ public class LobbyManager : MonoBehaviour
                                    if (timer >= 5.0f && !isFading)
                                    {
                                        GameManager.ChangeLobbyState(LobbyState.Under);
-                                       TransitionManager.SceneTransition(SceneType.UnderLobby, action: () => 
+                                       TransitionManager.SceneTransition(SceneType.UnderLobby, action: () =>
                                        {
                                            AudioManager.StopSE();
                                        });
@@ -484,11 +493,6 @@ public class LobbyManager : MonoBehaviour
                                })
                                .SetLink(_mainStage.gameObject)
                                .WaitForCompletion();
-
-        Debug.Log("ボスステージ出現");
-        //Camera.main.LayerCullingToggle("Ornament", true);
-        //_clockCamera.Priority = 10;
-        //StartCoroutine(OnPlayerMovable(3.0f));
     }
 
     IEnumerator ReturnPlayerCamera()
@@ -496,9 +500,25 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         _cheshireCatCamera.Priority = 10;
-                _clockCamera.Priority = 10;
-                Camera.main.LayerCullingToggle("Ornament", true);
-                StartCoroutine(OnPlayerMovable(3.0f, () => AudioManager.PlayBGM(BGMType.Lobby)));
+        _clockCamera.Priority = 10;
+        Camera.main.LayerCullingToggle("Ornament", true);
+        StartCoroutine(OnPlayerMovable(3.0f, () => AudioManager.PlayBGM(BGMType.Lobby)));
+    }
+
+    IEnumerator LobbyNameInfomationCoroutine()
+    {
+        DOTween.To(() => _lobbyLogoGroup.alpha,
+                    x => _lobbyLogoGroup.alpha = x,
+                    1f,
+                    1f)
+                .OnComplete(() => { print("ロゴ表示"); });
+
+        yield return new WaitForSeconds(3f);
+
+        DOTween.To(() => _lobbyLogoGroup.alpha,
+                    x => _lobbyLogoGroup.alpha = x,
+                    0f,
+                    1f);
     }
 }
 [Serializable]

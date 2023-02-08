@@ -111,6 +111,11 @@ public class DebrisGenerator : MonoBehaviour
     /// </summary>
     public void Return()
     {
+        if (_generateCoroutine != null)
+        {
+            StopCoroutine(_generateCoroutine);
+            _generateCoroutine = null;
+        }
         _debrisCtrl.Return();
     }
 

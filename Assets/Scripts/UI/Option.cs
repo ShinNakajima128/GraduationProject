@@ -72,6 +72,7 @@ public class Option : MonoBehaviour
     #endregion
 
     #region public
+    public event Action OnBackToMainMenu;
     #endregion
 
     #region property
@@ -472,7 +473,10 @@ public class Option : MonoBehaviour
         yield return new WaitForSeconds(0.03f);
 
         _optionGroup.alpha = 1;
-        UIManager.ActivatePanel(UIPanelType.Option);
+        if (GameManager.Instance.CurrentScene != SceneType.Title)
+        {
+            UIManager.ActivatePanel(UIPanelType.Option);
+        }
         _currentTab.Value = TabType.Sound;
         EventSystem.current.firstSelectedGameObject = _soundTabButtons[0].Button.gameObject;
         _soundTabButtons[0].Button.Select();
@@ -489,8 +493,16 @@ public class Option : MonoBehaviour
         _isPressed = false;
         _optionGroup.alpha = 0;
         _changeDifficultyInfoGroup.alpha = 0;
-        UIManager.InactivatePanel(UIPanelType.Option);
-        _pause.PauseActivate(true);
+
+        if (GameManager.Instance.CurrentScene != SceneType.Title)
+        {
+            _pause.PauseActivate(true);
+            UIManager.InactivatePanel(UIPanelType.Option);
+        }
+        else
+        {
+            OnBackToMainMenu?.Invoke();
+        }
     }
 
     IEnumerator ChangeDifficultyCoroutine(DifficultyType type)

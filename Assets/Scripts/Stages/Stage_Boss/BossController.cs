@@ -71,6 +71,7 @@ public class BossController : MonoBehaviour, IDamagable
     #region private
     Animator _anim;
     CharacterController _cc;
+    QueenFaceController _queenFc;
     BossShadow _bossShadow;
     Transform _playerTrans = default;
     BossState _currentBossState = default;
@@ -97,6 +98,7 @@ public class BossController : MonoBehaviour, IDamagable
     {
         TryGetComponent(out _anim);
         TryGetComponent(out _cc);
+        TryGetComponent(out _queenFc);
         TryGetComponent(out _bossShadow);
     }
     void Start()
@@ -105,6 +107,11 @@ public class BossController : MonoBehaviour, IDamagable
         _currentMoveSpeed = _defaultMoveSpeed;
         BossStageManager.Instance.CharacterMovable += BossMovable;
         MessagePlayer.Instance.Closeup += () => PlayBossAnimation(BossAnimationType.Angry);
+
+        EventManager.ListenEvents(Events.BossStage_BossTalking, () =>
+        {
+            
+        });
     }
 
     void FixedUpdate()
@@ -204,6 +211,15 @@ public class BossController : MonoBehaviour, IDamagable
     }
 
     /// <summary>
+    /// 女王の表情を変更する
+    /// </summary>
+    /// <param name="type"> 表情のタイプ </param>
+    public void ChangeFace(QueenFaceType type)
+    {
+        _queenFc.ChangeFaceType(type);
+    }
+
+    /// <summary>
     /// ジャンプ攻撃のコルーチン
     /// </summary>
     IEnumerator JumpAttack()
@@ -230,7 +246,6 @@ public class BossController : MonoBehaviour, IDamagable
         var playerTop = new Vector3(_playerTrans.position.x, _playerTrans.position.y + 10.0f, _playerTrans.position.z);
 
         _bossShadow.ChangeShadowSize(_minShadowSize, _jumpUpTime + param.ChaseTime); //影を徐々に小さくする
-
 
         //プレイヤーの頭上へジャンプする
         AudioManager.PlaySE(SEType.BossStage_QueenJump);
