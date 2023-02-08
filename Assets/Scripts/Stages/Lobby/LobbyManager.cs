@@ -362,6 +362,7 @@ public class LobbyManager : MonoBehaviour
         {
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
             ClockUI.Instance.SetClockUI(GameManager.Instance.CurrentClockState);
+            LobbyTipsUI.UpdateTips();
 
             if (GameManager.Instance.CurrentClockState == ClockState.Twelve)
             {
@@ -451,7 +452,6 @@ public class LobbyManager : MonoBehaviour
     IEnumerator OnBossStageAppearCoroutine()
     {
         StartCoroutine(OnHandsEmission());
-        //EffectManager.PlayEffect(EffectType.Heart, _heartEffectTrans.position);
         _clockRenderer.material = _goToUnderStageMat;
         IsAllStageCleared = true;
 

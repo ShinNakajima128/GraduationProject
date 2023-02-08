@@ -94,6 +94,7 @@ public class UnderLobbyManager : MonoBehaviour
         if (IsFirstVisit)
         {
             IsFirstVisit = false;
+            LobbyTipsUI.Instance.IsStageCleared = true;
             EventManager.OnEvent(Events.Alice_Overlook);
             StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
             AudioManager.PlaySE(SEType.UnderLobby_Lowering);
@@ -115,6 +116,7 @@ public class UnderLobbyManager : MonoBehaviour
 
         LetterboxController.ActivateLetterbox(false, 1.5f);
         yield return new WaitForSeconds(1.5f);
+        LobbyTipsUI.UpdateTips();
 
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);

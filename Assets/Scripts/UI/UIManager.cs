@@ -45,10 +45,12 @@ public class UIManager : MonoBehaviour
             if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
             {
                 LobbyManager.Instance.IsUIOperate += ChangeOperateUI;
+                LobbyManager.Instance.IsUIOperate += LobbyTipsUI.Instance.ActivateTipsPanel;
             }
             else
             {
                 UnderLobbyManager.Instance.IsUIOperate += ChangeOperateUI;
+                UnderLobbyManager.Instance.IsUIOperate += LobbyTipsUI.Instance.ActivateTipsPanel;
             }
         }
         else
