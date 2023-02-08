@@ -222,6 +222,7 @@ public class Stage3Operation : MonoBehaviour
                 _raiseOverheadTextImage.enabled = true;
                 _shotImageFillTween.Kill();
                 _shotImageFillTween = null;
+                _shotTextImage.fillAmount = 0;
                 _shotTextImage.enabled = false;
             }
         }

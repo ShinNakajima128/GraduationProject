@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 [RequireComponent(typeof(PlayerInput))]
 public class Stage3PlayerController : MonoBehaviour
@@ -33,12 +34,12 @@ public class Stage3PlayerController : MonoBehaviour
     /// <summary>
     /// 構え終わっているか
     /// </summary>
-    private bool IsStandbyed = false;
+    public bool IsStandbyed = false;
 
     /// <summary>
     /// 構え途中か
     /// </summary>
-    private bool IsStanding = false;
+    public bool IsStanding = false;
 
     /// <summary>
     /// 投げ終わったか
@@ -129,10 +130,23 @@ public class Stage3PlayerController : MonoBehaviour
         // 構えている最中or構え終わっている時は呼ばれない
         if (IsStandbyed == false && IsStanding == false)
         {
+            print("スイング開始");
+            _animator.SetFloat("Speed", 1f);
             _animator.CrossFadeInFixedTime("Swing_Standby", 0.2f);
             IsStanding = true;
             InputedMoveValue = Vector2.zero;
         }
+    }
+
+    /// <summary>
+    /// アニメーションのキャンセル
+    /// </summary>
+    private void CancelTheAnimation()
+    {
+        Debug.Log("Cancel");
+        _animator.SetFloat("Speed", -1f);
+        _animator.CrossFadeInFixedTime("Swing_Standby", 0.5f);
+        IsStanding = false;
     }
 
     /// <summary>
@@ -274,12 +288,6 @@ public class Stage3PlayerController : MonoBehaviour
     #region InputSystem CallBacks
     public void OnMove(InputAction.CallbackContext context)
     {
-        // 構え途中or構え終わっていたら操作できなくする
-        if (IsStanding || IsStandbyed)
-        {
-            return;
-        }
-
         if (!CanControl)
         {
             InputedMoveValue = Vector2.zero;
@@ -300,12 +308,6 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnTurnLeft(InputAction.CallbackContext context)
     {
-        // 構え途中or構え終わっていたら操作できなくする
-        if (IsStanding || IsStandbyed)
-        {
-            return;
-        }
-
         if (!CanControl) return;
 
         if (context.started)
@@ -320,12 +322,6 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnToRight(InputAction.CallbackContext context)
     {
-        // 構え途中or構え終わっていたら操作できなくする
-        if (IsStanding || IsStandbyed)
-        {
-            return;
-        }
-
         if (!CanControl) return;
 
         if (context.started)
@@ -340,15 +336,25 @@ public class Stage3PlayerController : MonoBehaviour
 
     private void OnThrow(InputAction.CallbackContext context)
     {
-        if (!CanControl || !IsStandbyed) return;
+        if (!CanControl)
+        {
+            return;
+        }
 
         if (context.canceled)
         {
+            if (!IsStandbyed)
+            {
+                CancelTheAnimation();
+                return;
+            }
+
             CanControl = false;
             _animator.CrossFadeInFixedTime("Swing_", 0.2f);
             AudioManager.PlaySE(SEType.Stage3_Swing);
         }
 
+        InputedMoveValue = Vector2.zero;
         UnRegistCallBacks();
     }
 
