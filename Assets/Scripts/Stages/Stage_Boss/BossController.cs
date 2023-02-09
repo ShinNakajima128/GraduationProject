@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using AliceProject;
 
 [RequireComponent(typeof(CharacterController))]
 public class BossController : MonoBehaviour, IDamagable
@@ -190,12 +191,32 @@ public class BossController : MonoBehaviour, IDamagable
         yield return transform.DOMove(_startBattleTrans.position, 1.0f).WaitForCompletion();
 
         BossStageManager.CameraShake();
-        LetterboxController.ActivateLetterbox(false);
         EventManager.OnEvent(Events.Boss_GroundShake);
         AudioManager.PlaySE(SEType.BossStage_QueenLanding);
+        LetterboxController.ActivateLetterbox(false);
         firstAction?.Invoke();
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2.0f);
+
+        switch (battlePhase)
+        {
+            case BossBattlePhase.First:
+                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.BossStage_BeforePhase1);
+
+                break;
+            case BossBattlePhase.Second:
+                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.BossStage_BeforePhase2);
+
+                break;
+            case BossBattlePhase.Third:
+                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.BossStage_BeforePhase3);
+                break;
+            default:
+                break;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
         phaseStartAction?.Invoke();
 
         PlayBossAnimation(BossAnimationType.Idle);

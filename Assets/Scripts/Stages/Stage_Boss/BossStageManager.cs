@@ -337,13 +337,9 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return new WaitForSeconds(0.3f);
 
         yield return new WaitForSeconds(2.0f);
+        
         TransitionManager.FadeOut(FadeType.Black_default);
-        //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
-        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
-        _trumpSolderMng.OnAllTrumpActivate(true); //トランプ兵をアクティブ化
-        LetterboxController.ActivateLetterbox(true);
-        CameraBlend(CameraType.Default, 0);
-        AudioManager.StopBGM(_cameraBlendTime / 2);
+        InGameSetup();
 
         yield return new WaitForSeconds(_cameraBlendTime);
 
@@ -437,17 +433,14 @@ public class BossStageManager : StageGame<BossStageManager>
                 i = 2;
             }
 
+            yield return new WaitForSeconds(0.5f);
+
             //バトルフェイズを終了するまで待機
             yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i,
                                   firstAction: () =>
                                   {
                                       CameraBlend(CameraType.Battle, _cameraBlendTime);
-                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
-
-                                      if (i == 2)
-                                      {
-                                          _fallPoleGenerator.Generate(3);
-                                      }
+                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);       
                                   },
                                   phaseStartAction: () =>
                                   {
@@ -457,6 +450,11 @@ public class BossStageManager : StageGame<BossStageManager>
                                       if (i > 0)
                                       {
                                           _debrisGenerator.StartGenerate();
+                                      }
+
+                                      if (i == 2)
+                                      {
+                                          _fallPoleGenerator.Generate(3);
                                       }
                                   });
 
@@ -501,6 +499,8 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
     {
+        CameraBlend(CameraType.Default, 1.5f);
+
         yield return new WaitForSeconds(1.0f);
 
         _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
@@ -727,6 +727,16 @@ public class BossStageManager : StageGame<BossStageManager>
     void OnBossStageGameOver()
     {
         StartCoroutine(GameOverCoroutine());
+    }
+
+    void InGameSetup()
+    {
+        //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
+        _trumpSolderMng.OnAllTrumpActivate(true); //トランプ兵をアクティブ化
+        LetterboxController.ActivateLetterbox(true);
+        CameraBlend(CameraType.Default, 0);
+        AudioManager.StopBGM(_cameraBlendTime / 2);
     }
 
     IEnumerator GameOverCoroutine()
