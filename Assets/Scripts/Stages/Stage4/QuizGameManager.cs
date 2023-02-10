@@ -9,6 +9,7 @@ using Cinemachine;
 using Unity.Collections;
 using UniRx;
 using UniRx.Triggers;
+using AliceProject;
 
 /// <summary>
 /// ステージ4のクイズゲームを管理するマネージャー
@@ -282,6 +283,26 @@ public class QuizGameManager : StageGame<QuizGameManager>
                     yield return QuestionCoroutine(_debugQuizType);
                 }
 
+                if (GameManager.Instance.IsFirstVisitCurrentStage)
+                {
+                    //フェイズ毎の会話パートを再生
+                    switch ((int)currentQuizType)
+                    {
+                        case 0:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage4_Phase1);
+                            break;
+                        case 1:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage4_Phase2);
+                            break;
+                        case 2:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage4_Phase3);
+                            break;
+                        default:
+                            break;
+                    }
+                    yield return new WaitForSeconds(0.5f);
+                }
+
                 Viewing(() =>
                 {
                     isAnswerPhase = true;
@@ -298,6 +319,26 @@ public class QuizGameManager : StageGame<QuizGameManager>
                 {
                     OnQuizSetUp(_debugQuizType);
                     yield return QuestionCoroutine(_debugQuizType);
+                }
+
+                if (GameManager.Instance.IsFirstVisitCurrentStage)
+                {
+                    //フェイズ毎の会話パートを再生
+                    switch ((int)currentQuizType)
+                    {
+                        case 0:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage4_Phase1);
+                            break;
+                        case 1:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage4_Phase2);
+                            break;
+                        case 2:
+                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage4_Phase3);
+                            break;
+                        default:
+                            break;
+                    }
+                    yield return new WaitForSeconds(0.5f);
                 }
 
                 Viewing(() =>
