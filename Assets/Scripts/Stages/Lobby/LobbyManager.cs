@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using AliceProject;
 using DG.Tweening;
+using UniRx;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -142,7 +143,7 @@ public class LobbyManager : MonoBehaviour
         SetPlayerPosition(GameManager.Instance.CurrentStage); //プレイヤー位置をプレイしたミニゲームのドアの前に移動
         _clockCtrl.ChangeClockState(GameManager.Instance.CurrentClockState, 0f, 0f); //時計の状態をオブジェクトに反映
         IsDuring = true;
-
+        SkipButton.Instance.Isrespond += () => IsDuring;
         if (!_debugMode)
         {
             if (!IsFirstArrival)
@@ -151,6 +152,12 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
+                SkipButton.Instance.OnSkip.Subscribe(_ =>
+                {
+                    StopAllCoroutines();
+                    StartCoroutine(SkipCoroutine());
+                });
+
                 AudioManager.StopBGM(1.0f);
                 EventManager.ListenEvents(Events.Lobby_MeetingCheshire, PlayMeetingBGM);
                 EventManager.ListenEvents(Events.Lobby_Introduction, () =>
@@ -187,7 +194,7 @@ public class LobbyManager : MonoBehaviour
                 AudioManager.PlaySE(SEType.Lobby_FirstVisit);
                 yield return _directionCameraMng.StartDirectionCoroutine(CameraDirectionType.Lobby_FirstVisit);
 
-                TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+                TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
                 TransitionManager.FadeIn(FadeType.Black_default, action: () =>
                 {
                     _directionCameraMng.ResetCamera(CameraDirectionType.Lobby_FirstVisit, 0f);
@@ -200,7 +207,7 @@ public class LobbyManager : MonoBehaviour
                 yield return _messagePlayer.PlayMessageCorountine(MessageType.Lobby_Visit, () =>
                 {
                     //チェシャ猫登場演出
-                    TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+                    TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
                     TransitionManager.FadeIn(FadeType.Mask_CheshireCat, action: () =>
                     {
                         _directionCameraMng.ResetCamera(CameraDirectionType.Lobby_Alice_Front, 0f);
@@ -519,6 +526,32 @@ public class LobbyManager : MonoBehaviour
                     x => _lobbyLogoGroup.alpha = x,
                     0f,
                     1f);
+    }
+
+    IEnumerator SkipCoroutine()
+    {
+        //TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+        TransitionManager.FadeIn(FadeType.Black_default, action: () =>
+        {
+            MessagePlayer.Instance.FadeMessageCanvas(0f, 0f);
+            LobbyCheshireCatManager.Instance.MovableCat.ActivateDissolve(true);
+            ClockUI.Instance.SetClockUI(GameManager.CheckGameStatus());
+            _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), 0f, 0f);
+            GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
+            SkipButton.Instance.gameObject.SetActive(false);
+        });
+
+        yield return new WaitForSeconds(2.0f);
+
+        LobbyTipsUI.UpdateTips();
+        _directionCameraMng.ResetBlendTime();
+
+        yield return new WaitForSeconds(1.0f);
+
+        TransitionManager.FadeOut(FadeType.Normal);
+
+        //AudioManager.StopBGM(1.5f); //一旦曲を止める
+        StartCoroutine(OnPlayerMovable(1.5f, () => AudioManager.PlayBGM(BGMType.Lobby)));
     }
 }
 [Serializable]

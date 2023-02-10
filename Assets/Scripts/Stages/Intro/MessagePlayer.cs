@@ -29,7 +29,7 @@ public class MessagePlayer : MonoBehaviour
     [Tooltip("テキストデータ")]
     [SerializeField]
     ScenarioData[] _data = default;
-    
+
     [Header("UI")]
     [Tooltip("メッセージを表示するPanelのCanvasGroup")]
     [SerializeField]
@@ -61,6 +61,7 @@ public class MessagePlayer : MonoBehaviour
     #endregion
 
     #region private
+    Coroutine _currentMessageCoroutine;
     bool _isChanged = false;
     bool _isSkiped = false;
     #endregion
@@ -110,7 +111,17 @@ public class MessagePlayer : MonoBehaviour
     {
         var d = _data.FirstOrDefault(m => m.MessageType == type);
 
-        yield return StartCoroutine(FlowMessage(d, action));
+        _currentMessageCoroutine = StartCoroutine(FlowMessage(d, action));
+        yield return _currentMessageCoroutine;
+    }
+
+    public void StopMessage()
+    {
+        if (_currentMessageCoroutine != null)
+        {
+            StopCoroutine(_currentMessageCoroutine);
+            _currentMessageCoroutine = null;
+        }
     }
 
     /// <summary>
@@ -167,7 +178,7 @@ public class MessagePlayer : MonoBehaviour
                     if (!_isSkiped)
                     {
                         yield return WaitTimer(_flowTime);
-                    }                    
+                    }
                 }
 
                 if (!_isSkiped)
@@ -191,7 +202,7 @@ public class MessagePlayer : MonoBehaviour
         }
 
         _submitIcon.SetActive(false);
-        
+
         OnScreenEffect(ScreenEffectType.Reset);
         FadeMessageCanvas(0f, _messagePanelFadeTime);
         action?.Invoke();
@@ -230,7 +241,7 @@ public class MessagePlayer : MonoBehaviour
     /// </summary>
     /// <param name="value"> 変更後の値 </param>
     /// <param name="fadeTime"> 透過にかける時間 </param>
-    void FadeMessageCanvas(float value, float fadeTime = 0f)
+    public void FadeMessageCanvas(float value, float fadeTime = 0f)
     {
         DOTween.To(() => _messagePanelCanvasGroup.alpha,
             x => _messagePanelCanvasGroup.alpha = x,

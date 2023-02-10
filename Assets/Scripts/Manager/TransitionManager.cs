@@ -180,7 +180,7 @@ public class TransitionManager : MonoBehaviour
                                        action?.Invoke();
                                    });
                 break;
-            case FadeType.Black_TransParent:
+            case FadeType.Black_Transparent:
                 Instance._fadeImage.DOColor(new Color(0, 0, 0, 0), fadeTime)
                                    .OnComplete(() =>
                                    {
@@ -266,7 +266,7 @@ public enum FadeType
     White_default,
     Black_default,
     White_Transparent,
-    Black_TransParent,
+    Black_Transparent,
     Mask_CheshireCat,
     Mask_Heart,
     Mask_KeyHole
