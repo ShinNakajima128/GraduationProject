@@ -424,6 +424,7 @@ public class BossStageManager : StageGame<BossStageManager>
         SkipButton.Instance.OnSkip.Subscribe(_ => 
         {
             TransitionManager.SetCanvasPriority(1010);
+            MessagePlayer.Instance.StopMessage();
             TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
             TransitionManager.SceneTransition(SceneType.Ending, FadeType.White_default);
         });
@@ -674,6 +675,7 @@ public class BossStageManager : StageGame<BossStageManager>
             _bossCtrl.gameObject.SetActive(true);
             InGameSetup();
             _directionCameraMng.ResetCamera();
+            SkipButton.Instance.ResetSubscribe();
             SkipButton.Instance.gameObject.SetActive(false);
         });
 

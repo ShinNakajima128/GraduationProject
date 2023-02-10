@@ -42,16 +42,6 @@ public class SkipButton : MonoBehaviour
     public IObservable<Unit> OnSkip => _onSkip;
     #endregion
 
-    private void OnDisable()
-    {
-        _skipButtonGroup.alpha = 0;
-        _isSkipCompleted = false;
-        _fillAreaImage.fillAmount = 0;
-        var disposable = _onSkip.Subscribe();
-        disposable.Dispose();
-        
-    }
-
     private void Awake()
     {
         Instance = this;
@@ -67,6 +57,20 @@ public class SkipButton : MonoBehaviour
     public void InactiveButton()
     {
         OnFadeButton(0f, 0f);
+    }
+
+    public void ResetSubscribe()
+    {
+        _skipButtonGroup.alpha = 0;
+        _isSkipCompleted = false;
+        _fillAreaImage.fillAmount = 0;
+
+        if (_onSkip != null)
+        {
+            _onSkip.Dispose();
+            _onSkip = null;
+        }
+        _onSkip = new Subject<Unit>();
     }
 
     /// <summary>
