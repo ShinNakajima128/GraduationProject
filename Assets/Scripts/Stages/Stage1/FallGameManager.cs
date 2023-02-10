@@ -103,7 +103,9 @@ public class FallGameManager : MonoBehaviour
             {
                 GameManager.SaveStageResult(true);
                 TransitionManager.SceneTransition(SceneType.Lobby);
-            });
+                AudioManager.StopBGM(1.5f);
+            })
+            .AddTo(this);
     }
 
     public void OnGameStart()
@@ -246,7 +248,7 @@ public class FallGameManager : MonoBehaviour
         }
 
         GameManager.UpdateFirstVisit(Stages.Stage1);
-        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+        TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
         IsSecondTry = true;
     }

@@ -22,6 +22,8 @@ public class UIInput : MonoBehaviour
     public static bool LeftCrossKey => Instance._input.actions["LeftCrossKey"].WasPressedThisFrame();
     public static bool RightCrossKey => Instance._input.actions["RightCrossKey"].WasPressedThisFrame();
     public static bool Option => Instance._input.actions["Option"].WasPressedThisFrame();
+    public static bool SkipDown => Instance._input.actions["Option"].WasPressedThisFrame();
+    public static bool SkipUp => Instance._input.actions["Option"].WasReleasedThisFrame();
     public static bool Exit => Instance._input.actions["Exit"].WasPressedThisFrame();
     #endregion
 

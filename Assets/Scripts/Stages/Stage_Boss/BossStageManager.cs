@@ -150,7 +150,9 @@ public class BossStageManager : StageGame<BossStageManager>
     /// <summary> 戦闘中かどうか </summary>
     ReactiveProperty<bool> _isInBattle = new ReactiveProperty<bool>();
     CinemachineImpulseSource _impulseSource;
+    Coroutine _startDirectionCoroutine;
     Coroutine _currentGameCoroutine;
+    Coroutine _endDirectionCoroutine;
     #endregion
 
     #region public
@@ -164,7 +166,8 @@ public class BossStageManager : StageGame<BossStageManager>
     #region property
     public static new BossStageManager Instance { get; private set; }
     public static bool IsFirstVisit { get; set; } = true;
-    public bool IsInBattle => _isInBattle.Value; 
+    public bool IsInBattle => _isInBattle.Value;
+    public bool IsDirecting => _isDirecting;
     #endregion
 
     protected override void Awake()
@@ -200,7 +203,8 @@ public class BossStageManager : StageGame<BossStageManager>
     public override void OnGameStart()
     {
         GameStart?.Invoke();
-        StartCoroutine(GameStartCoroutine());
+        _startDirectionCoroutine = StartCoroutine(GameStartCoroutine());
+        SkipButton.Instance.Isrespond += () => IsDirecting;
     }
 
     public override void OnGameEnd()
@@ -244,6 +248,8 @@ public class BossStageManager : StageGame<BossStageManager>
         if (_playOnEnding)
         {
             //メモ：カメラをバトル終了演出に切り替える処理をここへ記述
+            _isDirecting = true;
+
             _trumpSolderMng.OnAllTrumpActivate(true);
             _trumpSolderMng.OnAllTrumpAnimation("Idle");
             SubscribeEndEvents();
@@ -253,13 +259,15 @@ public class BossStageManager : StageGame<BossStageManager>
 
             yield return new WaitForSeconds(0.5f);
 
-            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_End1);
+            _endDirectionCoroutine = StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_End1));
+            yield return _endDirectionCoroutine;
 
             yield return GameManager.GetStillDirectionCoroutine(Stages.Stage_Boss, MessageType.GetStill_Stage_Boss, 3.0f);
 
             //エンディングSceneへ遷移する
-            TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+            TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
             TransitionManager.SceneTransition(SceneType.Ending);
+            _isDirecting = false;
             yield break;
         }
 
@@ -267,6 +275,18 @@ public class BossStageManager : StageGame<BossStageManager>
 
         if (!_debugMode && IsFirstVisit)
         {
+            _isDirecting = true;
+
+            SkipButton.Instance.OnSkip.Subscribe(_ =>
+            {
+                if (_startDirectionCoroutine != null)
+                {
+                    StopCoroutine(_startDirectionCoroutine);
+                    _startDirectionCoroutine = null;
+                }
+                    StartCoroutine(SkipCorourine());
+            });
+
             _directionBossObject.SetActive(true);
             _bossCtrl.gameObject.SetActive(false);
 
@@ -287,6 +307,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
             AudioManager.PlaySE(SEType.BossStage_QueenAppearance);
             OnFadeDescription(1, 0.25f);
+
             yield return new WaitForSeconds(2.5f);
             
             OnFadeDescription(0, 0.25f);
@@ -299,14 +320,7 @@ public class BossStageManager : StageGame<BossStageManager>
             EventManager.OnEvent(Events.BossStage_QueenAnger);
             yield return new WaitForSeconds(2f);
 
-            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start4, () =>
-            {
-                _isDirecting = true;
-            });
-            
-            yield return new WaitUntil(() => _isDirecting);
-
-            _isDirecting = false;
+            yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_Start4);
         }
 
         EventManager.OnEvent(Events.BossStage_DisolveCheshire);
@@ -337,17 +351,14 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return new WaitForSeconds(0.3f);
 
         yield return new WaitForSeconds(2.0f);
+        
         TransitionManager.FadeOut(FadeType.Black_default);
-        //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
-        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
-        _trumpSolderMng.OnAllTrumpActivate(true); //トランプ兵をアクティブ化
-        LetterboxController.ActivateLetterbox(true);
-        CameraBlend(CameraType.Default, 0);
-        AudioManager.StopBGM(_cameraBlendTime / 2);
+        InGameSetup();
 
         yield return new WaitForSeconds(_cameraBlendTime);
 
         action?.Invoke();
+        _isDirecting = false;
         //インゲームの処理を開始
         _currentGameCoroutine = StartCoroutine(InGameCoroutine());
     }
@@ -406,7 +417,17 @@ public class BossStageManager : StageGame<BossStageManager>
         EventManager.ListenEvents(Events.BossStage_End_CheshireLookUp, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_End_CheshireLookUp)));
         EventManager.ListenEvents(Events.BossStage_End_AliceZoomUp, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_End_AliceZoomUp)));
 
-
+        if (!SkipButton.Instance.gameObject.activeSelf) 
+        {
+            SkipButton.Instance.gameObject.SetActive(true);
+        }
+        SkipButton.Instance.OnSkip.Subscribe(_ => 
+        {
+            TransitionManager.SetCanvasPriority(1010);
+            MessagePlayer.Instance.StopMessage();
+            TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
+            TransitionManager.SceneTransition(SceneType.Ending, FadeType.White_default);
+        });
     }
 
     void Gameover()
@@ -437,17 +458,14 @@ public class BossStageManager : StageGame<BossStageManager>
                 i = 2;
             }
 
+            yield return new WaitForSeconds(0.5f);
+
             //バトルフェイズを終了するまで待機
             yield return _bossCtrl.BattlePhaseCoroutine((BossBattlePhase)i,
                                   firstAction: () =>
                                   {
                                       CameraBlend(CameraType.Battle, _cameraBlendTime);
-                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
-
-                                      if (i == 2)
-                                      {
-                                          _fallPoleGenerator.Generate(3);
-                                      }
+                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);       
                                   },
                                   phaseStartAction: () =>
                                   {
@@ -457,6 +475,11 @@ public class BossStageManager : StageGame<BossStageManager>
                                       if (i > 0)
                                       {
                                           _debrisGenerator.StartGenerate();
+                                      }
+
+                                      if (i == 2)
+                                      {
+                                          _fallPoleGenerator.Generate(3);
                                       }
                                   });
 
@@ -490,9 +513,12 @@ public class BossStageManager : StageGame<BossStageManager>
         TransitionManager.FadeOut(FadeType.Black_default);
         AudioManager.PlayBGM(BGMType.EndBossBattle);
 
+        _isDirecting = true;
 
-        yield return _messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_End1);
+        _endDirectionCoroutine = StartCoroutine(_messagePlayer.PlayMessageCorountine(MessageType.Stage_Boss_End1));
+        yield return _endDirectionCoroutine;
 
+        _isDirecting = false;
 
         //ボスを倒したあとの処理をここで実行し、エンディングSceneへ遷移する予定
         TransitionManager.FadeIn(FadeType.White_Transparent, 0f);
@@ -501,16 +527,22 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
     {
-        yield return new WaitForSeconds(1.0f);
-
-        _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
-        CharacterMovable?.Invoke(false);
-        OnDirectionSetUp();
 
         if (_debugMode)
         {
             phase = BossBattlePhase.Third;
         }
+
+        if (phase != BossBattlePhase.Third)
+        {
+            CameraBlend(CameraType.Default, 1.5f);
+        }
+
+        yield return new WaitForSeconds(1.0f);
+
+        _trumpSolderMng.OnAllTrumpAnimation("Shaking_Start");
+        CharacterMovable?.Invoke(false);
+        OnDirectionSetUp();
 
         //最後のフェイズの場合は戦闘終了の演出を行う
         if (phase == BossBattlePhase.Third)
@@ -632,6 +664,31 @@ public class BossStageManager : StageGame<BossStageManager>
         _infoImages[1].enabled = false;
     }
 
+    IEnumerator SkipCorourine()
+    {
+        TransitionManager.FadeIn(FadeType.Black_default, action: () => 
+        {
+            EventManager.OnEvent(Events.BossStage_DisolveCheshire);
+            MessagePlayer.Instance.StopMessage();
+            MessagePlayer.Instance.FadeMessageCanvas(0f, 0f);
+            _directionBossObject.SetActive(false);
+            _bossCtrl.gameObject.SetActive(true);
+            InGameSetup();
+            _directionCameraMng.ResetCamera();
+            SkipButton.Instance.ResetSubscribe();
+            SkipButton.Instance.gameObject.SetActive(false);
+        });
+
+        yield return new WaitForSeconds(2.5f);
+
+        TransitionManager.FadeOut(FadeType.Black_default);
+
+        yield return new WaitForSeconds(_cameraBlendTime);
+
+        //インゲームの処理を開始
+        _currentGameCoroutine = StartCoroutine(InGameCoroutine());
+    }
+
     /// <summary>
     /// 現在のカメラから別のカメラへ遷移する
     /// </summary>
@@ -727,6 +784,16 @@ public class BossStageManager : StageGame<BossStageManager>
     void OnBossStageGameOver()
     {
         StartCoroutine(GameOverCoroutine());
+    }
+
+    void InGameSetup()
+    {
+        //セリフの再生終了時にボスのモーションをリセット、カメラを戦闘用に変更
+        _bossCtrl.PlayBossAnimation(BossAnimationType.Idle, 0.3f);
+        _trumpSolderMng.OnAllTrumpActivate(true); //トランプ兵をアクティブ化
+        LetterboxController.ActivateLetterbox(true);
+        CameraBlend(CameraType.Default, 0);
+        AudioManager.StopBGM(_cameraBlendTime / 2);
     }
 
     IEnumerator GameOverCoroutine()

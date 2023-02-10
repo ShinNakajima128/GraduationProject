@@ -45,6 +45,8 @@ public class EatMe : MonoBehaviour
             }
             _isGrowuped = true;
             EventManager.OnEvent(Events.BossStage_GrowAlice);
+            AudioManager.PlaySE(SEType.Alice_Growup);
+
             _player.transform.DOScale(_sizeUpValue, _animTime)
                            .SetEase(_animEase);
             StartCoroutine(DiminishCoroutine());
@@ -52,12 +54,22 @@ public class EatMe : MonoBehaviour
     }
     IEnumerator DiminishCoroutine()
     {
-        yield return new WaitForSeconds(_growupTime);
+        yield return new WaitForSeconds(1.0f);
+
+        //AudioManager.PlayBGM(BGMType.Alice_Invincible);
         
+        yield return new WaitForSeconds(_growupTime - 1.0f);
+
+        //AudioManager.StopBGM();
+        AudioManager.PlaySE(SEType.Alice_ReturnSize);
         _player.transform.DOScale(1f, _animTime)
                            .SetEase(_animEase);
 
         EventManager.OnEvent(Events.BossStage_DiminishAlice);
+
+        yield return new WaitForSeconds(1.0f);
         _isGrowuped = false;
+
+        //AudioManager.PlayBGM(BGMType.Boss_InGame);
     }
 }

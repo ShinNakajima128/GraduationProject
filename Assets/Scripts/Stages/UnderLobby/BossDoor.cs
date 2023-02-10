@@ -31,13 +31,6 @@ public class BossDoor : MonoBehaviour
                 UnderLobbyManager.OffStageDescription();
             }
         });
-
-        //this.UpdateAsObservable()
-        //    .Where(_ => _isVicinity.Value && UIInput.Submit)
-        //    .Subscribe(_ =>
-        //    {
-        //        TransitionManager.SceneTransition(_sceneType, FadeType.Mask_KeyHole);
-        //    });
     }
 
     private void OnTriggerEnter(Collider other)

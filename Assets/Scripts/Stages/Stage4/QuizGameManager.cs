@@ -152,7 +152,9 @@ public class QuizGameManager : StageGame<QuizGameManager>
             {
                 GameManager.SaveStageResult(true);
                 TransitionManager.SceneTransition(SceneType.Lobby);
-            });
+                AudioManager.StopBGM(1.5f);
+            })
+            .AddTo(this);
     }
 
     public override void OnGameStart()
@@ -409,7 +411,7 @@ public class QuizGameManager : StageGame<QuizGameManager>
         }
         yield return new WaitForSeconds(1.0f);
 
-        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+        TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
         TransitionManager.SceneTransition(SceneType.Lobby);
     }
 

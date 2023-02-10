@@ -25,7 +25,8 @@ public enum BGMType
     GetStill,
     BossStage_Clear,
     UnderLobby,
-    EndBossBattle
+    EndBossBattle,
+    Alice_Invincible, //アリス:無敵
 }
 public enum SEType
 {
@@ -112,7 +113,10 @@ public enum SEType
     Trump_Alignment, //トランプ兵の整列音
     BossStage_QueenDamage, //女王がダメージを受ける
     BossStage_QueenJump, //女王がジャンプした時
-    BossStage_QueenFallDown //女王が落ち始めた時
+    BossStage_QueenFallDown, //女王が落ち始めた時
+    Stage3_Standby, //フラミンゴを構える
+    Alice_Growup, //アリス:大きくなる
+    Alice_ReturnSize, //アリス:元に戻る
 }
 
 public enum VOICEType

@@ -90,7 +90,8 @@ public class GameEnd : MonoBehaviour
                 .Subscribe(_ =>
                 {
                     StartCoroutine(ActivateCoroutine(false));
-                });
+                })
+                .AddTo(this);
         }
         else
         {
@@ -112,7 +113,8 @@ public class GameEnd : MonoBehaviour
                 .Subscribe(_ =>
                 {
                     StartCoroutine(ActivateCoroutine(false));
-                });
+                })
+                .AddTo(this);
         }
 
         #endregion

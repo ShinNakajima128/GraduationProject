@@ -217,9 +217,10 @@ public class QuizController : MonoBehaviour
 
             if (min < 1)
             {
-                continue;
+                min = 1;
             }
-            max = UnityEngine.Random.Range(_currentAnswerValue + 1, _currentAnswerValue + 6);
+
+            max = UnityEngine.Random.Range(min + 3, min + 6);
 
             for (int i = 0; i < _choiceButtonList.Count; i++)
             {

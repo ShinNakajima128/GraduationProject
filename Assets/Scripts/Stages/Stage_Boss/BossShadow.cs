@@ -27,7 +27,7 @@ public class BossShadow : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void LateUpdate()
     {
         if (_shadowTrans == null)
         {

@@ -386,7 +386,8 @@ public class Option : MonoBehaviour
             .Subscribe(_ =>
             {
                 OnCloseOptionPanel();
-            });
+            })
+            .AddTo(this);
 
         #region Change Tab Action
         this.UpdateAsObservable()
@@ -402,7 +403,8 @@ public class Option : MonoBehaviour
                 {
                     b.ButtonImage.sprite = b.ButtonData.DeselectSprite;
                 }
-            });
+            })
+            .AddTo(this);
 
         this.UpdateAsObservable()
             .Where(_ => IsActived &&
@@ -417,7 +419,8 @@ public class Option : MonoBehaviour
                 {
                     b.ButtonImage.sprite = b.ButtonData.DeselectSprite;
                 }
-            });
+            })
+            .AddTo(this);
         #endregion
 
         #region BGMBarAction
@@ -430,7 +433,8 @@ public class Option : MonoBehaviour
             .Subscribe(_ =>
             {
                 OnChangeLeftBar(SelectBarType.BGM);
-            });
+            })
+            .AddTo(this);
 
         this.UpdateAsObservable()
             .Where(_ =>
@@ -441,7 +445,8 @@ public class Option : MonoBehaviour
             .Subscribe(_ =>
             {
                 OnChangeRightBar(SelectBarType.BGM);
-            });
+            })
+            .AddTo(this);
         #endregion
 
         #region SEBarAction
@@ -454,7 +459,8 @@ public class Option : MonoBehaviour
             .Subscribe(_ =>
             {
                 OnChangeLeftBar(SelectBarType.SE);
-            });
+            })
+            .AddTo(this);
 
         this.UpdateAsObservable()
             .Where(_ =>
@@ -465,7 +471,8 @@ public class Option : MonoBehaviour
             .Subscribe(_ =>
             {
                 OnChangeRightBar(SelectBarType.SE);
-            });
+            })
+            .AddTo(this);
         #endregion
     }
     IEnumerator OnOptionCotoutine()

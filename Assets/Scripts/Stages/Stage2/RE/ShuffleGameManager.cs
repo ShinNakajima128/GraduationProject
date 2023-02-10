@@ -88,7 +88,9 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
             {
                 GameManager.SaveStageResult(true);
                 TransitionManager.SceneTransition(SceneType.Lobby);
-            });
+                AudioManager.StopBGM(1.5f);
+            })
+            .AddTo(this);
     }
 
     public override void OnGameSetUp()
@@ -312,7 +314,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 }
 
                 GameManager.SaveStageResult(true);
-                TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+                TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
                 TransitionManager.SceneTransition(SceneType.Lobby);
             }
         }

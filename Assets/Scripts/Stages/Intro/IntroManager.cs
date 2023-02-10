@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// イントロSceneの管理を行うマネージャークラス
@@ -18,6 +19,7 @@ public class IntroManager : MonoBehaviour
         if (_nextSceneType == SceneType.Stage1_Fall)
         {
             AudioManager.PlayBGM(BGMType.Intro);
+            
         }
         else
         {
@@ -29,13 +31,25 @@ public class IntroManager : MonoBehaviour
          {
              StartCoroutine(StartScenario());
          });
-
+    
+        SkipButton.Instance.Isrespond += SkipResponse;
+        SkipButton.Instance.OnSkip.Subscribe(_ =>
+        {
+            TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
+            TransitionManager.SceneTransition(_nextSceneType);
+        });
     }
+
     IEnumerator StartScenario()
     {
         yield return StartCoroutine(_player.PlayAllMessageCoroutine());
 
-        TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+        TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
         TransitionManager.SceneTransition(_nextSceneType);
+    }
+
+    bool SkipResponse()
+    {
+        return true;
     }
 }

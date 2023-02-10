@@ -78,6 +78,7 @@ public class LobbyTipsUI : MonoBehaviour
 
         Instance._leftTipsText.text = leftTips.TipsText;
         Instance._rightTipsText.text = rightTips.TipsText;
+        print($"{GameManager.Instance.CurrentClockState}");
     }
 
     /// <summary>
