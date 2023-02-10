@@ -530,7 +530,8 @@ public class LobbyManager : MonoBehaviour
 
     IEnumerator SkipCoroutine()
     {
-        //TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+        AudioManager.StopSE();
+        TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
         TransitionManager.FadeIn(FadeType.Black_default, action: () =>
         {
             MessagePlayer.Instance.FadeMessageCanvas(0f, 0f);
@@ -544,11 +545,13 @@ public class LobbyManager : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         LobbyTipsUI.UpdateTips();
-        _directionCameraMng.ResetBlendTime();
+        _directionCameraMng.SetBlendTime(0f);
+        _directionCameraMng.ResetCamera();
 
         yield return new WaitForSeconds(1.0f);
 
         TransitionManager.FadeOut(FadeType.Normal);
+        _directionCameraMng.ResetBlendTime();
 
         //AudioManager.StopBGM(1.5f); //ˆê’U‹È‚ðŽ~‚ß‚é
         StartCoroutine(OnPlayerMovable(1.5f, () => AudioManager.PlayBGM(BGMType.Lobby)));
