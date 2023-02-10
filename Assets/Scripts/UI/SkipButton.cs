@@ -80,7 +80,7 @@ public class SkipButton : MonoBehaviour
     {
         //スキップボタンを押した時
         this.UpdateAsObservable()
-            .Where(_ => UIInput.SkipDown)
+            .Where(_ => UIInput.SkipDown && !_isSkipCompleted)
             .Where(_ => Isrespond())
             .ThrottleFirst(TimeSpan.FromMilliseconds(100))
             .Subscribe(_ =>
@@ -89,6 +89,13 @@ public class SkipButton : MonoBehaviour
                 {
                     OnFadeButton(1, 0.15f);
                 }
+
+                if (_fadeCoroutine != null)
+                {
+                    StopCoroutine(_fadeCoroutine);
+                    _fadeCoroutine = null;
+                }
+
                 _skipCoroutine = StartCoroutine(StartSkipCoroutine());
             })
             .AddTo(this);

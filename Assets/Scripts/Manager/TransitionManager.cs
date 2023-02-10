@@ -258,7 +258,8 @@ public enum SceneType
     Stage5,
     Stage6,
     Stage_Boss,
-    Ending
+    Ending,
+    Credit
 }
 public enum FadeType
 {

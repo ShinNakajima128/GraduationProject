@@ -27,6 +27,7 @@ public enum BGMType
     UnderLobby,
     EndBossBattle,
     Alice_Invincible, //アリス:無敵
+    Credit
 }
 public enum SEType
 {

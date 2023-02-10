@@ -25,6 +25,8 @@ public class UIInput : MonoBehaviour
     public static bool SkipDown => Instance._input.actions["Option"].WasPressedThisFrame();
     public static bool SkipUp => Instance._input.actions["Option"].WasReleasedThisFrame();
     public static bool Exit => Instance._input.actions["Exit"].WasPressedThisFrame();
+    public static bool High => Instance._input.actions["B"].WasPressedThisFrame();
+    public static bool Low => Instance._input.actions["B"].WasReleasedThisFrame();
     #endregion
 
     private void Awake()
