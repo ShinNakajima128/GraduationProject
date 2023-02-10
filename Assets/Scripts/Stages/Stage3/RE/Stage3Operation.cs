@@ -40,6 +40,9 @@ public class Stage3Operation : MonoBehaviour
     [Header("Components")]
     [SerializeField]
     Stage3PlayerController _player = default;
+
+    [SerializeField]
+    GameObject _maxGaugeEffect = default;
     #endregion
 
     #region private
@@ -68,6 +71,7 @@ public class Stage3Operation : MonoBehaviour
         _shotTextImage.fillAmount = 0;
         _raiseOverheadTextImage.enabled = true;
         _shotTextImage.enabled = false;
+        _maxGaugeEffect.SetActive(false);
     }
 
     void SubscribeAction()
@@ -200,9 +204,13 @@ public class Stage3Operation : MonoBehaviour
             _raiseOverheadTextImage.enabled = false;
             _shotTextImage.enabled = true;
 
+            AudioManager.PlaySE(SEType.Stage3_Standby);
+
             _shotImageFillTween = _shotTextImage.DOFillAmount(1, 1.25f)
                                                 .OnComplete(() => 
                                                 {
+                                                    _maxGaugeEffect.SetActive(true);
+                                                    AudioManager.PlaySE(SEType.Stage3_MaxGauge);
                                                     _shotImageFillTween = _shotTextImage.transform.DOScale(1.1f, 0.25f)
                                                                             .SetLoops(-1, LoopType.Yoyo);
                                                 });
@@ -224,6 +232,11 @@ public class Stage3Operation : MonoBehaviour
                 _shotImageFillTween = null;
                 _shotTextImage.fillAmount = 0;
                 _shotTextImage.enabled = false;
+                AudioManager.StopSE();
+            }
+            else
+            {
+                _maxGaugeEffect.SetActive(false);
             }
         }
     }
