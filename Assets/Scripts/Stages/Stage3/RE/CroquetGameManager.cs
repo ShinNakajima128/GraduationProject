@@ -121,7 +121,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 GameManager.SaveStageResult(true);
                 TransitionManager.SceneTransition(SceneType.Lobby);
                 AudioManager.StopBGM(1.5f);
-            });
+            })
+            .AddTo(this);
     }
 
     public override void OnGameSetUp()
@@ -308,7 +309,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                         yield return new WaitForSeconds(2.0f);
                         GameManager.SaveStageResult(false);
                     }
-                    TransitionManager.FadeIn(FadeType.Black_TransParent, 0f);
+                    TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
                     TransitionManager.SceneTransition(SceneType.Lobby);
                 }
             }
