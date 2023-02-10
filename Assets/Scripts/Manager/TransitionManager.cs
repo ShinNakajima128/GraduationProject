@@ -56,9 +56,9 @@ public class TransitionManager : MonoBehaviour
     /// </summary>
     /// <param name="scene"> 遷移先のScene </param>
     /// <param name="action">  </param>
-    public static void SceneTransition(SceneType scene, FadeType fade = default, Action action = null)
+    public static void SceneTransition(SceneType scene, FadeType fade = default, float fadeTime = 1.5f, Action action = null)
     {
-        FadeIn(fade, action: () => 
+        FadeIn(fade, fadeTime, () =>
         {
             action?.Invoke();
             Instance.StartCoroutine(Instance.LoadScene(scene, Instance._loadTime));
@@ -106,7 +106,7 @@ public class TransitionManager : MonoBehaviour
                           });
                 break;
             case FadeType.Mask_CheshireCat:
-                Instance._fade.FadeIn(0f, () => 
+                Instance._fade.FadeIn(0f, () =>
                 {
                     Instance._fadeImage.DOFade(0f, 0f);
                     var cheshireMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.CheshireCat);
@@ -117,7 +117,7 @@ public class TransitionManager : MonoBehaviour
                 });
                 break;
             case FadeType.Mask_Heart:
-                Instance._fade.FadeIn(0f, () => 
+                Instance._fade.FadeIn(0f, () =>
                 {
                     Instance._fadeImage.DOFade(0f, 0f);
                     var heartMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.Heart);
@@ -128,7 +128,7 @@ public class TransitionManager : MonoBehaviour
                 });
                 break;
             case FadeType.Mask_KeyHole:
-                Instance._fade.FadeIn(0f, () => 
+                Instance._fade.FadeIn(0f, () =>
                 {
                     Instance._fadeImage.DOFade(0f, 0f);
                     var keyholeMaskData = Instance._maskData.Masks.FirstOrDefault(p => p.MaskType == MaskType.KeyHole);
@@ -194,7 +194,7 @@ public class TransitionManager : MonoBehaviour
                 Instance._fadeMaskImage.material.color = cheshireMaskData.MaskColor;
                 Instance._fadeImage.DOFade(0f, 0.05f)
                                    .OnComplete(() =>
-                                   { 
+                                   {
                                        Instance._fade.FadeIn(fadeTime, action);
                                    });
                 break;
@@ -234,7 +234,7 @@ public class TransitionManager : MonoBehaviour
         Instance._fadeCanvas.sortingOrder = value;
     }
 
-    IEnumerator LoadScene(SceneType scene,float loadTime)
+    IEnumerator LoadScene(SceneType scene, float loadTime)
     {
         yield return new WaitForSeconds(loadTime);
 
