@@ -245,7 +245,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             {
                 Instance._bgmSource.clip = bgm.Clip;
                 Instance._bgmSource.loop = loopType;
-                Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume;
+                Instance._bgmSource.volume = Instance._bgmVolume * Instance._masterVolume * bgm.Volume;
                 Instance._bgmSource.Play();
                 Debug.Log($"{bgm.BGMName}を再生");
 
@@ -522,6 +522,8 @@ public class BGM
     public string BGMName;
     public BGMType BGMType;
     public AudioClip Clip;
+    [Range(0, 1)]
+    public float Volume = 1f;
 }
 [Serializable]
 public class SE

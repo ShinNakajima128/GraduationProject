@@ -208,8 +208,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _masterVolume: 1
-  _bgmVolume: 0.2
-  _seVolume: 1
+  _bgmVolume: 0.5
+  _seVolume: 0.5
   _voiceVolume: 1
   _seAudioSourceNum: 10
   _voiceAudioSourceNum: 5
@@ -217,54 +217,71 @@ MonoBehaviour:
   - BGMName: "\u30BF\u30A4\u30C8\u30EB"
     BGMType: 0
     Clip: {fileID: 8300000, guid: 50e46311b18fb55489bc721c7fe83a44, type: 3}
+    Volume: 0.8
   - BGMName: "\u30A4\u30F3\u30C8\u30ED"
     BGMType: 1
     Clip: {fileID: 8300000, guid: ed176b9371bc3ee4886f1784127c8b1b, type: 3}
+    Volume: 0.8
   - BGMName: "\u30ED\u30D3\u30FC\uFF1A\u901A\u5E38"
     BGMType: 2
     Clip: {fileID: 8300000, guid: f7d9bab79ad6d9f4cae183e0452a7027, type: 3}
+    Volume: 0.3
   - BGMName: "\u30ED\u30D3\u30FC:\u30C1\u30A7\u30B7\u30E3\u732B\u906D\u9047"
     BGMType: 3
     Clip: {fileID: 8300000, guid: f1972d7b2369afd438a328e8a6f3c3f1, type: 3}
+    Volume: 0.65
   - BGMName: "\u30B9\u30C6\u30FC\u30B81:\u843D\u4E0B\u30B2\u30FC\u30E0"
     BGMType: 4
     Clip: {fileID: 8300000, guid: 1b85e8d354dd7a44981523f359fa709d, type: 3}
+    Volume: 0.65
   - BGMName: "\u30B9\u30C6\u30FC\u30B82:\u30B7\u30E3\u30C3\u30D5\u30EB\u30B2\u30FC\u30E0"
     BGMType: 5
     Clip: {fileID: 8300000, guid: 3371f1b36dcc85f4a83477ec7b682918, type: 3}
+    Volume: 0.65
   - BGMName: "\u30B9\u30C6\u30FC\u30B83:\u30AF\u30ED\u30C3\u30B1\u30FC\u30B2\u30FC\u30E0"
     BGMType: 6
     Clip: {fileID: 8300000, guid: 3784f098b39d6e548b6c3f51beae5a7e, type: 3}
+    Volume: 0.3
   - BGMName: "\u30B9\u30C6\u30FC\u30B84:\u30AB\u30A6\u30F3\u30C8\u30B2\u30FC\u30E0"
     BGMType: 7
     Clip: {fileID: 8300000, guid: c7855c83ed124ee40ac5b0525e08611f, type: 3}
+    Volume: 0.65
   - BGMName: "\u30DC\u30B9\u6226:\u6226\u95D8\u524D"
     BGMType: 8
     Clip: {fileID: 8300000, guid: 896f13d2b57a4604f8e1206f3e57ccca, type: 3}
+    Volume: 0.4
   - BGMName: "\u30DC\u30B9\u6226:\u6226\u95D8\u4E2D"
     BGMType: 9
     Clip: {fileID: 8300000, guid: 1d5054ced6944484d83b88bdceaa1205, type: 3}
+    Volume: 0.6
   - BGMName: "\u30A8\u30F3\u30C7\u30A3\u30F3\u30B0"
     BGMType: 10
     Clip: {fileID: 8300000, guid: 69facb96b55ead244a5610f3f6bc8d5f, type: 3}
+    Volume: 0.8
   - BGMName: "\u30AF\u30EA\u30A2\u30B8\u30F3\u30B0\u30EB"
     BGMType: 12
     Clip: {fileID: 8300000, guid: 3c73b1a6be806e840a46641cb6e0ca33, type: 3}
+    Volume: 0.5
   - BGMName: "\u30B9\u30C1\u30EB\u7372\u5F97"
     BGMType: 13
     Clip: {fileID: 8300000, guid: 9671039097ea9ed4493cff20605d382f, type: 3}
+    Volume: 0.4
   - BGMName: "\u30DC\u30B9\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2"
     BGMType: 14
     Clip: {fileID: 8300000, guid: e51cc8ef4c3c9644f99848132bfe013a, type: 3}
+    Volume: 0.55
   - BGMName: "\u5FD8\u5374\u306E\u9593"
     BGMType: 15
     Clip: {fileID: 8300000, guid: a612c3bbe2233934898412496739d7b0, type: 3}
-  - BGMName: "\u30DC\u30B9\u6226\u72E9\u731F\u5F8C"
+    Volume: 0.8
+  - BGMName: "\u30DC\u30B9\u6226\u7D42\u4E86\u5F8C"
     BGMType: 16
     Clip: {fileID: 8300000, guid: 5766df107c554764c86ad7884332ffb1, type: 3}
+    Volume: 0.5
   - BGMName: "\u30AF\u30EC\u30B8\u30C3\u30C8"
     BGMType: 18
     Clip: {fileID: 8300000, guid: f3c74c34fee879249a912bd1a021c2de, type: 3}
+    Volume: 0.9
   _seList:
   - SEName: "\u7372\u5F97"
     SEType: 12
@@ -293,7 +310,7 @@ MonoBehaviour:
   - SEName: "\u30AB\u30FC\u30BD\u30EB\u79FB\u52D5"
     SEType: 3
     Clip: {fileID: 8300000, guid: e5e89a7be900a3341b69c4ed9fd5693f, type: 3}
-    Volume: 0.3
+    Volume: 0.15
   - SEName: "\u30BB\u30EC\u30AF\u30C8"
     SEType: 0
     Clip: {fileID: 8300000, guid: 51af519a84d2b8f4880a6d0bcaaf52f1, type: 3}
@@ -317,7 +334,7 @@ MonoBehaviour:
   - SEName: "\u30ED\u30D3\u30FC\u5230\u7740"
     SEType: 20
     Clip: {fileID: 8300000, guid: a67eed7ad4086c347aace1db4f9c5d1c, type: 3}
-    Volume: 0.5
+    Volume: 0.3
   - SEName: "\u30C1\u30A7\u30B7\u30E3\u732B\u767B\u5834"
     SEType: 21
     Clip: {fileID: 8300000, guid: df23ea3088898fe4cb834a60ebc39eb2, type: 3}
@@ -337,11 +354,11 @@ MonoBehaviour:
   - SEName: "\u6642\u8A08\u304C\u52D5\u304F"
     SEType: 25
     Clip: {fileID: 8300000, guid: ddaaae28353b34f44821fb7171258381, type: 3}
-    Volume: 0.68
+    Volume: 0.4
   - SEName: "\u6642\u8A08\u304C\u6B62\u307E\u308B"
     SEType: 26
     Clip: {fileID: 8300000, guid: dbfc07bc35ced34449daa12c6e207c5b, type: 3}
-    Volume: 0.84
+    Volume: 0.5
   - SEName: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EBON"
     SEType: 27
     Clip: {fileID: 8300000, guid: f0b3e3671d444024ea9ec391b083362b, type: 3}
@@ -393,11 +410,11 @@ MonoBehaviour:
   - SEName: "\u30B9\u30C6\u30FC\u30B83:\u304A\u984C\u3092\u958B\u3051\u308B"
     SEType: 38
     Clip: {fileID: 8300000, guid: bbff54f4715b429408d5158d707f91c8, type: 3}
-    Volume: 0.71
+    Volume: 0.5
   - SEName: "\u30B9\u30C6\u30FC\u30B83:\u304A\u984C\u3092\u9589\u3058\u308B"
     SEType: 39
     Clip: {fileID: 8300000, guid: 736d9e81ee7825e4b8a1be19fe1e4267, type: 3}
-    Volume: 0.71
+    Volume: 0.5
   - SEName: "\u30B9\u30C6\u30FC\u30B83:\u30B4\u30FC\u30EB"
     SEType: 40
     Clip: {fileID: 8300000, guid: 0aad2ed4905fef74396ff05b81c2cdd5, type: 3}
@@ -414,14 +431,14 @@ MonoBehaviour:
     SEType: 43
     Clip: {fileID: 8300000, guid: ad9c1d9a3671c694ba5a89307cebc676, type: 3}
     Volume: 1
-  - SEName: "\u30B9\u30C6\u30FC\u30B83:t\u624B\u7D19\u304C\u50BE\u304F"
+  - SEName: "\u30B9\u30C6\u30FC\u30B83:\u624B\u7D19\u304C\u50BE\u304F"
     SEType: 44
     Clip: {fileID: 8300000, guid: 6b449b6d26eaba5448713984a100840f, type: 3}
-    Volume: 1
+    Volume: 0.8
   - SEName: "\u30B9\u30C6\u30FC\u30B83:\u5973\u738B\u306E\u5370"
     SEType: 45
     Clip: {fileID: 8300000, guid: b21046258771b6542b145d348013bb2a, type: 3}
-    Volume: 1
+    Volume: 0.8
   - SEName: "\u30B9\u30C6\u30FC\u30B84:\u554F\u984CSE1"
     SEType: 46
     Clip: {fileID: 8300000, guid: 25ed92195b577264cade7cfabdedca5f, type: 3}
@@ -493,7 +510,7 @@ MonoBehaviour:
   - SEName: "\u30DC\u30B9\u6226:\u5973\u738B\u843D\u4E0B\u4E2D"
     SEType: 63
     Clip: {fileID: 8300000, guid: 2d7fa2a10a5b3db4083a3a1fb5c6aafd, type: 3}
-    Volume: 0.8
+    Volume: 0.6
   - SEName: "\u30B9\u30C6\u30FC\u30B83:\u69CB\u3048\u308B"
     SEType: 64
     Clip: {fileID: 8300000, guid: 94e6a4e6941f4a143b9a6cfae977d75e, type: 3}
