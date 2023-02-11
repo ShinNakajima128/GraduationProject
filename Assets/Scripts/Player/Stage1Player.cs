@@ -65,6 +65,7 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable, IHealable
         _isInvincibled = true;
         _fc.ChangeFaceType(FaceType.Damage);
         IsMaxHP = false;
+        VibrationController.OnVibration(Strength.Low, 0.35f);
 
         var wait = new WaitForSeconds(_blinksInterVal);
 

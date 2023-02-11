@@ -206,6 +206,7 @@ public class Stage3Operation : MonoBehaviour
 
             AudioManager.PlaySE(SEType.Stage3_Standby);
 
+            VibrationController.OnVibration(Strength.Low, 1.15f);
             _shotImageFillTween = _shotTextImage.DOFillAmount(1, 1.25f)
                                                 .OnComplete(() => 
                                                 {
@@ -213,6 +214,7 @@ public class Stage3Operation : MonoBehaviour
                                                     AudioManager.PlaySE(SEType.Stage3_MaxGauge);
                                                     _shotImageFillTween = _shotTextImage.transform.DOScale(1.1f, 0.25f)
                                                                             .SetLoops(-1, LoopType.Yoyo);
+                                                    VibrationController.OnVibration(Strength.Middle, 0.15f);
                                                 });
         }
     }
@@ -233,6 +235,7 @@ public class Stage3Operation : MonoBehaviour
                 _shotTextImage.fillAmount = 0;
                 _shotTextImage.enabled = false;
                 AudioManager.StopSE();
+                VibrationController.OffVibration();
             }
             else
             {

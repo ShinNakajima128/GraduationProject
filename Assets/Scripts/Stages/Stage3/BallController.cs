@@ -81,6 +81,7 @@ public class BallController : MonoBehaviour, IThrowable
             transform.forward = result;
 
             _rb.velocity = result;
+            VibrationController.OnVibration(Strength.Middle, 0.2f);
             return;
         }
     }
