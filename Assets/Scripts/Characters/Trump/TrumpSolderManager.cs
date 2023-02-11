@@ -38,6 +38,7 @@ public class TrumpSolderManager : MonoBehaviour
     readonly List<BattleAreaTrumpSolder> _leftTrumps = new List<BattleAreaTrumpSolder>();
     readonly List<BattleAreaTrumpSolder> _rightTrumps = new List<BattleAreaTrumpSolder>();
     Coroutine[] _attackCoroutines = new Coroutine[4];
+    Action _finishAttackAction;
     #endregion
     #region public
     #endregion
@@ -96,6 +97,12 @@ public class TrumpSolderManager : MonoBehaviour
     public void OnTrumpSoldersAttack(DirectionType dir, Action start = null, Action finish = null)
     {
         _attackCoroutines[(int)dir] = StartCoroutine(TrumpSoldersAttackCoroutine(dir, start, finish));
+
+        if (finish != null)
+        {
+            finish = null;
+        }
+        _finishAttackAction = finish;
     }
 
     /// <summary>
@@ -131,6 +138,8 @@ public class TrumpSolderManager : MonoBehaviour
         {
             t.OnAnimation(name);
         }
+        _finishAttackAction?.Invoke();
+        _finishAttackAction = null;
     }
 
     void SetupTrumpSolders()
