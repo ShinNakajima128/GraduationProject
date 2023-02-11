@@ -195,7 +195,7 @@ public class MessagePlayer : MonoBehaviour
 
             _submitIcon.SetActive(true); //入力を促すアイコンをアクティブにする
 
-            yield return new WaitUntil(() => UIInput.Submit); //全て表示したらプレイヤーの入力を待機
+            yield return new WaitUntil(() => UIInput.Push); //全て表示したらプレイヤーの入力を待機
             AudioManager.PlaySE(SEType.UI_CursolMove);
 
             yield return new WaitForSeconds(0.05f);
@@ -225,7 +225,7 @@ public class MessagePlayer : MonoBehaviour
             {
                 yield break;
             }
-            else if (UIInput.Submit)
+            else if (UIInput.Push)
             {
                 _isSkiped = true;
                 //AudioManager.PlaySE(SEType.UI_CursolMove);

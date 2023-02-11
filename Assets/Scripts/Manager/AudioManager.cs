@@ -27,6 +27,7 @@ public enum BGMType
     UnderLobby,
     EndBossBattle,
     Alice_Invincible, //アリス:無敵
+    Credit
 }
 public enum SEType
 {
@@ -117,6 +118,7 @@ public enum SEType
     Stage3_Standby, //フラミンゴを構える
     Alice_Growup, //アリス:大きくなる
     Alice_ReturnSize, //アリス:元に戻る
+    Stage3_MaxGauge, //ステージ3:ゲージいっぱいになった
 }
 
 public enum VOICEType

@@ -732,6 +732,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Push"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ba515d8-9b4e-4ff0-9570-24b3df9af291"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1218,6 +1227,50 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""N"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""063a1631-a5eb-4d1a-9199-63ab6475efe9"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4d22b3c7-9d21-4e5a-b1d7-2a0ab6443242"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cbcb7f4a-ab76-4fed-ac5f-27483ed4d14b"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""163531f6-1e4a-441e-9376-24c0f73b8d55"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1374,6 +1427,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_RightCrossKey = m_UIInput.FindAction("RightCrossKey", throwIfNotFound: true);
         m_UIInput_Option = m_UIInput.FindAction("Option", throwIfNotFound: true);
         m_UIInput_Exit = m_UIInput.FindAction("Exit", throwIfNotFound: true);
+        m_UIInput_Push = m_UIInput.FindAction("Push", throwIfNotFound: true);
         // Stage_Boss
         m_Stage_Boss = asset.FindActionMap("Stage_Boss", throwIfNotFound: true);
         m_Stage_Boss_Move = m_Stage_Boss.FindAction("Move", throwIfNotFound: true);
@@ -1640,6 +1694,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_RightCrossKey;
     private readonly InputAction m_UIInput_Option;
     private readonly InputAction m_UIInput_Exit;
+    private readonly InputAction m_UIInput_Push;
     public struct UIInputActions
     {
         private @PlayerControls m_Wrapper;
@@ -1659,6 +1714,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @RightCrossKey => m_Wrapper.m_UIInput_RightCrossKey;
         public InputAction @Option => m_Wrapper.m_UIInput_Option;
         public InputAction @Exit => m_Wrapper.m_UIInput_Exit;
+        public InputAction @Push => m_Wrapper.m_UIInput_Push;
         public InputActionMap Get() { return m_Wrapper.m_UIInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1713,6 +1769,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Exit.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnExit;
                 @Exit.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnExit;
                 @Exit.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnExit;
+                @Push.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnPush;
+                @Push.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnPush;
+                @Push.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnPush;
             }
             m_Wrapper.m_UIInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -1762,6 +1821,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Exit.started += instance.OnExit;
                 @Exit.performed += instance.OnExit;
                 @Exit.canceled += instance.OnExit;
+                @Push.started += instance.OnPush;
+                @Push.performed += instance.OnPush;
+                @Push.canceled += instance.OnPush;
             }
         }
     }
@@ -1847,6 +1909,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnRightCrossKey(InputAction.CallbackContext context);
         void OnOption(InputAction.CallbackContext context);
         void OnExit(InputAction.CallbackContext context);
+        void OnPush(InputAction.CallbackContext context);
     }
     public interface IStage_BossActions
     {

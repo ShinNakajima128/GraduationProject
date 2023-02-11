@@ -228,6 +228,7 @@ public enum QueenFaceType
     Damage,
     Angry,
     Talking,
+    CloseEyes
 }
 
 public enum QueenEyeType

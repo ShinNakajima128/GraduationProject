@@ -82,6 +82,7 @@ public class AlbumManager : MonoBehaviour
                                      .Subscribe(_ =>
                                      {
                                          UIManager.InactivatePanel(UIPanelType.Album);
+                                         LobbyTipsUI.Instance.InactiveAlbumTips();
                                          ActivateAlbum(false);
                                          Debug.Log("ƒAƒ‹ƒoƒ€”ñ•\Ž¦");
                                      })

@@ -78,6 +78,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     int _currentRedStrileNum = 0;
     int _currentBlackStrikeNum = 0;
     bool _isGoaled = false;
+    /// <summary> 前回のお題を失敗しているか </summary>
+    bool _isBeforeOrderFailure = false;
     /// <summary> 倒した数 </summary>
     int _currentStrikeNum = 0;
     int _successCount = 0;
@@ -203,49 +205,64 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 _gameUI.SetTrumpCount(_currentRedStrileNum, _currentBlackStrikeNum);
                 _gameUI.SetResultText("");
 
-                _cameraMng.ChangeCamera(CroquetCameraType.View, 3.0f);
-
-                yield return new WaitForSeconds(3.0f);
-
-                //お題のアニメーションが終了するまで待機
-                yield return _order.LetterAnimationCoroutine(i + 1, data.ToString());
-
-                _cameraMng.ChangeCamera(CroquetCameraType.InGame);
-                LetterboxController.ActivateLetterbox(false, 1.5f);
-
-                if (i == 0)
+                if (!_isBeforeOrderFailure)
                 {
-                    yield return new WaitForSeconds(2.0f);
+                    _cameraMng.ChangeCamera(CroquetCameraType.View, 3.0f);
 
-                    _infoImages[0].enabled = true;
-                    yield return new WaitForSeconds(1.5f);
-                    _infoImages[0].enabled = false;
+                    yield return new WaitForSeconds(3.0f);
+
+                    //お題のアニメーションが終了するまで待機
+                    yield return _order.LetterAnimationCoroutine(i + 1, data.ToString());
+
+                    _cameraMng.ChangeCamera(CroquetCameraType.InGame);
+                    LetterboxController.ActivateLetterbox(false, 1.5f);
+
+
+                    if (i == 0)
+                    {
+                        yield return new WaitForSeconds(2.0f);
+
+                        _infoImages[0].enabled = true;
+                        yield return new WaitForSeconds(1.5f);
+                        _infoImages[0].enabled = false;
+                    }
+                    else
+                    {
+                        yield return new WaitForSeconds(1.5f);
+                    }
+
+                    //初めてステージ3をプレイしている場合
+                    if (GameManager.Instance.IsFirstVisitCurrentStage)
+                    {
+                        //フェイズ毎の会話パートを再生
+                        switch (i)
+                        {
+                            case 0:
+                                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase1);
+                                break;
+                            case 1:
+                                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase2);
+                                break;
+                            case 2:
+                                yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase3);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
                 else
                 {
+                    //お題失敗時の処理
+                    yield return new WaitForSeconds(0.5f);
+
+                    TransitionManager.FadeOut(FadeType.Normal);
+                    LetterboxController.ActivateLetterbox(false, 1.5f);
+
                     yield return new WaitForSeconds(1.5f);
-                }
 
-                //初めてステージ3をプレイしている場合
-                if (GameManager.Instance.IsFirstVisitCurrentStage)
-                {
-                    //フェイズ毎の会話パートを再生
-                    switch (i)
-                    {
-                        case 0:
-                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase1);
-                            break;
-                        case 1:
-                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase2);
-                            break;
-                        case 2:
-                            yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage3_Phase3);
-                            break;
-                        default:
-                            break;
-                    }
+                    _isBeforeOrderFailure = false;
                 }
-
                 yield return new WaitForSeconds(0.2f);
 
                 _gameUI.ChangeUIGroup(CroquetGameState.InGame);
@@ -270,11 +287,20 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                 {
                     TransitionManager.FadeIn(FadeType.Normal, action: () =>
                     {
-                        _cameraMng.ChangeCamera(CroquetCameraType.Order, 0f);
-                        _gameUI.ChangeUIGroup(CroquetGameState.Order);
-
                         LetterboxController.ActivateLetterbox(true, 0f);
-                        TransitionManager.FadeOut(FadeType.Normal);
+
+                        //お題をクリアした場合は次のお題を表示する処理を開始
+                        if (!_isBeforeOrderFailure)
+                        {
+                            _cameraMng.ChangeCamera(CroquetCameraType.Order, 0f);
+                            _gameUI.ChangeUIGroup(CroquetGameState.Order);
+                            TransitionManager.FadeOut(FadeType.Normal);
+                        }
+                        //お題を失敗した時はお題演出をスキップして再チャレンジ
+                        else
+                        {
+                            _cameraMng.ChangeCamera(CroquetCameraType.InGame, 0f);
+                        }
                     });
 
                     yield return new WaitForSeconds(2.0f);
@@ -346,6 +372,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
             HPManager.Instance.ChangeHPValue(1);
             resultValue?.Invoke(1);
             AudioManager.PlaySE(SEType.Stage3_Failure);
+            _isBeforeOrderFailure = true;
         }
 
         _gameUI.OnResultUI(result);

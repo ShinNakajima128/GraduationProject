@@ -36,7 +36,7 @@ public class IntroManager : MonoBehaviour
         SkipButton.Instance.OnSkip.Subscribe(_ =>
         {
             TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
-            TransitionManager.SceneTransition(_nextSceneType);
+            TransitionManager.SceneTransition(_nextSceneType, fadeTime: 3.0f);
         });
     }
 

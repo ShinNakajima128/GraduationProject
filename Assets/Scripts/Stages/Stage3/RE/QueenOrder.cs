@@ -102,6 +102,7 @@ public class QueenOrder : MonoBehaviour
         yield return new WaitForSeconds(_waitTime);
 
         //手紙の上蓋(表)が開く
+        AudioManager.PlaySE(SEType.Stage3_heeloverOrder);
         yield return _letterCover_Front.DOLocalRotate(new Vector3(90, 0, 0), _animTime)
                                        .SetEase(Ease.Linear)
                                        .WaitForCompletion();
@@ -151,7 +152,6 @@ public class QueenOrder : MonoBehaviour
         //女王の切手のアニメーション終了
 
         //手紙の傾きを変更
-        AudioManager.PlaySE(SEType.Stage3_heeloverOrder);
         yield return _letterTrans.DOLocalRotate(new Vector3(0, 0, -10.5f), _animTime)
                                  .SetEase(Ease.OutBounce)
                                  .WaitForCompletion();

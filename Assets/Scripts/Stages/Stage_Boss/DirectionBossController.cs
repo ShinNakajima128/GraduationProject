@@ -61,6 +61,7 @@ public class DirectionBossController : MonoBehaviour
             {
                 ChangeAnimation(DirectionBossAnimationType.Point);
                 AudioManager.PlaySE(SEType.BossStage_QueenQuiet);
+                //_queenFc.ChangeFaceType(QueenFaceType.CloseEyes);
                 _queenFc.ChangeFaceType(QueenFaceType.Talking);
             });
         }
@@ -85,12 +86,14 @@ public class DirectionBossController : MonoBehaviour
             EventManager.ListenEvents(Events.BossStage_End_FrontQueen, () =>
             {
                 ChangeAnimation(DirectionBossAnimationType.Look);
+                _queenFc.ChangeFaceType(QueenFaceType.CloseEyes);
                 _queenFc.ChangeFaceType(QueenFaceType.Talking);
             });
             
             EventManager.ListenEvents(Events.BossStage_End_ShakeHead, () =>
             {
                 ChangeAnimation(DirectionBossAnimationType.No);
+                _queenFc.ChangeFaceType(QueenFaceType.Default);
                 _queenFc.ChangeFaceType(QueenFaceType.Talking);
             });
 

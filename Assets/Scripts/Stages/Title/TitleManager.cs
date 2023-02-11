@@ -109,13 +109,18 @@ public class TitleManager : MonoBehaviour
                     break;
                 case ButtonType.Credit:
                     b.Value.OnClickAsObservable()
-                           .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
+                           .Take(1)
                            .Subscribe(_ =>
                            {
                                if (_currentTitleType != TitleUIType.Start)
                                {
                                    return;
                                }
+                               TransitionManager.SceneTransition(SceneType.Credit);
+                               AudioManager.PlaySE(SEType.UI_GameStart);
+                               b.Value.transform.DOLocalMoveY(b.Value.transform.localPosition.y - 15, 0.05f)
+                                                                        .SetLoops(2, LoopType.Yoyo);
+                               EventSystem.current.SetSelectedGameObject(null);
                                Debug.Log("Credit");
                            });
                     break;
