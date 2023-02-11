@@ -96,6 +96,11 @@ public class SkipButton : MonoBehaviour
                     _fadeCoroutine = null;
                 }
 
+                if (Time.timeScale != 1)
+                {
+                    Time.timeScale = 1;
+                }
+
                 _skipCoroutine = StartCoroutine(StartSkipCoroutine());
             })
             .AddTo(this);

@@ -71,7 +71,10 @@ public class CreditManager : MonoBehaviour
         SkipButton.Instance.OnSkip.Subscribe(_ =>
         {
             TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
-            TransitionManager.SceneTransition(SceneType.Title);
+            TransitionManager.SceneTransition(SceneType.Title, action: () =>
+            {
+                Time.timeScale = 1;
+            });
         });
     }
 
@@ -97,6 +100,9 @@ public class CreditManager : MonoBehaviour
         yield return new WaitUntil(() => UIInput.B);
 
         TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
-        TransitionManager.SceneTransition(SceneType.Title);
+        TransitionManager.SceneTransition(SceneType.Title, action: () => 
+        {
+            Time.timeScale = 1;
+        });
     }
 }
