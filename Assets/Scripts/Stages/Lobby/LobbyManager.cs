@@ -474,6 +474,7 @@ public class LobbyManager : MonoBehaviour
              _brain.m_DefaultBlend.m_Time = 0;
              _clock_ShakeCamera.Priority = 20;
              _clockCtrl.OnCrazyClock();
+             VibrationController.OnVibration(Strength.Low, 10f);
              AudioManager.PlaySE(SEType.UnderLobby_Lowering);
 
              TransitionManager.FadeOut(FadeType.Normal, 0.5f);

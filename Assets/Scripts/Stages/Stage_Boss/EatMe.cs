@@ -46,6 +46,7 @@ public class EatMe : MonoBehaviour
             _isGrowuped = true;
             EventManager.OnEvent(Events.BossStage_GrowAlice);
             AudioManager.PlaySE(SEType.Alice_Growup);
+            VibrationController.OnVibration(Strength.Middle, 0.3f);
 
             _player.transform.DOScale(_sizeUpValue, _animTime)
                            .SetEase(_animEase);
@@ -62,6 +63,8 @@ public class EatMe : MonoBehaviour
 
         //AudioManager.StopBGM();
         AudioManager.PlaySE(SEType.Alice_ReturnSize);
+        VibrationController.OnVibration(Strength.Middle, 0.3f);
+
         _player.transform.DOScale(1f, _animTime)
                            .SetEase(_animEase);
 

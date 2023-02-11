@@ -64,6 +64,7 @@ public class ExcuteDirection : MonoBehaviour
 
         //処刑したと分かるSEの再生はここに記述
         AudioManager.PlaySE(SEType.Trump_Slust);
+        VibrationController.OnVibration(Strength.Middle, 0.3f);
         Debug.Log("トランプ兵の首飛ぶ");
 
         TransitionManager.FadeIn(FadeType.Normal, 1.5f, action: () =>

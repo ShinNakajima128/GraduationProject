@@ -159,27 +159,29 @@ public class LobbyClockController : MonoBehaviour
         else
         {
             _hourHand.DOLocalRotate(hourRotate, animTime)
-                 .SetDelay(derayTime);
+                     .SetDelay(derayTime);
 
             _minuteHand.DOLocalRotate(secondRotate, animTime)
-                .OnComplete(() =>
-                {
-                    if (isPlaySE)
-                    {
-                        AudioManager.StopSE();
-                        AudioManager.PlaySE(SEType.Lobby_StopClock);
-                    }
-                    GameManager.UpdateCurrentClock(state);
-                    action?.Invoke();
-                })
-                .SetDelay(derayTime)
-                .OnStart(() =>
-                {
-                    if (isPlaySE)
-                    {
-                        AudioManager.PlaySE(SEType.Lobby_ClockMove);
-                    }
-                });
+                       .OnComplete(() =>
+                       {
+                           if (isPlaySE)
+                           {
+                               AudioManager.StopSE();
+                               AudioManager.PlaySE(SEType.Lobby_StopClock);
+                               VibrationController.OnVibration(Strength.Middle, 0.3f);
+                           }
+                           GameManager.UpdateCurrentClock(state);
+                           action?.Invoke();
+                       })
+                       .SetDelay(derayTime)
+                       .OnStart(() =>
+                       {
+                           if (isPlaySE)
+                           {
+                               AudioManager.PlaySE(SEType.Lobby_ClockMove);
+                               VibrationController.OnVibration(Strength.Low, animTime - 0.2f);
+                           }
+                       });
         }
 
         _isCrazing = false;

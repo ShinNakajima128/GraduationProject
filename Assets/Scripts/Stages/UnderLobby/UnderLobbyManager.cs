@@ -98,6 +98,7 @@ public class UnderLobbyManager : MonoBehaviour
             EventManager.OnEvent(Events.Alice_Overlook);
             StartCoroutine(_clockCtrl.CrazyClockCoroutine(5f, 3f));
             AudioManager.PlaySE(SEType.UnderLobby_Lowering);
+            VibrationController.OnVibration(Strength.Low, _startStageAnimTime + 0.5f);
 
             yield return _underLobbyObjectTrans.DOLocalMoveY(0, _startStageAnimTime)
                                                .SetEase(Ease.Linear)
@@ -105,6 +106,7 @@ public class UnderLobbyManager : MonoBehaviour
 
             AudioManager.StopSE();
             AudioManager.PlaySE(SEType.UnderLobby_Arrival);
+            VibrationController.OnVibration(Strength.Middle, 0.3f);
             CameraShake();
 
             yield return new WaitForSeconds(1.0f);

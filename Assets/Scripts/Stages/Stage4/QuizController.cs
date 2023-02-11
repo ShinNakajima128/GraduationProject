@@ -174,6 +174,7 @@ public class QuizController : MonoBehaviour
             //_questionText.text = $"ïsê≥âÅc ê≥âÇÕ{_currentAnswerValue}";
             _wrongImage.enabled = true;
             AudioManager.PlaySE(SEType.Stage2_Wrong);
+            VibrationController.OnVibration(Strength.Middle, 0.2f);
             callback?.Invoke(0);
         }
 
