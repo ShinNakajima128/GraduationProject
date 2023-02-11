@@ -48,10 +48,10 @@ public class EndBattleDirectionManager : MonoBehaviour
         {
             _cat.ChangeState(CheshireCatState.Standing_Up);
         });
-        //EventManager.ListenEvents(Events.BossStage_End_CheshireOverhead, () =>
-        //{
-        //    MoveCat();
-        //});
+        EventManager.ListenEvents(Events.BossStage_End_CheshireOverhead, () =>
+        {
+            _cheshireFc.OnTaking();
+        });
         EventManager.ListenEvents(Events.BossStage_End_CheshireLookUp, () =>
         {
             LookUpMoveCat();
