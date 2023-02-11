@@ -95,6 +95,8 @@ public class TeacupShuffler : MonoBehaviour
                                 .PathTrans.Select(x => x.transform.position).ToArray();
 
         AudioManager.PlaySE(SEType.Stage2_Shuffle);
+        VibrationController.OnVibration(Strength.Low, 0.2f);
+
         //２つのカップを入れ替えるアニメーションを再生。処理はカップのアニメーションが終わるまで待機
         _teapots[index].DOPath(mainToTargetPath, shuffleTime, PathType.CatmullRom);
         yield return _teapots[targetIndex].DOPath(targetToMainPath, shuffleTime, PathType.CatmullRom)
@@ -123,6 +125,7 @@ public class TeacupShuffler : MonoBehaviour
         EffectManager.PlayEffect(EffectType.Stage2_WarpStart, _teapots[index].transform.position);
         EffectManager.PlayEffect(EffectType.Stage2_WarpStart, _teapots[randomTarget].transform.position);
         AudioManager.PlaySE(SEType.Stage2_Warp);
+        VibrationController.OnVibration(Strength.Middle, 0.3f);
 
         yield return new WaitForSeconds(0.4f);
 
@@ -134,6 +137,7 @@ public class TeacupShuffler : MonoBehaviour
         EffectManager.PlayEffect(EffectType.Stage2_WarpEnd, _teapots[index].transform.position);
         EffectManager.PlayEffect(EffectType.Stage2_WarpEnd, _teapots[randomTarget].transform.position);
         AudioManager.PlaySE(SEType.Stage2_Warp);
+        VibrationController.OnVibration(Strength.Middle, 0.3f);
 
         yield return new WaitForSeconds(0.4f);
 
