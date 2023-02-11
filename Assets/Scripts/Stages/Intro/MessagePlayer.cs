@@ -146,7 +146,7 @@ public class MessagePlayer : MonoBehaviour
         for (int i = 0; i < d.Length; i++)
         {
             _actorText.text = d[i].Actor;
-            _actorIconImage.sprite = GetActorIcon(d[i].Actor);
+            _actorIconImage.sprite = GetActorIcon(d[i].Actor, d[i].IconType);
 
             if (d[i].Actor == "？？？")
             {
@@ -270,37 +270,56 @@ public class MessagePlayer : MonoBehaviour
         }
     }
 
-    Sprite GetActorIcon(string actorName)
+    Sprite GetActorIcon(string actorName, IconType type)
     {
+        ActorData actor = default;
         Sprite icon = default;
 
         switch (actorName)
         {
             case "アリス":
-                icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Alice).Icon;
+                actor = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Alice);
                 break;
             case "チェシャ猫":
-                icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat).Icon;
+                actor = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat); 
                 break;
             case "ウサギ":
-                icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Rabbit).Icon;
+                actor = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Rabbit);
                 break;
             case "ハートの女王":
-                icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen).Icon;
+                actor = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen);
                 break;
             case "？？？":
                 if (GameManager.Instance.CurrentScene == SceneType.Lobby ||
                     GameManager.Instance.CurrentScene == SceneType.Stage1_Fall)
                 {
-                    icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat).Icon;
+                    actor = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.CheshireCat);
                 }
                 else
                 {
-                    icon = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen).Icon;
+                    actor = _iconData.Actors.FirstOrDefault(x => x.Actor == Actor.Queen);
                 }
                 break;
             default:
                 Debug.LogError("名前の指定が間違っています");
+                break;
+        }
+        switch (type)
+        {
+            case IconType.Default:
+                icon = actor.Icon_Default;
+                break;
+            case IconType.Type1:
+                icon = actor.Type1;
+                break;
+            case IconType.Type2:
+                icon = actor.Type2;
+                break;
+            case IconType.Type3:
+                icon = actor.Type3;
+                break;
+            default:
+                Debug.LogError("アイコンの指定が間違っています");
                 break;
         }
         return icon;
