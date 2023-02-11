@@ -392,6 +392,10 @@ public class LobbyManager : MonoBehaviour
         AudioManager.PlayBGM(BGMType.Lobby_MeetingCheshire);
     }
 
+    /// <summary>
+    /// カメラ操作の切り替え
+    /// </summary>
+    /// <param name="isMovable"> 動かせるかどうか </param>
     void CameraMovable(bool isMovable)
     {
         _provider.enabled = isMovable;
@@ -502,6 +506,10 @@ public class LobbyManager : MonoBehaviour
                                .WaitForCompletion();
     }
 
+    /// <summary>
+    /// アクティブカメラをプレイヤーカメラに戻す
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ReturnPlayerCamera()
     {
         yield return new WaitForSeconds(2.0f);
@@ -512,6 +520,10 @@ public class LobbyManager : MonoBehaviour
         StartCoroutine(OnPlayerMovable(3.0f, () => AudioManager.PlayBGM(BGMType.Lobby)));
     }
 
+    /// <summary>
+    /// ロビーの名前をしばらく表示した後に非表示にするコルーチン
+    /// </summary>
+    /// <returns></returns>
     IEnumerator LobbyNameInfomationCoroutine()
     {
         DOTween.To(() => _lobbyLogoGroup.alpha,
@@ -531,7 +543,7 @@ public class LobbyManager : MonoBehaviour
     IEnumerator SkipCoroutine()
     {
         AudioManager.StopSE();
-        TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
+        //TransitionManager.FadeIn(FadeType.Black_Transparent, 0f);
         TransitionManager.FadeIn(FadeType.Black_default, action: () =>
         {
             MessagePlayer.Instance.FadeMessageCanvas(0f, 0f);
