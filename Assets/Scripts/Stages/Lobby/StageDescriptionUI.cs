@@ -98,8 +98,8 @@ public class StageDescriptionUI : MonoBehaviour
 
         selectEntry.callback.AddListener(eventData =>
         {
-            //チュートリアル画面を開いている場合は処理を行わない
-            if (_tutorial.IsActivateTutorial)
+            //非アクティブの時、またはチュートリアル画面を開いている場合は処理を行わない
+            if (_tutorial.IsActivateTutorial || !_isActiveUI)
             {
                 return;
             }
@@ -196,7 +196,7 @@ public class StageDescriptionUI : MonoBehaviour
         selectEntry2.callback.AddListener(eventData =>
         {
             //チュートリアル画面を開いている場合は処理を行わない
-            if (_tutorial.IsActivateTutorial)
+            if (_tutorial.IsActivateTutorial || !_isActiveUI)
             {
                 return;
             }

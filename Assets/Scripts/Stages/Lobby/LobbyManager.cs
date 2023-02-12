@@ -262,6 +262,7 @@ public class LobbyManager : MonoBehaviour
                 }
                 else
                 {
+                    LobbyTipsUI.UpdateTips();
                     AudioManager.PlayBGM(BGMType.Lobby);
                     StartCoroutine(OnPlayerMovable(0.2f));
                     Debug.Log("クリア済みステージ、またはステージ失敗");
@@ -280,6 +281,7 @@ public class LobbyManager : MonoBehaviour
             IsDuring = false;
             StartCoroutine(LobbyNameInfomationCoroutine());
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
+            LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Movable);
         }
 
         GameManager.SaveStageResult(false);
@@ -447,13 +449,15 @@ public class LobbyManager : MonoBehaviour
         LetterboxController.ActivateLetterbox(false);
 
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
 
         IsDuring = false;
         PlayerMove?.Invoke(true);
         IsUIOperate?.Invoke(true);
         _unclearedIconsParent.SetActive(true);
         action?.Invoke();
+        Debug.Log("call");
+        //LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Movable);
         StartCoroutine(LobbyNameInfomationCoroutine());
     }
 
