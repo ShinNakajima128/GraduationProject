@@ -82,11 +82,12 @@ public class LobbyCheshireCatManager : MonoBehaviour
 
         var activeCat = _cheshireCats.FirstOrDefault(c => c.CatType == type).CheshireCat;
 
+        activeCat.SetActive(true);
+
         if (type == LobbyCheshireCatType.Movable && _cheshireCat.IsDissolved) 
         {
-            _cheshireCat.ActivateDissolve(false);
+            _catBehaviour.StartMoving();
         }
-        activeCat.SetActive(true);
         print($"{type}");
     }
 }

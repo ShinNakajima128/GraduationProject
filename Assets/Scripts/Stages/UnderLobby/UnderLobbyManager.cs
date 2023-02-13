@@ -177,7 +177,7 @@ public class UnderLobbyManager : MonoBehaviour
                     x => _underLobbyLogoGroup.alpha = x,
                     1f,
                     1f)
-                .OnComplete(() => { print("ƒƒS•\¦"); });
+               .OnComplete(() => { print("ƒƒS•\¦"); });
 
         yield return new WaitForSeconds(3f);
 

@@ -29,12 +29,14 @@ public class CheshireCat : MonoBehaviour
     Coroutine _currentCoroutine;
     Material _cheshireBodyMat;
     Material _cheshireFaceMat;
+    bool _isDissolved = false;
     #endregion
 
     #region public
     #endregion
 
     #region property
+    public bool IsDissolved => _isDissolved;
     #endregion
 
     private void Awake()
@@ -72,13 +74,15 @@ public class CheshireCat : MonoBehaviour
 
     public void ActivateDissolve(bool isActive)
     {
+        _isDissolved = isActive;
+
         Debug.Log("Dissolve");
         float bodyValue;
         float faceValue;
 
         if (isActive)
         {
-            bodyValue = -1f;
+            bodyValue = -1.2f;
 
             DOTween.To(() => bodyValue,
                 v => bodyValue = v,
@@ -89,7 +93,7 @@ public class CheshireCat : MonoBehaviour
                     _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
                 });
 
-            faceValue = -1;
+            faceValue = -1.2f;
 
             DOTween.To(() => faceValue,
                 v => faceValue = v,
@@ -106,7 +110,7 @@ public class CheshireCat : MonoBehaviour
 
             DOTween.To(() => bodyValue,
                 v => bodyValue = v,
-                -1f,
+                -1.2f,
                 _fadeTime)
                 .OnUpdate(() =>
                 {
@@ -117,7 +121,7 @@ public class CheshireCat : MonoBehaviour
 
             DOTween.To(() => faceValue,
                 v => faceValue = v,
-                -1f,
+                -1.2f,
                 _fadeTime)
                 .OnUpdate(() =>
                 {
@@ -182,7 +186,7 @@ public class CheshireCat : MonoBehaviour
 
         while (true)
         {
-            random = Random.Range(7, 10);
+            random = Random.Range(3, 7);
 
             yield return new WaitForSeconds(random);
 
