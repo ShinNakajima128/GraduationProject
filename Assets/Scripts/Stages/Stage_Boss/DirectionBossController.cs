@@ -53,6 +53,7 @@ public class DirectionBossController : MonoBehaviour
             {
                 ChangeAnimation(DirectionBossAnimationType.Order);
                 AudioManager.PlaySE(SEType.BossStage_QueenQuiet);
+                VibrationController.OnVibration(Strength.Middle, 0.3f);
                 _queenFc.ChangeFaceType(QueenFaceType.Angry);
                 _queenFc.ChangeFaceType(QueenFaceType.Talking);
             });

@@ -246,6 +246,7 @@ public class ShuffleGameManager : StageGame<ShuffleGameManager>
                 _juggeInfo[1].SetActive(true);
                 HPManager.Instance.ChangeHPValue(1);
                 AudioManager.PlaySE(SEType.Stage2_Wrong); //ïsê≥ââπçƒê∂
+                VibrationController.OnVibration(Strength.Middle, 0.2f);
 
                 yield return new WaitForSeconds(1.5f);
 

@@ -741,6 +741,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HiddenUI"",
+                    ""type"": ""Button"",
+                    ""id"": ""cdcdab2d-d5c9-4566-9c54-67a0b683d650"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1271,6 +1280,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Push"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e51e337d-6145-4d4f-b817-f173db77fc74"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HiddenUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c70b12de-95d9-434c-aea0-cd79ab64f795"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HiddenUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1428,6 +1459,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_Option = m_UIInput.FindAction("Option", throwIfNotFound: true);
         m_UIInput_Exit = m_UIInput.FindAction("Exit", throwIfNotFound: true);
         m_UIInput_Push = m_UIInput.FindAction("Push", throwIfNotFound: true);
+        m_UIInput_HiddenUI = m_UIInput.FindAction("HiddenUI", throwIfNotFound: true);
         // Stage_Boss
         m_Stage_Boss = asset.FindActionMap("Stage_Boss", throwIfNotFound: true);
         m_Stage_Boss_Move = m_Stage_Boss.FindAction("Move", throwIfNotFound: true);
@@ -1695,6 +1727,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_Option;
     private readonly InputAction m_UIInput_Exit;
     private readonly InputAction m_UIInput_Push;
+    private readonly InputAction m_UIInput_HiddenUI;
     public struct UIInputActions
     {
         private @PlayerControls m_Wrapper;
@@ -1715,6 +1748,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Option => m_Wrapper.m_UIInput_Option;
         public InputAction @Exit => m_Wrapper.m_UIInput_Exit;
         public InputAction @Push => m_Wrapper.m_UIInput_Push;
+        public InputAction @HiddenUI => m_Wrapper.m_UIInput_HiddenUI;
         public InputActionMap Get() { return m_Wrapper.m_UIInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1772,6 +1806,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Push.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnPush;
                 @Push.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnPush;
                 @Push.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnPush;
+                @HiddenUI.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnHiddenUI;
+                @HiddenUI.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnHiddenUI;
+                @HiddenUI.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnHiddenUI;
             }
             m_Wrapper.m_UIInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -1824,6 +1861,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Push.started += instance.OnPush;
                 @Push.performed += instance.OnPush;
                 @Push.canceled += instance.OnPush;
+                @HiddenUI.started += instance.OnHiddenUI;
+                @HiddenUI.performed += instance.OnHiddenUI;
+                @HiddenUI.canceled += instance.OnHiddenUI;
             }
         }
     }
@@ -1910,6 +1950,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnOption(InputAction.CallbackContext context);
         void OnExit(InputAction.CallbackContext context);
         void OnPush(InputAction.CallbackContext context);
+        void OnHiddenUI(InputAction.CallbackContext context);
     }
     public interface IStage_BossActions
     {

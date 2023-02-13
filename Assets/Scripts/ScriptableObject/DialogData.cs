@@ -17,6 +17,8 @@ public class DialogData
     float _displayTime = 0.05f;
     [SerializeField]
     int _fontSize = 35;
+    [SerializeField]
+    IconType _iconType = IconType.Default;
     #endregion
 
     #region hide inspector
@@ -31,6 +33,7 @@ public class DialogData
     public Events EventType => _screenEffectType;
     public float DisplayTime => _displayTime;
     public int FontSize => _fontSize;
+    public IconType IconType => _iconType;
     #endregion
     public void MessagesToArray()
     {

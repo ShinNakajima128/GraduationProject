@@ -70,6 +70,7 @@ public class FallPole : MonoBehaviour
                      _attackCollider.gameObject.SetActive(false);
                      AudioManager.PlaySE(SEType.BossStage_DebrisLanding);
                      BossStageManager.CameraShake();
+                     VibrationController.OnVibration(Strength.High, 0.5f);
                  })
                  .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }

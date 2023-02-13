@@ -217,7 +217,6 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
                     _cameraMng.ChangeCamera(CroquetCameraType.InGame);
                     LetterboxController.ActivateLetterbox(false, 1.5f);
 
-
                     if (i == 0)
                     {
                         yield return new WaitForSeconds(2.0f);
@@ -399,7 +398,8 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
         _player.GoalAction(() =>
         {
             _isGoaled = true;
-            _testModel.DOShakeScale(0.5f,strength: 1f, vibrato:10);
+            _testModel.DOShakeScale(0.5f,strength: 0.8f, vibrato:10);
+            VibrationController.OnVibration(Strength.High, 0.3f);
         });
 
         _player.CheckPointAction(() =>
@@ -438,6 +438,7 @@ public class CroquetGameManager : StageGame<CroquetGameManager>
     {
         _trumpBlowSESource.Play();
         _trumpBlowSESource.pitch += 0.1f;
+        VibrationController.OnVibration(Strength.Middle, 0.2f);
     }
 
     void ResetSource()

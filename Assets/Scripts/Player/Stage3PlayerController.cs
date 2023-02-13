@@ -256,6 +256,7 @@ public class Stage3PlayerController : MonoBehaviour
         IsStandbyed = false;
 
         AudioManager.PlaySE(SEType.Stage3_Shot);
+        VibrationController.OnVibration(Strength.High, 0.2f);
     }
 
     /// <summary>

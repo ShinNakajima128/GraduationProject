@@ -28,6 +28,7 @@ public class UIInput : MonoBehaviour
     public static bool High => Instance._input.actions["B"].WasPressedThisFrame();
     public static bool Low => Instance._input.actions["B"].WasReleasedThisFrame();
     public static bool Push => Instance._input.actions["Push"].WasPressedThisFrame();
+    public static bool Hidden => Instance._input.actions["HiddenUI"].WasPressedThisFrame();
     #endregion
 
     private void Awake()

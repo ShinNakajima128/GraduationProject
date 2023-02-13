@@ -28,6 +28,7 @@ public class BallController : MonoBehaviour, IThrowable
     private event Action OnGoaled;
     private event Action OnCheckPointed;
     private Rigidbody _rb;
+    private Renderer _renderer;
     private Vector3 _direction;
     private Vector3 _originPos;
     private Quaternion _default;
@@ -43,6 +44,7 @@ public class BallController : MonoBehaviour, IThrowable
     {
         _default = this.transform.rotation;
         _rb = GetComponent<Rigidbody>();
+        _renderer = GetComponent<Renderer>();
         _originPos = transform.localPosition;
     }
 
@@ -81,6 +83,7 @@ public class BallController : MonoBehaviour, IThrowable
             transform.forward = result;
 
             _rb.velocity = result;
+            VibrationController.OnVibration(Strength.Middle, 0.2f);
             return;
         }
     }
@@ -187,8 +190,11 @@ public class BallController : MonoBehaviour, IThrowable
     #endregion
     IEnumerator DelayVanishCoroutine()
     {
+        _renderer.enabled = false;
+
         yield return new WaitForSeconds(3.0f);
 
+        _renderer.enabled = true;
         gameObject.SetActive(false);
     }
 }

@@ -31,6 +31,7 @@ public class BossAreaController : MonoBehaviour
             if (isActive)
             {
                 a.IsAttacked = false;
+                a.AttackArea.AttackCollider.enabled = false;
             }
         }
     }

@@ -37,6 +37,12 @@ public class Stage3Operation : MonoBehaviour
     [SerializeField]
     Image _shotTextImage = default;
 
+    [SerializeField]
+    GameObject _circleGaugeObject = default;
+
+    [SerializeField]
+    Image _circleGaugeImage = default;
+
     [Header("Components")]
     [SerializeField]
     Stage3PlayerController _player = default;
@@ -50,6 +56,7 @@ public class Stage3Operation : MonoBehaviour
     CanvasGroup _operationGroup;
     bool _isOnLeftMoveAnimed = false;
     bool _isOnRightMoveAnimed = false;
+    Tween _circleGaugeTween;
     Tween _shotImageFillTween;
     #endregion
 
@@ -192,6 +199,10 @@ public class Stage3Operation : MonoBehaviour
     #endregion
 
     #region OnShotActions
+    /// <summary>
+    /// 構えるアクション
+    /// </summary>
+    /// <param name="context"></param>
     void OnStandby(InputAction.CallbackContext context)
     {
         if (!IsActived)
@@ -206,16 +217,31 @@ public class Stage3Operation : MonoBehaviour
 
             AudioManager.PlaySE(SEType.Stage3_Standby);
 
-            _shotImageFillTween = _shotTextImage.DOFillAmount(1, 1.25f)
-                                                .OnComplete(() => 
+            VibrationController.OnVibration(Strength.Low, 1.25f);
+            
+            _circleGaugeObject.SetActive(true);
+            _circleGaugeTween = _circleGaugeImage.DOFillAmount(1, 1.25f)
+                                                 .SetEase(Ease.Linear);
+
+            _shotImageFillTween = _shotTextImage.DOFillAmount(1, 1.3f)
+                                                .SetEase(Ease.Linear)
+                                                .OnComplete(() =>  
                                                 {
+                                                    //ゲージがMAXになったら以下の処理
+                                                    _circleGaugeImage.fillAmount = 0;
+                                                    _circleGaugeObject.SetActive(false);
                                                     _maxGaugeEffect.SetActive(true);
                                                     AudioManager.PlaySE(SEType.Stage3_MaxGauge);
-                                                    _shotImageFillTween = _shotTextImage.transform.DOScale(1.1f, 0.25f)
+                                                    _shotImageFillTween = _shotTextImage.transform.DOScale(1.2f, 0.5f)
                                                                             .SetLoops(-1, LoopType.Yoyo);
+                                                    VibrationController.OnVibration(Strength.Middle, 0.25f);
                                                 });
         }
     }
+    /// <summary>
+    /// 打つアクション
+    /// </summary>
+    /// <param name="context"></param>
     void OnShot(InputAction.CallbackContext context)
     {
         if (!IsActived)
@@ -225,17 +251,50 @@ public class Stage3Operation : MonoBehaviour
 
         if (context.canceled)
         {
+            //構え終わってない場合はキャンセル
             if (!_player.IsStandbyed)
             {
                 _raiseOverheadTextImage.enabled = true;
-                _shotImageFillTween.Kill();
-                _shotImageFillTween = null;
+
+                if (_circleGaugeTween != null)
+                {
+                    _circleGaugeTween.Kill();
+                    _circleGaugeTween = null;
+                }
+
+                if (_shotImageFillTween != null)
+                {
+                    _shotImageFillTween.Kill();
+                    _shotImageFillTween = null;
+                }
+
+                _circleGaugeImage.fillAmount = 0;
+                _circleGaugeObject.SetActive(false);
+
                 _shotTextImage.fillAmount = 0;
                 _shotTextImage.enabled = false;
+                
                 AudioManager.StopSE();
+                VibrationController.OffVibration();
             }
             else
             {
+                if (_circleGaugeTween != null)
+                {
+                    _circleGaugeTween.Kill();
+                    _circleGaugeTween = null;
+                }
+
+                if (_shotImageFillTween != null)
+                {
+                    _shotImageFillTween.Kill();
+                    _shotImageFillTween = null;
+                }
+
+                _circleGaugeImage.fillAmount = 0;
+                _shotTextImage.fillAmount = 0;
+
+                _circleGaugeObject.SetActive(false);
                 _maxGaugeEffect.SetActive(false);
             }
         }

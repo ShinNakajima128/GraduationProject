@@ -31,6 +31,7 @@ public class AttackAreaController : MonoBehaviour
     
     #region property
     public BoxCollider AttackAreaCollider => _searchArea;
+    public AttackArea AttackArea => _attackArea;
     public bool IsAttacked { get; set; } = false;
     #endregion
 

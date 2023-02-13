@@ -111,8 +111,10 @@ public class BossController : MonoBehaviour, IDamagable
 
         EventManager.ListenEvents(Events.BossStage_BossTalking, () =>
         {
-            
+            _queenFc.ChangeFaceType(QueenFaceType.Talking);
         });
+
+        EventManager.ListenEvents(Events.FinishTalking, StopTalking);
     }
 
     void FixedUpdate()
@@ -126,6 +128,16 @@ public class BossController : MonoBehaviour, IDamagable
     void BossMovable(bool isMove)
     {
         _isInBattle = isMove;
+    }
+
+    void StopTalking()
+    {
+        if (!_queenFc.IsTalking)
+        {
+            return;
+        }
+
+        _queenFc.FinishTalk();
     }
 
     private void OnMove()
@@ -194,6 +206,8 @@ public class BossController : MonoBehaviour, IDamagable
         EventManager.OnEvent(Events.Boss_GroundShake);
         AudioManager.PlaySE(SEType.BossStage_QueenLanding);
         LetterboxController.ActivateLetterbox(false);
+        VibrationController.OnVibration(Strength.High, 0.35f);
+
         firstAction?.Invoke();
 
         yield return new WaitForSeconds(2.0f);
@@ -304,6 +318,8 @@ public class BossController : MonoBehaviour, IDamagable
                                   EventManager.OnEvent(Events.Boss_GroundShake);
                                   EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
                                   AudioManager.PlaySE(SEType.BossStage_QueenLanding);
+                                  VibrationController.OnVibration(Strength.Middle, 0.3f);
+
                                   Debug.Log("着地");
                               })
                               .WaitForCompletion();
@@ -325,6 +341,7 @@ public class BossController : MonoBehaviour, IDamagable
 
                 EffectManager.PlayEffect(EffectType.ShockWave, transform.position);
                 AudioManager.PlaySE(SEType.BossStage_QueenLanding);
+                VibrationController.OnVibration(Strength.Low, 0.2f);
                 //EventManager.OnEvent(Events.Boss_GroundShake); //追加の着地でも地面を揺らす
             }
         }
@@ -369,6 +386,7 @@ public class BossController : MonoBehaviour, IDamagable
         _isDamaged = true;
         BossHPManager.Instance.Damage();
         AudioManager.PlaySE(SEType.BossStage_QueenDamage);
+        VibrationController.OnVibration(Strength.Middle, 0.2f);
 
         //3フェイズ目の時は倒されたモーションを再生
         if (_currentBattlePhase == BossBattlePhase.Third)

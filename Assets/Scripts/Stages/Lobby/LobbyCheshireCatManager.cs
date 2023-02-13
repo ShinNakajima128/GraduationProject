@@ -14,6 +14,19 @@ public class LobbyCheshireCatManager : MonoBehaviour
     [Tooltip("ロビーのチェシャ猫データ")]
     [SerializeField]
     LobbyCheshireCat[] _cheshireCats = default;
+
+    [Header("Components")]
+    [Tooltip("ロビーを動き回るチェシャ猫のコンポーネント")]
+    [SerializeField]
+    CheshireCat _cheshireCat = default;
+
+    [Tooltip("ロビーを動き回るチェシャ猫の行動処理のコンポーネント")]
+    [SerializeField]
+    CheshireCatBehaviour _catBehaviour = default;
+
+    [Header("Debug")]
+    [SerializeField]
+    bool _debugMode = false;
     #endregion
 
     #region private
@@ -42,14 +55,20 @@ public class LobbyCheshireCatManager : MonoBehaviour
 
         //ロビーを動き回るチェシャ猫の機能を持つComponentを取得
         _cheshireCats.FirstOrDefault(c => c.CatType == LobbyCheshireCatType.Movable)
-                     .CatObject.TryGetComponent(out _movableCat);
+                     .CheshireCat.TryGetComponent(out _movableCat);
     }
 
     private void Start()
     {
         //動き回るチェシャ猫のアクティブ時のアクションを登録
         _activateActionDic[LobbyCheshireCatType.Movable] += () => _movableCat.ChangeState(CheshireCatState.Idle);
+
+        if (_debugMode)
+        {
+            ActiveCheshireCat(LobbyCheshireCatType.Movable);
+        }
     }
+
     /// <summary>
     /// 指定したチェシャ猫をアクティブにする
     /// </summary>
@@ -58,10 +77,17 @@ public class LobbyCheshireCatManager : MonoBehaviour
     {
         foreach (var cat in _cheshireCats)
         {
-            cat.CatObject.SetActive(false);
+            cat.CheshireCat.SetActive(false);
         }
 
-        _cheshireCats.FirstOrDefault(c => c.CatType == type).CatObject.SetActive(true);
+        var activeCat = _cheshireCats.FirstOrDefault(c => c.CatType == type).CheshireCat;
+
+        if (type == LobbyCheshireCatType.Movable && _cheshireCat.IsDissolved) 
+        {
+            _cheshireCat.ActivateDissolve(false);
+        }
+        activeCat.SetActive(true);
+        print($"{type}");
     }
 }
 
@@ -73,7 +99,7 @@ public struct LobbyCheshireCat
 {
     public string TypeName;
     public LobbyCheshireCatType CatType;
-    public GameObject CatObject;
+    public GameObject CheshireCat;
 }
 
 /// <summary>

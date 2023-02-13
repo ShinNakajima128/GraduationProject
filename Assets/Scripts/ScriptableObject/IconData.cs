@@ -16,5 +16,16 @@ public class IconData : ScriptableObject
 public struct ActorData
 {
     public Actor Actor;
-    public Sprite Icon;
+    public Sprite Icon_Default;
+    public Sprite Type1;
+    public Sprite Type2;
+    public Sprite Type3;
+}
+
+public enum IconType
+{
+    Default,
+    Type1,
+    Type2,
+    Type3,
 }
