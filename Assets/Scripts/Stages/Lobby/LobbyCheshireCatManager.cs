@@ -58,7 +58,7 @@ public class LobbyCheshireCatManager : MonoBehaviour
                      .CheshireCat.TryGetComponent(out _movableCat);
     }
 
-    private void Start()
+    IEnumerator Start()
     {
         //動き回るチェシャ猫のアクティブ時のアクションを登録
         _activateActionDic[LobbyCheshireCatType.Movable] += () => _movableCat.ChangeState(CheshireCatState.Idle);
@@ -67,13 +67,20 @@ public class LobbyCheshireCatManager : MonoBehaviour
         {
             ActiveCheshireCat(LobbyCheshireCatType.Movable);
         }
+
+        yield return null;
+
+        foreach (var cat in _cheshireCats)
+        {
+            cat.CheshireCat.SetActive(false);
+        }
     }
 
     /// <summary>
     /// 指定したチェシャ猫をアクティブにする
     /// </summary>
     /// <param name="type"> チェシャ猫オブジェクトの種類 </param>
-    public void ActiveCheshireCat(LobbyCheshireCatType type)
+    public void ActiveCheshireCat(LobbyCheshireCatType type, bool isMoving = false)
     {
         foreach (var cat in _cheshireCats)
         {
@@ -81,13 +88,17 @@ public class LobbyCheshireCatManager : MonoBehaviour
         }
 
         var activeCat = _cheshireCats.FirstOrDefault(c => c.CatType == type).CheshireCat;
-
+        
         activeCat.SetActive(true);
 
-        if (type == LobbyCheshireCatType.Movable && _cheshireCat.IsDissolved) 
+        if (type == LobbyCheshireCatType.Movable) 
         {
-            _catBehaviour.StartMoving();
+            if (isMoving)
+            {
+                _catBehaviour.StartMoving();
+            }
         }
+
         print($"{type}");
     }
 }

@@ -457,7 +457,7 @@ public class LobbyManager : MonoBehaviour
         _unclearedIconsParent.SetActive(true);
         action?.Invoke();
         Debug.Log("call");
-        LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Movable);
+        LobbyCheshireCatManager.Instance.ActiveCheshireCat(LobbyCheshireCatType.Movable, true);
         StartCoroutine(LobbyNameInfomationCoroutine());
     }
 

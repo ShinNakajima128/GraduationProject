@@ -91,6 +91,7 @@ public class CheshireCatBehaviour : MonoBehaviour
     public void StartMoving()
     {
         StartCoroutine(WarpCoroutine());
+        _cat.CheshireFaceCtrl.ChangeFaceType(CheshireCatFaceType.Blink);
     }
 
     IEnumerator IdleCoroutine()
@@ -149,11 +150,18 @@ public class CheshireCatBehaviour : MonoBehaviour
 
     IEnumerator WarpCoroutine()
     {
+        if (!_cat.IsDissolved)
+        {
+            _cat.ActivateDissolve(true, 0f); 
+        }
+
+        yield return null;
+
         while (true)
         {
             if (!_cat.IsDissolved)
             {
-                _cat.ActivateDissolve(true); //ディゾルブ時間は「1.5秒」固定
+                _cat.ActivateDissolve(true);
 
                 yield return new WaitForSeconds(1.5f);     
             }
