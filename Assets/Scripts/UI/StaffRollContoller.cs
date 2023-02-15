@@ -16,12 +16,19 @@ public class StaffRollContoller : MonoBehaviour
     [SerializeField]
     float _delayStartTime = 2.0f;
 
+    [Tooltip("アニメーションが非表示にするスクロールの進行度")]
+    [SerializeField]
+    float _inactiveAnimationPercent = 0.9f;
+
     [Header("UIObjects")]
     [SerializeField]
     Transform _staffRollTrans = default;
 
     [SerializeField]
     Transform _scrollTargetTrans = default;
+
+    [SerializeField]
+    CreditAnimation _creditAnim = default;
     #endregion
 
     #region private
@@ -40,6 +47,10 @@ public class StaffRollContoller : MonoBehaviour
     {
         _staffRollTrans.DOLocalMove(_scrollTargetTrans.localPosition, _animTime)
                        .SetEase(Ease.Linear)
+                       .OnStart(() => 
+                       {
+                           _creditAnim.OnFadeDescription(1, 1.0f);
+                       })
                        .OnComplete(() => 
                        {
                            print("スクロール終了");
@@ -47,5 +58,13 @@ public class StaffRollContoller : MonoBehaviour
                            OnComplitedAction?.Invoke();
                        })
                        .SetDelay(_delayStartTime);
+
+        StartCoroutine(InactiveAnimation());
+    }
+    IEnumerator InactiveAnimation()
+    {
+        yield return new WaitForSeconds(_animTime * _inactiveAnimationPercent);
+
+        _creditAnim.OnFadeDescription(0, 1.0f);
     }
 }

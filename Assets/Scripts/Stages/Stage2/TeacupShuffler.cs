@@ -95,7 +95,7 @@ public class TeacupShuffler : MonoBehaviour
                                 .PathTrans.Select(x => x.transform.position).ToArray();
 
         AudioManager.PlaySE(SEType.Stage2_Shuffle);
-        VibrationController.OnVibration(Strength.Low, 0.2f);
+        //VibrationController.OnVibration(Strength.Low, 0.2f);
 
         //２つのカップを入れ替えるアニメーションを再生。処理はカップのアニメーションが終わるまで待機
         _teapots[index].DOPath(mainToTargetPath, shuffleTime, PathType.CatmullRom);

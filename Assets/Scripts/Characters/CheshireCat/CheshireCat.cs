@@ -14,9 +14,6 @@ public class CheshireCat : MonoBehaviour
     float _moveSpeed = 1.5f;
 
     [SerializeField]
-    float _fadeTime = 1.0f;
-
-    [SerializeField]
     CheshireCatState _currentState = default;
 
     [Header("Renderer")]
@@ -25,28 +22,33 @@ public class CheshireCat : MonoBehaviour
     #endregion
 
     #region private
+    CheshireCatFaceController _cheshireFc;
     Animator _anim;
     Coroutine _currentCoroutine;
     Material _cheshireBodyMat;
     Material _cheshireFaceMat;
+    bool _isDissolved = false;
     #endregion
 
     #region public
     #endregion
 
     #region property
+    public bool IsDissolved => _isDissolved;
+    public CheshireCatFaceController CheshireFaceCtrl => _cheshireFc;
     #endregion
 
     private void Awake()
     {
+        TryGetComponent(out _cheshireFc);
         TryGetComponent(out _anim);
     }
 
     IEnumerator Start()
     {
-        EventManager.ListenEvents(Events.Cheshire_StartGrinning, () => 
+        EventManager.ListenEvents(Events.Cheshire_StartGrinning, () =>
         {
-            OnAction(CheshireCatState.Jump, 0.2f); 
+            OnAction(CheshireCatState.Jump, 0.2f);
         });
         _cheshireBodyMat = _cheshireRenderer.materials[0];
         _cheshireFaceMat = _cheshireRenderer.materials[1];
@@ -70,59 +72,62 @@ public class CheshireCat : MonoBehaviour
         OnAction(_currentState, animBlend);
     }
 
-    public void ActivateDissolve(bool isActive)
+    public void ActivateDissolve(bool isActive, float fadeTime = 1.5f)
     {
+        _isDissolved = isActive;
+
         Debug.Log("Dissolve");
         float bodyValue;
         float faceValue;
 
         if (isActive)
         {
-            bodyValue = -1f;
+            bodyValue = -1.2f;
 
             DOTween.To(() => bodyValue,
-                v => bodyValue = v,
-                0f,
-                _fadeTime)
-                .OnUpdate(() => 
-                { 
-                    _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
-                });
+                   v => bodyValue = v,
+                   0f,
+                   fadeTime)
+                   .OnUpdate(() =>
+                   {
+                       _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
+                   });
 
-            faceValue = -1;
+            faceValue = -1.2f;
 
             DOTween.To(() => faceValue,
-                v => faceValue = v,
-                0f,
-                _fadeTime)
-                .OnUpdate(() =>
-                {
-                    _cheshireFaceMat.SetVector("_DissolveParams", new Vector4(3, 1, faceValue, 0.1f));
-                });
+                   v => faceValue = v,
+                   0f,
+                   fadeTime)
+                   .OnUpdate(() =>
+                   {
+                       _cheshireFaceMat.SetVector("_DissolveParams", new Vector4(3, 1, faceValue, 0.1f));
+                   });
         }
         else
         {
+            
             bodyValue = 0f;
 
             DOTween.To(() => bodyValue,
-                v => bodyValue = v,
-                -1f,
-                _fadeTime)
-                .OnUpdate(() =>
-                {
-                    _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
-                });
+                   v => bodyValue = v,
+                   -1.2f,
+                   fadeTime)
+                   .OnUpdate(() =>
+                   {
+                       _cheshireBodyMat.SetVector("_DissolveParams", new Vector4(3, 1, bodyValue, 0.1f));
+                   });
 
             faceValue = 0f;
 
             DOTween.To(() => faceValue,
-                v => faceValue = v,
-                -1f,
-                _fadeTime)
-                .OnUpdate(() =>
-                {
-                    _cheshireFaceMat.SetVector("_DissolveParams", new Vector4(3, 1, faceValue, 0.1f));
-                });
+                   v => faceValue = v,
+                   -1.2f,
+                   fadeTime)
+                   .OnUpdate(() =>
+                   {
+                       _cheshireFaceMat.SetVector("_DissolveParams", new Vector4(3, 1, faceValue, 0.1f));
+                   });
         }
     }
 
@@ -182,7 +187,7 @@ public class CheshireCat : MonoBehaviour
 
         while (true)
         {
-            random = Random.Range(7, 10);
+            random = Random.Range(3, 7);
 
             yield return new WaitForSeconds(random);
 

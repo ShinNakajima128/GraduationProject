@@ -161,7 +161,6 @@ public class GameoverDirection : MonoBehaviour
         trigger2.triggers.Add(selectEntry2);
 
         //ƒ{ƒ^ƒ“‘I‘ðŽž‚Ìˆ—‚ð“o˜^
-        //ƒ{ƒ^ƒ“‘I‘ðŽž‚Ìˆ—‚ð“o˜^
         _gameoverSelectButtons[1].OnClickAsObservable()
                                  .Where(_ => _isActiveUI)
                                  .Take(1)
