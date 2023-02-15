@@ -156,7 +156,12 @@ public class StageTutorial : MonoBehaviour
         var data = _tutorialData.FirstOrDefault(d => d.Stage == stage);
 
         SetDescription(data); //ステージ詳細データをUIに反映
-        _tutorialBackground.sprite = data.TutorialBackground; //背景画像をセット
+
+        //ステージ1でのチュートリアルではない場合
+        if (GameManager.Instance.CurrentScene != SceneType.Stage1_Fall)
+        {
+            _tutorialBackground.sprite = data.TutorialBackground; //背景画像をセット
+        }
         _currentPageLength = data.DescriptionDatas.Length; //ページの長さを取得
         _currentPageIcon.sprite = data.CurrentPageIcon; //ステージごとのページアイコンをセット
 
@@ -175,17 +180,23 @@ public class StageTutorial : MonoBehaviour
     /// チュートリアル画面のON/OFFを切り替える
     /// </summary>
     /// <param name="isActivate"> 表示か非表示かどうか </param>
-    public void ActivateTutorialUI(bool isActivate)
+    public void ActivateTutorialUI(bool isActivate, float fadeTime = 0f)
     {
         if (isActivate)
         {
             UIManager.ActivatePanel(UIPanelType.Tutorial);
-            _tutorialGroup.alpha = 1;
+            DOTween.To(() => _tutorialGroup.alpha,
+                x => _tutorialGroup.alpha = x,
+                1,
+                fadeTime);
         }
         else
         {
             UIManager.InactivatePanel(UIPanelType.Tutorial);
-            _tutorialGroup.alpha = 0;
+            DOTween.To(() => _tutorialGroup.alpha,
+                x => _tutorialGroup.alpha = x,
+                0,
+                fadeTime);
             PlayButtonPressAction = null;
         }
     }

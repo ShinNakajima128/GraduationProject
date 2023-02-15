@@ -40,7 +40,11 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance.CurrentScene != SceneType.Title)
+        if (GameManager.Instance.CurrentScene == SceneType.Stage1_Fall)
+        {
+            Debug.Log("ステージ1");
+        }
+        else if (GameManager.Instance.CurrentScene != SceneType.Title)
         {
             if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
             {

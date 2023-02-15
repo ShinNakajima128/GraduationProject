@@ -43,6 +43,10 @@ public class FallGameManager : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
 
+    [Header("Components")]
+    [SerializeField]
+    StageTutorial _tutorial = default;
+
     [Header("Debug")]
     [SerializeField]
     bool _debugMode = false;
@@ -52,6 +56,8 @@ public class FallGameManager : MonoBehaviour
     /// <summary> 目標の枚数 </summary>
     int _targetCount;
     Vector3 _originPos;
+    /// <summary> チュートリアルが見終わったかどうか </summary>
+    bool _isfinishTutorial = false;
     #endregion
 
     #region events
@@ -187,6 +193,14 @@ public class FallGameManager : MonoBehaviour
         ObstacleGenerator.Instance.SetInterval(_gamePrameters[diffIndex].ObstacleGenerateInterval);
         TableGenerator.Instance.SetInterval(_gamePrameters[diffIndex].TableGenerateInterval);
         WhitePaperGenerator.Instance.SetInterval(_gamePrameters[diffIndex].WhitePaperGenerateInterval);
+
+        if (!IsSecondTry)
+        {
+            _tutorial.TutorialSetup(Stages.Stage1, () => 
+            {
+                _isfinishTutorial = true;
+            });
+        }
     }
 
     IEnumerator GameStartCoroutine(Action action = null)
@@ -200,6 +214,28 @@ public class FallGameManager : MonoBehaviour
             yield return MessagePlayer.Instance.PlayMessageCorountine(MessageType.FirstVisit_Stage1);
             yield return new WaitForSeconds(1.5f);
         }
+
+        if (!IsSecondTry)
+        {
+            DOFController.Instance.ActivateDOF(true, 0.5f);
+            _tutorial.ActivateTutorialUI(true, 0.5f);
+
+            yield return new WaitForSeconds(0.5f);
+
+            //yield return _tutorial.gameObject.transform.DOLocalMoveY(0f, 0.5f)
+            //                                           .WaitForCompletion();
+
+            yield return new WaitUntil(() => _isfinishTutorial);
+
+            //yield return _tutorial.gameObject.transform.DOLocalMoveY(-1080f, 0.5f)
+            //                                           .WaitForCompletion();
+
+            DOFController.Instance.ActivateDOF(false, 0.5f);
+            _tutorial.ActivateTutorialUI(false, 0.5f);
+
+            yield return new WaitForSeconds(0.5f);
+        }
+
         _infoImages[0].enabled = true;
         //_informationText.text = "スタート!";
 
