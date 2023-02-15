@@ -70,16 +70,15 @@ public class DrinkMe : MonoBehaviour
                 _target = other.GetComponent<IHealable>();
             }
 
-            //プレイヤーの体力がMAXの時は処理を行わない
-            if (_target.IsMaxHP)
+            //プレイヤーの体力が減っている場合のみ処理を行う
+            if (!_target.IsMaxHP)
             {
-                return;
+                _target.Heal(_healValue);
             }
-
-            //プレイヤーを回復し、自身を非アクティブにする
+         
+            //アイテム獲得演出を行い、自身を非アクティブにする
             AudioManager.PlaySE(SEType.Player_Heal);
             EffectManager.PlayEffect(EffectType.Player_Heal, other.gameObject.transform);
-            _target.Heal(_healValue);
             gameObject.SetActive(false);
         }
     }
