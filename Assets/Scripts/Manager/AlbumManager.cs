@@ -254,6 +254,7 @@ public class AlbumManager : MonoBehaviour
             StillSetup();
             _albumGroup.alpha = 1;
             ActivePage(_currentPageIndex);
+            DOFController.Instance.ActivateDOF(true, 0.25f);
 
             if (GameManager.Instance.CurrentLobbyState == LobbyState.Default)
             {
@@ -272,6 +273,7 @@ public class AlbumManager : MonoBehaviour
         else
         {
             AudioManager.PlaySE(SEType.Lobby_CloseAlbum);
+            DOFController.Instance.ActivateDOF(false, 0.25f);
             _operatePanel.SetActive(false);
 
             yield return transform.DOLocalMoveY(_originPosTrans.localPosition.y, _animTime)
