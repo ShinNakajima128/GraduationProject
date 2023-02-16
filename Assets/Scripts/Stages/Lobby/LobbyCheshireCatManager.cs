@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 /// <summary>
 /// ロビーのチェシャ猫を管理するManagerクラス
@@ -74,6 +76,15 @@ public class LobbyCheshireCatManager : MonoBehaviour
         {
             cat.CheshireCat.SetActive(false);
         }
+
+        //チェシャ猫の表示バグが起きた時の対処として登録する処理
+        this.UpdateAsObservable()
+            .Where(_ => UIInput.LobbyReset)
+            .Take(1)
+            .Subscribe(_ =>
+            {
+                ActiveCheshireCat(LobbyCheshireCatType.Movable);
+            });
     }
 
     /// <summary>

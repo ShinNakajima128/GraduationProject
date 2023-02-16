@@ -750,6 +750,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""298e3d6a-83cd-4acc-800e-c287d1193ba7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1302,6 +1311,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""HiddenUI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6114df5e-d6c3-4e8f-b0c8-f4e5a6ceba5b"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1460,6 +1480,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UIInput_Exit = m_UIInput.FindAction("Exit", throwIfNotFound: true);
         m_UIInput_Push = m_UIInput.FindAction("Push", throwIfNotFound: true);
         m_UIInput_HiddenUI = m_UIInput.FindAction("HiddenUI", throwIfNotFound: true);
+        m_UIInput_Reset = m_UIInput.FindAction("Reset", throwIfNotFound: true);
         // Stage_Boss
         m_Stage_Boss = asset.FindActionMap("Stage_Boss", throwIfNotFound: true);
         m_Stage_Boss_Move = m_Stage_Boss.FindAction("Move", throwIfNotFound: true);
@@ -1728,6 +1749,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UIInput_Exit;
     private readonly InputAction m_UIInput_Push;
     private readonly InputAction m_UIInput_HiddenUI;
+    private readonly InputAction m_UIInput_Reset;
     public struct UIInputActions
     {
         private @PlayerControls m_Wrapper;
@@ -1749,6 +1771,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Exit => m_Wrapper.m_UIInput_Exit;
         public InputAction @Push => m_Wrapper.m_UIInput_Push;
         public InputAction @HiddenUI => m_Wrapper.m_UIInput_HiddenUI;
+        public InputAction @Reset => m_Wrapper.m_UIInput_Reset;
         public InputActionMap Get() { return m_Wrapper.m_UIInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1809,6 +1832,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @HiddenUI.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnHiddenUI;
                 @HiddenUI.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnHiddenUI;
                 @HiddenUI.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnHiddenUI;
+                @Reset.started -= m_Wrapper.m_UIInputActionsCallbackInterface.OnReset;
+                @Reset.performed -= m_Wrapper.m_UIInputActionsCallbackInterface.OnReset;
+                @Reset.canceled -= m_Wrapper.m_UIInputActionsCallbackInterface.OnReset;
             }
             m_Wrapper.m_UIInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -1864,6 +1890,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @HiddenUI.started += instance.OnHiddenUI;
                 @HiddenUI.performed += instance.OnHiddenUI;
                 @HiddenUI.canceled += instance.OnHiddenUI;
+                @Reset.started += instance.OnReset;
+                @Reset.performed += instance.OnReset;
+                @Reset.canceled += instance.OnReset;
             }
         }
     }
@@ -1951,6 +1980,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnExit(InputAction.CallbackContext context);
         void OnPush(InputAction.CallbackContext context);
         void OnHiddenUI(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
     }
     public interface IStage_BossActions
     {
