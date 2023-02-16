@@ -71,6 +71,8 @@ public enum Events
     BossStage_BossAngry, //ボス怒り
     BossStage_ChangeBossFace_Default, //ボスの表情を元に戻す
     BossStage_Cheshire_Happy, //チェシャ猫:喜ぶ
+    BossStage_Phase3_FocusEatMe, //EatMeに注目
+    BossStage_Phase3_CameraReset //カメラを元に戻す
 }
 
 /// <summary>

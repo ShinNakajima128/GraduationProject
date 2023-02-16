@@ -39,7 +39,7 @@ public class EatMe : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        transform.DOLocalRotate(new Vector3(75, 180, 0), 0f);
+        transform.DOLocalRotate(new Vector3(75, 0, 0), 0f);
         transform.DOLocalMoveY(_startHeight, 0f);
     }
 
