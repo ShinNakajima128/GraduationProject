@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// がれきを生成、消去する機能を持つComponent
+/// </summary>
 public class DebrisGenerator : MonoBehaviour
 {
     #region serialize
@@ -10,6 +13,10 @@ public class DebrisGenerator : MonoBehaviour
     [Tooltip("がれきを生成する数")]
     [SerializeField]
     int _generateCount = 3;
+
+    [Tooltip("フェーズ2の生成範囲の座標")]
+    [SerializeField]
+    Transform[] _generateRangeTrans = default;
 
     [Tooltip("同じタイミングで生成したがれきの生成間隔")]
     [SerializeField]
@@ -72,11 +79,21 @@ public class DebrisGenerator : MonoBehaviour
             StartCoroutine(GenerateCoroutine());
         }
     }
+
     /// <summary>
-    /// がれきを生成する
+    /// がれきを設定された「範囲」にランダムで生成する
     /// </summary>
     /// <param name="generateCount"> 生成する数 </param>
-    public void Generate(int generateCount)
+    public void RandomGenerate(int generateCount)
+    {
+        StartCoroutine(RandomIntervalCoroutine(generateCount));
+    }
+
+    /// <summary>
+    /// がれきを設定された「座標」にランダムで生成する
+    /// </summary>
+    /// <param name="generateCount"> 生成する数 </param>
+    public void DefiniteGenerate(int generateCount)
     {
         bool isSet;
         int randomIndex;
@@ -122,9 +139,19 @@ public class DebrisGenerator : MonoBehaviour
     /// <summary>
     /// がれきを生成開始する
     /// </summary>
-    public void StartGenerate()
+    public void StartGenerate(GenerateType type)
     {
-        _generateCoroutine = StartCoroutine(GenerateCoroutine());
+        switch (type)
+        {
+            case GenerateType.Random:
+                _generateCoroutine = StartCoroutine(RandomGenerateCoroutine());
+                break;
+            case GenerateType.Definite:
+                _generateCoroutine = StartCoroutine(GenerateCoroutine());
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -155,11 +182,33 @@ public class DebrisGenerator : MonoBehaviour
         }
     }
 
+    IEnumerator RandomGenerateCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        WaitForSeconds interval;
+
+        if (_debugMode)
+        {
+            interval = new WaitForSeconds(_debugGenerateInterval);
+        }
+        else
+        {
+            interval = new WaitForSeconds(_nextGenerateInterval);
+        }
+
+        while (true)
+        {
+            RandomGenerate(_generateCount);
+            yield return interval;
+        }
+    }
+
     IEnumerator GenerateCoroutine()
     {
         yield return new WaitForSeconds(0.5f);
 
-        WaitForSeconds interval = default;
+        WaitForSeconds interval;
 
         if (_debugMode)
         {
@@ -172,10 +221,62 @@ public class DebrisGenerator : MonoBehaviour
 
         while (true)
         {
-            Generate(_generateCount);
+            DefiniteGenerate(_generateCount);
             yield return interval;
         }
     }
+
+    IEnumerator RandomIntervalCoroutine(int generateCount)
+    {
+        var interval = new WaitForSeconds(_sometimeGenerateInterval);
+
+        IsGenerating = true;
+
+        for (int i = 0; i < generateCount; i++)
+        {
+            GameObject shadow = default;
+
+            float randomX = Random.Range(_generateRangeTrans[0].position.x, _generateRangeTrans[1].position.x);
+            float randomZ = Random.Range(_generateRangeTrans[1].position.z, _generateRangeTrans[0].position.z);
+
+            Vector3 randomPoint = new Vector3(randomX, 10f, randomZ);
+
+            Vector3 shadowGeneratePoint = new Vector3(randomPoint.x,
+                                              0.01f, //影を表示するY座標はこの数値でないとステージに埋まるため 
+                                              randomPoint.z);
+
+            _debrisShadowCtrl.Use(shadowGeneratePoint, s =>
+            {
+                s.OnAnimation(2.5f, () =>
+                {
+                    _debrisCtrl.Use(randomPoint, d =>
+                    {
+                        d.OnAnimation(() =>
+                        {
+                            s.gameObject.SetActive(false);
+                        });
+
+                        if (shadow != null)
+                        {
+                            d.SetShadow(shadow);
+                        }
+
+                        int percent = Random.Range(0, 10);
+
+                        //指定したアイテム生成確率を超えたらアイテムを発生させる
+                        if (_itemGeneratePercent >= percent / 10.0f)
+                        {
+                            d.IsItemGenerate = true;
+                        }
+                    });
+                });
+                shadow = s.gameObject;
+            });
+
+            yield return interval;
+        }
+    }
+
     IEnumerator GenerateIntervalCoroutine(int generateCount)
     {
         var interval = new WaitForSeconds(_sometimeGenerateInterval);
@@ -222,4 +323,13 @@ public class DebrisGenerator : MonoBehaviour
             yield return interval;
         }
     }
+}
+
+/// <summary>
+/// 生成の種類
+/// </summary>
+public enum GenerateType
+{
+    Random, //指定した範囲をランダム
+    Definite //定位置
 }

@@ -478,9 +478,15 @@ public class BossStageManager : StageGame<BossStageManager>
                                       CharacterMovable?.Invoke(true);
                                       _hpPanel.alpha = 1;
 
-                                      if (i > 0)
+                                      if (i > 1)
                                       {
-                                          _debrisGenerator.StartGenerate();
+                                          _debrisGenerator.StartGenerate(GenerateType.Definite);
+                                          print("定位置に生成");
+                                      }
+                                      else if (i > 0)
+                                      {
+                                          _debrisGenerator.StartGenerate(GenerateType.Random);
+                                          print("ランダムな「座標」に生成");
                                       }
 
                                       if (i == 2)
