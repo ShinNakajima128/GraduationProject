@@ -43,6 +43,9 @@ public class FallGameManager : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera _finishCamera = default;
 
+    [SerializeField]
+    Transform _shadowTrans = default;
+
     [Header("Components")]
     [SerializeField]
     StageTutorial _tutorial = default;
@@ -256,7 +259,12 @@ public class FallGameManager : MonoBehaviour
          });
         _informationText.gameObject.transform.DOLocalMoveY(300, 0f);
 
-        yield return new WaitForSeconds(4.5f);
+        yield return new WaitForSeconds(1.5f);
+
+        _shadowTrans.DOScale(0.8f, 3.0f)
+                    .SetEase(Ease.OutCubic);
+
+        yield return new WaitForSeconds(3.0f);
 
         _finishCamera.Priority = 12;
 
