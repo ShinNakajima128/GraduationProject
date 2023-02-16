@@ -6,22 +6,21 @@ using DG.Tweening;
 public class EatMe : MonoBehaviour
 {
     #region serialize
+    [Header("Variables")]
     [SerializeField]
-    float _sizeUpValue = 1.5f;
+    float _startHeight = 10.0f;
 
+    [Tooltip("ˆê‰ñ“]‚É‚©‚¯‚éŽžŠÔ")]
     [SerializeField]
-    float _animTime = 0.5f;
-
-    [SerializeField]
-    Ease _animEase = Ease.InBounce;
-
-    [SerializeField]
-    float _growupTime = 10.0f;
+    float _rotateTime = 2.0f;
     #endregion
 
     #region private
-    bool _isGrowuped = false;
-    Transform _player;
+    AliceGrowup _growup;
+    #endregion
+
+    #region protected
+    protected bool _init = false;
     #endregion
 
     #region public
@@ -30,49 +29,54 @@ public class EatMe : MonoBehaviour
     #region property
     #endregion
 
+    protected virtual void OnEnable()
+    {
+        if (_init)
+        {
+            OnRotate();
+        }
+    }
+
+    protected virtual void OnDisable()
+    {
+        transform.DOLocalRotate(new Vector3(75, 180, 0), 0f);
+        transform.DOLocalMoveY(_startHeight, 0f);
+    }
+
+    protected virtual void Start()
+    {
+        if (!_init)
+        {
+            OnRotate();
+            _init = true;
+        }
+    }
+
+    protected void OnRotate()
+    {
+        transform.DOLocalRotate(new Vector3(75, -360, 0), _rotateTime, RotateMode.FastBeyond360)
+                 .SetEase(Ease.Linear)
+                 .SetLoops(-1)
+                 .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if (_isGrowuped)
+            if (_growup == null)
+            {
+                _growup = other.GetComponent<AliceGrowup>();
+            }
+
+            if (_growup.IsGrowuped)
             {
                 return;
             }
 
-            if (_player == null)
-            {
-                _player = other.transform;
-            }
-            _isGrowuped = true;
-            EventManager.OnEvent(Events.BossStage_GrowAlice);
-            AudioManager.PlaySE(SEType.Alice_Growup);
-            VibrationController.OnVibration(Strength.Middle, 0.3f);
-
-            _player.transform.DOScale(_sizeUpValue, _animTime)
-                           .SetEase(_animEase);
-            StartCoroutine(DiminishCoroutine());
+            _growup.Growup();
+            EatMeGenerator.Instance.IsActived.Value = false;
+            gameObject.SetActive(false);
         }
-    }
-    IEnumerator DiminishCoroutine()
-    {
-        yield return new WaitForSeconds(1.0f);
-
-        //AudioManager.PlayBGM(BGMType.Alice_Invincible);
-        
-        yield return new WaitForSeconds(_growupTime - 1.0f);
-
-        //AudioManager.StopBGM();
-        AudioManager.PlaySE(SEType.Alice_ReturnSize);
-        VibrationController.OnVibration(Strength.Middle, 0.3f);
-
-        _player.transform.DOScale(1f, _animTime)
-                           .SetEase(_animEase);
-
-        EventManager.OnEvent(Events.BossStage_DiminishAlice);
-
-        yield return new WaitForSeconds(1.0f);
-        _isGrowuped = false;
-
-        //AudioManager.PlayBGM(BGMType.Boss_InGame);
     }
 }

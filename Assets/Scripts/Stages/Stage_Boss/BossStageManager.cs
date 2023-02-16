@@ -87,6 +87,10 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     GameObject _endDirectionObjectsParent = default;
 
+    [Tooltip("EatMe‚ÌTransform")]
+    [SerializeField]
+    Transform _eatMeObject = default;
+
     [Header("UI")]
     [SerializeField]
     CanvasGroup _hpPanel = default;
@@ -492,6 +496,7 @@ public class BossStageManager : StageGame<BossStageManager>
                                       if (i == 2)
                                       {
                                           _fallPoleGenerator.Generate(3);
+                                          EatMeGenerator.Instance.IsActived.Value = true;
                                       }
                                   });
 
@@ -539,7 +544,6 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
     {
-
         if (_debugMode)
         {
             phase = BossBattlePhase.Third;
@@ -639,6 +643,8 @@ public class BossStageManager : StageGame<BossStageManager>
             _bossCtrl.PlayBossAnimation(BossAnimationType.Idle);
             yield return new WaitForSeconds(1.0f);
 
+            ItemGenerator.Instance.Return();
+
             CameraBlend(CameraType.Default, 2.0f);
             yield return new WaitForSeconds(2.5f);
         }
@@ -671,6 +677,7 @@ public class BossStageManager : StageGame<BossStageManager>
         _hpPanel.alpha = 0;
         AudioManager.PlayBGM(BGMType.BossStage_Clear, false);
         ItemGenerator.Instance.Return();
+        EatMeGenerator.Instance.Return();
 
         yield return new WaitForSeconds(11.5f);
 
