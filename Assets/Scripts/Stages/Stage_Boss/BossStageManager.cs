@@ -711,6 +711,7 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return new WaitForSeconds(2.5f);
 
         TransitionManager.FadeOut(FadeType.Black_default);
+        _directionCameraMng.ResetCamera();
 
         yield return new WaitForSeconds(_cameraBlendTime);
 
