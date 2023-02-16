@@ -87,6 +87,10 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     GameObject _endDirectionObjectsParent = default;
 
+    [Tooltip("EatMeのTransform")]
+    [SerializeField]
+    Transform _eatMeObject = default;
+
     [Header("UI")]
     [SerializeField]
     CanvasGroup _hpPanel = default;
@@ -133,7 +137,7 @@ public class BossStageManager : StageGame<BossStageManager>
     [Tooltip("最初の演出をスキップ、3フェイズ目からスタート")]
     [SerializeField]
     bool _debugMode = false;
-    
+
     [Tooltip("戦闘終了後シーン確認用")]
     [SerializeField]
     bool _playOnEnding = false;
@@ -284,7 +288,7 @@ public class BossStageManager : StageGame<BossStageManager>
                     StopCoroutine(_startDirectionCoroutine);
                     _startDirectionCoroutine = null;
                 }
-                    StartCoroutine(SkipCorourine());
+                StartCoroutine(SkipCorourine());
             });
 
             _directionBossObject.SetActive(true);
@@ -309,7 +313,7 @@ public class BossStageManager : StageGame<BossStageManager>
             OnFadeDescription(1, 0.25f);
 
             yield return new WaitForSeconds(2.5f);
-            
+
             OnFadeDescription(0, 0.25f);
 
             yield return new WaitForSeconds(1.0f);
@@ -357,7 +361,7 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return new WaitForSeconds(0.3f);
 
         yield return new WaitForSeconds(2.0f);
-        
+
         TransitionManager.FadeOut(FadeType.Black_default);
         InGameSetup();
 
@@ -388,8 +392,8 @@ public class BossStageManager : StageGame<BossStageManager>
     {
         EventManager.ListenEvents(Events.BossStage_FrontAlice, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontAlice)));
         EventManager.ListenEvents(Events.BossStage_SlowlyRise, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_SlowlyRise)));
-        EventManager.ListenEvents(Events.BossStage_OnBossFace, () => 
-        { 
+        EventManager.ListenEvents(Events.BossStage_OnBossFace, () =>
+        {
             StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_OnBossFace));
         });
         EventManager.ListenEvents(Events.BossStage_BehindBoss, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindBoss, 31)));
@@ -397,8 +401,18 @@ public class BossStageManager : StageGame<BossStageManager>
         EventManager.ListenEvents(Events.BossStage_BehindAlice, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_BehindAlice, 32)));
         EventManager.ListenEvents(Events.BossStage_FrontBoss, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontBoss, 34)));
         EventManager.ListenEvents(Events.BossStage_ZoomBossFace, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_ZoomBossFace, 35)));
-        EventManager.ListenEvents(Events.BossStage_FrontCheshire, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontCheshireCat, 36)));
+        EventManager.ListenEvents(Events.BossStage_FrontCheshire, () =>
+        {
+            StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_FrontCheshireCat, 36));
+            _cheshireCat.CheshireFaceCtrl.ChangeFaceType(CheshireCatFaceType.StartGrinning);
+        });
         EventManager.ListenEvents(Events.BossStage_DisolveCheshire, () => _cheshireCat.ActivateDissolve(true));
+        EventManager.ListenEvents(Events.BossStage_Phase3_FocusEatMe, () =>
+        { 
+            StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_Phase3_FocusEatMe, 36));
+            EatMeGenerator.Instance.IsActived.Value = true;
+        });
+        EventManager.ListenEvents(Events.BossStage_Phase3_CameraReset, () => _directionCameraMng.ResetCamera(CameraDirectionType.BossStage_Phase3_FocusEatMe, 1.5f));
     }
 
     void SubscribeEndEvents()
@@ -423,11 +437,11 @@ public class BossStageManager : StageGame<BossStageManager>
         EventManager.ListenEvents(Events.BossStage_End_CheshireLookUp, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_End_CheshireLookUp)));
         EventManager.ListenEvents(Events.BossStage_End_AliceZoomUp, () => StartCoroutine(_directionCameraMng.StartDirectionCoroutine(CameraDirectionType.BossStage_End_AliceZoomUp)));
 
-        if (!SkipButton.Instance.gameObject.activeSelf) 
+        if (!SkipButton.Instance.gameObject.activeSelf)
         {
             SkipButton.Instance.gameObject.SetActive(true);
         }
-        SkipButton.Instance.OnSkip.Subscribe(_ => 
+        SkipButton.Instance.OnSkip.Subscribe(_ =>
         {
             TransitionManager.SetCanvasPriority(1010);
             MessagePlayer.Instance.StopMessage();
@@ -471,16 +485,22 @@ public class BossStageManager : StageGame<BossStageManager>
                                   firstAction: () =>
                                   {
                                       CameraBlend(CameraType.Battle, _cameraBlendTime);
-                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);       
+                                      _areaEffect.transform.DOLocalMoveY(0f, 1.0f);
                                   },
                                   phaseStartAction: () =>
                                   {
                                       CharacterMovable?.Invoke(true);
                                       _hpPanel.alpha = 1;
 
-                                      if (i > 0)
+                                      if (i > 1)
                                       {
-                                          _debrisGenerator.StartGenerate();
+                                          _debrisGenerator.StartGenerate(GenerateType.Definite);
+                                          print("定位置に生成");
+                                      }
+                                      else if (i > 0)
+                                      {
+                                          _debrisGenerator.StartGenerate(GenerateType.Random);
+                                          print("ランダムな「座標」に生成");
                                       }
 
                                       if (i == 2)
@@ -533,7 +553,6 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator DirectionCoroutine(BossBattlePhase phase)
     {
-
         if (_debugMode)
         {
             phase = BossBattlePhase.Third;
@@ -633,6 +652,8 @@ public class BossStageManager : StageGame<BossStageManager>
             _bossCtrl.PlayBossAnimation(BossAnimationType.Idle);
             yield return new WaitForSeconds(1.0f);
 
+            ItemGenerator.Instance.Return();
+
             CameraBlend(CameraType.Default, 2.0f);
             yield return new WaitForSeconds(2.5f);
         }
@@ -665,6 +686,7 @@ public class BossStageManager : StageGame<BossStageManager>
         _hpPanel.alpha = 0;
         AudioManager.PlayBGM(BGMType.BossStage_Clear, false);
         ItemGenerator.Instance.Return();
+        EatMeGenerator.Instance.Return();
 
         yield return new WaitForSeconds(11.5f);
 
@@ -673,7 +695,7 @@ public class BossStageManager : StageGame<BossStageManager>
 
     IEnumerator SkipCorourine()
     {
-        TransitionManager.FadeIn(FadeType.Black_default, action: () => 
+        TransitionManager.FadeIn(FadeType.Black_default, action: () =>
         {
             EventManager.OnEvent(Events.BossStage_DisolveCheshire);
             MessagePlayer.Instance.StopMessage();
@@ -689,6 +711,7 @@ public class BossStageManager : StageGame<BossStageManager>
         yield return new WaitForSeconds(2.5f);
 
         TransitionManager.FadeOut(FadeType.Black_default);
+        _directionCameraMng.ResetCamera();
 
         yield return new WaitForSeconds(_cameraBlendTime);
 

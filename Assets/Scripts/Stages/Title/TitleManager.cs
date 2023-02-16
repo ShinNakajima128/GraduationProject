@@ -51,6 +51,7 @@ public class TitleManager : MonoBehaviour
 
         //開始画面以外で「A」を押した場合は開始画面に戻る
         this.UpdateAsObservable().Where(_ => _currentTitleType != TitleUIType.Start &&
+                                             !PreviewManager.Instance.IsPreviewed &&
                                              UIInput.A)
                                  .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
                                  .Subscribe(_ =>
@@ -97,6 +98,7 @@ public class TitleManager : MonoBehaviour
             {
                 case ButtonType.GameStart:
                     b.Value.OnClickAsObservable()
+                           .Where(_ => !PreviewManager.Instance.IsPreviewed)
                            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
                            .Subscribe(_ =>
                            {
@@ -109,6 +111,7 @@ public class TitleManager : MonoBehaviour
                     break;
                 case ButtonType.Credit:
                     b.Value.OnClickAsObservable()
+                           .Where(_ => !PreviewManager.Instance.IsPreviewed)
                            .Take(1)
                            .Subscribe(_ =>
                            {
@@ -126,6 +129,7 @@ public class TitleManager : MonoBehaviour
                     break;
                 case ButtonType.Option:
                     b.Value.OnClickAsObservable()
+                           .Where(_ => !PreviewManager.Instance.IsPreviewed)
                            .ThrottleFirst(TimeSpan.FromMilliseconds(1000))
                            .Subscribe(_ =>
                            {
@@ -140,7 +144,8 @@ public class TitleManager : MonoBehaviour
                     break;
                 case ButtonType.Difficulty_Easy:
                     b.Value.OnClickAsObservable()
-                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect)
+                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect &&
+                                       !PreviewManager.Instance.IsPreviewed)
                            .Take(1)
                            .Subscribe(_ =>
                            {
@@ -154,7 +159,8 @@ public class TitleManager : MonoBehaviour
                     break;
                 case ButtonType.Difficulty_Normal:
                     b.Value.OnClickAsObservable()
-                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect)
+                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect &&
+                                       !PreviewManager.Instance.IsPreviewed)
                            .Take(1)
                            .Subscribe(_ =>
                            {
@@ -168,7 +174,8 @@ public class TitleManager : MonoBehaviour
                     break;
                 case ButtonType.Difficulty_Hard:
                     b.Value.OnClickAsObservable()
-                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect)
+                           .Where(_ => _currentTitleType == TitleUIType.DifficultySelect &&
+                                       !PreviewManager.Instance.IsPreviewed)
                            .Take(1)
                            .Subscribe(_ =>
                            {
@@ -178,7 +185,7 @@ public class TitleManager : MonoBehaviour
                                b.Value.transform.DOLocalMoveY(b.Value.transform.localPosition.y - 15, 0.05f)
                                                                         .SetLoops(2, LoopType.Yoyo);
                                EventSystem.current.SetSelectedGameObject(null);
-                           });                    
+                           });
                     break;
                 default:
                     break;
@@ -190,7 +197,7 @@ public class TitleManager : MonoBehaviour
     /// タイトルのUIPanelを変更する
     /// </summary>
     /// <param name="titleUIType"> タイトルのUIの種類 </param>
-    void ChangeUIPanel(TitleUIType titleUIType)
+    public void ChangeUIPanel(TitleUIType titleUIType)
     {
         StartCoroutine(ChangeUIPanelCoroutine(titleUIType));
     }
@@ -203,7 +210,7 @@ public class TitleManager : MonoBehaviour
             p.alpha = 0;
         }
 
-        yield return new WaitForSeconds(0.02f);
+        yield return null;
 
         _currentTitleType = titleUIType;
 

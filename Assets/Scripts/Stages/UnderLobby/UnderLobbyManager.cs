@@ -83,9 +83,9 @@ public class UnderLobbyManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        yield return null;
+        TransitionManager.FadeOut(FadeType.Black_default);
 
-        TransitionManager.FadeOut(FadeType.Normal);
+        yield return null;
         LetterboxController.ActivateLetterbox(true, 0);
         AudioManager.PlayBGM(BGMType.UnderLobby);
         PlayerMove?.Invoke(false);

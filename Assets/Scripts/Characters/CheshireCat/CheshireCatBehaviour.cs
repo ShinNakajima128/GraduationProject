@@ -135,7 +135,7 @@ public class CheshireCatBehaviour : MonoBehaviour
                 _cat.ChangeState(CheshireCatState.Idle, 1.0f);
             }
             yield return new WaitForSeconds(_waitTime);
-            random = UnityEngine.Random.Range(0, 4);
+            random = UnityEngine.Random.Range(0, 3);
 
             if (random != 0)
             {

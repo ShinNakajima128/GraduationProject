@@ -244,6 +244,7 @@ public enum CameraDirectionType
     BossStage_End_AliceLookDown, //アリスが見下ろす
     BossStage_End_CheshireLookUp, //チェシャ猫がアリスを見上げる
     BossStage_End_AliceZoomUp, //アリス顔アップ
+    BossStage_Phase3_FocusEatMe //EatMeに注目
 }
 
 public enum CameraMovementType

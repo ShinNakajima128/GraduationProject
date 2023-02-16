@@ -11,6 +11,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 9294844b15dca184d914a632279b24e1, type: 3}
   m_ValidKeywords:
   - EFFECT_HUE_VARIATION
+  - UNITY_UI_CLIP_RECT
   - _METALLICGLOSSMAP
   - _REQUIRE_UV2
   - _SURFACE_TYPE_TRANSPARENT
@@ -18,8 +19,9 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2460
+  stringTagMap:
+    RenderType: TransparentCutout
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -53,11 +55,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: ca680e1b267e274459c71e541616e16e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 266e2b112e74ce64d9486ea56c02b843, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: ca680e1b267e274459c71e541616e16e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 266e2b112e74ce64d9486ea56c02b843, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Bump2ndMap:
@@ -165,7 +167,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: ca680e1b267e274459c71e541616e16e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 266e2b112e74ce64d9486ea56c02b843, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatCap2ndBlendMask:
@@ -331,11 +333,11 @@ Material:
     - _ClearCoatSmoothness: 0
     - _ColorMask: 15
     - _Cull: 2
-    - _Cutoff: 0.001
+    - _Cutoff: -0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DissolveNoiseStrength: 0.1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _DstBlendAlphaFA: 1
     - _DstBlendFA: 1
@@ -552,7 +554,7 @@ Material:
     - _TessFactorMax: 3
     - _TessShrink: 0
     - _TessStrength: 0.5
-    - _TransparentMode: 0
+    - _TransparentMode: 2
     - _UVSec: 0
     - _UseAnisotropy: 0
     - _UseAudioLink: 0
