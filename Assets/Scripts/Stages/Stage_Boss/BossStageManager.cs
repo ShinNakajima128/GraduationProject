@@ -87,10 +87,6 @@ public class BossStageManager : StageGame<BossStageManager>
     [SerializeField]
     GameObject _endDirectionObjectsParent = default;
 
-    [Tooltip("EatMe‚ÌTransform")]
-    [SerializeField]
-    Transform _eatMeObject = default;
-
     [Header("UI")]
     [SerializeField]
     CanvasGroup _hpPanel = default;

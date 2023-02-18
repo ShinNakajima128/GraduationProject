@@ -162,16 +162,16 @@ public class QuizController : MonoBehaviour
         _questionText.text = "";
         HighlightButton();
 
+        _questionText.text = $"答えは…{_currentAnswerValue}！";
+
         if (Judge())
         {
-            //_questionText.text = "正解！";
             _correctImage.enabled = true;
             AudioManager.PlaySE(SEType.Stage2_Correct);
             callback?.Invoke(1);
         }
         else
         {
-            //_questionText.text = $"不正解… 正解は{_currentAnswerValue}";
             _wrongImage.enabled = true;
             AudioManager.PlaySE(SEType.Stage2_Wrong);
             VibrationController.OnVibration(Strength.Middle, 0.2f);
@@ -186,7 +186,7 @@ public class QuizController : MonoBehaviour
         yield return new WaitForSeconds(_goToNextPhaseInterval);
 
         _choicePanel.alpha = 0;
-
+        _questionText.text = "";
         _AnswerTimeText.text = "";        
     }
 
