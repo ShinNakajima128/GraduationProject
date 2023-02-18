@@ -186,8 +186,8 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     bool _isStoping = false;
 
     #region Volume Property
-    public int CurrentBGMVolume { get; set; } = 10;
-    public int CurrentSEVolume { get; set; } = 10;
+    public int CurrentBGMVolume { get; set; } = 5;
+    public int CurrentSEVolume { get; set; } = 5;
     #endregion
 
     void Awake()
