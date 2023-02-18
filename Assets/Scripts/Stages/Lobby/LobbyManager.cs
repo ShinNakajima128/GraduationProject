@@ -552,11 +552,14 @@ public class LobbyManager : MonoBehaviour
         TransitionManager.FadeIn(FadeType.Black_default, action: () =>
         {
             MessagePlayer.Instance.FadeMessageCanvas(0f, 0f);
+            LobbyCheshireCatManager.Instance.InactiveCheshireCat(LobbyCheshireCatType.Appearance);
             LobbyCheshireCatManager.Instance.MovableCat.ActivateDissolve(true);
             ClockUI.Instance.SetClockUI(GameManager.CheckGameStatus());
             _clockCtrl.ChangeClockState(GameManager.CheckGameStatus(), 0f, 0f);
             GameManager.UpdateStageStatus(GameManager.Instance.CurrentStage);
             SkipButton.Instance.gameObject.SetActive(false);
+            _cheshireCatCamera.Priority = 10;
+            _clockCamera.Priority = 10;
         });
 
         yield return new WaitForSeconds(2.0f);

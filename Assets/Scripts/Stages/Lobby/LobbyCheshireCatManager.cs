@@ -112,6 +112,12 @@ public class LobbyCheshireCatManager : MonoBehaviour
 
         print($"{type}");
     }
+
+    public void InactiveCheshireCat(LobbyCheshireCatType type)
+    {
+        var activeCat = _cheshireCats.FirstOrDefault(c => c.CatType == type).CheshireCat;
+        activeCat.SetActive(false);
+    }
 }
 
 /// <summary>
