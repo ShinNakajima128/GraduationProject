@@ -74,6 +74,7 @@ public class FallGameManager : MonoBehaviour
     #region property
     public static FallGameManager Instance { get; private set; }
     public static bool IsSecondTry { get; set; } = false;
+    public bool IsGameEnd { get; private set; } = false;
     public int TargetCount => _targetCount;
     public int MaxHP => _maxHP;
     #endregion
@@ -167,9 +168,12 @@ public class FallGameManager : MonoBehaviour
     /// </summary>
     void OnGameOver()
     {
+        IsGameEnd = true;
+
         //ƒƒr[‚©‚ç’§í‚µ‚Ä‚¢‚È‚¢ê‡
         if (!IsSecondTry)
         {
+            EffectManager.ReturnEffect();
             TransitionManager.SceneTransition(SceneType.Stage1_Fall);
         }
         else
@@ -252,6 +256,8 @@ public class FallGameManager : MonoBehaviour
 
     IEnumerator GameEndCoroutine()
     {
+        IsGameEnd = true;
+
         TransitionManager.FadeIn(FadeType.Normal, action: () =>
          {
              _inGamePanel.alpha = 0;

@@ -61,7 +61,7 @@ public class DrinkMe : MonoBehaviour
                  .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }
 
-    protected void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
