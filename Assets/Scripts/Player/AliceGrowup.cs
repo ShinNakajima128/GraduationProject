@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+/// <summary>
+/// アリス巨大化ギミックのComponent
+/// </summary>
 public class AliceGrowup : MonoBehaviour
 {
     #region serialize
@@ -47,6 +50,9 @@ public class AliceGrowup : MonoBehaviour
         StartCoroutine(DiminishCoroutine());
     }
 
+    /// <summary>
+    /// サイズを元に戻すCoroutine
+    /// </summary>
     IEnumerator DiminishCoroutine()
     {
         yield return new WaitForSeconds(_growupTime);
