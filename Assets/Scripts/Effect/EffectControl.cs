@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class EffectControl : MonoBehaviour
 {
@@ -9,7 +11,7 @@ public class EffectControl : MonoBehaviour
 
     bool m_isSetParent = false;
     Transform _effectMng;
-    
+
     private void Awake()
     {    
         m_particles = GetComponentsInChildren<ParticleSystem>();
@@ -18,23 +20,28 @@ public class EffectControl : MonoBehaviour
     void Start()
     {
         _effectMng = GameObject.FindGameObjectWithTag("EffectManager").transform;
-    }
-    void Update()
-    {
-        foreach (var particle in m_particles)
-        {
-            if (particle.isPlaying)
+
+        this.UpdateAsObservable()
+            .Subscribe(_ =>
             {
-                return;
-            }
-        }
-        if (m_isSetParent)
-        {
-            gameObject.transform.SetParent(_effectMng);
-            gameObject.transform.localPosition = Vector3.zero;
-        }
-        gameObject.SetActive(false);//全てのParticleの再生終了で非アクティブにする
+                foreach (var particle in m_particles)
+                {
+                    if (particle.isPlaying)
+                    {
+                        return;
+                    }
+                }
+                if (m_isSetParent)
+                {
+                    gameObject.transform.SetParent(_effectMng);
+                    gameObject.transform.localPosition = Vector3.zero;
+                    m_isSetParent = false;
+                }
+                gameObject.SetActive(false);//全てのParticleの再生終了で非アクティブにする
+            })
+            .AddTo(this);
     }
+
     /// <summary>
     /// 指定した場所でEffectを再生する
     /// </summary>
@@ -71,6 +78,13 @@ public class EffectControl : MonoBehaviour
         foreach (var particle in m_particles)
         {
             particle.Stop();
+        }
+
+        if (m_isSetParent)
+        {
+            gameObject.transform.SetParent(_effectMng);
+            gameObject.transform.localPosition = Vector3.zero;
+            m_isSetParent = false;
         }
     }
     /// <summary>

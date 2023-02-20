@@ -60,6 +60,14 @@ public class Stage1Player : PlayerBase, IEffectable, IDamagable, IHealable
         }
     }
 
+    /// <summary>
+    /// 無敵になる。最後の紙を獲得した瞬間に呼び出す
+    /// </summary>
+    public void OnInvincible()
+    {
+        _isInvincibled = true;
+    }
+
     IEnumerator DamageCoroutine()
     {
         _isInvincibled = true;

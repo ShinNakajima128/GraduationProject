@@ -59,4 +59,13 @@ public class Stage1DrinkMe : DrinkMe
                  })
                  .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }
+
+    protected override void OnTriggerEnter(Collider other)
+    {
+        if (FallGameManager.Instance.IsGameEnd) 
+        {
+            return;
+        }
+        base.OnTriggerEnter(other);
+    }
 }

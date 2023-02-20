@@ -51,6 +51,8 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
 
     Dictionary<EffectType, List<EffectControl>> m_effectDic = new Dictionary<EffectType, List<EffectControl>>();
 
+    public Dictionary<EffectType, List<EffectControl>> EffectDic => m_effectDic;
+
     void Awake()
     {
         if (this != Instance)
@@ -97,6 +99,23 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
             }
             effect.Play(parent);
             return;
+        }
+    }
+
+    public static void ReturnEffect()
+    {
+        print("エフェクトを停止");
+        foreach (var effect in Instance.m_effectDic)
+        {
+            foreach (var e in effect.Value)
+            {
+                if (!e.IsActive())
+                {
+                    continue;
+                }
+                e.Stop();
+                print($"再生中のエフェクトを停止:{e.name}");
+            }
         }
     }
 }

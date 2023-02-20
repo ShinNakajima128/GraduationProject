@@ -5,10 +5,14 @@ using UnityEngine.UI;
 using UniRx;
 using DG.Tweening;
 
+/// <summary>
+/// 紙のカウント数を管理するManager
+/// </summary>
 public class CountManager : MonoBehaviour
 {
     #region serialize
     [Header("UIObjects")]
+    [Tooltip("アニメーションのターゲットとなるTransform")]
     [SerializeField]
     RectTransform _targetPaperTrans = default;
 
@@ -29,6 +33,11 @@ public class CountManager : MonoBehaviour
 
     [SerializeField]
     Text _currentCountText = default;
+
+    [Header("Componets")]
+    [Tooltip("ステージ1のプレイヤー")]
+    [SerializeField]
+    Stage1Player _player = default;
     #endregion
 
     #region private
@@ -86,6 +95,12 @@ public class CountManager : MonoBehaviour
         {
             Debug.Log("紙獲得");
             AudioManager.PlaySE(SEType.Item_Get);
+
+            if (_currentCount.Value == _targetCount - 1)
+            {
+                _player.OnInvincible();
+            }
+
             p.OnAnimation(effect.EffectPos, _targetPaperTrans, () =>
             {
                 _currentCount.Value++;
